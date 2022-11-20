@@ -1,0 +1,65 @@
+{
+    "CheckForFlame": {
+        "checkpoints": [
+            {
+                "steps": 99968,
+                "file_path": "results\\ppo\\CheckForFlame\\CheckForFlame-99968.onnx",
+                "reward": null,
+                "creation_time": 1665102133.2131417,
+                "auxillary_file_paths": [
+                    "results\\ppo\\CheckForFlame\\CheckForFlame-99968.pt"
+                ]
+            },
+            {
+                "steps": 149952,
+                "file_path": "results\\ppo\\CheckForFlame\\CheckForFlame-149952.onnx",
+                "reward": null,
+                "creation_time": 1665102194.5905387,
+                "auxillary_file_paths": [
+                    "results\\ppo\\CheckForFlame\\CheckForFlame-149952.pt"
+                ]
+            },
+            {
+                "steps": 199936,
+                "file_path": "results\\ppo\\CheckForFlame\\CheckForFlame-199936.onnx",
+                "reward": null,
+                "creation_time": 1665102257.3975277,
+                "auxillary_file_paths": [
+                    "results\\ppo\\CheckForFlame\\CheckForFlame-199936.pt"
+                ]
+            },
+            {
+                "steps": 249984,
+                "file_path": "results\\ppo\\CheckForFlame\\CheckForFlame-249984.onnx",
+                "reward": null,
+                "creation_time": 1665102320.0052142,
+                "auxillary_file_paths": [
+                    "results\\ppo\\CheckForFlame\\CheckForFlame-249984.pt"
+                ]
+            },
+            {
+                "steps": 282048,
+                "file_path": "results\\ppo\\CheckForFlame\\CheckForFlame-282048.onnx",
+                "reward": null,
+                "creation_time": 1665102426.5003965,
+                "auxillary_file_paths": [
+                    "results\\ppo\\CheckForFlame\\CheckForFlame-282048.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 282048,
+            "file_path": "results\\ppo\\CheckForFlame.onnx",
+            "reward": null,
+            "creation_time": 1665102426.5003965,
+            "auxillary_file_paths": [
+                "results\\ppo\\CheckForFlame\\CheckForFlame-282048.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.11.0+cu115"
+    }
+}

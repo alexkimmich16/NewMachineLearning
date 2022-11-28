@@ -57,7 +57,7 @@ namespace UnitySharpNEAT
         private UnitController _unitControllerPrefab = default;
 
         [SerializeField, Tooltip("The parent transform which will hold the instantiated Units.")]
-        private Transform _spawnParent = default;
+        public Transform _spawnParent = default;
 
 
         [Header("Debug")]

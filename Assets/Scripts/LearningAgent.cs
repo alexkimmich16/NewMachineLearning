@@ -20,8 +20,6 @@ namespace UnitySharpNEAT
     public class LearningAgent : UnitController
     {
         [Header("Set")]
-
-        public int DesiredCycles;
         public DebugType DebugType;
 
         //[HideInInspector]
@@ -31,7 +29,6 @@ namespace UnitySharpNEAT
         public float Timer;
         public int Frame;
         public int Set;
-        public int CycleNum;
 
         [Header("References")]
 
@@ -44,9 +41,6 @@ namespace UnitySharpNEAT
         public bool Guess;
         public int GuessNum;
 
-        //[HideInInspector]
-        //public List<Motion> Motions;
-
         public delegate void EventHandler(bool State, int Cycle, int Set);
         public event EventHandler MoveToNextEvent;
 
@@ -55,103 +49,136 @@ namespace UnitySharpNEAT
 
         public EditSide side;
 
-        public GameObject RightTest;
-        //public SingleInfo info;
-
-        public float SetDegrees;
-
-        public float HandCamAngle, CamAngle, EndAngle;
-
         public static List<Vector2> ListNegitives = new List<Vector2>() { new Vector2(1, 1), new Vector2(-1, 1), new Vector2(-1, -1), new Vector2(1, -1) };
         public static List<bool> InvertAngles = new List<bool>() { false, true, false, true };
-        public bool AngleTest;
-        //private int Offset = 270;
-
-        //public List<int> Index;
+        //public bool AngleTest;
 
         public SingleInfo MyInfo;
-
+        
         public bool RequestNum;
         public int Streak;
-        public override float GetFitness()
+
+        public float Fitness;
+
+        public bool SentLearnManagerFinish;
+
+        public bool Active() { return Frame < MaxFrame; }
+
+        public int MaxFrame;
+        private void Start()
         {
-            return 1;
+            LearnManager.OnNewMotion += RecieveNewMotion;
+            int sibling = GetSiblingIndex(transform, transform.parent);
+            transform.position = new Vector3(0,0, sibling * LearnManager.instance.SpawnGap);
+
+            int GetSiblingIndex(Transform child, Transform parent)
+            {
+                for (int i = 0; i < parent.childCount; ++i)
+                {
+                    if (child == parent.GetChild(i))
+                        return i;
+                }
+                Debug.LogWarning("Child doesn't belong to this parent.");
+                return 0;
+            }
         }
         
+        void RecieveNewMotion(int LowStat, int HighStat, int SetStat)
+        {
+            //Debug.Log("recieve: " + HighStat);
+            Frame = LowStat;
+            MaxFrame = HighStat;
+            SentLearnManagerFinish = false;
+            Set = SetStat;
+        }
+
+        #region Overrides
+        public override float GetFitness()
+        {
+            float RealFitness = Fitness;
+            Fitness = 0;
+            return RealFitness;
+        }
+
         protected override void UseBlackBoxOutpts(ISignalArray outputSignalArray)//on output
         {
+            if (!Active())
+                return;
             CustomDebug("OnActionReceived");
             //outputSignalArray
             GuessNum = (int)outputSignalArray[0];
             bool CurrentGuess = (int)outputSignalArray[0] == 1;
             Guess = CurrentGuess;
-            if (CurrentGuess)
-                Streak += 1;
-            else
-                Streak = 0;
+            //float CurrentReward = LearnManager.instance.GetReward(Streak);
+            ChangeStreak(CurrentGuess == CurrentMotion().AtFrameState(Frame));
+            Fitness += LearnManager.instance.GetReward(Streak);
+            if (Fitness < 0)
+                Fitness = 0;
+            handToChange.material = FalseTrue[GuessNum];
 
-            float Reward = LearnManager.instance.GetReward(Streak);
-            if (state == learningState.Learning)
-                Reward();
-            else if (state == learningState.Testing)
-                handToChange.material = FalseTrue[GuessNum];
+            //if (state == learningState.Learning)
         }
         protected override void UpdateBlackBoxInputs(ISignalArray inputSignalArray)//on Input
         {
-            /*
-            inputSignalArray[0] = frontray;
-            inputSignalArray[1] = leftray;
-            inputSignalArray[2] = behindray;
-            inputSignalArray[3] = rightray;
-            inputSignalArray[4] = rotation;
-            inputSignalArray[5] = selfpositionx;
-            inputSignalArray[6] = selfpositiony;
-            inputSignalArray[7] = waypointpositionx;
-            inputSignalArray[8] = waypointpositiony;
-            */
-
-            //CustomDebug("CollectObservations");
-            //Debug.Log("Observe  Frame: " + Frame + " Set: " + Set);
-
+            if (!Active())
+            {
+                if (SentLearnManagerFinish == false)
+                {
+                    LearnManager.instance.AgentWaiting();
+                    SentLearnManagerFinish = true;
+                }
+                return;
+            }
+            CustomDebug("CollectObservations");
             LearnManager LM = LearnManager.instance;
-            SingleInfo info = GetCurrentInfo();
-            MyInfo = info;
-            /*
-            if (LM.HeadPos)
-                sensor.AddObservation(info.HeadPos);
-            if (LM.HeadRot)
-                sensor.AddObservation(info.HeadRot.normalized);
+            int CurrentIndex = 0;
+
             if (LM.HandPos)
-                sensor.AddObservation(info.HandPos);
+                AddVector3(LM.motions.Motions[Set].Infos[Frame].HandPos);
             if (LM.HandRot)
-                sensor.AddObservation(info.HandRot.normalized);
-            if (LM.HandVel)
-                sensor.AddObservation(info.HandVel);
-            if (LM.AdjustedHandPos)
-                sensor.AddObservation(info.AdjustedHandPos);
-            */
+                AddVector3(LM.motions.Motions[Set].Infos[Frame].HandRot);
+            if (LM.HeadPos)
+                AddVector3(LM.motions.Motions[Set].Infos[Frame].HeadPos);
+            if (LM.HeadRot)
+                AddVector3(LM.motions.Motions[Set].Infos[Frame].HeadRot);
+
+            if(Frame < MaxFrame)
+                Frame += 1;
+            void AddVector3(Vector3 Input)
+            {
+                inputSignalArray[CurrentIndex] = Input.x;
+                inputSignalArray[CurrentIndex + 1] = Input.y;
+                inputSignalArray[CurrentIndex + 2] = Input.z;
+                CurrentIndex += 3;
+            }
         }
         protected override void HandleIsActiveChanged(bool newIsActive)
         {
-
             foreach (Transform t in transform)
             {
                 t.gameObject.SetActive(newIsActive);
             }
         }
-        public List<int> GetRandomList()
+        #endregion
+        void ChangeStreak(bool Outcome)
         {
-            List<int> NewList = new List<int>();
-            for (int i = 0; i < LearnManager.instance.motions.Motions.Count; i++)
-                NewList.Add(i);
-            Shuffle.ShuffleSet(NewList);
-            return NewList;
-        }
+            if (Outcome == true && Streak >= 0)
+                Streak += 1;
+            else if(Outcome == false && Streak <= 0)
+                Streak -= 1;
 
+            if (Outcome == true && Streak < 0 || Outcome == false && Streak > 0)
+                Streak = 0;
+            //Debug.Log("Reward Guess: " + GotRight + "  Works: " + ListWorks + "  Reward: " + LearnManager.instance.motions.GetReward(GotRight, ListWorks));
+        }
+        
+        
+        
+        /*
         public void MoveToNext()
         {
             Timer = 0;
-            Frame += 1;
+            //Frame += 1;
             
             if (Frame == CurrentMotion().Infos.Count)
             {
@@ -183,108 +210,30 @@ namespace UnitySharpNEAT
 
             }
         }
-        public SingleInfo GetCurrentInfo()
-        {
-            if (state == learningState.Learning)
-                return CurrentFrame();
-            else
-                return LearnManager.instance.Info.GetControllerInfo(side);
-        }
-        public SingleInfo CurrentFrame()
-        {
-            return LearnManager.instance.motions.Motions[Set].Infos[Frame];
-        }
-        public Motion CurrentMotion()
-        {
-            return LearnManager.instance.motions.Motions[Set];
-        }
-        //public 
-        
-        public void LearnStep()
-        {
-            //Debug.Log("Learnst: " + state.ToString());
-            if (state == learningState.Learning)
-            {
-                if (Frame == 0)
-                    MoveToNext();
-                else
-                {
-                    RequestDecision();
-                    CustomDebug("RequestDecision");
-                }
-            }
-            else if (state == learningState.Testing)
-            {
-                RequestDecision();
-                //CustomDebug("RequestDecision");
-                Timer = 0;
-            }
-        }
+        */
+        //public SingleInfo GetCurrentInfo() { return (state == learningState.Learning) ? CurrentFrame() : LearnManager.instance.Info.GetControllerInfo(side); }
+        //public SingleInfo CurrentFrame() { return LearnManager.instance.motions.Motions[Set].Infos[Frame]; }
+        public Motion CurrentMotion() { return LearnManager.instance.motions.Motions[Set]; }
+
         public void CustomDebug(string text)
         {
             if (DebugType == DebugType.None)
                 return;
             string FrameReference = "";
             if (DebugType == DebugType.WithState)
-                FrameReference = " Timer: " + Timer + "|Frame: " + Frame + "|Set: " + Set + "" + "|CycleNum: " + CycleNum + "|";
+                FrameReference = " Timer: " + Timer + "|Frame: " + Frame + "|Set: " + Set + "" + "|";
             Debug.Log(text + FrameReference);
         }
-        /*
-
-        public override void OnActionReceived(ActionBuffers actions)
+        public List<int> GetRandomList()
         {
-            
+            List<int> NewList = new List<int>();
+            for (int i = 0; i < LearnManager.instance.motions.Motions.Count; i++)
+                NewList.Add(i);
+            Shuffle.ShuffleSet(NewList);
+            return NewList;
         }
-        void Reward()
-        {
 
-            bool ListWorks = CurrentMotion().AtFrameState(Frame);
-            bool GotRight = Guess == ListWorks;
-
-
-            if (GotRight)
-            {
-                //Debug.Log("Reward");
-                //set red
-            }
-            else
-            {
-                //Debug.Log("Punish");
-                //set blue
-            }
-
-            Debug.Log("Reward Guess: " + GotRight + "  Works: " + ListWorks + "  Reward: " + LearnManager.instance.motions.GetReward(GotRight, ListWorks));
-
-            SetReward(LearnManager.instance.motions.GetReward(GotRight, ListWorks));
-            MoveToNextEvent(GotRight, CycleNum, CurrentMotion().TrueIndex);
-            MoveToNext();
-        }
-        
-        
-        private void Start()
-        {
-            //Index = GetRandomList();
-            if (RequestNum)
-                Set = LearnManager.instance.RequestMotion();
-        }
-        public bool LastState()
-        {
-            if (Frame - 1 >= 0)
-                return CurrentMotion().AtFrameState(Frame - 1);
-            else
-            {
-                if (Set == 0)
-                    return true;
-                else
-                {
-                    //goo to last set
-                    int LastSize = LearnManager.instance.motions.Motions[Set - 1].Infos.Count - 1;
-                    return LearnManager.instance.motions.Motions[Set - 1].AtFrameState(LastSize);
-                }
-            }
-        }
-        
-        
+        /*        
         public SingleInfo CurrentControllerInfo()
         {
             LearnManager LM = LearnManager.instance;

@@ -17,7 +17,6 @@ public class LearnManager : MonoBehaviour
         motions = MovementList[(int)LearnType];
         for (int i = 0; i < motions.Motions.Count; i++)
             motions.Motions[i].TrueIndex = i;
-
     }
     public CurrentLearn LearnType;
     [HideInInspector]
@@ -34,31 +33,16 @@ public class LearnManager : MonoBehaviour
     public bool AdjustedHandPos;
 
     [Header("References")]
-    //public BehaviorParameters parameters;
-    //public LearningAgent agent;
 
     public HandActions Left;
     public HandActions Right;
     public Transform Cam;
     
-    private float Interval;
     public float TrueAhead;
     public Vector2 EachAdd;
 
     public int RightIndex;
     public int WrongIndex;
-
-    
-    
-    public List<float> Rewards;
-    public float GetReward(int Streak)
-    {
-        
-        return Streak * 5;
-    }
-    
-
-
 
     private static float FramePerSecond = 60;
 
@@ -66,20 +50,6 @@ public class LearnManager : MonoBehaviour
     public event EventHandlerTwo LearnReached;
     public float Timer;
     public List<Material> FalseTrue;
-    public int GetTotalFrames()
-    {
-        int Count = 0;
-        if (motions.Motions.Count == 0)
-            return 0;
-        for (int i = 0; i < motions.Motions.Count; i++)
-        {
-            for (int j = 0; j < motions.Motions[i].Infos.Count; j++)
-            {
-                Count += 1;
-            }
-        }
-        return Count;
-    }
 
     [Header("Stats"), HideInInspector]
     public int VectorObvervationCount;
@@ -96,6 +66,56 @@ public class LearnManager : MonoBehaviour
     
     public int TotalFrames;
 
+    public delegate void NewMotion(int Low, int High, int Set);
+    public static event NewMotion OnNewMotion;
+
+    [Header("NEAT")]
+    public int FramesBeforeRecalculation;
+    public int AgentsWaiting;
+    public int CurrentFrame;
+    
+    public int Set;
+    
+    public bool IsLearning;
+
+    public float SpawnGap;
+
+    [Header("Rewards")]
+    public float FalseMultiplier;
+    public float RewardMultiplier;
+    public float GetReward(int Streak)
+    {
+        if (Streak < 0)
+            return Streak * RewardMultiplier * FalseMultiplier;
+        else
+            return Streak * RewardMultiplier;
+        //int IsFalse = System.Convert.ToInt32((Streak < 0));
+        //return Streak * RewardMultiplier * (FalseMultiplier * IsFalse);
+    }
+    public void AgentWaiting()
+    {
+        AgentsWaiting += 1;
+        if (AgentsWaiting == gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.childCount)
+        {
+            StartCoroutine(AgentCooldown());
+        }
+    }
+    IEnumerator AgentCooldown()
+    {
+        yield return new WaitForEndOfFrame();
+        
+        CurrentFrame += FramesBeforeRecalculation;
+        
+        if (CurrentFrame  + FramesBeforeRecalculation >= motions.Motions[Set].Infos.Count - 1)
+        {
+            Set += 1;
+            CurrentFrame = 0;
+            if (Set == motions.Motions.Count)
+                Set = 0;
+        }
+        OnNewMotion(CurrentFrame, CurrentFrame + FramesBeforeRecalculation, Set);
+        AgentsWaiting = 0;
+    }
     
     public int RequestMotion()
     {
@@ -127,17 +147,18 @@ public class LearnManager : MonoBehaviour
         //Debug.Log("Ahead: " + TrueAhead);
         return ReturnNum;
     }
+    /*
     private void FixedUpdate()
     {
-        Timer += Time.deltaTime;
+        Timer += Time.deltaTime * TrainSpeed;
         if (Timer > Interval)
         {
             Timer = 0;
             LearnReached();
         }
         //RightControllerStats = Info.GetControllerInfo(EditSide.right);
-
     }
+    */
     void Start()
     {
         for (int i = 0; i < motions.Motions.Count; i++)
@@ -148,15 +169,7 @@ public class LearnManager : MonoBehaviour
                 Rights.Add(i);
             else
                 Wrongs.Add(i);
-
         }
-
-        if (GetOutput)
-        {
-            TotalFrames = GetTotalFrames();
-            RightWrong = GetRightWrongTotal();
-        }
-        Interval = 1 / FramePerSecond;
     }
 
     public Vector2 GetRightWrongTotal()
@@ -178,6 +191,24 @@ public class LearnManager : MonoBehaviour
             else if (motions.Motions[MotionNum].AtFrameState(j) == false)
                 WrongCount += 1;
         return new Vector2(RightCount, WrongCount);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            if(IsLearning == false)
+            {
+                StartCoroutine(StartEvolutionSequence());
+                IsLearning = true;
+            }
+        }
+    }
+    IEnumerator StartEvolutionSequence()
+    {   
+        gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>().StartEvolution();
+        yield return new WaitForEndOfFrame();
+        OnNewMotion(0, 0 + FramesBeforeRecalculation, 0);
     }
 }
 [System.Serializable]

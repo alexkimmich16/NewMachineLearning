@@ -1263,7 +1263,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7013353487439660056}
-  - component: {fileID: 7013353487439660061}
   - component: {fileID: 7013353487439660062}
   m_Layer: 0
   m_Name: SingleAI
@@ -1290,36 +1289,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7013353487439660061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7013353487439660057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BrainParameters:
-    VectorObservationSize: 6
-    NumStackedVectorObservations: 5
-    m_ActionSpec:
-      m_NumContinuousActions: 0
-      BranchSizes: 02000000
-    VectorActionSize: 02000000
-    VectorActionDescriptions: []
-    VectorActionSpaceType: 0
-    hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
-  m_InferenceDevice: 0
-  m_BehaviorType: 0
-  m_BehaviorName: CheckForFlame
-  TeamId: 0
-  m_UseChildSensors: 0
-  m_UseChildActuators: 1
-  m_ObservableAttributeHandling: 0
 --- !u!114 &7013353487439660062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1332,28 +1301,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5346c818672abc1489c7f28f7f830cb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentParameters:
-    maxStep: 0
-  hasUpgradedFromAgentParameters: 1
-  MaxStep: 450000
-  DesiredCycles: 25
   DebugType: 0
   state: 0
   Timer: 0
   Frame: 0
   Set: 0
-  CycleNum: 0
-  FalseTrue: []
+  FalseTrue:
+  - {fileID: 2100000, guid: dbd4aed6d0cbd204abdc789ae6ce43d8, type: 2}
+  - {fileID: 2100000, guid: 6383519db53c4274c8dc728274771cc0, type: 2}
   handToChange: {fileID: 1624718459}
   Guess: 0
   GuessNum: 0
   side: 0
-  RightTest: {fileID: 0}
-  SetDegrees: 0
-  HandCamAngle: 0
-  CamAngle: 0
-  EndAngle: 0
-  AngleTest: 0
   MyInfo:
     HeadPos: {x: 0, y: 0, z: 0}
     HeadRot: {x: 0, y: 0, z: 0}
@@ -1362,6 +1321,10 @@ MonoBehaviour:
     HandVel: {x: 0, y: 0, z: 0}
     AdjustedHandPos: {x: 0, y: 0, z: 0}
   RequestNum: 1
+  Streak: 0
+  Fitness: 0
+  SentLearnManagerFinish: 0
+  MaxFrame: 0
 --- !u!1 &8880212747804663132
 GameObject:
   m_ObjectHideFlags: 0

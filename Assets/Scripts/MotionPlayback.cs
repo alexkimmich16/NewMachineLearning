@@ -26,31 +26,23 @@ public class MotionPlayback : MonoBehaviour
     public Transform Head;
     public Transform Left;
     public Transform Right;
-    /*
-    private LearningAgent Agent;
 
     public SkinnedMeshRenderer handToChange;
-    
-    private void FixedUpdate()
-    {
-        if(transform.GetComponentInParent<LearningAgent>() != null)
-            Agent = transform.GetComponentInParent<LearningAgent>();
-    }
     void Update()
     {
-        if(Agent != null)
-            handToChange.material = LearnManager.instance.FalseTrue[Convert.ToInt32(Agent.CurrentMotion().AtFrameState(Frame))];
-        else
-            handToChange.material = LearnManager.instance.FalseTrue[Convert.ToInt32(LearnManager.instance.motions.Motions[Motion].AtFrameState(Frame))];
-
+        //handToChange.material = LearnManager.instance.FalseTrue[Convert.ToInt32(Agent.CurrentMotion().AtFrameState(Frame))];
+        //handToChange.material = LearnManager.instance.FalseTrue[Convert.ToInt32(LearnManager.instance.motions.Motions[Motion].AtFrameState(Frame))];
         if (type == PlayType.WatchAI)
         {
             //Debug.Log("move");
-            SingleInfo info = Agent.CurrentFrame();
+            LearnManager LM = LearnManager.instance;
+            SingleInfo info = LM.motions.Motions[LM.Set].Infos[LM.CurrentFrame + LM.FramesBeforeRecalculation];
             moveAll(info);
         }
+        /*
         else if (type == PlayType.StandaloneRepeat || type == PlayType.StandaloneSequence)
         {
+            
             NextTime = 1 / PlaybackSpeed;
             Timer += Time.deltaTime;
             if (Timer < NextTime)
@@ -85,6 +77,7 @@ public class MotionPlayback : MonoBehaviour
             moveAll(info);
             LastMotion = Motion;
         }
+        */
         void moveAll(SingleInfo info)
         {
             MoveController(Right, info);
@@ -101,5 +94,5 @@ public class MotionPlayback : MonoBehaviour
         Head.localPosition = info.HeadPos;
         Head.localEulerAngles = info.HeadRot;
     }
-    */
+    
 }

@@ -1303,7 +1303,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DebugType: 0
   state: 0
-  Timer: 0
   Frame: 0
   Set: 0
   FalseTrue:
@@ -1324,6 +1323,7 @@ MonoBehaviour:
   Streak: 0
   Fitness: 0
   SentLearnManagerFinish: 0
+  MotionIndex: 0
   MaxFrame: 0
 --- !u!1 &8880212747804663132
 GameObject:
@@ -1379,3 +1379,4 @@ MonoBehaviour:
   Left: {fileID: 0}
   Right: {fileID: 1473723156}
   handToChange: {fileID: 1624718459}
+  LA: {fileID: 7013353487439660062}

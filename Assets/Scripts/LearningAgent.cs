@@ -26,7 +26,6 @@ namespace UnitySharpNEAT
         public learningState state;
 
         [Header("Current")]
-        public float Timer;
         public int Frame;
         public int Set;
 
@@ -38,7 +37,6 @@ namespace UnitySharpNEAT
         [Header("Other")]
 
         [HideInInspector]
-        public bool Guess;
         public int GuessNum;
 
         public delegate void EventHandler(bool State, int Cycle, int Set);
@@ -61,7 +59,7 @@ namespace UnitySharpNEAT
         public float Fitness;
 
         public bool SentLearnManagerFinish;
-
+        public int MotionIndex;
         public bool Active() { return Frame < MaxFrame; }
 
         public int MaxFrame;
@@ -70,7 +68,6 @@ namespace UnitySharpNEAT
             LearnManager.OnNewMotion += RecieveNewMotion;
             int sibling = GetSiblingIndex(transform, transform.parent);
             transform.position = new Vector3(0,0, sibling * LearnManager.instance.SpawnGap);
-
             int GetSiblingIndex(Transform child, Transform parent)
             {
                 for (int i = 0; i < parent.childCount; ++i)
@@ -82,16 +79,15 @@ namespace UnitySharpNEAT
                 return 0;
             }
         }
-        
-        void RecieveNewMotion(int LowStat, int HighStat, int SetStat)
+        void RecieveNewMotion(int Motion, int SetStat)
         {
-            //Debug.Log("recieve: " + HighStat);
-            Frame = LowStat;
-            MaxFrame = HighStat;
             SentLearnManagerFinish = false;
             Set = SetStat;
+            MotionIndex = Motion;
+            LearnManager LM = LearnManager.instance;
+            Frame = LM.FeedFrames;
+            MaxFrame = LM.MovementList[Motion].Motions[SetStat].Infos.Count;
         }
-
         #region Overrides
         public override float GetFitness()
         {
@@ -99,24 +95,30 @@ namespace UnitySharpNEAT
             Fitness = 0;
             return RealFitness;
         }
-
         protected override void UseBlackBoxOutpts(ISignalArray outputSignalArray)//on output
         {
             if (!Active())
                 return;
             CustomDebug("OnActionReceived");
-            //outputSignalArray
-            GuessNum = (int)outputSignalArray[0];
-            bool CurrentGuess = (int)outputSignalArray[0] == 1;
-            Guess = CurrentGuess;
-            //float CurrentReward = LearnManager.instance.GetReward(Streak);
-            ChangeStreak(CurrentGuess == CurrentMotion().AtFrameState(Frame));
+
+            int Guess = GetHighest();
+            GuessNum = Guess;
+
+            ChangeStreak(Guess == MotionIndex);
             Fitness += LearnManager.instance.GetReward(Streak);
             if (Fitness < 0)
                 Fitness = 0;
-            handToChange.material = FalseTrue[GuessNum];
+            handToChange.material = FalseTrue[Convert.ToInt32(Guess == MotionIndex)];
 
-            //if (state == learningState.Learning)
+            int GetHighest()
+            {
+                float Highest = 0;
+                int index = 0;
+                for (int i = 0; i < outputSignalArray.Length; i++)
+                    if (outputSignalArray[i] > Highest)
+                        index = i;
+                return index;
+            }
         }
         protected override void UpdateBlackBoxInputs(ISignalArray inputSignalArray)//on Input
         {
@@ -132,18 +134,24 @@ namespace UnitySharpNEAT
             CustomDebug("CollectObservations");
             LearnManager LM = LearnManager.instance;
             int CurrentIndex = 0;
-
-            if (LM.HandPos)
-                AddVector3(LM.motions.Motions[Set].Infos[Frame].HandPos);
-            if (LM.HandRot)
-                AddVector3(LM.motions.Motions[Set].Infos[Frame].HandRot);
-            if (LM.HeadPos)
-                AddVector3(LM.motions.Motions[Set].Infos[Frame].HeadPos);
-            if (LM.HeadRot)
-                AddVector3(LM.motions.Motions[Set].Infos[Frame].HeadRot);
+            for (int i = 0; i < LearnManager.instance.FeedFrames; i++)
+            {
+                int CurrentFrame = Frame - i;
+                //Debug.Log(MotionIndex + "  " +  Set + "  " + CurrentFrame);
+                if (LM.HandPos)
+                    AddVector3(LM.MovementList[MotionIndex].Motions[Set].Infos[CurrentFrame].HandPos);
+                if (LM.HandRot)
+                    AddVector3(LM.MovementList[MotionIndex].Motions[Set].Infos[CurrentFrame].HandRot);
+                if (LM.HeadPos)
+                    AddVector3(LM.MovementList[MotionIndex].Motions[Set].Infos[CurrentFrame].HeadPos);
+                if (LM.HeadRot)
+                    AddVector3(LM.MovementList[MotionIndex].Motions[Set].Infos[CurrentFrame].HeadRot);
+            }
 
             if(Frame < MaxFrame)
                 Frame += 1;
+
+
             void AddVector3(Vector3 Input)
             {
                 inputSignalArray[CurrentIndex] = Input.x;
@@ -171,49 +179,8 @@ namespace UnitySharpNEAT
                 Streak = 0;
             //Debug.Log("Reward Guess: " + GotRight + "  Works: " + ListWorks + "  Reward: " + LearnManager.instance.motions.GetReward(GotRight, ListWorks));
         }
-        
-        
-        
-        /*
-        public void MoveToNext()
-        {
-            Timer = 0;
-            //Frame += 1;
-            
-            if (Frame == CurrentMotion().Infos.Count)
-            {
-                Frame = 0;
-                if (RequestNum)
-                    Set = LearnManager.instance.RequestMotion();
-                else
-                {
-                    Set += 1;
-                    if (Set == LearnManager.instance.motions.Motions.Count - 1)
-                    {
-                        if (CycleNum < DesiredCycles - 1)
-                        {
-                            //restart
-                            Set = 0;
-                            CycleNum += 1;
-                            //Index = GetRandomList();
-                        }
-                        else
-                        {
-                            FinalFrame();
-                            LearnManager.instance.LearnReached -= LearnStep;
-                            Frame = 0;
-                            Set = 0;
-                            CustomDebug("Done");
-                        }
-                    }
-                }
 
-            }
-        }
-        */
-        //public SingleInfo GetCurrentInfo() { return (state == learningState.Learning) ? CurrentFrame() : LearnManager.instance.Info.GetControllerInfo(side); }
-        //public SingleInfo CurrentFrame() { return LearnManager.instance.motions.Motions[Set].Infos[Frame]; }
-        public Motion CurrentMotion() { return LearnManager.instance.motions.Motions[Set]; }
+        public Motion CurrentMotion() { return LearnManager.instance.MovementList[MotionIndex].Motions[Set]; }
 
         public void CustomDebug(string text)
         {
@@ -221,9 +188,11 @@ namespace UnitySharpNEAT
                 return;
             string FrameReference = "";
             if (DebugType == DebugType.WithState)
-                FrameReference = " Timer: " + Timer + "|Frame: " + Frame + "|Set: " + Set + "" + "|";
+                FrameReference = "|Frame: " + Frame + "|Set: " + Set + "" + "|";
             Debug.Log(text + FrameReference);
         }
+
+        /*
         public List<int> GetRandomList()
         {
             List<int> NewList = new List<int>();
@@ -231,9 +200,7 @@ namespace UnitySharpNEAT
                 NewList.Add(i);
             Shuffle.ShuffleSet(NewList);
             return NewList;
-        }
-
-        /*        
+        }  
         public SingleInfo CurrentControllerInfo()
         {
             LearnManager LM = LearnManager.instance;

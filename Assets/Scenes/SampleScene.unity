@@ -269,14 +269,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DebugType: 0
   state: 1
-  Timer: 0
   Frame: 0
   Set: 0
   FalseTrue:
   - {fileID: 2100000, guid: dbd4aed6d0cbd204abdc789ae6ce43d8, type: 2}
   - {fileID: 2100000, guid: 6383519db53c4274c8dc728274771cc0, type: 2}
   handToChange: {fileID: 2608482829048369067}
-  Guess: 0
   GuessNum: 0
   side: 0
   MyInfo:
@@ -290,6 +288,7 @@ MonoBehaviour:
   Streak: 0
   Fitness: 0
   SentLearnManagerFinish: 0
+  MotionIndex: 0
   MaxFrame: 0
 --- !u!114 &20299531
 MonoBehaviour:
@@ -5329,6 +5328,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1445321410908044327, guid: ad437abf9ab109a4dbad807b68210a9f, type: 3}
+      propertyPath: _initialTimeScale
+      value: 0.96
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad437abf9ab109a4dbad807b68210a9f, type: 3}
 --- !u!1 &1186492034
@@ -6472,8 +6475,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _experimentConfigFileName: experiment.config
-  _networkInputCount: 6
-  _networkOutputCount: 1
+  _networkInputCount: 12
+  _networkOutputCount: 3
   Trials: 1
   TrialDuration: 50
   StoppingFitness: 1e+9
@@ -6524,8 +6527,6 @@ MonoBehaviour:
   Cam: {fileID: 1867183570494687147}
   TrueAhead: 0
   EachAdd: {x: 1, y: 1}
-  RightIndex: 0
-  WrongIndex: 0
   Timer: 0
   FalseTrue:
   - {fileID: 2100000, guid: dbd4aed6d0cbd204abdc789ae6ce43d8, type: 2}
@@ -6552,16 +6553,15 @@ MonoBehaviour:
   Rights: 
   Wrongs: 
   GetOutput: 1
-  RightWrong: {x: 0, y: 0}
-  TotalFrames: 0
-  FramesBeforeRecalculation: 1
+  FeedFrames: 2
   AgentsWaiting: 0
-  CurrentFrame: 0
   Set: 0
-  IsLearning: 0
   SpawnGap: 0.38
+  IsLearning: 0
   FalseMultiplier: 40
   RewardMultiplier: 2
+  CurrentMotion: 0
+  CurrentSet: 0
 --- !u!1 &1650534507
 GameObject:
   m_ObjectHideFlags: 0
@@ -7635,7 +7635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1869930600
 Transform:
   m_ObjectHideFlags: 0
@@ -7675,6 +7675,7 @@ MonoBehaviour:
   Left: {fileID: 0}
   Right: {fileID: 209071109}
   handToChange: {fileID: 0}
+  LA: {fileID: 0}
 --- !u!1 &1893873062
 GameObject:
   m_ObjectHideFlags: 0
@@ -9809,14 +9810,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DebugType: 0
   state: 1
-  Timer: 0
   Frame: 0
   Set: 0
   FalseTrue:
   - {fileID: 2100000, guid: dbd4aed6d0cbd204abdc789ae6ce43d8, type: 2}
   - {fileID: 2100000, guid: 6383519db53c4274c8dc728274771cc0, type: 2}
   handToChange: {fileID: 5940410813187525387}
-  Guess: 0
   GuessNum: 0
   side: 1
   MyInfo:
@@ -9830,6 +9829,7 @@ MonoBehaviour:
   Streak: 0
   Fitness: 0
   SentLearnManagerFinish: 0
+  MotionIndex: 0
   MaxFrame: 0
 --- !u!114 &2591947932039339695
 MonoBehaviour:

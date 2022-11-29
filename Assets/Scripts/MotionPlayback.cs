@@ -28,17 +28,25 @@ public class MotionPlayback : MonoBehaviour
     public Transform Right;
 
     public SkinnedMeshRenderer handToChange;
+
+    public UnitySharpNEAT.LearningAgent LA;
+    private void Start()
+    {
+        LA = transform.parent.GetComponent<UnitySharpNEAT.LearningAgent>();
+    }
     void Update()
     {
         //handToChange.material = LearnManager.instance.FalseTrue[Convert.ToInt32(Agent.CurrentMotion().AtFrameState(Frame))];
         //handToChange.material = LearnManager.instance.FalseTrue[Convert.ToInt32(LearnManager.instance.motions.Motions[Motion].AtFrameState(Frame))];
         if (type == PlayType.WatchAI)
         {
-            //Debug.Log("move");
             LearnManager LM = LearnManager.instance;
-            SingleInfo info = LM.motions.Motions[LM.Set].Infos[LM.CurrentFrame + LM.FramesBeforeRecalculation];
+            Motion motion = LA.CurrentMotion();
+            Debug.Log("|Motion: " + LA.MotionIndex + " |Set: " + LA.Set + " |Frame: " + LA.Frame + "|");
+            SingleInfo info = motion.Infos[LA.Frame];
             moveAll(info);
         }
+
         /*
         else if (type == PlayType.StandaloneRepeat || type == PlayType.StandaloneSequence)
         {

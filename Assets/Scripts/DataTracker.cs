@@ -5,44 +5,45 @@ public class DataTracker : MonoBehaviour
 {
 
     [Header("RightVSWrong")]
-    public RightWrongStats RightStats;
-    private Vector2 Current;
+    public Vector2 Current;
+    public Vector2 Total;
 
-    public InfoType type;
-    public int CapMaxInterval = 40;
-    public int EndTotal;
+    //[Header("RightVSWrong")]
 
-
-    [Header("LastFailures")]
-    public LastFailureStats FailStats;
-    public int FramesBefore;
-    public int Finished;
-    public int TotalAI;
-    private bool Concluded = false;
-    //public 
-    /*
-    [Header("Other")]
-    private LearningAgent LA;
 
     
+    //public LastFailureStats FailStats;
+    //public 
 
-    public bool ReachedEndTotal()
-    {
-        return (RightStats.RightWrong.Count * CapMaxInterval) + Current.x + Current.y > EndTotal;
-    }
+    public delegate void Guess(bool Correct);
+    public static event Guess OnGuess;
+    public static void CallGuess(bool Guess) { OnGuess(Guess); }
+
+
+    [Header("Stats")]
+    public float RefreshInterval = 2f;
+    public bool DebugOnRefresh;
     void Start()
     {
-        //LA = LearningAgent.instance;
-        
-        LearningAgent[] components = GameObject.FindObjectsOfType<LearningAgent>();
-        TotalAI = components.Length;
-        for (int i = 0; i < components.Length; i++)
-        {
-            components[i].MoveToNextEvent += OnNextFrame;
-            components[i].FinalFrame += FinalFrame;
-        }  
-        
+        OnGuess += AddToGuesses;
+        StartCoroutine(RefreshWait());
     }
+    public void AddToGuesses(bool Guess)
+    {
+        Current = (Guess) ? new Vector2(Current.x + 1, Current.y) : new Vector2(Current.x, Current.y + 1);
+        Total = (Guess) ? new Vector2(Total.x + 1, Total.y) : new Vector2(Total.x, Total.y + 1);
+    }
+    IEnumerator RefreshWait()
+    {
+        while (true)
+        {
+            if (DebugOnRefresh)
+                Debug.Log("Right: %" + (Current.x / (Current.x + Current.y) ) * 100);
+            Current = Vector2.zero;
+            yield return new WaitForSeconds(RefreshInterval);
+        }
+    }
+    /*
     public void FinishTest()
     {
         Concluded = true;
@@ -94,6 +95,7 @@ public class DataTracker : MonoBehaviour
         }
     }
     */
+
 }
 [System.Serializable]
 public class RightWrongStats

@@ -40,12 +40,8 @@ namespace UnitySharpNEAT
         [HideInInspector]
         public CurrentLearn CurrentGuess;
 
-        public delegate void EventHandler(bool State, int Cycle, int Set);
-        public event EventHandler MoveToNextEvent;
-
         public delegate void EventHandlerTwo();
         public event EventHandlerTwo FinalFrame;
-
 
         public EditSide side;
 
@@ -72,7 +68,6 @@ namespace UnitySharpNEAT
             transform.position = new Vector3(0,0, sibling * LearnManager.instance.SpawnGap);
             for (int i = 0; i < LearnManager.instance.MovementList.Count; ++i)
                 WeightedGuesses.Add(0);
-
             int GetSiblingIndex(Transform child, Transform parent)
             {
                 for (int i = 0; i < parent.childCount; ++i)
@@ -106,13 +101,15 @@ namespace UnitySharpNEAT
 
             int Guess = GetHighest();
             CurrentGuess = (CurrentLearn)Guess;
+            bool IsCorrect = Guess == MotionIndex;
 
-            ChangeStreak(Guess == MotionIndex);
+            ChangeStreak(IsCorrect);
+            DataTracker.CallGuess(IsCorrect);
             Fitness += LearnManager.instance.GetReward(Streak);
             if (Fitness < 0)
                 Fitness = 0;
-            handToChange.material = FalseTrue[Convert.ToInt32(Guess == MotionIndex)];
-
+            handToChange.material = FalseTrue[Convert.ToInt32(IsCorrect)];
+           
             int GetHighest()
             {
                 float Highest = 0;
@@ -161,13 +158,18 @@ namespace UnitySharpNEAT
 
             void AddVector3(Vector3 Input)
             {
-                inputSignalArray[CurrentIndex] = Input.x;
-                inputSignalArray[CurrentIndex + 1] = Input.y;
-                inputSignalArray[CurrentIndex + 2] = Input.z;
-
-                //inputSignalArray[CurrentIndex] = Convert.ToByte(Input.x);
-                //inputSignalArray[CurrentIndex + 1] = Convert.ToByte(Input.y);
-                //inputSignalArray[CurrentIndex + 2] = Convert.ToByte(Input.z);
+                if (LearnManager.instance.ConvertToBytes == false)
+                {
+                    inputSignalArray[CurrentIndex] = Input.x;
+                    inputSignalArray[CurrentIndex + 1] = Input.y;
+                    inputSignalArray[CurrentIndex + 2] = Input.z;
+                }
+                else
+                {
+                    inputSignalArray[CurrentIndex] = Convert.ToByte(Input.x);
+                    inputSignalArray[CurrentIndex + 1] = Convert.ToByte(Input.y);
+                    inputSignalArray[CurrentIndex + 2] = Convert.ToByte(Input.z);
+                }
                 CurrentIndex += 3;
             }
         }
@@ -202,7 +204,6 @@ namespace UnitySharpNEAT
                 FrameReference = "|Frame: " + Frame + "|Set: " + Set + "" + "|";
             Debug.Log(text + FrameReference);
         }
-
         /*
         public List<int> GetRandomList()
         {
@@ -213,12 +214,6 @@ namespace UnitySharpNEAT
             return NewList;
         }  
         */
-        
-       
-        
-        
-       
-
     }
     
    

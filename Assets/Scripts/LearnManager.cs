@@ -69,7 +69,6 @@ public class LearnManager : MonoBehaviour
 
 
     [Header("Rewards")]
-    public float FalseMultiplier;
     public float RewardMultiplier;
 
     [Header("Motions")]
@@ -84,6 +83,8 @@ public class LearnManager : MonoBehaviour
     public List<SingleInfo> LeftInfo;
 
     public int MaxStoreInfo;
+
+    public bool ConvertToBytes;
 
     public void SetSupervisorStats()
     {
@@ -201,8 +202,6 @@ public class LearnManager : MonoBehaviour
 
                 newInfo.AdjustedHandPos = LM.Cam.position - controller.transform.position;
 
-                //newInfo.Works = controller.TriggerPressed();
-
                 return newInfo;
             }
             else
@@ -222,8 +221,6 @@ public class LearnManager : MonoBehaviour
 
                 float NewHandCamAngle = Vector3.SignedAngle(targetDir, forwardDir, Vector3.up) + 180;
 
-                //reset hand
-                //
                 return newInfo;
             }
         }

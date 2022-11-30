@@ -47,10 +47,6 @@ public class HandActions : MonoBehaviour
         device.TryGetFeatureValue(CommonUsages.deviceVelocity, out Vector3 Velocity);
         return Velocity;
     }
-    private void FixedUpdate()
-    {
-        
-    }
     void Update()
     {
         SetRemoteStats();
@@ -118,6 +114,8 @@ public class HandActions : MonoBehaviour
             //Debug.Log("touchpad" + Direction);
         }
     }
+
+
     #endregion
 
 }

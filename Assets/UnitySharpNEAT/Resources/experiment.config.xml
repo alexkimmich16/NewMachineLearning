@@ -9,5 +9,5 @@
       </Activation>
       <ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
       <ComplexityThreshold>10</ComplexityThreshold>
-      <Description>Cars learn to race around a race track</Description>
+      <Description>AI made to decipher the intended motion of the player</Description>
     </Config>

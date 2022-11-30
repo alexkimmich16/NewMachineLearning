@@ -6,10 +6,11 @@ using System;
 public class AllMotions : ScriptableObject
 {
     public List<Motion> Motions;
-    public Vector2 Punishment = new Vector2(-1, -1);
-    public Vector2 Reward = new Vector2(1,1);
+    //public Vector2 Punishment = new Vector2(-1, -1);
+    //public Vector2 Reward = new Vector2(1,1);
 
     //x is i guessed false
+    /*
     public float GetReward(bool GotRight, bool Correct)
     {
         Vector2 Consequence;
@@ -23,7 +24,7 @@ public class AllMotions : ScriptableObject
         else
             return Consequence.y;
     }
-
+    */
     public List<Motion> Random()
     {
         List<Motion> NewMotions = new List<Motion>(Motions);

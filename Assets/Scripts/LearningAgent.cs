@@ -23,12 +23,13 @@ namespace UnitySharpNEAT
         public DebugType DebugType;
 
         //[HideInInspector]
-        public learningState state;
+        
 
         [Header("Current")]
         public int Frame;
         public int Set;
-
+        public int MaxFrame;
+        public int MotionIndex;
         [Header("References")]
 
         public List<Material> FalseTrue;
@@ -37,7 +38,7 @@ namespace UnitySharpNEAT
         [Header("Other")]
 
         [HideInInspector]
-        public int GuessNum;
+        public CurrentLearn CurrentGuess;
 
         public delegate void EventHandler(bool State, int Cycle, int Set);
         public event EventHandler MoveToNextEvent;
@@ -45,36 +46,38 @@ namespace UnitySharpNEAT
         public delegate void EventHandlerTwo();
         public event EventHandlerTwo FinalFrame;
 
+
         public EditSide side;
 
-        public static List<Vector2> ListNegitives = new List<Vector2>() { new Vector2(1, 1), new Vector2(-1, 1), new Vector2(-1, -1), new Vector2(1, -1) };
-        public static List<bool> InvertAngles = new List<bool>() { false, true, false, true };
+        
         //public bool AngleTest;
 
-        public SingleInfo MyInfo;
+        [HideInInspector] public SingleInfo MyInfo;
         
-        public bool RequestNum;
         public int Streak;
 
         public float Fitness;
 
-        public bool SentLearnManagerFinish;
-        public int MotionIndex;
+        [HideInInspector] public bool SentLearnManagerFinish;
+
+        public List<float> WeightedGuesses;
+        
         public bool Active() { return Frame < MaxFrame; }
 
-        public int MaxFrame;
+        
         private void Start()
         {
             LearnManager.OnNewMotion += RecieveNewMotion;
             int sibling = GetSiblingIndex(transform, transform.parent);
             transform.position = new Vector3(0,0, sibling * LearnManager.instance.SpawnGap);
+            for (int i = 0; i < LearnManager.instance.MovementList.Count; ++i)
+                WeightedGuesses.Add(0);
+
             int GetSiblingIndex(Transform child, Transform parent)
             {
                 for (int i = 0; i < parent.childCount; ++i)
-                {
                     if (child == parent.GetChild(i))
                         return i;
-                }
                 Debug.LogWarning("Child doesn't belong to this parent.");
                 return 0;
             }
@@ -86,7 +89,7 @@ namespace UnitySharpNEAT
             MotionIndex = Motion;
             LearnManager LM = LearnManager.instance;
             Frame = LM.FeedFrames;
-            MaxFrame = LM.MovementList[Motion].Motions[SetStat].Infos.Count;
+            MaxFrame = LM.MovementList[Motion].Motions[SetStat].Infos.Count - 1;
         }
         #region Overrides
         public override float GetFitness()
@@ -102,7 +105,7 @@ namespace UnitySharpNEAT
             CustomDebug("OnActionReceived");
 
             int Guess = GetHighest();
-            GuessNum = Guess;
+            CurrentGuess = (CurrentLearn)Guess;
 
             ChangeStreak(Guess == MotionIndex);
             Fitness += LearnManager.instance.GetReward(Streak);
@@ -115,8 +118,11 @@ namespace UnitySharpNEAT
                 float Highest = 0;
                 int index = 0;
                 for (int i = 0; i < outputSignalArray.Length; i++)
+                {
+                    WeightedGuesses[i] = (float)outputSignalArray[i] * 1000;
                     if (outputSignalArray[i] > Highest)
                         index = i;
+                }
                 return index;
             }
         }
@@ -137,15 +143,16 @@ namespace UnitySharpNEAT
             for (int i = 0; i < LearnManager.instance.FeedFrames; i++)
             {
                 int CurrentFrame = Frame - i;
+                SingleInfo Info = (LM.state == learningState.Learning) ? LM.MovementList[MotionIndex].Motions[Set].Infos[CurrentFrame] : LM.PastFrame(side, CurrentFrame);
                 //Debug.Log(MotionIndex + "  " +  Set + "  " + CurrentFrame);
                 if (LM.HandPos)
-                    AddVector3(LM.MovementList[MotionIndex].Motions[Set].Infos[CurrentFrame].HandPos);
+                    AddVector3(Info.HandPos);
                 if (LM.HandRot)
-                    AddVector3(LM.MovementList[MotionIndex].Motions[Set].Infos[CurrentFrame].HandRot);
+                    AddVector3(Info.HandRot);
                 if (LM.HeadPos)
-                    AddVector3(LM.MovementList[MotionIndex].Motions[Set].Infos[CurrentFrame].HeadPos);
+                    AddVector3(Info.HeadPos);
                 if (LM.HeadRot)
-                    AddVector3(LM.MovementList[MotionIndex].Motions[Set].Infos[CurrentFrame].HeadRot);
+                    AddVector3(Info.HeadRot);
             }
 
             if(Frame < MaxFrame)
@@ -157,6 +164,10 @@ namespace UnitySharpNEAT
                 inputSignalArray[CurrentIndex] = Input.x;
                 inputSignalArray[CurrentIndex + 1] = Input.y;
                 inputSignalArray[CurrentIndex + 2] = Input.z;
+
+                //inputSignalArray[CurrentIndex] = Convert.ToByte(Input.x);
+                //inputSignalArray[CurrentIndex + 1] = Convert.ToByte(Input.y);
+                //inputSignalArray[CurrentIndex + 2] = Convert.ToByte(Input.z);
                 CurrentIndex += 3;
             }
         }
@@ -201,152 +212,12 @@ namespace UnitySharpNEAT
             Shuffle.ShuffleSet(NewList);
             return NewList;
         }  
-        public SingleInfo CurrentControllerInfo()
-        {
-            LearnManager LM = LearnManager.instance;
-            SingleInfo newInfo = new SingleInfo();
-            bool ConstantRot = true;
-            HandActions controller = MyHand();
-            newInfo.HeadPos = LM.Cam.localPosition;
-            newInfo.HeadRot = LM.Cam.rotation.eulerAngles;
-            if (Right)
-            {
-                if(ConstantRot == false)
-                {
-                    newInfo.HandPos = controller.transform.localPosition;
-                    newInfo.HandRot = controller.transform.localRotation.eulerAngles;
-                    newInfo.HandVel = controller.Velocity;
-
-                    newInfo.AdjustedHandPos = LM.Cam.position - controller.transform.position;
-
-                    //newInfo.Works = controller.TriggerPressed();
-
-                    return newInfo;
-                }
-                else
-                {
-                    float CamRot = LM.Cam.rotation.eulerAngles.y;
-                    Vector3 handPos = controller.transform.localPosition;
-                    newInfo.HeadPos = new Vector3(LM.Cam.localPosition.x, 0, LM.Cam.localPosition.z);
-                    Vector3 LevelCamPos = new Vector3(newInfo.HeadPos.x, 0, newInfo.HeadPos.z);
-                    Vector3 LevelHandPos = new Vector3(handPos.x, 0, handPos.z);
-                    Vector3 targetDir = LevelCamPos - LevelHandPos;
-
-                    Vector3 StartEulerAngles = LM.Cam.eulerAngles;
-                    LM.Cam.eulerAngles = new Vector3(0, CamRot, 0);
-
-                    Vector3 forwardDir = LM.Cam.rotation * Vector3.forward;
-                    LM.Cam.eulerAngles = StartEulerAngles;
-
-                    float NewHandCamAngle = Vector3.SignedAngle(targetDir, forwardDir, Vector3.up) + 180;
-
-                    //reset hand
-                    //
-                    return newInfo;
-                }
-            }
-            else
-            {
-                //CamRot
-                float CamRot = LM.Cam.rotation.eulerAngles.y;
-                CamAngle = CamRot;
-                Vector3 handPos = controller.transform.localPosition;
-                float Distance = Vector3.Distance(new Vector3(handPos.x, 0, handPos.z), new Vector3(newInfo.HeadPos.x, 0, newInfo.HeadPos.z));
-                //pos
-                Vector3 LevelCamPos = new Vector3(newInfo.HeadPos.x, 0, newInfo.HeadPos.z);
-                Vector3 LevelHandPos = new Vector3(handPos.x, 0, handPos.z);
-                Vector3 targetDir = LevelCamPos - LevelHandPos;
-
-                Vector3 StartEulerAngles = LM.Cam.eulerAngles;
-                LM.Cam.eulerAngles = new Vector3(0, CamRot, 0);
-
-                Vector3 forwardDir = LM.Cam.rotation * Vector3.forward;
-                LM.Cam.eulerAngles = StartEulerAngles;
-
-                HandCamAngle = Vector3.SignedAngle(targetDir, forwardDir, Vector3.up) + 180;
-
-                float Angle = GetAngle(CamRot);
-                EndAngle = Angle;
-
-                newInfo.AdjustedHandPos = IntoComponents(Angle);
-                Vector2 XYForce = IntoComponents(Angle);
-                Vector3 AdjustedCamPos = new Vector3(XYForce.x, 0, XYForce.y);
-
-                Vector3 Point = (AdjustedCamPos * Distance) + new Vector3(newInfo.HeadPos.x, 0, newInfo.HeadPos.z);
-                Point = new Vector3(Point.x, handPos.y, Point.z);
-                newInfo.HandPos = Point;
-
-                ///additional rotation
-                Vector3 Rotation = controller.transform.rotation.eulerAngles;
-                newInfo.HandRot = new Vector3(Rotation.x, Rotation.y, -Rotation.z);
-
-                ///velocity
-                Vector2 InputVelocity = new Vector2(controller.Velocity.x, controller.Velocity.z);
-                Vector2 FoundVelocity = mirrorImage(IntoComponents(CamAngle), InputVelocity);
-                newInfo.HandVel = new Vector3(FoundVelocity.x, controller.Velocity.y, FoundVelocity.y);
-
-                //newInfo.Works = controller.TriggerPressed();
-                return newInfo;
-                Vector2 IntoComponents(float Angle)
-                {
-                    int Quad = GetQuad(Angle, out float RemainingAngle);
-                    if (InvertAngles[Quad])
-                        RemainingAngle = 90 - RemainingAngle;
-
-                    //Negitives
-                    float Radians = RemainingAngle * Mathf.Deg2Rad;
-                    //Debug.Log("remainAngle: " + Radians);
-
-                    float XForce = Mathf.Cos(Radians) * ListNegitives[Quad].x;
-                    float YForce = Mathf.Sin(Radians) * ListNegitives[Quad].y;
-
-                    return new Vector2(XForce, YForce);
-
-                    int GetQuad(float Angle, out float RemainAngle)
-                    {
-                        //0-360
-                        int TotalQuads = (int)(Angle / 90);
-                        RemainAngle = Angle - TotalQuads * 90;
-                        //int Quad = StartQuad;
-                        if (TotalQuads < 0)
-                        {
-                            TotalQuads += 4;
-                        }
-
-                        int RemoveExcessQuads = (int)(TotalQuads / 4);
-                        //RemainAngle = Angle;
-                        return TotalQuads - RemoveExcessQuads * 4;
-                    }
-                }
-                static Vector2 mirrorImage(Vector2 Line, Vector2 Pos)
-                {
-                    float temp = (-2 * (Line.x * Pos.x + Line.y * Pos.y)) / (Line.x * Line.x + Line.y * Line.y);
-                    float x = (temp * Line.x) + Pos.x;
-                    float y = (temp * Line.y) + Pos.y;
-                    return new Vector2(x, y);
-                }
-                float GetAngle(float CamRot)
-                {
-                    float Angle = 360 - (CamRot + HandCamAngle + Offset);
-                    //Offset
-                    if (Angle > 360)
-                        Angle -= 360;
-                    else if (Angle < -360)
-                        Angle += 360;
-                    return Angle;
-                }
-            }
-        }
-        
-        
         */
-        HandActions MyHand()
-        {
-            if (side == EditSide.right)
-                return LearnManager.instance.Right;
-            else
-                return LearnManager.instance.Left;
-        }
+        
+       
+        
+        
+       
 
     }
     

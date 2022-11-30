@@ -1305,12 +1305,13 @@ MonoBehaviour:
   state: 0
   Frame: 0
   Set: 0
+  MaxFrame: 0
+  MotionIndex: 0
   FalseTrue:
   - {fileID: 2100000, guid: dbd4aed6d0cbd204abdc789ae6ce43d8, type: 2}
   - {fileID: 2100000, guid: 6383519db53c4274c8dc728274771cc0, type: 2}
   handToChange: {fileID: 1624718459}
-  Guess: 0
-  GuessNum: 0
+  CurrentGuess: 0
   side: 0
   MyInfo:
     HeadPos: {x: 0, y: 0, z: 0}
@@ -1319,12 +1320,10 @@ MonoBehaviour:
     HandRot: {x: 0, y: 0, z: 0}
     HandVel: {x: 0, y: 0, z: 0}
     AdjustedHandPos: {x: 0, y: 0, z: 0}
-  RequestNum: 1
   Streak: 0
   Fitness: 0
   SentLearnManagerFinish: 0
-  MotionIndex: 0
-  MaxFrame: 0
+  WeightedGuesses: 
 --- !u!1 &8880212747804663132
 GameObject:
   m_ObjectHideFlags: 0

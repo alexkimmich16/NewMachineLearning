@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -268,14 +268,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugType: 0
-  state: 1
   Frame: 0
   Set: 0
+  MaxFrame: 0
+  MotionIndex: 0
   FalseTrue:
   - {fileID: 2100000, guid: dbd4aed6d0cbd204abdc789ae6ce43d8, type: 2}
   - {fileID: 2100000, guid: 6383519db53c4274c8dc728274771cc0, type: 2}
   handToChange: {fileID: 2608482829048369067}
-  GuessNum: 0
+  CurrentGuess: 0
   side: 0
   MyInfo:
     HeadPos: {x: 0, y: 0, z: 0}
@@ -284,12 +285,10 @@ MonoBehaviour:
     HandRot: {x: 0, y: 0, z: 0}
     HandVel: {x: 0, y: 0, z: 0}
     AdjustedHandPos: {x: 0, y: 0, z: 0}
-  RequestNum: 0
   Streak: 0
   Fitness: 0
   SentLearnManagerFinish: 0
-  MotionIndex: 0
-  MaxFrame: 0
+  WeightedGuesses: []
 --- !u!114 &20299531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6475,10 +6474,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _experimentConfigFileName: experiment.config
-  _networkInputCount: 12
+  _networkInputCount: 24
   _networkOutputCount: 3
   Trials: 1
-  TrialDuration: 50
+  TrialDuration: 5
   StoppingFitness: 1e+9
   _unitControllerPrefab: {fileID: 7013353487439660062, guid: 5d36c706c3d324e4bbe2994f2486b6e2, type: 3}
   _spawnParent: {fileID: 701478116}
@@ -6510,7 +6509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a6b77184d7afe14d9ed77ce7cd9cc7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LearnType: 0
+  state: 0
   motions: {fileID: 11400000, guid: b43c4ee0449caaa419408f76f3c4b51f, type: 2}
   MovementList:
   - {fileID: 11400000, guid: b43c4ee0449caaa419408f76f3c4b51f, type: 2}
@@ -6525,13 +6524,9 @@ MonoBehaviour:
   Left: {fileID: 1867183570487954632}
   Right: {fileID: 1867183570734329137}
   Cam: {fileID: 1867183570494687147}
-  TrueAhead: 0
-  EachAdd: {x: 1, y: 1}
-  Timer: 0
   FalseTrue:
   - {fileID: 2100000, guid: dbd4aed6d0cbd204abdc789ae6ce43d8, type: 2}
   - {fileID: 2100000, guid: 6383519db53c4274c8dc728274771cc0, type: 2}
-  VectorObvervationCount: 0
   Info:
     TestMain:
     - {fileID: 2058880472}
@@ -6542,18 +6537,7 @@ MonoBehaviour:
     TestHand:
     - {fileID: 1654231988}
     - {fileID: 778150131}
-  RightControllerStats:
-    HeadPos: {x: 0, y: 0, z: 0}
-    HeadRot: {x: 0, y: 0, z: 0}
-    HandPos: {x: 0, y: 0, z: 0}
-    HandRot: {x: 0, y: 0, z: 0}
-    HandVel: {x: 0, y: 0, z: 0}
-    AdjustedHandPos: {x: 0, y: 0, z: 0}
-  RightWrongStats: []
-  Rights: 
-  Wrongs: 
-  GetOutput: 1
-  FeedFrames: 2
+  FeedFrames: 4
   AgentsWaiting: 0
   Set: 0
   SpawnGap: 0.38
@@ -6562,6 +6546,11 @@ MonoBehaviour:
   RewardMultiplier: 2
   CurrentMotion: 0
   CurrentSet: 0
+  InputCount: 0
+  OutputCount: 0
+  RightInfo: []
+  LeftInfo: []
+  MaxStoreInfo: 10
 --- !u!1 &1650534507
 GameObject:
   m_ObjectHideFlags: 0
@@ -7183,6 +7172,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1753467734}
   m_CullTransparentMesh: 1
+--- !u!1 &1754713374
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1754713375}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1754713375
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754713374}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.14700651, y: 0.18434477, z: 1.8427676}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1762531543
 GameObject:
   m_ObjectHideFlags: 0
@@ -9809,14 +9829,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugType: 0
-  state: 1
   Frame: 0
   Set: 0
+  MaxFrame: 0
+  MotionIndex: 0
   FalseTrue:
   - {fileID: 2100000, guid: dbd4aed6d0cbd204abdc789ae6ce43d8, type: 2}
   - {fileID: 2100000, guid: 6383519db53c4274c8dc728274771cc0, type: 2}
   handToChange: {fileID: 5940410813187525387}
-  GuessNum: 0
+  CurrentGuess: 0
   side: 1
   MyInfo:
     HeadPos: {x: 0, y: 0, z: 0}
@@ -9825,12 +9846,10 @@ MonoBehaviour:
     HandRot: {x: 0, y: 0, z: 0}
     HandVel: {x: 0, y: 0, z: 0}
     AdjustedHandPos: {x: 0, y: 0, z: 0}
-  RequestNum: 0
   Streak: 0
   Fitness: 0
   SentLearnManagerFinish: 0
-  MotionIndex: 0
-  MaxFrame: 0
+  WeightedGuesses: []
 --- !u!114 &2591947932039339695
 MonoBehaviour:
   m_ObjectHideFlags: 0

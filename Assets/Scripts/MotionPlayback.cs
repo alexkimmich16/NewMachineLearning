@@ -42,9 +42,9 @@ public class MotionPlayback : MonoBehaviour
         {
             LearnManager LM = LearnManager.instance;
             Motion motion = LA.CurrentMotion();
-            Debug.Log("|Motion: " + LA.MotionIndex + " |Set: " + LA.Set + " |Frame: " + LA.Frame + "|");
-            SingleInfo info = motion.Infos[LA.Frame];
-            moveAll(info);
+            //Debug.Log("|Motion: " + LA.MotionIndex + " |Set: " + LA.Set + " |Frame: " + LA.Frame + "|");
+            if(motion.Infos.Count > LA.Frame)
+                moveAll(motion.Infos[LA.Frame]);
         }
 
         /*

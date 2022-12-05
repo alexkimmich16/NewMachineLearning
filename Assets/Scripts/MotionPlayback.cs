@@ -32,19 +32,41 @@ public class MotionPlayback : MonoBehaviour
     public UnitySharpNEAT.LearningAgent LA;
     private void Start()
     {
-        LA = transform.parent.GetComponent<UnitySharpNEAT.LearningAgent>();
+        if(type == PlayType.WatchAI)
+            LA = transform.parent.GetComponent<UnitySharpNEAT.LearningAgent>();
+        //else if(type == PlayType.Repeat)
+
     }
     void Update()
     {
-        //handToChange.material = LearnManager.instance.FalseTrue[Convert.ToInt32(Agent.CurrentMotion().AtFrameState(Frame))];
-        //handToChange.material = LearnManager.instance.FalseTrue[Convert.ToInt32(LearnManager.instance.motions.Motions[Motion].AtFrameState(Frame))];
+        LearnManager LM = LearnManager.instance;
         if (type == PlayType.WatchAI)
         {
-            LearnManager LM = LearnManager.instance;
-            Motion motion = LA.CurrentMotion();
-            //Debug.Log("|Motion: " + LA.MotionIndex + " |Set: " + LA.Set + " |Frame: " + LA.Frame + "|");
-            if(motion.Infos.Count > LA.Frame)
-                moveAll(motion.Infos[LA.Frame]);
+            if(LA.MotionIndex < LM.MovementList.Count && LA.Set < LM.MovementList[LA.MotionIndex].Motions.Count)
+            {
+                Motion motion = LA.CurrentMotion();
+                //Debug.Log("|Motion: " + LA.MotionIndex + " |Set: " + LA.Set + " |Frame: " + LA.Frame + "|");
+                if (motion.Infos.Count > LA.Frame)
+                    moveAll(motion.Infos[LA.Frame]);
+            }
+        }
+        else if (type == PlayType.Repeat)
+        {
+            NextTime = 1 / PlaybackSpeed;
+            Timer += Time.deltaTime;
+            if (Timer < NextTime)
+                return;
+            Timer = 0;
+            Frame += 1;
+            if (LastMotion != Motion)
+                Frame = 0;
+            if (Frame >= LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos.Count)
+                Frame = 0;
+
+            SingleInfo info = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos[Frame];
+            
+            moveAll(info);
+            LastMotion = Motion;
         }
 
         /*
@@ -68,23 +90,7 @@ public class MotionPlayback : MonoBehaviour
             SingleInfo info = Agent.CurrentFrame();
             moveAll(info);
         }
-        else if (type == PlayType.Repeat)
-        {
-            NextTime = 1 / PlaybackSpeed;
-            Timer += Time.deltaTime;
-            if (Timer < NextTime)
-                return;
-            Timer = 0;
-            Frame += 1;
-            if(LastMotion != Motion)
-                Frame = 0;
-            if (Frame == LearnManager.instance.motions.Motions[Motion].Infos.Count)
-                Frame = 0;
-            SingleInfo info = LearnManager.instance.motions.Motions[Motion].Infos[Frame];
-            
-            moveAll(info);
-            LastMotion = Motion;
-        }
+        
         */
         void moveAll(SingleInfo info)
         {

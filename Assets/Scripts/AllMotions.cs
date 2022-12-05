@@ -10,21 +10,7 @@ public class AllMotions : ScriptableObject
     //public Vector2 Reward = new Vector2(1,1);
 
     //x is i guessed false
-    /*
-    public float GetReward(bool GotRight, bool Correct)
-    {
-        Vector2 Consequence;
-        if (GotRight == true)
-            Consequence = Reward;
-        else
-            Consequence = Punishment;
-
-        if (Correct == false)
-            return Consequence.x;
-        else
-            return Consequence.y;
-    }
-    */
+    
     public List<Motion> Random()
     {
         List<Motion> NewMotions = new List<Motion>(Motions);

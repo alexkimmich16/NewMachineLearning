@@ -35,14 +35,10 @@ namespace UnitySharpNEAT
         public List<Material> FalseTrue;
         public SkinnedMeshRenderer handToChange;
 
-        [Header("Other")]
-
-        [HideInInspector]
-        public CurrentLearn CurrentGuess;
-
+        
         public delegate void EventHandlerTwo();
         public event EventHandlerTwo FinalFrame;
-
+        [Header("Other")]
         public EditSide side;
 
         
@@ -57,10 +53,19 @@ namespace UnitySharpNEAT
         [HideInInspector] public bool SentLearnManagerFinish;
 
         public List<float> WeightedGuesses;
-        
-        public bool Active() { return Frame < MaxFrame; }
+        //public List<float> Sort;
+        public bool Conflict;
+        public float Reward;
+        public void OnNewGeneration()
+        {
+            Fitness = 0;
 
-        
+        }
+        public bool Active() { return Frame < MaxFrame; }
+        [Header("Output")]
+        public CurrentLearn CurrentGuess;
+        public CurrentLearn RealMotion;
+        public bool Iscorrect;
         private void Start()
         {
             LearnManager.OnNewMotion += RecieveNewMotion;
@@ -68,6 +73,7 @@ namespace UnitySharpNEAT
             transform.position = new Vector3(0,0, sibling * LearnManager.instance.SpawnGap);
             for (int i = 0; i < LearnManager.instance.MovementList.Count; ++i)
                 WeightedGuesses.Add(0);
+            LearnManager.instance.OnNewGen += OnNewGeneration; 
             int GetSiblingIndex(Transform child, Transform parent)
             {
                 for (int i = 0; i < parent.childCount; ++i)
@@ -90,7 +96,7 @@ namespace UnitySharpNEAT
         public override float GetFitness()
         {
             float RealFitness = Fitness;
-            Fitness = 0;
+            //Fitness = 1000;
             return RealFitness;
         }
         protected override void UseBlackBoxOutpts(ISignalArray outputSignalArray)//on output
@@ -99,27 +105,59 @@ namespace UnitySharpNEAT
                 return;
             CustomDebug("OnActionReceived");
 
-            int Guess = GetHighest();
-            CurrentGuess = (CurrentLearn)Guess;
-            bool IsCorrect = Guess == MotionIndex;
+            bool IndexWorks = LearnManager.instance.MovementList[MotionIndex].Motions[Set].AtFrameState(Frame);
 
-            ChangeStreak(IsCorrect);
-            DataTracker.CallGuess(IsCorrect);
-            Fitness += LearnManager.instance.GetReward(Streak);
+            CurrentLearn TrueMotion = (CurrentLearn)((IndexWorks) ? MotionIndex : 0);
+            CurrentLearn Guess = (CurrentLearn)GetHighest(out Conflict);
+
+            DataTracker.instance.CallGuess(Guess, TrueMotion, Set);
+            
+            Fitness += FitnessIncrease();
             if (Fitness < 0)
                 Fitness = 0;
-            handToChange.material = FalseTrue[Convert.ToInt32(IsCorrect)];
-           
-            int GetHighest()
+            
+            DataTracker.instance.AgentNewGenCall();
+            SetVariablesPublic();
+            float FitnessIncrease()
+            {
+                float Increase = (IsCorrect()) ? 100 : 0;
+                return (TrueMotion == CurrentLearn.Nothing && LearnManager.instance.RewardOnFalse == false) ? 0 : Increase;
+                //return Increase;
+            }
+            bool IsCorrect()
+            {
+                //bool NoConflict = !Conflict;
+                bool NoConflict = true;
+                bool CorrectGuess = Guess == TrueMotion;
+
+                return NoConflict && CorrectGuess;
+            }
+            void SetVariablesPublic()
+            {
+                CurrentGuess = Guess;
+                RealMotion = TrueMotion;
+                Reward = FitnessIncrease();
+                handToChange.material = FalseTrue[Convert.ToInt32(IsCorrect())];
+                Iscorrect = IsCorrect();
+            }
+            int GetHighest(out bool ConflictingGuesses)
             {
                 float Highest = 0;
                 int index = 0;
                 for (int i = 0; i < outputSignalArray.Length; i++)
                 {
                     WeightedGuesses[i] = (float)outputSignalArray[i] * 1000;
-                    if (outputSignalArray[i] > Highest)
+                    if (WeightedGuesses[i] > Highest)
+                    {
+                        Highest = WeightedGuesses[i];
                         index = i;
+                    }
                 }
+                List<float> SortList = new List<float>(WeightedGuesses);
+                SortList.Sort();
+                SortList.Reverse();
+                ConflictingGuesses = (SortList[0] == SortList[1]) ? true : false;
+
                 return index;
             }
         }
@@ -140,7 +178,7 @@ namespace UnitySharpNEAT
             for (int i = 0; i < LearnManager.instance.FeedFrames; i++)
             {
                 int CurrentFrame = Frame - i;
-                SingleInfo Info = (LM.state == learningState.Learning) ? LM.MovementList[MotionIndex].Motions[Set].Infos[CurrentFrame] : LM.PastFrame(side, CurrentFrame);
+                SingleInfo Info = (LM.state == learningState.Learning) ? CurrentMotion().Infos[CurrentFrame] : LM.PastFrame(side, CurrentFrame);
                 //Debug.Log(MotionIndex + "  " +  Set + "  " + CurrentFrame);
                 if (LM.HandPos)
                     AddVector3(Info.HandPos);
@@ -155,6 +193,7 @@ namespace UnitySharpNEAT
             if(Frame < MaxFrame)
                 Frame += 1;
 
+            //TotalFrameTest +=
 
             void AddVector3(Vector3 Input)
             {
@@ -180,6 +219,7 @@ namespace UnitySharpNEAT
                 t.gameObject.SetActive(newIsActive);
             }
         }
+        //override v
         #endregion
         void ChangeStreak(bool Outcome)
         {
@@ -188,12 +228,14 @@ namespace UnitySharpNEAT
             else if(Outcome == false && Streak <= 0)
                 Streak -= 1;
 
-            if (Outcome == true && Streak < 0 || Outcome == false && Streak > 0)
-                Streak = 0;
+            if (Outcome == true && Streak < 0)
+                Streak = 1;
+            else if(Outcome == false && Streak > 0)
+                Streak = -1;
             //Debug.Log("Reward Guess: " + GotRight + "  Works: " + ListWorks + "  Reward: " + LearnManager.instance.motions.GetReward(GotRight, ListWorks));
         }
 
-        public Motion CurrentMotion() { return LearnManager.instance.MovementList[MotionIndex].Motions[Set]; }
+        public Motion CurrentMotion() { return LearnManager.instance.MovementList[MotionIndex].Motions[Set];}
 
         public void CustomDebug(string text)
         {

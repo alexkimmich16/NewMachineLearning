@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 public enum EditSide
 {
     left = 0,
@@ -9,7 +10,11 @@ public enum EditSide
 }
 public class MotionEditor : MonoBehaviour
 {
+    public static MotionEditor instance;
+    private void Awake() { instance = this; }
+
     public int MotionNum;
+    public CurrentLearn MotionType;
     public bool Typing;
     public TMP_InputField input;
     public TextMeshProUGUI sideText;
@@ -18,7 +23,9 @@ public class MotionEditor : MonoBehaviour
 
     public TextMeshProUGUI FrameNum;
     public TextMeshProUGUI PlaybackSpeed;
+    public TextMeshProUGUI MotionTypeText;
     public MotionPlayback display;
+    
 
     //public List<RectTransform> ArrowSpots;
     public List<TextMeshProUGUI> TrueRangeTexts;
@@ -36,31 +43,43 @@ public class MotionEditor : MonoBehaviour
     }
     public float SpeedChangeAdd()
     {
-        float RealSpeedChange()
-        {
-            return SpeedChangePerSecond * Time.deltaTime;
-        }
         float Change = 0;
         if (Input.GetKey(KeyCode.LeftControl) == false)
             return 0;
 
         if (Input.GetKey(KeyCode.UpArrow))
-            if (Input.GetKey(KeyCode.LeftShift))
-                Change += RealSpeedChange() * SpeedMultiplier;
-            else
-                Change += RealSpeedChange();
+            Change += ((Input.GetKey(KeyCode.LeftShift)) ? SpeedMultiplier : 1) * SpeedChangePerSecond * Time.deltaTime;
+
         if (Input.GetKey(KeyCode.DownArrow))
-            if (Input.GetKey(KeyCode.LeftShift))
-                Change -= RealSpeedChange() * SpeedMultiplier;
-            else
-                Change -= RealSpeedChange();
+            Change -= ((Input.GetKey(KeyCode.LeftShift)) ? SpeedMultiplier : 1) * SpeedChangePerSecond * Time.deltaTime;
 
         return Change;
     }
+    public void ChangeMotionType(int Change)
+    {
+        MotionType += Change;
+        if ((int)MotionType > Enum.GetValues(typeof(CurrentLearn)).Length - 1)
+            MotionType = 0;
+        else if((int)MotionType < 0)
+            MotionType = (CurrentLearn)Enum.GetValues(typeof(CurrentLearn)).Length - 1;
 
+        if (MotionNum > LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1)
+            MotionNum = LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1;
+
+        display.Frame = 0;
+    }
     void Update()
     {
-        int TrueRangeCount = LearnManager.instance.motions.Motions[MotionNum].TrueRanges.Count;
+        if (Input.GetKey(KeyCode.LeftAlt))
+            if(Input.GetKeyDown(KeyCode.UpArrow))
+                ChangeMotionType(1);
+            else if(Input.GetKeyDown(KeyCode.DownArrow))
+                ChangeMotionType(-1);
+
+        if (MotionNum >= LearnManager.instance.MovementList[(int)MotionType].Motions.Count)
+            MotionNum = LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1;
+
+        int TrueRangeCount = LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Count;
         if (Input.GetKeyDown(KeyCode.PageDown) && MaxMinEditing < TrueRangeCount - 1)
             MaxMinEditing += 1;
         if (Input.GetKeyDown(KeyCode.PageUp) && MaxMinEditing > 0 || MaxMinEditing > TrueRangeCount)
@@ -68,33 +87,37 @@ public class MotionEditor : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.KeypadMinus))
             if (TrueRangeCount > 0)
-                LearnManager.instance.motions.Motions[MotionNum].TrueRanges.RemoveAt(TrueRangeCount - 1);
+                LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.RemoveAt(TrueRangeCount - 1);
 
         if (Input.GetKeyDown(KeyCode.KeypadPlus) && TrueRangeCount - 1 < TrueRangeTexts.Count)
-            LearnManager.instance.motions.Motions[MotionNum].TrueRanges.Add(Vector2.zero);
+            LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Add(Vector2.zero);
 
 
         input.ActivateInputField();
         sideText.text = "#" + MotionNum;
         FrameNum.text = "Frame: " + display.Frame;
+        MotionTypeText.text = "Motion: " + MotionType.ToString();
         display.PlaybackSpeed += SpeedChangeAdd();
         PlaybackSpeed.text = "Speed: " + display.PlaybackSpeed.ToString("F2");
-        Max.text = "Max: " + LearnManager.instance.motions.Motions[MotionNum].Infos.Count;
-        if(LearnManager.instance.motions.Motions[MotionNum].TrueRanges.Count == 1)
-            CurrentValue.text = "X: " + LearnManager.instance.motions.Motions[MotionNum].TrueRanges[MaxMinEditing].x + "\n" + "Y: " + LearnManager.instance.motions.Motions[MotionNum].TrueRanges[MaxMinEditing].y;
+        Max.text = "Max: " + LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].Infos.Count;
+        if(LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Count == 1)
+            CurrentValue.text = "X: " + LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].x + "\n" + "Y: " + LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].y;
         else
             CurrentValue.text = "X: " + "\n" + "Y: ";
-
-        if (Input.GetKeyDown(KeyCode.UpArrow) && MotionNum < LearnManager.instance.motions.Motions.Count - 1)
+        if(Input.GetKey(KeyCode.LeftAlt) == false)
         {
-            MotionNum += 1;
-            display.Motion = MotionNum;
+            if (Input.GetKeyDown(KeyCode.UpArrow) && MotionNum < LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1)
+            {
+                MotionNum += 1;
+                display.Motion = MotionNum;
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow) && MotionNum > 0)
+            {
+                MotionNum -= 1;
+                display.Motion = MotionNum;
+            }
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow) && MotionNum > 0)
-        {
-            MotionNum -= 1;
-            display.Motion = MotionNum;
-        }
+        
 
         if (Input.GetKeyDown(KeyCode.LeftArrow) && Input.GetKey(KeyCode.LeftControl) == false && Input.GetKey(KeyCode.LeftShift) == false)
         {
@@ -109,17 +132,11 @@ public class MotionEditor : MonoBehaviour
             input.ActivateInputField();
         }
 
-        
-        
-
-        
-
-
         for (int i = 0; i < TrueRangeTexts.Count; i++)
         {
-            if(LearnManager.instance.motions.Motions[MotionNum].TrueRanges.Count > i)
+            if(LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Count > i)
             {
-                Vector2 TrueRange = LearnManager.instance.motions.Motions[MotionNum].TrueRanges[i];
+                Vector2 TrueRange = LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[i];
                 TrueRangeTexts[i].text = "X: " + TrueRange.x + " Y: " + TrueRange.y;
                 if (i == MaxMinEditing)
                     TrueRangeTexts[i].color = Color.red;
@@ -148,12 +165,12 @@ public class MotionEditor : MonoBehaviour
 
     public void Set(int ToSet, EditSide side)
     {
-        if (LearnManager.instance.motions.Motions[MotionNum].TrueRanges.Count == 0)
-            LearnManager.instance.motions.Motions[MotionNum].TrueRanges.Add(new Vector2(-1, -1));
-        Vector2 Range = LearnManager.instance.motions.Motions[MotionNum].TrueRanges[MaxMinEditing];
+        if (LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Count == 0)
+            LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Add(new Vector2(-1, -1));
+        Vector2 Range = LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing];
         if (side == EditSide.left)
-            LearnManager.instance.motions.Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(ToSet, Range.y);
+            LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(ToSet, Range.y);
         else if(side == EditSide.right)
-            LearnManager.instance.motions.Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(Range.x, ToSet);
+            LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(Range.x, ToSet);
     }
 }

@@ -12,88 +12,63 @@ public class SpreadSheet : MonoBehaviour
     public static SpreadSheet instance;
     private void Awake() { instance = this; }
     
-    private string RightWrongName;
-    private string FalseFramesName;
+    //public string OutputName;
+    public string Location() { return Application.dataPath + "/SpreadSheets/AIStatHolder.csv"; }
     private AllMotions Motions;
 
-    public static bool ResetDataIndex = true;
+    public bool Written;
 
-    public void PrintRightWrong(RightWrongStats Stats)
+    public float Interval;
+
+    public void PrintStats()
     {
-        TextWriter tw = new StreamWriter(RightWrongName, false);
-        tw.WriteLine("Right, Wrong, Bool");
-        for (int i = 0; i < Stats.RightWrong.Count; i++)
+        TextWriter tw;
+        if (Written == false)
         {
-            tw.WriteLine(Stats.RightWrong[i].x + "," + Stats.RightWrong[i].y + "," + Stats.RightWrong[i].z);
+            tw = new StreamWriter(Location(), false);
+            tw.WriteLine("Guess, Truth, Correct, Index, Set");
+            Written = true;
         }
+        else
+        {
+            tw = new StreamWriter(Location(), true);
+        }
+        
+        DataTracker DT = DataTracker.instance;
+        for (int i = 0; i < DT.Stats.Count; i++)
+        {
+            tw.WriteLine(DT.Stats[i].Guess + "," + DT.Stats[i].Truth + "," + DT.Stats[i].Correct + "," + DT.Stats[i].Index + "," + DT.Stats[i].Set);
+        }
+        DT.Stats.Clear();
         tw.Close();
     }
-
-    public void PrintFalseFrames(LastFailureStats Stats)
+    public void UpdateSpreadSheet()
     {
-        TextWriter tw = new StreamWriter(FalseFramesName, false);
-        tw.WriteLine("Index, Frequency, Bool");
-
-        for (int i = 0; i < Stats.LastSetFailures.Count; i++)
-        {
-            int Index = (int)Stats.LastSetFailures[i].x;
-            float Frequency = Stats.LastSetFailures[i].y / Motions.Motions[Index].Infos.Count;
-            tw.WriteLine(Index + "," + Frequency + "," + Stats.LastSetFailures[i].z);
-        }
-        tw.Close();
+        Debug.Log("update SpreadSheet");
+        //Debug.Log(Location());
+        PrintStats();
     }
-
+    IEnumerator CallPrintStats()
+    {
+        while (true)
+        {
+            PrintStats();
+            yield return new WaitForSeconds(Interval);
+        }
+    }
     void Start()
     {
         Motions = LearnManager.instance.motions;
         if (Motions.Motions.Count == 0)
             return;
-        
-        if (ResetDataIndex)
-        {
-            for (int i = 0; i < Motions.Motions.Count; i++)
-            {
-                Motions.Motions[i].TrueIndex = i;
-            }
-        }
-
-        RightWrongName = Application.dataPath + "/SpreadSheets/RightWrong" + Most("RightWrong").ToString() + ".csv";
-        FalseFramesName = Application.dataPath + "/SpreadSheets/FalseFrames" + Most("FalseFrames").ToString() + ".csv";
-        int Most(string Name)
-        {
-            int Num = 0;
-            while (Num < 50)
-            {
-                if (System.IO.File.Exists(Application.dataPath + "/SpreadSheets/" + Name + Num.ToString() + ".csv"))
-                    Num += 1;
-                else
-                    return Num;
-            }
-            return 1000;
-        }
+        StartCoroutine(CallPrintStats());
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.R))
+            UpdateSpreadSheet();
     }
-
-
-    /*
-    public List<AICapStats> ConvertToCapStats(AIStats stats)
-    {
-        bool Done = false;
-        int Index = 0;
-        while (Done == false)
-        {
-            int Total
-            if(stats.RightWrong[Index] > CapMaxInterval)
-            {
-
-            }
-        }
-    }
-    */
 }
 

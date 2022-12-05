@@ -13,14 +13,7 @@ public class LearnManager : MonoBehaviour
     public static LearnManager instance;
     public static List<Vector2> ListNegitives = new List<Vector2>() { new Vector2(1, 1), new Vector2(-1, 1), new Vector2(-1, -1), new Vector2(1, -1) };
     public static List<bool> InvertAngles = new List<bool>() { false, true, false, true };
-    private void Awake()
-    {
-        instance = this;
-
-        //motions = MovementList[(int)LearnType];
-        //for (int i = 0; i < motions.Motions.Count; i++)
-        //motions.Motions[i].TrueIndex = i;
-    }
+    private void Awake() { instance = this; }
     //public CurrentLearn LearnType;
     public learningState state;
     [HideInInspector]
@@ -65,19 +58,17 @@ public class LearnManager : MonoBehaviour
 
     [Header("NEAT")]
     public float SpawnGap;
-    public bool IsLearning;
-
+    private int InputCount, OutputCount;
 
     [Header("Rewards")]
     public float RewardMultiplier;
 
-    [Header("Motions")]
-    public int CurrentMotion;
-    public int CurrentSet;
+    //[Header("Motions")]
+    [HideInInspector] public int CurrentMotion;
+    [HideInInspector] public int CurrentSet;
 
     [Header("NeatCount")]
-    public int InputCount;
-    public int OutputCount;
+    
 
     public List<SingleInfo> RightInfo;
     public List<SingleInfo> LeftInfo;
@@ -85,6 +76,27 @@ public class LearnManager : MonoBehaviour
     public int MaxStoreInfo;
 
     public bool ConvertToBytes;
+
+    //public int TotalFrameTest;
+    public int LastGeneration;
+
+    public delegate void NewGen();
+    public event NewGen OnNewGen;
+
+    public List<bool> AllowMotions;
+
+    public bool RewardOnFalse;
+
+    private void Update()
+    {
+        int Generation = (int)GetComponent<UnitySharpNEAT.NeatSupervisor>().CurrentGeneration;
+        if(Generation != LastGeneration)
+        {
+            LastGeneration = Generation;
+            OnNewGen();
+            ///OnNewGeneration()
+        }
+    }
 
     public void SetSupervisorStats()
     {
@@ -96,10 +108,11 @@ public class LearnManager : MonoBehaviour
         int Inputs() { return Space(HeadPos) + Space(HeadRot) + Space(HandPos) + Space(HandRot); }
         int Space(bool Bool) { return System.Convert.ToInt32(Bool) * 3; }
     }
-
+    
     public float GetReward(int Streak)
     {
-        return Streak * RewardMultiplier;
+        //return Streak * RewardMultiplier;
+        return (Streak > 0) ? 100f : 0;
     }
     public void AgentWaiting()
     {
@@ -112,6 +125,10 @@ public class LearnManager : MonoBehaviour
     public void GetRandomMotion(out int Motion, out int Set)
     {
         Motion = Random.Range(0, MovementList.Count);
+        while (AllowMotions[Motion] == false)
+        {
+            Motion = Random.Range(0, MovementList.Count);
+        }
         Set = Random.Range(0, MovementList[Motion].Motions.Count);
     }
     public SingleInfo PastFrame(EditSide side, int FramesAgo)
@@ -122,6 +139,7 @@ public class LearnManager : MonoBehaviour
     IEnumerator AgentCooldown()
     {
         yield return new WaitForEndOfFrame();
+        //GetComponent<UnitySharpNEAT.NeatSupervisor>().RunBest();
         //feed frame
         GetRandomMotion(out CurrentMotion, out CurrentSet);
         OnNewMotion(CurrentMotion, CurrentSet);
@@ -148,6 +166,12 @@ public class LearnManager : MonoBehaviour
     {
         StartCoroutine(ManageLists(1/ 60));
         SetSupervisorStats();
+
+        GetRandomMotion(out CurrentMotion, out CurrentSet);
+        if(OnNewMotion != null)
+            OnNewMotion(CurrentMotion, CurrentSet);
+
+
         /*
         for (int i = 0; i < motions.Motions.Count; i++)
         {

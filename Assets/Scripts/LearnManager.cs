@@ -51,68 +51,66 @@ public class LearnManager : MonoBehaviour
     public static event NewMotion OnNewMotion;
 
     [Header("Frames")]
-    public int FeedFrames;
+    
     [HideInInspector] public int AgentsWaiting;
     [HideInInspector] public int Set;
 
 
-    [Header("NEAT")]
-    public float SpawnGap;
+    [Header("NEAT"), HideInInspector]
+    public float SpawnGap = 0.38f;
     private int InputCount, OutputCount;
-
-    [Header("Rewards")]
-    public float RewardMultiplier;
 
     //[Header("Motions")]
     [HideInInspector] public int CurrentMotion;
     [HideInInspector] public int CurrentSet;
 
     [Header("NeatCount")]
-    
+    [HideInInspector] public List<SingleInfo> RightInfo;
+    [HideInInspector] public List<SingleInfo> LeftInfo;
 
-    public List<SingleInfo> RightInfo;
-    public List<SingleInfo> LeftInfo;
-
-    public int MaxStoreInfo;
-
+    [HideInInspector] public int MaxStoreInfo;
+    [Header("NEAT Settings")]
     public bool ConvertToBytes;
-
-    //public int TotalFrameTest;
-    public int LastGeneration;
-
-    public delegate void NewGen();
-    public event NewGen OnNewGen;
-
-    public List<bool> AllowMotions;
+    public bool ShouldPunishStreakGuess;
+    public int MaxStreakPunish;
 
     public bool RewardOnFalse;
 
+    public List<bool> AllowMotions;
+    
+    public int FramesToFeedAI;
+    
+    [Header("NEAT Stats")]
+    private int LastGeneration;
+    [HideInInspector] public List<float> MotionRewardMultiplier;
+    
+    public delegate void NewGen();
+    public event NewGen OnNewGen;
+    public bool ShouldPunish(int Streak) { return Streak >= MaxStreakPunish && ShouldPunishStreakGuess == true; }
+
+    public void UpdateRewardMultiplier()
+    {
+        for (int i = 0; i < MovementList.Count; ++i)
+            MotionRewardMultiplier.Add(1f);
+    }
     private void Update()
     {
         int Generation = (int)GetComponent<UnitySharpNEAT.NeatSupervisor>().CurrentGeneration;
         if(Generation != LastGeneration)
         {
             LastGeneration = Generation;
-            OnNewGen();
-            ///OnNewGeneration()
+            if(OnNewGen != null)
+                OnNewGen();
         }
     }
 
     public void SetSupervisorStats()
     {
-        InputCount = Inputs() * FeedFrames;
+        InputCount = Inputs() * FramesToFeedAI;
         OutputCount = MovementList.Count;
 
-        //gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._networkInputCount = Inputs() * FeedFrames;
-        //gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._networkOutputCount = MovementList.Count;
         int Inputs() { return Space(HeadPos) + Space(HeadRot) + Space(HandPos) + Space(HandRot); }
         int Space(bool Bool) { return System.Convert.ToInt32(Bool) * 3; }
-    }
-    
-    public float GetReward(int Streak)
-    {
-        //return Streak * RewardMultiplier;
-        return (Streak > 0) ? 100f : 0;
     }
     public void AgentWaiting()
     {
@@ -166,7 +164,7 @@ public class LearnManager : MonoBehaviour
     {
         StartCoroutine(ManageLists(1/ 60));
         SetSupervisorStats();
-
+        UpdateRewardMultiplier();
         GetRandomMotion(out CurrentMotion, out CurrentSet);
         if(OnNewMotion != null)
             OnNewMotion(CurrentMotion, CurrentSet);

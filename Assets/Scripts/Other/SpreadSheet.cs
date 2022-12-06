@@ -67,7 +67,7 @@ public class SpreadSheet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.L))
             UpdateSpreadSheet();
     }
 }

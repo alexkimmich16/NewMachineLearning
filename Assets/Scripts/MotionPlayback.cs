@@ -34,7 +34,6 @@ public class MotionPlayback : MonoBehaviour
     {
         if(type == PlayType.WatchAI)
             LA = transform.parent.GetComponent<UnitySharpNEAT.LearningAgent>();
-        //else if(type == PlayType.Repeat)
 
     }
     void Update()

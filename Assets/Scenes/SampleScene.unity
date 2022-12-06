@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -292,6 +292,8 @@ MonoBehaviour:
   CurrentGuess: 0
   RealMotion: 0
   Iscorrect: 0
+  GuessStreak: 0
+  lastGuess: 0
 --- !u!4 &20299532
 Transform:
   m_ObjectHideFlags: 0
@@ -6647,20 +6649,21 @@ MonoBehaviour:
     TestHand:
     - {fileID: 1654231988}
     - {fileID: 778150131}
-  FeedFrames: 10
   AgentsWaiting: 0
   Set: 0
   SpawnGap: 0.38
-  RewardMultiplier: 2
   CurrentMotion: 0
   CurrentSet: 0
   RightInfo: []
   LeftInfo: []
   MaxStoreInfo: 10
   ConvertToBytes: 0
-  LastGeneration: 0
+  ShouldPunishStreakGuess: 1
+  MaxStreakPunish: 10
+  RewardOnFalse: 0
   AllowMotions: 00010101
-  RewardOnFalse: 1
+  FramesToFeedAI: 5
+  MotionRewardMultiplier: []
 --- !u!114 &1615791730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9984,6 +9987,8 @@ MonoBehaviour:
   CurrentGuess: 0
   RealMotion: 0
   Iscorrect: 0
+  GuessStreak: 0
+  lastGuess: 0
 --- !u!114 &2591947932039339695
 MonoBehaviour:
   m_ObjectHideFlags: 0

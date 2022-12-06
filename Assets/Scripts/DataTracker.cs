@@ -13,24 +13,23 @@ public class DataTracker : MonoBehaviour
 
     public List<float> PastFitness;
 
-    //public delegate void Guess(CurrentLearn guess, CurrentLearn Truth, bool Correct);
-    //public static event Guess OnGuess;
-
     private int NewGenAgents;
 
     private int AIStatIndex;
     private int AIStatCount;
 
     public int AIShouldWatch = 5;
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+            Total = Vector2.zero;
+    }
     public void AgentNewGenCall()
     {
         NewGenAgents += 1;
         if (NewGenAgents == gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.childCount)
         {
             NewGenAgents = 0;
-            //Debug.Log(gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.GetChild(0).GetComponent<UnitySharpNEAT.LearningAgent>().Fitness);
-            //PastFitness.Add();
         }
     }
     public void CallGuess(CurrentLearn guess, CurrentLearn Truth, int Set)
@@ -76,7 +75,6 @@ public class DataTracker : MonoBehaviour
             yield return new WaitForSeconds(RefreshInterval);
         }
     }
-
 }
 
 [System.Serializable]

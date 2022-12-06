@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
     <Config>
-      <ExperimentName>CarExperiment</ExperimentName>
+      <ExperimentName>MotionLearn</ExperimentName>
       <PopulationSize>50</PopulationSize>
-      <SpecieCount>1</SpecieCount>
+      <SpecieCount>3</SpecieCount>
       <Activation>
         <Scheme>Acyclic</Scheme>
       </Activation>

@@ -59,13 +59,16 @@ namespace UnitySharpNEAT
         public void OnNewGeneration()
         {
             Fitness = 0;
-
         }
         public bool Active() { return Frame < MaxFrame; }
         [Header("Output")]
         public CurrentLearn CurrentGuess;
         public CurrentLearn RealMotion;
         public bool Iscorrect;
+
+        public int GuessStreak;
+        public CurrentLearn lastGuess;
+
         private void Start()
         {
             LearnManager.OnNewMotion += RecieveNewMotion;
@@ -89,14 +92,13 @@ namespace UnitySharpNEAT
             Set = SetStat;
             MotionIndex = Motion;
             LearnManager LM = LearnManager.instance;
-            Frame = LM.FeedFrames;
+            Frame = LM.FramesToFeedAI;
             MaxFrame = LM.MovementList[Motion].Motions[SetStat].Infos.Count - 1;
         }
         #region Overrides
         public override float GetFitness()
         {
             float RealFitness = Fitness;
-            //Fitness = 1000;
             return RealFitness;
         }
         protected override void UseBlackBoxOutpts(ISignalArray outputSignalArray)//on output
@@ -113,16 +115,22 @@ namespace UnitySharpNEAT
             DataTracker.instance.CallGuess(Guess, TrueMotion, Set);
             
             Fitness += FitnessIncrease();
+
             if (Fitness < 0)
                 Fitness = 0;
-            
+
+            ChangeSameGuessStreak(Guess);
+
             DataTracker.instance.AgentNewGenCall();
             SetVariablesPublic();
             float FitnessIncrease()
             {
                 float Increase = (IsCorrect()) ? 100 : 0;
-                return (TrueMotion == CurrentLearn.Nothing && LearnManager.instance.RewardOnFalse == false) ? 0 : Increase;
-                //return Increase;
+                float Subtract = (LearnManager.instance.ShouldPunish(GuessStreak)) ? -1000 : 0;
+                if (LearnManager.instance.ShouldPunish(GuessStreak))
+                    GuessStreak = 0;
+                float ShouldRewardOnFalse = (TrueMotion == CurrentLearn.Nothing && LearnManager.instance.RewardOnFalse == false) ? 0 : 1;
+                return (Increase + Subtract) * ShouldRewardOnFalse;
             }
             bool IsCorrect()
             {
@@ -175,7 +183,7 @@ namespace UnitySharpNEAT
             CustomDebug("CollectObservations");
             LearnManager LM = LearnManager.instance;
             int CurrentIndex = 0;
-            for (int i = 0; i < LearnManager.instance.FeedFrames; i++)
+            for (int i = 0; i < LearnManager.instance.FramesToFeedAI; i++)
             {
                 int CurrentFrame = Frame - i;
                 SingleInfo Info = (LM.state == learningState.Learning) ? CurrentMotion().Infos[CurrentFrame] : LM.PastFrame(side, CurrentFrame);
@@ -221,8 +229,21 @@ namespace UnitySharpNEAT
         }
         //override v
         #endregion
-        void ChangeStreak(bool Outcome)
+        void ChangeSameGuessStreak(CurrentLearn Guess)
         {
+            if (Guess == lastGuess)
+            {
+                GuessStreak += 1;
+                //GuessStreak1
+            }
+            else
+            {
+                GuessStreak = 0;
+            }
+
+
+            lastGuess = Guess;
+            /*
             if (Outcome == true && Streak >= 0)
                 Streak += 1;
             else if(Outcome == false && Streak <= 0)
@@ -233,6 +254,7 @@ namespace UnitySharpNEAT
             else if(Outcome == false && Streak > 0)
                 Streak = -1;
             //Debug.Log("Reward Guess: " + GotRight + "  Works: " + ListWorks + "  Reward: " + LearnManager.instance.motions.GetReward(GotRight, ListWorks));
+            */
         }
 
         public Motion CurrentMotion() { return LearnManager.instance.MovementList[MotionIndex].Motions[Set];}

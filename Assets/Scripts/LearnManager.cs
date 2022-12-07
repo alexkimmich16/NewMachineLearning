@@ -86,6 +86,9 @@ public class LearnManager : MonoBehaviour
     
     public delegate void NewGen();
     public event NewGen OnNewGen;
+
+    public float PerFrameSeconds;
+
     public bool ShouldPunish(int Streak) { return Streak >= MaxStreakPunish && ShouldPunishStreakGuess == true; }
 
     public void UpdateRewardMultiplier()
@@ -143,7 +146,6 @@ public class LearnManager : MonoBehaviour
         OnNewMotion(CurrentMotion, CurrentSet);
         AgentsWaiting = 0;
     }
-
     IEnumerator ManageLists(float Interval)
     {
         while (true)

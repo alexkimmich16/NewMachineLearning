@@ -69,6 +69,21 @@ namespace UnitySharpNEAT
         public int GuessStreak;
         public CurrentLearn lastGuess;
 
+        public List<float> Times = new List<float>();
+        public List<float> Frames = new List<float>();
+
+        public float Timer;
+        private bool IsSecondFrame;
+        public void AddFrameAndTime()
+        {
+            Times.Add(Timer);
+            Timer = 0;
+            Frames.Add(LearnManager.instance.MovementList[MotionIndex].Motions[Set].Infos.Count);
+        }
+        private void Update()
+        {
+            Timer += Time.deltaTime;
+        }
         private void Start()
         {
             LearnManager.OnNewMotion += RecieveNewMotion;
@@ -76,7 +91,8 @@ namespace UnitySharpNEAT
             transform.position = new Vector3(0,0, sibling * LearnManager.instance.SpawnGap);
             for (int i = 0; i < LearnManager.instance.MovementList.Count; ++i)
                 WeightedGuesses.Add(0);
-            LearnManager.instance.OnNewGen += OnNewGeneration; 
+            LearnManager.instance.OnNewGen += OnNewGeneration;
+            IsSecondFrame = true;
             int GetSiblingIndex(Transform child, Transform parent)
             {
                 for (int i = 0; i < parent.childCount; ++i)
@@ -88,12 +104,18 @@ namespace UnitySharpNEAT
         }
         void RecieveNewMotion(int Motion, int SetStat)
         {
+
             SentLearnManagerFinish = false;
             Set = SetStat;
             MotionIndex = Motion;
             LearnManager LM = LearnManager.instance;
             Frame = LM.FramesToFeedAI;
             MaxFrame = LM.MovementList[Motion].Motions[SetStat].Infos.Count - 1;
+            if (IsSecondFrame == true)
+                IsSecondFrame = false;
+            else
+                AddFrameAndTime();
+
         }
         #region Overrides
         public override float GetFitness()

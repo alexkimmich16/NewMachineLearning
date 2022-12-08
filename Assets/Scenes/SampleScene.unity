@@ -4637,8 +4637,72 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30de501a3bf7d0f4d82579bcaedf34e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: IsActiveDictionary
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Boolean,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Guess
+    - Name: $v
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: MotionFinishedCount
+    - Name: $v
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Truth
+    - Name: $v
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   Written: 0
-  Interval: 60
 --- !u!4 &1023122170
 Transform:
   m_ObjectHideFlags: 0
@@ -6664,7 +6728,7 @@ MonoBehaviour:
   ShouldPunishStreakGuess: 0
   MaxStreakPunish: 10
   RewardOnFalse: 1
-  AllowMotions: 00010101
+  AllowMotions: 01010101
   FramesToFeedAI: 20
   MotionRewardMultiplier: []
   TotalValues: {x: 0, y: 0}
@@ -6681,6 +6745,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0b611303c55e724ca255d2e67a14cd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   Current: {x: 0, y: 0}
   Total: {x: 0, y: 0}
   Past: []

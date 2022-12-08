@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class DataTracker : MonoBehaviour
+using Sirenix.OdinInspector;
+public class DataTracker : SerializedMonoBehaviour
 {
     public static DataTracker instance;
     private void Awake() { instance = this; }
@@ -13,7 +14,9 @@ public class DataTracker : MonoBehaviour
 
     public List<float> PastFitness;
 
-
+    [Header("Stats")]
+    public float RefreshInterval = 2f;
+    public bool DebugOnRefresh;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
@@ -21,20 +24,23 @@ public class DataTracker : MonoBehaviour
     }
     public void LogGuess(int Motion, int Set)
     {
-        List<CurrentLearn> Guesses = LearnManager.instance.gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.GetChild(0).GetComponent<UnitySharpNEAT.LearningAgent>().Guesses;
-        List<CurrentLearn> Truths = LearnManager.instance.GetAllMotions(Motion, Set);
+
+
+        //List<CurrentLearn> Guesses = LearnManager.instance.gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.GetChild(0).GetComponent<UnitySharpNEAT.LearningAgent>().Guesses;
+        //List<CurrentLearn> Truths = LearnManager.instance.GetAllMotions(Motion, Set);
+        UnitySharpNEAT.LearningAgent agent = LearnManager.instance.gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.GetChild(0).GetComponent<UnitySharpNEAT.LearningAgent>();
+        CurrentLearn Guess = agent.CurrentGuess;
+        CurrentLearn Truth = LearnManager.instance.MovementList[Motion].Motions[Set].AtFrameState(agent.Frame) ? (CurrentLearn)Motion: CurrentLearn.Nothing;
         int PlayCount = LearnManager.instance.MovementList[Motion].Motions[Set].PlayCount;
         
-        //Current = (guess == Truth) ? new Vector2(Current.x + 1, Current.y) : new Vector2(Current.x, Current.y + 1);
-        //Total = (guess == Truth) ? new Vector2(Total.x + 1, Total.y) : new Vector2(Total.x, Total.y + 1);
+        Current = (Guess == Truth) ? new Vector2(Current.x + 1, Current.y) : new Vector2(Current.x, Current.y + 1);
+        Total = (Guess == Truth) ? new Vector2(Total.x + 1, Total.y) : new Vector2(Total.x, Total.y + 1);
         //stat.
-        Stats.Add(new AIStat(Motion, Set, Guesses, Truths, PlayCount));
+        Stats.Add(new AIStat(Motion, Set, PlayCount, Guess, Truth));
     }
 
 
-    [Header("Stats")]
-    public float RefreshInterval = 2f;
-    public bool DebugOnRefresh;
+    
     void Start()
     {
         StartCoroutine(RefreshWait());
@@ -59,15 +65,18 @@ public class DataTracker : MonoBehaviour
 public class AIStat
 {
     public int Motion, Set;
-    public List<CurrentLearn> Guesses, Truths;
+    //public List<CurrentLearn> Guesses, Truths;
     public int MotionPlayNum;
-    public AIStat(int MotionStat, int SetStat, List<CurrentLearn> GuessesStat, List<CurrentLearn> TruthStat, int MotionPlayNumStat)
+    public CurrentLearn Guess, Truth;
+    public AIStat(int MotionStat, int SetStat, int MotionPlayNumStat, CurrentLearn GuessStat, CurrentLearn TruthStat)
     {
-        Guesses = new List<CurrentLearn>(GuessesStat);
-        Truths = new List<CurrentLearn>(TruthStat);
+        //Guesses = new List<CurrentLearn>(GuessesStat);
+        //Truths = new List<CurrentLearn>(TruthStat);
         Motion = MotionStat;
         Set = SetStat;
         MotionPlayNum = MotionPlayNumStat;
+        Guess = GuessStat;
+        Truth = TruthStat;
     }
 }
 

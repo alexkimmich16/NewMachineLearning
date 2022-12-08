@@ -13,44 +13,22 @@ public class DataTracker : MonoBehaviour
 
     public List<float> PastFitness;
 
-    private int NewGenAgents;
 
-    private int AIStatIndex;
-    private int AIStatCount;
-
-    public int AIShouldWatch = 5;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
             Total = Vector2.zero;
     }
-    public void AgentNewGenCall()
+    public void LogGuess(int Motion, int Set)
     {
-        NewGenAgents += 1;
-        if (NewGenAgents == gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.childCount)
-        {
-            NewGenAgents = 0;
-        }
-    }
-    public void CallGuess(CurrentLearn guess, CurrentLearn Truth, int Set)
-    {
-        Current = (guess == Truth) ? new Vector2(Current.x + 1, Current.y) : new Vector2(Current.x, Current.y + 1);
-        Total = (guess == Truth) ? new Vector2(Total.x + 1, Total.y) : new Vector2(Total.x, Total.y + 1);
-        AIStatCount += 1;
-        if (AIStatCount == gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.childCount)
-        {
-            AIStatCount = 0;
-            AIStatIndex += 1;
-            return;
-        }
-            
-        if (AIShouldWatch < AIStatCount)
-            return;
+        List<CurrentLearn> Guesses = LearnManager.instance.gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.GetChild(0).GetComponent<UnitySharpNEAT.LearningAgent>().Guesses;
+        List<CurrentLearn> Truths = LearnManager.instance.GetAllMotions(Motion, Set);
+        int PlayCount = LearnManager.instance.MovementList[Motion].Motions[Set].PlayCount;
         
-        AIStat stat = new AIStat(guess, Truth, AIStatIndex, Set);
+        //Current = (guess == Truth) ? new Vector2(Current.x + 1, Current.y) : new Vector2(Current.x, Current.y + 1);
+        //Total = (guess == Truth) ? new Vector2(Total.x + 1, Total.y) : new Vector2(Total.x, Total.y + 1);
         //stat.
-        Stats.Add(stat);
-        AIStatIndex += 1;
+        Stats.Add(new AIStat(Motion, Set, Guesses, Truths, PlayCount));
     }
 
 
@@ -80,16 +58,16 @@ public class DataTracker : MonoBehaviour
 [System.Serializable]
 public class AIStat
 {
-    public CurrentLearn Guess, Truth;
-    public bool Correct;
-    public int Index, Set;
-    public AIStat(CurrentLearn GuessStat, CurrentLearn TruthStat, int ListNum, int SetNum)
+    public int Motion, Set;
+    public List<CurrentLearn> Guesses, Truths;
+    public int MotionPlayNum;
+    public AIStat(int MotionStat, int SetStat, List<CurrentLearn> GuessesStat, List<CurrentLearn> TruthStat, int MotionPlayNumStat)
     {
-        Guess = GuessStat;
-        Truth = TruthStat;
-        Correct = GuessStat == TruthStat;
-        Index = ListNum;
-        Set = SetNum;
+        Guesses = new List<CurrentLearn>(GuessesStat);
+        Truths = new List<CurrentLearn>(TruthStat);
+        Motion = MotionStat;
+        Set = SetStat;
+        MotionPlayNum = MotionPlayNumStat;
     }
 }
 

@@ -35,7 +35,8 @@ public class Motion
     public List<SingleInfo> Infos;
     public List<Vector2> TrueRanges;
     public int TrueIndex;
-
+    public int PlayCount;
+    
     public void IntoRange(List<bool> Values)
     {
         List<Vector2> ranges = new List<Vector2>();

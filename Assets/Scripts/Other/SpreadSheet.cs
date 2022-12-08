@@ -37,7 +37,7 @@ public class SpreadSheet : MonoBehaviour
         DataTracker DT = DataTracker.instance;
         for (int i = 0; i < DT.Stats.Count; i++)
         {
-            tw.WriteLine(DT.Stats[i].Guess + "," + DT.Stats[i].Truth + "," + DT.Stats[i].Correct + "," + DT.Stats[i].Index + "," + DT.Stats[i].Set);
+            //tw.WriteLine(DT.Stats[i].Guess + "," + DT.Stats[i].Truth + "," + DT.Stats[i].Correct + "," + DT.Stats[i].Index + "," + DT.Stats[i].Set);
         }
         DT.Stats.Clear();
         tw.Close();

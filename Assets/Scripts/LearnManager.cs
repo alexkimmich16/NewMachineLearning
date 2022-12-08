@@ -56,7 +56,7 @@ public class LearnManager : MonoBehaviour
     [HideInInspector] public int Set;
 
 
-    [Header("NEAT"), HideInInspector]
+    [Header("NEAT")]
     public float SpawnGap = 0.38f;
     private int InputCount, OutputCount;
 
@@ -71,8 +71,11 @@ public class LearnManager : MonoBehaviour
     [HideInInspector] public int MaxStoreInfo;
     [Header("NEAT Settings")]
     public bool ConvertToBytes;
+    public bool ShouldRewardMultiplier;
     public bool ShouldPunishStreakGuess;
     public int MaxStreakPunish;
+
+    
 
     public bool RewardOnFalse;
 
@@ -82,19 +85,68 @@ public class LearnManager : MonoBehaviour
     
     [Header("NEAT Stats")]
     private int LastGeneration;
-    [HideInInspector] public List<float> MotionRewardMultiplier;
+    public List<float> MotionRewardMultiplier;
     
     public delegate void NewGen();
     public event NewGen OnNewGen;
 
-    public float PerFrameSeconds;
+    public Vector2 TotalValues;
 
+    [HideInInspector]public bool FinishedAndWaiting;
+    public List<CurrentLearn> GetAllMotions(int MotionNum, int SetNum)
+    {
+        List<CurrentLearn> LearnTypes = new List<CurrentLearn>();
+        for (int i = 0; i < MovementList[MotionNum].Motions[SetNum].Infos.Count; i++)
+        {
+            LearnTypes.Add(MovementList[MotionNum].Motions[SetNum].AtFrameState(i) == true ? (CurrentLearn)MotionNum : (CurrentLearn)0);
+        }
+        return LearnTypes;
+    }
     public bool ShouldPunish(int Streak) { return Streak >= MaxStreakPunish && ShouldPunishStreakGuess == true; }
 
     public void UpdateRewardMultiplier()
     {
         for (int i = 0; i < MovementList.Count; ++i)
-            MotionRewardMultiplier.Add(1f);
+            MotionRewardMultiplier.Add(0f);
+
+        for (int i = 0; i < MotionRewardMultiplier.Count; ++i)
+        {
+            for (int j = 0; j < MovementList[i].Motions.Count; ++j)
+            {
+                MovementList[i].Motions[j].PlayCount = 0;
+
+
+                List<int> FramesTotal = TotalOfMotion(i, j);
+                float Weight = (1f/MovementList.Count) * (1f/MovementList[i].Motions.Count);
+                float FrameCount = MovementList[i].Motions[j].Infos.Count;
+                for (int k = 0; k < FramesTotal.Count; ++k)
+                {
+                    float FrameValue = Weight * (FramesTotal[k] / FrameCount);
+                    //Debug.Log(" Weight: " + Weight + " FrameCount: " + FrameCount + " FramesTotal: " + FramesTotal[k] + " FrameValue: " + FrameValue + " K: " + k);
+                    MotionRewardMultiplier[k] += FrameValue;
+                }
+            }
+            
+        }
+        for (int i = 0; i < MotionRewardMultiplier.Count; ++i)
+        {
+            TotalValues = new Vector2(TotalValues.x + MotionRewardMultiplier[i], TotalValues.y);
+            MotionRewardMultiplier[i] = 1f - MotionRewardMultiplier[i];
+            TotalValues = new Vector2(TotalValues.x + MotionRewardMultiplier[i], TotalValues.y);
+        }
+            
+        List<int> TotalOfMotion(int Motion, int Set)
+        {
+            List<int> Total = new List<int>();
+            for (int i = 0; i < MovementList.Count; ++i)
+                Total.Add(0);
+            for (int i = 0; i < MovementList[Motion].Motions[Set].Infos.Count; ++i)
+            {
+                int ListAdd = MovementList[Motion].Motions[Set].AtFrameState(i) ? Motion : 0;
+                Total[ListAdd] += 1;
+            }
+            return Total;
+        }
     }
     private void Update()
     {
@@ -131,6 +183,7 @@ public class LearnManager : MonoBehaviour
             Motion = Random.Range(0, MovementList.Count);
         }
         Set = Random.Range(0, MovementList[Motion].Motions.Count);
+        
     }
     public SingleInfo PastFrame(EditSide side, int FramesAgo)
     {
@@ -139,10 +192,15 @@ public class LearnManager : MonoBehaviour
     }
     IEnumerator AgentCooldown()
     {
+        DataTracker.instance.LogGuess(CurrentMotion, CurrentSet);
+        FinishedAndWaiting = true;
         yield return new WaitForEndOfFrame();
-        //GetComponent<UnitySharpNEAT.NeatSupervisor>().RunBest();
+        //Getcomponent<UnitySharpNEAT.NeatSupervisor>().r
+        if (OnNewGen != null)
+            OnNewGen();
         //feed frame
         GetRandomMotion(out CurrentMotion, out CurrentSet);
+        MovementList[CurrentMotion].Motions[CurrentSet].PlayCount += 1;
         OnNewMotion(CurrentMotion, CurrentSet);
         AgentsWaiting = 0;
     }
@@ -168,7 +226,8 @@ public class LearnManager : MonoBehaviour
         SetSupervisorStats();
         UpdateRewardMultiplier();
         GetRandomMotion(out CurrentMotion, out CurrentSet);
-        if(OnNewMotion != null)
+        
+        if (OnNewMotion != null)
             OnNewMotion(CurrentMotion, CurrentSet);
 
 

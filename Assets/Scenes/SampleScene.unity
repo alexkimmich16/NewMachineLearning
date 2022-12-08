@@ -294,6 +294,7 @@ MonoBehaviour:
   Iscorrect: 0
   GuessStreak: 0
   lastGuess: 0
+  Guesses: 
 --- !u!4 &20299532
 Transform:
   m_ObjectHideFlags: 0
@@ -4053,6 +4054,7 @@ MonoBehaviour:
     Infos: []
     TrueRanges: []
     TrueIndex: 0
+    PlayCount: 0
   ShouldRecord: 1
   Values: 
 --- !u!4 &795205100
@@ -6585,10 +6587,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _experimentConfigFileName: experiment.config
-  _networkInputCount: 60
+  _networkInputCount: 120
   _networkOutputCount: 4
   Trials: 1
-  TrialDuration: 0.5
+  TrialDuration: 100
   StoppingFitness: 1e+9
   _unitControllerPrefab: {fileID: 7013353487439660062, guid: 5d36c706c3d324e4bbe2994f2486b6e2, type: 3}
   _spawnParent: {fileID: 701478116}
@@ -6658,12 +6660,15 @@ MonoBehaviour:
   LeftInfo: []
   MaxStoreInfo: 10
   ConvertToBytes: 0
-  ShouldPunishStreakGuess: 1
+  ShouldRewardMultiplier: 1
+  ShouldPunishStreakGuess: 0
   MaxStreakPunish: 10
-  RewardOnFalse: 0
+  RewardOnFalse: 1
   AllowMotions: 00010101
-  FramesToFeedAI: 5
+  FramesToFeedAI: 20
   MotionRewardMultiplier: []
+  TotalValues: {x: 0, y: 0}
+  FinishedAndWaiting: 0
 --- !u!114 &1615791730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6681,7 +6686,6 @@ MonoBehaviour:
   Past: []
   Stats: []
   PastFitness: []
-  AIShouldWatch: 1
   RefreshInterval: 1.03
   DebugOnRefresh: 0
 --- !u!1 &1650534507
@@ -9989,6 +9993,7 @@ MonoBehaviour:
   Iscorrect: 0
   GuessStreak: 0
   lastGuess: 0
+  Guesses: 
 --- !u!114 &2591947932039339695
 MonoBehaviour:
   m_ObjectHideFlags: 0

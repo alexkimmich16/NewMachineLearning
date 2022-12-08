@@ -69,21 +69,7 @@ namespace UnitySharpNEAT
         public int GuessStreak;
         public CurrentLearn lastGuess;
 
-        public List<float> Times = new List<float>();
-        public List<float> Frames = new List<float>();
-
-        public float Timer;
-        private bool IsSecondFrame;
-        public void AddFrameAndTime()
-        {
-            Times.Add(Timer);
-            Timer = 0;
-            Frames.Add(LearnManager.instance.MovementList[MotionIndex].Motions[Set].Infos.Count);
-        }
-        private void Update()
-        {
-            Timer += Time.deltaTime;
-        }
+        public List<CurrentLearn> Guesses;
         private void Start()
         {
             LearnManager.OnNewMotion += RecieveNewMotion;
@@ -92,7 +78,6 @@ namespace UnitySharpNEAT
             for (int i = 0; i < LearnManager.instance.MovementList.Count; ++i)
                 WeightedGuesses.Add(0);
             LearnManager.instance.OnNewGen += OnNewGeneration;
-            IsSecondFrame = true;
             int GetSiblingIndex(Transform child, Transform parent)
             {
                 for (int i = 0; i < parent.childCount; ++i)
@@ -104,18 +89,13 @@ namespace UnitySharpNEAT
         }
         void RecieveNewMotion(int Motion, int SetStat)
         {
-
             SentLearnManagerFinish = false;
             Set = SetStat;
             MotionIndex = Motion;
             LearnManager LM = LearnManager.instance;
             Frame = LM.FramesToFeedAI;
             MaxFrame = LM.MovementList[Motion].Motions[SetStat].Infos.Count - 1;
-            if (IsSecondFrame == true)
-                IsSecondFrame = false;
-            else
-                AddFrameAndTime();
-
+            Guesses.Clear();
         }
         #region Overrides
         public override float GetFitness()
@@ -134,7 +114,7 @@ namespace UnitySharpNEAT
             CurrentLearn TrueMotion = (CurrentLearn)((IndexWorks) ? MotionIndex : 0);
             CurrentLearn Guess = (CurrentLearn)GetHighest(out Conflict);
 
-            DataTracker.instance.CallGuess(Guess, TrueMotion, Set);
+            //DataTracker.instance.CallGuess(Guess, TrueMotion, Set);
             
             Fitness += FitnessIncrease();
 
@@ -142,24 +122,23 @@ namespace UnitySharpNEAT
                 Fitness = 0;
 
             ChangeSameGuessStreak(Guess);
-
-            DataTracker.instance.AgentNewGenCall();
             SetVariablesPublic();
             float FitnessIncrease()
             {
+                LearnManager LM = LearnManager.instance;
                 float Increase = (IsCorrect()) ? 100 : 0;
-                float Subtract = (LearnManager.instance.ShouldPunish(GuessStreak)) ? -1000 : 0;
-                if (LearnManager.instance.ShouldPunish(GuessStreak))
+                float Subtract = (LM.ShouldPunish(GuessStreak)) ? -1000 : 0;
+                if (LM.ShouldPunish(GuessStreak))
                     GuessStreak = 0;
-                float ShouldRewardOnFalse = (TrueMotion == CurrentLearn.Nothing && LearnManager.instance.RewardOnFalse == false) ? 0 : 1;
-                return (Increase + Subtract) * ShouldRewardOnFalse;
+                Guesses.Add(Guess);
+                float MotionMultiplier = LM.ShouldRewardMultiplier ? LM.MotionRewardMultiplier[(int)TrueMotion] : 1;
+                float ShouldRewardOnFalse = (TrueMotion == CurrentLearn.Nothing && LM.RewardOnFalse == false) ? 0 : 1;
+                return (Increase + Subtract) * ShouldRewardOnFalse * MotionMultiplier;
             }
             bool IsCorrect()
             {
-                //bool NoConflict = !Conflict;
                 bool NoConflict = true;
                 bool CorrectGuess = Guess == TrueMotion;
-
                 return NoConflict && CorrectGuess;
             }
             void SetVariablesPublic()
@@ -290,16 +269,6 @@ namespace UnitySharpNEAT
                 FrameReference = "|Frame: " + Frame + "|Set: " + Set + "" + "|";
             Debug.Log(text + FrameReference);
         }
-        /*
-        public List<int> GetRandomList()
-        {
-            List<int> NewList = new List<int>();
-            for (int i = 0; i < LearnManager.instance.motions.Motions.Count; i++)
-                NewList.Add(i);
-            Shuffle.ShuffleSet(NewList);
-            return NewList;
-        }  
-        */
     }
     
    

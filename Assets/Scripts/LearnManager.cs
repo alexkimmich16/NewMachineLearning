@@ -8,6 +8,26 @@ public enum CurrentLearn
     Flames = 2,
     FlameBlock = 3,
 }
+[System.Serializable]
+public class MatrixStat
+{
+    public int X, Y;
+    public float H, S;
+    public float CreationTime;
+    public float TimeSinceCreation()
+    {
+        return Time.timeSinceLevelLoad - CreationTime;
+    }
+    public MatrixStat(int XStat, int YStat, float HStat, float SStat)
+    {
+        X = XStat;
+        Y = YStat;
+        H = HStat;
+        S = SStat;
+        CreationTime = Time.timeSinceLevelLoad;
+    }
+}
+
 public class LearnManager : MonoBehaviour
 {
     public static LearnManager instance;
@@ -76,8 +96,6 @@ public class LearnManager : MonoBehaviour
     public bool MultiplyByHighestGuess;
     public int MaxStreakPunish;
 
-    
-
     public bool RewardOnFalse;
 
     public List<bool> AllowMotions;
@@ -94,6 +112,48 @@ public class LearnManager : MonoBehaviour
     public Vector2 TotalValues;
 
     [HideInInspector]public bool FinishedAndWaiting;
+
+    public Vector2[,] GridStats;
+    public int Width = 80;
+    public int Height = 20;
+
+    public float MaxHeightDifference;
+
+    public Vector2[,] ToGrid()
+    {
+        Vector2[,] Stats = new Vector2[Width, Height];
+        /*
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                Stats[i, j] = Vector2.zero;
+            }
+        }
+        */
+        ///log motions
+        List<MatrixStat> MatrixStats = new List<MatrixStat>();
+        for (int i = 0; i < 5; i++)
+        {
+            MatrixStats.Add(GetMatrixStats(i));
+        }
+        return Stats;
+    }
+    public MatrixStat GetMatrixStats(int Frame)
+    {
+        //float Angle = 
+        int X = (angle / 360) * Width;
+
+
+        int Y = ((hand.y - cam.y) / MaxHeightDifference) * Height;
+
+        float H = (angle / 360) * Width;
+
+        float S = (angle / 360) * Width;
+
+        return new MatrixStat(X, Y, H, S);
+    }
+
     public List<CurrentLearn> GetAllMotions(int MotionNum, int SetNum)
     {
         List<CurrentLearn> LearnTypes = new List<CurrentLearn>();
@@ -439,7 +499,7 @@ public class ControllerInfo
         SingleInfo ReturnTest()
         {
             SingleInfo newInfo = new SingleInfo();
-            newInfo.HeadPos = TestCam[(int)side].position;
+            newInfo.HeadP-os = TestCam[(int)side].position;
             newInfo.HeadRot = TestCam[(int)side].rotation.eulerAngles;
             newInfo.HandPos = TestHand[(int)side].position;
             newInfo.HandRot = TestHand[(int)side].rotation.eulerAngles;

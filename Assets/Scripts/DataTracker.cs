@@ -66,13 +66,10 @@ public class DataTracker : SerializedMonoBehaviour
 public class AIStat
 {
     public int Motion, Set;
-    //public List<CurrentLearn> Guesses, Truths;
     public int MotionPlayNum;
     public CurrentLearn Guess, Truth;
     public AIStat(int MotionStat, int SetStat, int MotionPlayNumStat, CurrentLearn GuessStat, CurrentLearn TruthStat)
     {
-        //Guesses = new List<CurrentLearn>(GuessesStat);
-        //Truths = new List<CurrentLearn>(TruthStat);
         Motion = MotionStat;
         Set = SetStat;
         MotionPlayNum = MotionPlayNumStat;

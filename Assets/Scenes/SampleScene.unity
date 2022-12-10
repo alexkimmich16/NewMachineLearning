@@ -295,6 +295,7 @@ MonoBehaviour:
   GuessStreak: 0
   lastGuess: 0
   Guesses: 
+  IsLogger: 0
 --- !u!4 &20299532
 Transform:
   m_ObjectHideFlags: 0
@@ -1473,7 +1474,7 @@ RectTransform:
   m_Children:
   - {fileID: 840198899}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1970,7 +1971,7 @@ RectTransform:
   - {fileID: 2493965760057927540}
   - {fileID: 2076693941}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6651,7 +6652,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _experimentConfigFileName: experiment.config
-  _networkInputCount: 120
+  _networkInputCount: 30
   _networkOutputCount: 4
   Trials: 1
   TrialDuration: 100
@@ -6726,10 +6727,11 @@ MonoBehaviour:
   ConvertToBytes: 0
   ShouldRewardMultiplier: 1
   ShouldPunishStreakGuess: 0
+  MultiplyByHighestGuess: 1
   MaxStreakPunish: 10
   RewardOnFalse: 1
   AllowMotions: 01010101
-  FramesToFeedAI: 20
+  FramesToFeedAI: 5
   MotionRewardMultiplier: []
   TotalValues: {x: 0, y: 0}
   FinishedAndWaiting: 0
@@ -6755,7 +6757,8 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   Current: {x: 0, y: 0}
-  Total: {x: 0, y: 0}
+  CurrentTotal: {x: 0, y: 0}
+  AbsoluteTotal: {x: 0, y: 0}
   Past: []
   Stats: []
   PastFitness: []
@@ -7382,37 +7385,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1753467734}
   m_CullTransparentMesh: 1
---- !u!1 &1754713374
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1754713375}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1754713375
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1754713374}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.14700651, y: 0.18434477, z: 1.8427676}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 14
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1762531543
 GameObject:
   m_ObjectHideFlags: 0
@@ -9681,7 +9653,7 @@ MonoBehaviour:
   speed: 500
   groundLayer:
     serializedVersion: 2
-    m_Bits: 2147483647
+    m_Bits: 55
   Additionalheight: -0.2
   direction: {x: 0, y: 0, z: 0}
   directionAdd: {x: 0, y: 0, z: 0}
@@ -10067,6 +10039,7 @@ MonoBehaviour:
   GuessStreak: 0
   lastGuess: 0
   Guesses: 
+  IsLogger: 0
 --- !u!114 &2591947932039339695
 MonoBehaviour:
   m_ObjectHideFlags: 0

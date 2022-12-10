@@ -73,6 +73,7 @@ public class LearnManager : MonoBehaviour
     public bool ConvertToBytes;
     public bool ShouldRewardMultiplier;
     public bool ShouldPunishStreakGuess;
+    public bool MultiplyByHighestGuess;
     public int MaxStreakPunish;
 
     
@@ -192,7 +193,7 @@ public class LearnManager : MonoBehaviour
     }
     IEnumerator AgentCooldown()
     {
-        DataTracker.instance.LogGuess(CurrentMotion, CurrentSet);
+        //DataTracker.instance.LogGuess(CurrentMotion, CurrentSet);
         FinishedAndWaiting = true;
         yield return new WaitForEndOfFrame();
         //Getcomponent<UnitySharpNEAT.NeatSupervisor>().r

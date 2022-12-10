@@ -2,12 +2,12 @@
 
     <Config>
       <ExperimentName>MotionLearn</ExperimentName>
-      <PopulationSize>50</PopulationSize>
+      <PopulationSize>100</PopulationSize>
       <SpecieCount>3</SpecieCount>
       <Activation>
         <Scheme>Acyclic</Scheme>
       </Activation>
       <ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
-      <ComplexityThreshold>10</ComplexityThreshold>
+      <ComplexityThreshold>20</ComplexityThreshold>
       <Description>AI made to decipher the intended motion of the player</Description>
     </Config>

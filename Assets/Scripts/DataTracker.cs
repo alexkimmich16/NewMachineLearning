@@ -8,7 +8,8 @@ public class DataTracker : SerializedMonoBehaviour
     private void Awake() { instance = this; }
     [Header("RightVSWrong")]
     public Vector2 Current;
-    public Vector2 Total;
+    public Vector2 CurrentTotal;
+    public Vector2 AbsoluteTotal;
     public List<Vector2> Past;
     public List<AIStat> Stats;
 
@@ -20,21 +21,21 @@ public class DataTracker : SerializedMonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
-            Total = Vector2.zero;
+            CurrentTotal = Vector2.zero;
     }
     public void LogGuess(int Motion, int Set)
     {
-
-
         //List<CurrentLearn> Guesses = LearnManager.instance.gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.GetChild(0).GetComponent<UnitySharpNEAT.LearningAgent>().Guesses;
         //List<CurrentLearn> Truths = LearnManager.instance.GetAllMotions(Motion, Set);
         UnitySharpNEAT.LearningAgent agent = LearnManager.instance.gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.GetChild(0).GetComponent<UnitySharpNEAT.LearningAgent>();
         CurrentLearn Guess = agent.CurrentGuess;
+
         CurrentLearn Truth = LearnManager.instance.MovementList[Motion].Motions[Set].AtFrameState(agent.Frame) ? (CurrentLearn)Motion: CurrentLearn.Nothing;
         int PlayCount = LearnManager.instance.MovementList[Motion].Motions[Set].PlayCount;
         
         Current = (Guess == Truth) ? new Vector2(Current.x + 1, Current.y) : new Vector2(Current.x, Current.y + 1);
-        Total = (Guess == Truth) ? new Vector2(Total.x + 1, Total.y) : new Vector2(Total.x, Total.y + 1);
+        CurrentTotal = (Guess == Truth) ? new Vector2(CurrentTotal.x + 1, CurrentTotal.y) : new Vector2(CurrentTotal.x, CurrentTotal.y + 1);
+        AbsoluteTotal = (Guess == Truth) ? new Vector2(AbsoluteTotal.x + 1, AbsoluteTotal.y) : new Vector2(AbsoluteTotal.x, AbsoluteTotal.y + 1);
         //stat.
         Stats.Add(new AIStat(Motion, Set, PlayCount, Guess, Truth));
     }

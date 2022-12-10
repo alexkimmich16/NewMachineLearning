@@ -70,10 +70,16 @@ namespace UnitySharpNEAT
         public CurrentLearn lastGuess;
 
         public List<CurrentLearn> Guesses;
+
+        public bool IsLogger;
+
+        private float WeightOutputMultiplier = 1000f;
+        
         private void Start()
         {
             LearnManager.OnNewMotion += RecieveNewMotion;
             int sibling = GetSiblingIndex(transform, transform.parent);
+            IsLogger = sibling == 0;
             transform.position = new Vector3(0,0, sibling * LearnManager.instance.SpawnGap);
             for (int i = 0; i < LearnManager.instance.MovementList.Count; ++i)
                 WeightedGuesses.Add(0);
@@ -94,6 +100,7 @@ namespace UnitySharpNEAT
             MotionIndex = Motion;
             LearnManager LM = LearnManager.instance;
             Frame = LM.FramesToFeedAI;
+            //LM.MovementList[Motion].Motions[SetStat].Infos.Count - 1
             MaxFrame = LM.MovementList[Motion].Motions[SetStat].Infos.Count - 1;
             Guesses.Clear();
         }
@@ -113,8 +120,8 @@ namespace UnitySharpNEAT
 
             CurrentLearn TrueMotion = (CurrentLearn)((IndexWorks) ? MotionIndex : 0);
             CurrentLearn Guess = (CurrentLearn)GetHighest(out Conflict);
-
-            //DataTracker.instance.CallGuess(Guess, TrueMotion, Set);
+            if(IsLogger)
+                DataTracker.instance.LogGuess(MotionIndex, Set);
             
             Fitness += FitnessIncrease();
 
@@ -126,14 +133,15 @@ namespace UnitySharpNEAT
             float FitnessIncrease()
             {
                 LearnManager LM = LearnManager.instance;
-                float Increase = (IsCorrect()) ? 100 : 0;
+                float Increase = (IsCorrect()) ? 100 : -100;
                 float Subtract = (LM.ShouldPunish(GuessStreak)) ? -1000 : 0;
                 if (LM.ShouldPunish(GuessStreak))
                     GuessStreak = 0;
                 Guesses.Add(Guess);
                 float MotionMultiplier = LM.ShouldRewardMultiplier ? LM.MotionRewardMultiplier[(int)TrueMotion] : 1;
                 float ShouldRewardOnFalse = (TrueMotion == CurrentLearn.Nothing && LM.RewardOnFalse == false) ? 0 : 1;
-                return (Increase + Subtract) * ShouldRewardOnFalse * MotionMultiplier;
+                float HighestMultiplier = (LearnManager.instance.MultiplyByHighestGuess) ? (WeightedGuesses[GetHighest(out bool Conflict)] / WeightOutputMultiplier) : 1;
+                return (Increase + Subtract) * ShouldRewardOnFalse * MotionMultiplier * HighestMultiplier;
             }
             bool IsCorrect()
             {
@@ -155,7 +163,7 @@ namespace UnitySharpNEAT
                 int index = 0;
                 for (int i = 0; i < outputSignalArray.Length; i++)
                 {
-                    WeightedGuesses[i] = (float)outputSignalArray[i] * 1000;
+                    WeightedGuesses[i] = (float)outputSignalArray[i] * WeightOutputMultiplier;
                     if (WeightedGuesses[i] > Highest)
                     {
                         Highest = WeightedGuesses[i];

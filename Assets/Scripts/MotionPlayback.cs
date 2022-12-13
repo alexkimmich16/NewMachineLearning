@@ -30,6 +30,12 @@ public class MotionPlayback : MonoBehaviour
     public SkinnedMeshRenderer handToChange;
 
     public UnitySharpNEAT.LearningAgent LA;
+
+    public delegate void NewFrame();
+    public static event NewFrame OnNewFrame;
+
+    public bool OneInterprolate;
+    public List<SingleInfo> interpolating;
     private void Start()
     {
         if(type == PlayType.WatchAI)
@@ -56,41 +62,36 @@ public class MotionPlayback : MonoBehaviour
             if (Timer < NextTime)
                 return;
             Timer = 0;
+            if (interpolating.Count > 0)
+            {
+                moveAll(interpolating[0]);
+                interpolating.RemoveAt(0);
+                return;
+            }
             Frame += 1;
             if (LastMotion != Motion)
                 Frame = 0;
             if (Frame >= LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos.Count)
+            {
                 Frame = 0;
+                if (OneInterprolate)
+                {
+                    int MaxFromCount = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos.Count - 1;
+                    Vector3 From = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos[MaxFromCount].HandPos;
+                    Vector3 To = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum + 1].Infos[0].HandPos;
+                    interpolating = MatrixManager.instance.InterpolatePositions(From, To);
+                    OneInterprolate = false;
+                    MotionEditor.instance.MotionNum += 1;
+                }
+            }
 
             SingleInfo info = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos[Frame];
             
             moveAll(info);
             LastMotion = Motion;
-        }
 
-        /*
-        else if (type == PlayType.StandaloneRepeat || type == PlayType.StandaloneSequence)
-        {
-            
-            NextTime = 1 / PlaybackSpeed;
-            Timer += Time.deltaTime;
-            if (Timer < NextTime)
-                return;
-            Timer = 0;
-            Frame += 1;
-            if (Frame == Agent.CurrentMotion().Infos.Count)
-            {
-                if (type == PlayType.StandaloneSequence)
-                {
-                    Motion += 1;
-                }
-                Frame = 0;
-            }
-            SingleInfo info = Agent.CurrentFrame();
-            moveAll(info);
+            OnNewFrame();
         }
-        
-        */
         void moveAll(SingleInfo info)
         {
             MoveController(Right, info);

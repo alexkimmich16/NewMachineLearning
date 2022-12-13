@@ -25,8 +25,14 @@ public class AllMotions : ScriptableObject
 [System.Serializable]
 public class SingleInfo
 {
-    public Vector3 HeadPos, HeadRot, HandPos, HandRot, HandVel, AdjustedHandPos;
-    //public bool Works;
+    public Vector3 HeadPos, HeadRot, HandPos, HandRot;
+    public SingleInfo(Vector3 HandPosStat, Vector3 HandRotStat, Vector3 HeadPosStat, Vector3 HeadRotStat)
+    {
+        HeadPos = HeadPosStat;
+        HeadRot = HeadRotStat;
+        HandPos = HandPosStat;
+        HandRot = HandRotStat;
+    }
 }
 [System.Serializable]
 public class Motion

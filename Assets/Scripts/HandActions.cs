@@ -41,6 +41,11 @@ public class HandActions : MonoBehaviour
 
     public float Magnitude;
 
+    public delegate void OnRelease();
+    public event OnRelease OnTriggerRelease;
+
+    private bool lastTrigger;
+
     public Vector3 GetVelocity()
     {
         InputDevice device = InputDevices.GetDeviceAtXRNode(inputSource);
@@ -49,7 +54,7 @@ public class HandActions : MonoBehaviour
     }
     void Update()
     {
-        SetRemoteStats();
+        //SetRemoteStats();
         //CheckColliders();
         
         Child = transform.GetChild(1).eulerAngles;
@@ -59,6 +64,18 @@ public class HandActions : MonoBehaviour
         if (Child.y > 270)
             Child.y -= 360;
         LocalRotation = new Vector3(Child.x, CamLocal.y - Child.y, Child.z);
+
+
+        if(TriggerPressed() == true && lastTrigger == false)
+        {
+            lastTrigger = true;
+        }
+        else if (TriggerPressed() == false && lastTrigger == true)
+        {
+            lastTrigger = false;
+            if(OnTriggerRelease != null)
+                OnTriggerRelease();
+        }
         /*
         if (LearningAgent.instance.Learning == false)
         {
@@ -76,27 +93,19 @@ public class HandActions : MonoBehaviour
     #region Checks
     public bool TriggerPressed()
     {
-        if (Trigger > 0.5)
-        {
-            return true;
-        }
-        return false;
+        InputDevice device = InputDevices.GetDeviceAtXRNode(inputSource);
+        device.TryGetFeatureValue(CommonUsages.trigger, out Trigger);
+        return Trigger > 0.5;
     }
     public bool GripPressed()
     {
-        if (Grip > 0.5)
-        {
-            return true;
-        }
-        return false;
+        InputDevice device = InputDevices.GetDeviceAtXRNode(inputSource);
+        device.TryGetFeatureValue(CommonUsages.grip, out Grip);
+        return Grip > 0.5;
     }
     public void SetRemoteStats()
     {
         InputDevice device = InputDevices.GetDeviceAtXRNode(inputSource);
-
-        device.TryGetFeatureValue(CommonUsages.trigger, out Trigger);
-
-        device.TryGetFeatureValue(CommonUsages.grip, out Grip);
 
         device.TryGetFeatureValue(CommonUsages.secondaryButton, out BottomButtonPressed);
         device.TryGetFeatureValue(CommonUsages.secondaryTouch, out BottomButtonTouched);

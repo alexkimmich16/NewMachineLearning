@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 public enum CurrentLearn
 {
     Nothing = 0,
@@ -8,25 +9,7 @@ public enum CurrentLearn
     Flames = 2,
     FlameBlock = 3,
 }
-[System.Serializable]
-public class MatrixStat
-{
-    public int X, Y;
-    public float H, S;
-    public float CreationTime;
-    public float TimeSinceCreation()
-    {
-        return Time.timeSinceLevelLoad - CreationTime;
-    }
-    public MatrixStat(int XStat, int YStat, float HStat, float SStat)
-    {
-        X = XStat;
-        Y = YStat;
-        H = HStat;
-        S = SStat;
-        CreationTime = Time.timeSinceLevelLoad;
-    }
-}
+
 
 public class LearnManager : MonoBehaviour
 {
@@ -71,7 +54,7 @@ public class LearnManager : MonoBehaviour
     public static event NewMotion OnNewMotion;
 
     [Header("Frames")]
-    
+
     [HideInInspector] public int AgentsWaiting;
     [HideInInspector] public int Set;
 
@@ -85,8 +68,8 @@ public class LearnManager : MonoBehaviour
     [HideInInspector] public int CurrentSet;
 
     [Header("NeatCount")]
-    [HideInInspector] public List<SingleInfo> RightInfo;
-    [HideInInspector] public List<SingleInfo> LeftInfo;
+    public List<SingleInfo> RightInfo;
+    public List<SingleInfo> LeftInfo;
 
     [HideInInspector] public int MaxStoreInfo;
     [Header("NEAT Settings")]
@@ -99,67 +82,39 @@ public class LearnManager : MonoBehaviour
     public bool RewardOnFalse;
 
     public List<bool> AllowMotions;
-    
+
     public int FramesToFeedAI;
-    
+
     [Header("NEAT Stats")]
     private int LastGeneration;
     public List<float> MotionRewardMultiplier;
-    
+
     public delegate void NewGen();
     public event NewGen OnNewGen;
 
     public Vector2 TotalValues;
 
-    [HideInInspector]public bool FinishedAndWaiting;
+    [HideInInspector] public bool FinishedAndWaiting;
 
-    public Vector2[,] GridStats;
-    public int Width = 80;
-    public int Height = 20;
+    
 
-    public float MaxHeightDifference;
-
-    public Vector2[,] ToGrid()
+    void Start()
     {
-        Vector2[,] Stats = new Vector2[Width, Height];
-        /*
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                Stats[i, j] = Vector2.zero;
-            }
-        }
-        */
-        ///log motions
-        List<MatrixStat> MatrixStats = new List<MatrixStat>();
-        for (int i = 0; i < 5; i++)
-        {
-            MatrixStats.Add(GetMatrixStats(i));
-        }
-        return Stats;
+        StartCoroutine(ManageLists(1 / 60));
+        SetSupervisorStats();
+        UpdateRewardMultiplier();
+        GetRandomMotion(out CurrentMotion, out CurrentSet);
+
+        if (OnNewMotion != null)
+            OnNewMotion(CurrentMotion, CurrentSet);
     }
-    public MatrixStat GetMatrixStats(int Frame)
-    {
-        //float Angle = 
-        int X = (angle / 360) * Width;
-
-
-        int Y = ((hand.y - cam.y) / MaxHeightDifference) * Height;
-
-        float H = (angle / 360) * Width;
-
-        float S = (angle / 360) * Width;
-
-        return new MatrixStat(X, Y, H, S);
-    }
-
+    
     public List<CurrentLearn> GetAllMotions(int MotionNum, int SetNum)
     {
         List<CurrentLearn> LearnTypes = new List<CurrentLearn>();
         for (int i = 0; i < MovementList[MotionNum].Motions[SetNum].Infos.Count; i++)
         {
-            LearnTypes.Add(MovementList[MotionNum].Motions[SetNum].AtFrameState(i) == true ? (CurrentLearn)MotionNum : (CurrentLearn)0);
+            LearnTypes.Add(MovementList[MotionNum].Motions[SetNum].AtFrameState(i) == true ? (CurrentLearn)MotionNum : CurrentLearn.Nothing);
         }
         return LearnTypes;
     }
@@ -256,7 +211,6 @@ public class LearnManager : MonoBehaviour
         //DataTracker.instance.LogGuess(CurrentMotion, CurrentSet);
         FinishedAndWaiting = true;
         yield return new WaitForEndOfFrame();
-        //Getcomponent<UnitySharpNEAT.NeatSupervisor>().r
         if (OnNewGen != null)
             OnNewGen();
         //feed frame
@@ -281,92 +235,34 @@ public class LearnManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        StartCoroutine(ManageLists(1/ 60));
-        SetSupervisorStats();
-        UpdateRewardMultiplier();
-        GetRandomMotion(out CurrentMotion, out CurrentSet);
-        
-        if (OnNewMotion != null)
-            OnNewMotion(CurrentMotion, CurrentSet);
+    
 
-
-        /*
-        for (int i = 0; i < motions.Motions.Count; i++)
-        {
-            RightWrongStats.Add(GetRightWrongAt(i));
-            int TrueAhead = (int)(RightWrongStats[i].x - RightWrongStats[i].y);
-            if (TrueAhead > 0)
-                Rights.Add(i);
-            else
-                Wrongs.Add(i);
-        }
-        */
-    }
-
-    /*
-    public Vector2 GetRightWrongTotal()
-    {
-        Vector2 RightWrongCount = Vector2.zero;
-        for (int i = 0; i < RightWrongStats.Count; i++)
-            RightWrongCount = RightWrongCount + RightWrongStats[i];
-        return RightWrongCount;
-    }
-    public Vector2 GetRightWrongAt(int MotionNum)
-    {
-        int RightCount = 0;
-        int WrongCount = 0;
-        if (motions.Motions.Count == 0)
-            return Vector2.zero;
-        for (int j = 0; j < motions.Motions[MotionNum].Infos.Count; j++)
-            if (motions.Motions[MotionNum].AtFrameState(j) == true)
-                RightCount += 1;
-            else if (motions.Motions[MotionNum].AtFrameState(j) == false)
-                WrongCount += 1;
-        return new Vector2(RightCount, WrongCount);
-    }
-    */
     public SingleInfo CurrentControllerInfo(EditSide side)
     {
         LearnManager LM = LearnManager.instance;
-        SingleInfo newInfo = new SingleInfo();
-        bool ConstantRot = true;
+        SingleInfo newInfo = new SingleInfo(Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero);
         HandActions controller = side == EditSide.right ? LM.Right : LM.Left;
 
         newInfo.HeadPos = LM.Cam.localPosition;
         newInfo.HeadRot = LM.Cam.rotation.eulerAngles;
         if (side == EditSide.right)
         {
-            if (ConstantRot == false)
-            {
-                newInfo.HandPos = controller.transform.localPosition;
-                newInfo.HandRot = controller.transform.localRotation.eulerAngles;
-                newInfo.HandVel = controller.Velocity;
+            float CamRot = LM.Cam.rotation.eulerAngles.y;
+            Vector3 handPos = controller.transform.localPosition;
+            newInfo.HeadPos = new Vector3(LM.Cam.localPosition.x, 0, LM.Cam.localPosition.z);
+            Vector3 LevelCamPos = new Vector3(newInfo.HeadPos.x, 0, newInfo.HeadPos.z);
+            Vector3 LevelHandPos = new Vector3(handPos.x, 0, handPos.z);
+            Vector3 targetDir = LevelCamPos - LevelHandPos;
 
-                newInfo.AdjustedHandPos = LM.Cam.position - controller.transform.position;
+            Vector3 StartEulerAngles = LM.Cam.eulerAngles;
+            LM.Cam.eulerAngles = new Vector3(0, CamRot, 0);
 
-                return newInfo;
-            }
-            else
-            {
-                float CamRot = LM.Cam.rotation.eulerAngles.y;
-                Vector3 handPos = controller.transform.localPosition;
-                newInfo.HeadPos = new Vector3(LM.Cam.localPosition.x, 0, LM.Cam.localPosition.z);
-                Vector3 LevelCamPos = new Vector3(newInfo.HeadPos.x, 0, newInfo.HeadPos.z);
-                Vector3 LevelHandPos = new Vector3(handPos.x, 0, handPos.z);
-                Vector3 targetDir = LevelCamPos - LevelHandPos;
+            Vector3 forwardDir = LM.Cam.rotation * Vector3.forward;
+            LM.Cam.eulerAngles = StartEulerAngles;
 
-                Vector3 StartEulerAngles = LM.Cam.eulerAngles;
-                LM.Cam.eulerAngles = new Vector3(0, CamRot, 0);
+            float NewHandCamAngle = Vector3.SignedAngle(targetDir, forwardDir, Vector3.up) + 180;
 
-                Vector3 forwardDir = LM.Cam.rotation * Vector3.forward;
-                LM.Cam.eulerAngles = StartEulerAngles;
-
-                float NewHandCamAngle = Vector3.SignedAngle(targetDir, forwardDir, Vector3.up) + 180;
-
-                return newInfo;
-            }
+            return newInfo;
         }
         else
         {
@@ -387,7 +283,7 @@ public class LearnManager : MonoBehaviour
 
             float Angle = GetAngle(CamRot);
 
-            newInfo.AdjustedHandPos = IntoComponents(Angle);
+            //newInfo.AdjustedHandPos = IntoComponents(Angle);
             Vector2 XYForce = IntoComponents(Angle);
             Vector3 AdjustedCamPos = new Vector3(XYForce.x, 0, XYForce.y);
 
@@ -402,7 +298,8 @@ public class LearnManager : MonoBehaviour
             ///velocity
             Vector2 InputVelocity = new Vector2(controller.Velocity.x, controller.Velocity.z);
             Vector2 FoundVelocity = mirrorImage(IntoComponents(CamRot), InputVelocity);
-            newInfo.HandVel = new Vector3(FoundVelocity.x, controller.Velocity.y, FoundVelocity.y);
+
+            //newInfo.HandVel = new Vector3(FoundVelocity.x, controller.Velocity.y, FoundVelocity.y);
 
             //newInfo.Works = controller.TriggerPressed();
             return newInfo;
@@ -466,13 +363,7 @@ public class ControllerInfo
     public List<Transform> TestCam;
     public List<Transform> TestHand;
 
-    HandActions MyHand(EditSide side)
-    {
-        if (side == EditSide.right)
-            return LearnManager.instance.Right;
-        else
-            return LearnManager.instance.Left;
-    }
+    public HandActions MyHand(EditSide side) { return (side == EditSide.right) ? LearnManager.instance.Right : LearnManager.instance.Left; }
     public SingleInfo GetControllerInfo(EditSide side)
     {
         Transform Cam = LearnManager.instance.Cam;
@@ -493,18 +384,8 @@ public class ControllerInfo
             
         TestMain[(int)side].rotation = Quaternion.Euler(0, YDifference, 0);
         //TestCam[(int)side].localRotation = Cam.localRotation;
-        return ReturnTest();
+        return new SingleInfo(TestHand[(int)side].position, TestHand[(int)side].rotation.eulerAngles, TestCam[(int)side].position, TestCam[(int)side].rotation.eulerAngles); ;
 
-
-        SingleInfo ReturnTest()
-        {
-            SingleInfo newInfo = new SingleInfo();
-            newInfo.HeadP-os = TestCam[(int)side].position;
-            newInfo.HeadRot = TestCam[(int)side].rotation.eulerAngles;
-            newInfo.HandPos = TestHand[(int)side].position;
-            newInfo.HandRot = TestHand[(int)side].rotation.eulerAngles;
-            return newInfo;
-        }
         void SetReferences()
         {
             TestMain[(int)side].position = Vector3.zero;

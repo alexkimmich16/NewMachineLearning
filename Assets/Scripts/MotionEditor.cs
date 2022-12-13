@@ -37,6 +37,9 @@ public class MotionEditor : MonoBehaviour
     public float SpeedChangePerSecond;
     public float SpeedMultiplier;
 
+    public delegate void ChangeMotion();
+    public static event ChangeMotion OnChangeMotion;
+
     private void Start()
     {
         input.ActivateInputField();
@@ -57,6 +60,7 @@ public class MotionEditor : MonoBehaviour
     }
     public void ChangeMotionType(int Change)
     {
+        
         MotionType += Change;
         if ((int)MotionType > Enum.GetValues(typeof(CurrentLearn)).Length - 1)
             MotionType = 0;
@@ -67,6 +71,7 @@ public class MotionEditor : MonoBehaviour
             MotionNum = LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1;
 
         display.Frame = 0;
+        OnChangeMotion();
     }
     void Update()
     {
@@ -110,11 +115,14 @@ public class MotionEditor : MonoBehaviour
             {
                 MotionNum += 1;
                 display.Motion = MotionNum;
+                OnChangeMotion();
             }
             if (Input.GetKeyDown(KeyCode.DownArrow) && MotionNum > 0)
             {
+                
                 MotionNum -= 1;
                 display.Motion = MotionNum;
+                OnChangeMotion();
             }
         }
         

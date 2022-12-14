@@ -1269,7 +1269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55a4959af032305438a04d410c6b0418, type: 3}
   m_Name: InterceptCreateSessionFeature Standalone
   m_EditorClassIdentifier: 
-  m_enabled: 0
+  m_enabled: 1
   nameUi: 'Sample: Intercept Create Session'
   version: 0.0.1
   featureIdInternal: com.unity.openxr.feature.example.intercept
@@ -1815,14 +1815,14 @@ MonoBehaviour:
   - {fileID: -5698246915905401053}
   - {fileID: 6201551931855696254}
   - {fileID: -8709156091631354364}
+  - {fileID: 3651214432974056513}
   - {fileID: 9168349127260137843}
+  - {fileID: -5515096687869606127}
   - {fileID: -6866079696215890091}
   - {fileID: -8094388554937866181}
   - {fileID: -2571093544764524417}
   - {fileID: 4703410600883579200}
   - {fileID: -6960558693106865562}
-  - {fileID: 3651214432974056513}
-  - {fileID: -5515096687869606127}
   - {fileID: 7011480403307360749}
   m_renderMode: 1
   m_depthSubmissionMode: 0

@@ -38,6 +38,18 @@ public class MatrixManager : MonoBehaviour
     [Header("Interpolation")]
     public int InterprolateFrames;
 
+    public List<float> GridToFloats()
+    {
+        List<float> AllFloats = new List<float>;
+        for (int i = 0; i < Width; i++)
+            for (int j = 0; j < Height; j++)
+            {
+                AllFloats.Add(GridStats[i, j].x);
+                AllFloats.Add(GridStats[i, j].y);
+            }
+        return AllFloats;
+    }
+
     void Start()
     {
         GridStats = new Vector2[Width, Height];

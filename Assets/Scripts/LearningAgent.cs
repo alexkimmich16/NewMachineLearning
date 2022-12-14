@@ -196,7 +196,7 @@ namespace UnitySharpNEAT
             {
                 int CurrentFrame = Frame - i;
                 SingleInfo Info = (LM.state == learningState.Learning) ? CurrentMotion().Infos[CurrentFrame] : LM.PastFrame(side, CurrentFrame);
-                //Debug.Log(MotionIndex + "  " +  Set + "  " + CurrentFrame);
+
                 if (LM.HandPos)
                     AddVector3(Info.HandPos);
                 if (LM.HandRot)

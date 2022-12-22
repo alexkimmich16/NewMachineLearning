@@ -39,9 +39,9 @@ public class Motion
 {
     //[HideInInspector]
     public List<SingleInfo> Infos;
-    public List<Vector2> TrueRanges;
-    public int TrueIndex;
-    public int PlayCount;
+    [HideInInspector] public List<Vector2> TrueRanges;
+    [HideInInspector] public int TrueIndex;
+    [HideInInspector] public int PlayCount;
     
     public void IntoRange(List<bool> Values)
     {

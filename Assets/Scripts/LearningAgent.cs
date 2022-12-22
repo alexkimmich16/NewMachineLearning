@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using SharpNeat.Phenomes;
+using Sirenix.OdinInspector;
 //https://www.phyley.com/decompose-force-into-xy-components
 public enum learningState
 {
@@ -22,9 +23,6 @@ namespace UnitySharpNEAT
         [Header("Set")]
         public DebugType DebugType;
 
-        //[HideInInspector]
-        
-
         [Header("Current")]
         public int Frame;
         public int Set;
@@ -38,6 +36,9 @@ namespace UnitySharpNEAT
         
         public delegate void EventHandlerTwo();
         public event EventHandlerTwo FinalFrame;
+
+        public delegate void NewFrame();
+        public event NewFrame OnNewFrame;
         [Header("Other")]
         public EditSide side;
 
@@ -60,76 +61,126 @@ namespace UnitySharpNEAT
         {
             Fitness = 0;
         }
-        public bool Active() { return Frame < MaxFrame; }
+        
         [Header("Output")]
         public CurrentLearn CurrentGuess;
         public CurrentLearn RealMotion;
-        public bool Iscorrect;
 
         public int GuessStreak;
         public CurrentLearn lastGuess;
 
-        public List<CurrentLearn> Guesses;
+        private float OutputMultiplier = 1000f;
+        public List<SingleInfo> InterpolateFrames;
+        public bool CanGiveAnswer, CanRecieveInfo;
+        public static int StartedUpCount;
+        public static int TotalMaxAgents = 100;
 
-        public bool IsLogger;
-
-        private float WeightOutputMultiplier = 1000f;
         
+        public float LastWorldTime;
+        public float LargestTime;
+        [Header("Debug")]
+        public bool IsInterpolatingDsplay;
+        public bool IsLoggerDisplay;
+        
+
+        public void StartupCountAdd()
+        {
+            StartedUpCount += 1;
+            if (StartedUpCount == TotalMaxAgents)
+            {
+                //Debug.Log("done");
+                LearnManager.instance.StartAlgorithmSequence();
+            }
+
+        }
+        
+        public void OnIntervalReached()
+        {
+            CanGiveAnswer = true;
+            CanRecieveInfo = true;
+        }
+
+        public bool Active() { return Frame != MaxFrame || IsInterpolating(); }
+        public bool IsInterpolating() { return InterpolateFrames.Count > 0 && Frame == MaxFrame; }
+        public bool IsLogger() { return transform == transform.parent.GetChild(0); }
         private void Start()
         {
             LearnManager.OnNewMotion += RecieveNewMotion;
-            int sibling = GetSiblingIndex(transform, transform.parent);
-            IsLogger = sibling == 0;
+            LearnManager.OnIntervalReached += OnIntervalReached;
+
+            int sibling = 0;
+            for (int i = 0; i < transform.parent.childCount; ++i)
+                if (transform == transform.parent.GetChild(i))
+                    sibling = i;
             transform.position = new Vector3(0,0, sibling * LearnManager.instance.SpawnGap);
+            gameObject.name = "AI: " + sibling;
             for (int i = 0; i < LearnManager.instance.MovementList.Count; ++i)
                 WeightedGuesses.Add(0);
             LearnManager.instance.OnNewGen += OnNewGeneration;
-            int GetSiblingIndex(Transform child, Transform parent)
-            {
-                for (int i = 0; i < parent.childCount; ++i)
-                    if (child == parent.GetChild(i))
-                        return i;
-                Debug.LogWarning("Child doesn't belong to this parent.");
-                return 0;
-            }
+            StartupCountAdd();
+            //AddToStartup();
         }
-        void RecieveNewMotion(int Motion, int SetStat)
+        void RecieveNewMotion(int Motion, int SetStat, List<SingleInfo> InterpolateFramesStat)
         {
+            LearnManager LM = LearnManager.instance;
+
             SentLearnManagerFinish = false;
             Set = SetStat;
             MotionIndex = Motion;
-            LearnManager LM = LearnManager.instance;
-            Frame = LM.FramesToFeedAI;
-            //LM.MovementList[Motion].Motions[SetStat].Infos.Count - 1
+            
+            //Frame = LM.FramesToFeedAI;
+            Frame = 0;
             MaxFrame = LM.MovementList[Motion].Motions[SetStat].Infos.Count - 1;
-            Guesses.Clear();
+
+            InterpolateFrames = new List<SingleInfo>(InterpolateFramesStat);
         }
         #region Overrides
         public override float GetFitness()
         {
+            if (Fitness < 0)
+                Fitness = 0;
             float RealFitness = Fitness;
+            //Fitness = 0;
             return RealFitness;
         }
         protected override void UseBlackBoxOutpts(ISignalArray outputSignalArray)//on output
         {
+            IsInterpolatingDsplay = IsInterpolating();
+            IsLoggerDisplay = IsLogger();
             if (!Active())
                 return;
+
             CustomDebug("OnActionReceived");
 
-            bool IndexWorks = LearnManager.instance.MovementList[MotionIndex].Motions[Set].AtFrameState(Frame);
-
-            CurrentLearn TrueMotion = (CurrentLearn)((IndexWorks) ? MotionIndex : 0);
+            CurrentLearn Truth = TrueMotion();
             CurrentLearn Guess = (CurrentLearn)GetHighest(out Conflict);
-            if(IsLogger)
-                DataTracker.instance.LogGuess(MotionIndex, Set);
-            
+            SetVariablesPublic();
+
+            if (CanGiveAnswer == false)
+                return;
+            CanGiveAnswer = false;
+            if (IsInterpolating())
+                return;
+            if(false)
+                Debug.Log("ISLOgger: " + IsLogger());
+            if (IsLogger())
+                DataTracker.instance.LogGuess();
+
             Fitness += FitnessIncrease();
 
-            if (Fitness < 0)
-                Fitness = 0;
-
             ChangeSameGuessStreak(Guess);
-            SetVariablesPublic();
+
+            CurrentLearn TrueMotion()
+            {
+                if (IsInterpolating())
+                    return CurrentLearn.Nothing;
+                if (LearnManager.instance.AtFrameStateAlwaysTrue)
+                    return (CurrentLearn)MotionIndex;
+
+                bool IndexWorks = LearnManager.instance.MovementList[MotionIndex].Motions[Set].AtFrameState(Frame);
+                CurrentLearn IndexCheckMotion = (CurrentLearn)((IndexWorks) ? MotionIndex : 0);
+                return IndexCheckMotion;
+            }
             float FitnessIncrease()
             {
                 LearnManager LM = LearnManager.instance;
@@ -137,25 +188,25 @@ namespace UnitySharpNEAT
                 float Subtract = (LM.ShouldPunish(GuessStreak)) ? -1000 : 0;
                 if (LM.ShouldPunish(GuessStreak))
                     GuessStreak = 0;
-                Guesses.Add(Guess);
-                float MotionMultiplier = LM.ShouldRewardMultiplier ? LM.MotionRewardMultiplier[(int)TrueMotion] : 1;
-                float ShouldRewardOnFalse = (TrueMotion == CurrentLearn.Nothing && LM.RewardOnFalse == false) ? 0 : 1;
-                float HighestMultiplier = (LearnManager.instance.MultiplyByHighestGuess) ? (WeightedGuesses[GetHighest(out bool Conflict)] / WeightOutputMultiplier) : 1;
-                return (Increase + Subtract) * ShouldRewardOnFalse * MotionMultiplier * HighestMultiplier;
+                float MotionMultiplier = LM.UseWeightedRewardMultiplier ? LM.WeightedRewardMultiplier[(int)Truth] : 1;
+                float ShouldRewardOnFalse = (Truth == CurrentLearn.Nothing && LM.RewardNothingGuess == false) ? 0 : 1;
+                float HighestMultiplier = (LearnManager.instance.MultiplyByHighestGuess) ? (WeightedGuesses[GetHighest(out bool Conflict)] / OutputMultiplier) : 1;
+                float RewardOnInterpolateMultiplier = (IsInterpolating() && LearnManager.instance.RewardOnInterpolation || IsInterpolating() == false) ? 1f : 0f;
+                return (Increase + Subtract) * ShouldRewardOnFalse * MotionMultiplier * HighestMultiplier * RewardOnInterpolateMultiplier;
             }
             bool IsCorrect()
             {
                 bool NoConflict = true;
-                bool CorrectGuess = Guess == TrueMotion;
-                return NoConflict && CorrectGuess;
+                bool CorrectGuess = Guess == Truth;
+                bool IsInterpolationSafe = IsInterpolating() && LearnManager.instance.RewardOnInterpolation || IsInterpolating() == false;
+                return NoConflict && CorrectGuess && IsInterpolationSafe ;
             }
             void SetVariablesPublic()
             {
                 CurrentGuess = Guess;
-                RealMotion = TrueMotion;
+                RealMotion = Truth;
                 Reward = FitnessIncrease();
                 handToChange.material = FalseTrue[Convert.ToInt32(IsCorrect())];
-                Iscorrect = IsCorrect();
             }
             int GetHighest(out bool ConflictingGuesses)
             {
@@ -163,7 +214,7 @@ namespace UnitySharpNEAT
                 int index = 0;
                 for (int i = 0; i < outputSignalArray.Length; i++)
                 {
-                    WeightedGuesses[i] = (float)outputSignalArray[i] * WeightOutputMultiplier;
+                    WeightedGuesses[i] = (float)outputSignalArray[i] * OutputMultiplier;
                     if (WeightedGuesses[i] > Highest)
                     {
                         Highest = WeightedGuesses[i];
@@ -181,53 +232,44 @@ namespace UnitySharpNEAT
         protected override void UpdateBlackBoxInputs(ISignalArray inputSignalArray)//on Input
         {
             if (!Active())
-            {
-                if (SentLearnManagerFinish == false)
-                {
-                    LearnManager.instance.AgentWaiting();
-                    SentLearnManagerFinish = true;
-                }
                 return;
-            }
-            CustomDebug("CollectObservations");
-            LearnManager LM = LearnManager.instance;
-            int CurrentIndex = 0;
-            for (int i = 0; i < LearnManager.instance.FramesToFeedAI; i++)
-            {
-                int CurrentFrame = Frame - i;
-                SingleInfo Info = (LM.state == learningState.Learning) ? CurrentMotion().Infos[CurrentFrame] : LM.PastFrame(side, CurrentFrame);
-
-                if (LM.HandPos)
-                    AddVector3(Info.HandPos);
-                if (LM.HandRot)
-                    AddVector3(Info.HandRot);
-                if (LM.HeadPos)
-                    AddVector3(Info.HeadPos);
-                if (LM.HeadRot)
-                    AddVector3(Info.HeadRot);
-            }
-
-            if(Frame < MaxFrame)
+            //Debug.Log("Frame: " + Frame + "  MaxFrame: " + MaxFrame + "  IsInterpolating: " + IsInterpolating());
+            if (Frame < MaxFrame)
                 Frame += 1;
+            else if (IsInterpolating())
+                InterpolateFrames.RemoveAt(0);
 
-            //TotalFrameTest +=
+            if (OnNewFrame != null)
+                OnNewFrame();
 
-            void AddVector3(Vector3 Input)
+            if (!Active())
             {
-                if (LearnManager.instance.ConvertToBytes == false)
+                LearnManager.instance.AgentWaiting();
+                if (IsLogger())
                 {
-                    inputSignalArray[CurrentIndex] = Input.x;
-                    inputSignalArray[CurrentIndex + 1] = Input.y;
-                    inputSignalArray[CurrentIndex + 2] = Input.z;
+                    if (Time.timeSinceLevelLoad - LastWorldTime > LargestTime)
+                    {
+                        LargestTime = (Time.timeSinceLevelLoad - LastWorldTime);
+                        //Debug.Log("LastTime: " + (Time.timeSinceLevelLoad - LastWorldTime).ToString("F2") + "  Motion: " + (CurrentLearn)MotionIndex + "  Set: " + Set + "  Frames: " + (MaxFrame + 1));
+                    }
+                    LastWorldTime = Time.timeSinceLevelLoad;
                 }
-                else
-                {
-                    inputSignalArray[CurrentIndex] = Convert.ToByte(Input.x);
-                    inputSignalArray[CurrentIndex + 1] = Convert.ToByte(Input.y);
-                    inputSignalArray[CurrentIndex + 2] = Convert.ToByte(Input.z);
-                }
-                CurrentIndex += 3;
+                
             }
+                
+            
+            //Frame != MaxFrame || IsInterpolating()
+            if (CanRecieveInfo == false)
+                return;
+            
+            CanRecieveInfo = false;
+            //if (IsLogger)
+                //Debug.Log("inputPT: 2");
+            CustomDebug("CollectObservations");
+
+            List<float> Feed = MatrixManager.instance.GridToFloats();
+            for (int i = 0; i < Feed.Count; i++)
+                inputSignalArray[i] = Feed[i];
         }
         protected override void HandleIsActiveChanged(bool newIsActive)
         {
@@ -236,7 +278,6 @@ namespace UnitySharpNEAT
                 t.gameObject.SetActive(newIsActive);
             }
         }
-        //override v
         #endregion
         void ChangeSameGuessStreak(CurrentLearn Guess)
         {

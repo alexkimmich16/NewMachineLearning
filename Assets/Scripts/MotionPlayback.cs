@@ -47,13 +47,11 @@ public class MotionPlayback : MonoBehaviour
         LearnManager LM = LearnManager.instance;
         if (type == PlayType.WatchAI)
         {
-            if(LA.MotionIndex < LM.MovementList.Count && LA.Set < LM.MovementList[LA.MotionIndex].Motions.Count)
-            {
-                Motion motion = LA.CurrentMotion();
-                //Debug.Log("|Motion: " + LA.MotionIndex + " |Set: " + LA.Set + " |Frame: " + LA.Frame + "|");
-                if (motion.Infos.Count > LA.Frame)
-                    moveAll(motion.Infos[LA.Frame]);
-            }
+            //Debug.Log("|Motion: " + LA.MotionIndex + " |Set: " + LA.Set + " |Frame: " + LA.Frame + "|");
+            if (LA.Active() && LA.IsInterpolating() == false)
+                moveAll(LA.CurrentMotion().Infos[LA.Frame]);
+            else if (LA.IsInterpolating())
+                moveAll(LA.InterpolateFrames[0]);
         }
         else if (type == PlayType.Repeat)
         {
@@ -79,7 +77,7 @@ public class MotionPlayback : MonoBehaviour
                     int MaxFromCount = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos.Count - 1;
                     Vector3 From = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos[MaxFromCount].HandPos;
                     Vector3 To = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum + 1].Infos[0].HandPos;
-                    interpolating = MatrixManager.instance.InterpolatePositions(From, To);
+                    interpolating = LearnManager.instance.InterpolatePositions(From, To);
                     OneInterprolate = false;
                     MotionEditor.instance.MotionNum += 1;
                 }
@@ -89,8 +87,8 @@ public class MotionPlayback : MonoBehaviour
             
             moveAll(info);
             LastMotion = Motion;
-
-            OnNewFrame();
+            if(OnNewFrame != null)
+                OnNewFrame();
         }
         void moveAll(SingleInfo info)
         {

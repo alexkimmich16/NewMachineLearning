@@ -71,7 +71,8 @@ public class MotionEditor : MonoBehaviour
             MotionNum = LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1;
 
         display.Frame = 0;
-        OnChangeMotion();
+        if(OnChangeMotion != null)
+            OnChangeMotion();
     }
     void Update()
     {
@@ -115,14 +116,16 @@ public class MotionEditor : MonoBehaviour
             {
                 MotionNum += 1;
                 display.Motion = MotionNum;
-                OnChangeMotion();
+                if(OnChangeMotion != null)
+                    OnChangeMotion();
             }
             if (Input.GetKeyDown(KeyCode.DownArrow) && MotionNum > 0)
             {
                 
                 MotionNum -= 1;
                 display.Motion = MotionNum;
-                OnChangeMotion();
+                if (OnChangeMotion != null)
+                    OnChangeMotion();
             }
         }
         

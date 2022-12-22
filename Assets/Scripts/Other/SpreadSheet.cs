@@ -12,24 +12,25 @@ public class SpreadSheet : SerializedMonoBehaviour
     public string Location() { return Application.dataPath + "/SpreadSheets/AIStatHolder.csv"; }
     private AllMotions Motions;
 
-    public bool Written;
+    private bool HasWritten;
 
-    private float Interval = 60f;
+    public float WriteToSpreadsheetInterval = 60f;
 
     public Dictionary<string, bool> IsActiveDictionary;
             //
     public void PrintStats()
     {
         TextWriter tw;
-        if (Written == false)
+        if (HasWritten == false)
         {
             tw = new StreamWriter(Location(), false);
             string LineWrite = "Motion, Set";
             if (IsActiveDictionary["MotionFinishedCount"] == true) { LineWrite = LineWrite + ", MotionFinishedCount"; }
             if (IsActiveDictionary["Guess"] == true) { LineWrite = LineWrite + ", Guess"; }
             if (IsActiveDictionary["Truth"] == true) { LineWrite = LineWrite + ", Truth"; }
+            if (IsActiveDictionary["Timer"] == true) { LineWrite = LineWrite + ", Timer"; }
             tw.WriteLine(LineWrite);
-            Written = true;
+            HasWritten = true;
         }
         else
         {
@@ -43,23 +44,18 @@ public class SpreadSheet : SerializedMonoBehaviour
             if (IsActiveDictionary["MotionFinishedCount"] == true) { CombinedString = CombinedString + ", " + DT.Stats[i].MotionPlayNum; }
             if (IsActiveDictionary["Guess"] == true) { CombinedString = CombinedString + ", " + DT.Stats[i].Guess; }
             if (IsActiveDictionary["Truth"] == true) { CombinedString = CombinedString + ", " + DT.Stats[i].Truth; }
+            if (IsActiveDictionary["Timer"] == true) { CombinedString = CombinedString + ", " + DT.Stats[i].Timer; }
             tw.WriteLine(CombinedString);
         }
         DT.Stats.Clear();
         tw.Close();
-    }
-    public void UpdateSpreadSheet()
-    {
-        Debug.Log("update SpreadSheet");
-        //Debug.Log(Location());
-        PrintStats();
     }
     IEnumerator CallPrintStats()
     {
         while (true)
         {
             PrintStats();
-            yield return new WaitForSeconds(Interval);
+            yield return new WaitForSeconds(WriteToSpreadsheetInterval);
         }
     }
     void Start()
@@ -68,13 +64,6 @@ public class SpreadSheet : SerializedMonoBehaviour
         if (Motions.Motions.Count == 0)
             return;
         StartCoroutine(CallPrintStats());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-            UpdateSpreadSheet();
     }
 }
 

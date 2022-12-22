@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
-public class MatrixManager : MonoBehaviour
+public enum MatrixDisplay
+{
+    MotionPlayback = 0,
+    LearnManager = 1,
+    ControllerTesting = 2,
+}
+public class MatrixManager : SerializedMonoBehaviour
 {
     public static MatrixManager instance;
     private void Awake() { instance = this; }
 
     LearnManager LM;
     [Header("MatrixStats")]
+    public MatrixDisplay currentDisplay;
 
     public int Width = 80;
     public int Height = 20;
@@ -20,27 +27,22 @@ public class MatrixManager : MonoBehaviour
 
     //[BoxGroup("ReadOnly table")]
     //[TableMatrix(IsReadOnly = true)]
-    public Vector2[,] GridStats;
+    [HideInInspector] public Vector2[,] GridStats;
 
-    public List<MatrixStat> MatrixStats;
+
+    [HideInInspector]public List<MatrixStat> MatrixStats;
 
     private Texture2D TextureMap;
     public Image Display;
     private Sprite mySprite;
-    public Color DisplayColor;
-
-    public float UpdateInterval;
-
-    public bool TestingWithControllers;
 
     private Vector3 DefultHSV = new Vector3(0f, 0f, 0.5f);
 
-    [Header("Interpolation")]
-    public int InterprolateFrames;
-
+    [PropertyRange(1, 200)]public int ResetFrames;
+    public int FramesWaited;
     public List<float> GridToFloats()
     {
-        List<float> AllFloats = new List<float>;
+        List<float> AllFloats = new List<float>();
         for (int i = 0; i < Width; i++)
             for (int j = 0; j < Height; j++)
             {
@@ -49,7 +51,10 @@ public class MatrixManager : MonoBehaviour
             }
         return AllFloats;
     }
-
+    public void OnStartLearn()
+    {
+        LearnManager.instance.LoggingAI().OnNewFrame += OnNewFrame;
+    }
     void Start()
     {
         GridStats = new Vector2[Width, Height];
@@ -57,26 +62,24 @@ public class MatrixManager : MonoBehaviour
         TextureMap.filterMode = FilterMode.Point;
 
         LM = LearnManager.instance;
-        MotionPlayback.OnNewFrame += OnNewFrame;
-        //LM.Info.MyHand(EditSide.right).OnTriggerRelease += ResetMatrix;
-        MotionEditor.OnChangeMotion += ResetMatrix;
+
+        if (currentDisplay == MatrixDisplay.MotionPlayback)
+        {
+            MotionPlayback.OnNewFrame += OnNewFrame;
+            MotionEditor.OnChangeMotion += ResetMatrix;
+        }
+        else if (currentDisplay == MatrixDisplay.ControllerTesting)
+        {
+
+        }
+        else if (currentDisplay == MatrixDisplay.LearnManager)
+        {
+            LearnManager.OnAlgorithmStart += OnStartLearn;
+        }
 
         StartCoroutine(UpdateGraphic());
 
         ResetMatrix();
-    }
-
-    public List<SingleInfo> InterpolatePositions(Vector3 from, Vector3 to)
-    {
-        List<SingleInfo> LerpList = new List<SingleInfo>();
-        float EachChange = 1f / (InterprolateFrames + 1f);
-        float Current = EachChange;
-        for (int i = 0; i < InterprolateFrames; i++)
-        {
-            LerpList.Add(new SingleInfo(Vector3.Lerp(from, to, Current), Vector3.zero, Vector3.zero, Vector3.zero));
-            Current += EachChange;
-        }
-        return LerpList;
     }
     public void ResetMatrix()
     {
@@ -100,25 +103,34 @@ public class MatrixManager : MonoBehaviour
     }
     IEnumerator UpdateGraphic()
     {
-        //DataTracker.instance.LogGuess(CurrentMotion, CurrentSet);
         while (true)
         {
-            yield return new WaitForSeconds(UpdateInterval);
+            while (ResetFrames > FramesWaited)
+            {
+                yield return new WaitForEndOfFrame();
+                FramesWaited += 1;
+            }
+                
             UpdateGrid();
+            FramesWaited = 0;
         }
     }
     public void OnNewFrame()
     {
-        if(TestingWithControllers == false || LM.Info.MyHand(EditSide.right).TriggerPressed() == true)
-        {
-            AddToMatrixList(CorrospondingMatrixStat());
-        }
+        if (currentDisplay == MatrixDisplay.ControllerTesting && LM.Info.MyHand(EditSide.right).TriggerPressed() == false)
+            return;
+        if (currentDisplay == MatrixDisplay.LearnManager && LM.CurrentSingleInfo() == null)
+            return;
+        AddToMatrixList(GetCorrospondingMatrixStat());
     }
     public void AddToMatrixList(MatrixStat Stat)
     {
+        if (Stat.X > Width || Stat.X < 0 || Stat.Y > Height || Stat.Y < 0)
+            Debug.LogError("larger than array at  Motion: " + LearnManager.instance.CurrentMotion + "  Set: " + LearnManager.instance.CurrentSet);
         for (int i = 0; i < MatrixStats.Count; i++)
             if (MatrixStats[i].X == Stat.X && MatrixStats[i].Y == Stat.Y)
                 MatrixStats.RemoveAt(i);
+
         GridStats[Stat.X, Stat.Y] = Vector2.zero;
 
         MatrixStats.Add(Stat);
@@ -161,7 +173,7 @@ public class MatrixManager : MonoBehaviour
         Display.sprite = mySprite;
     }
 
-    public MatrixStat CorrospondingMatrixStat()
+    public MatrixStat GetCorrospondingMatrixStat()
     {
         SingleInfo newInfo = GetCorrospondingInfo();
 
@@ -169,12 +181,22 @@ public class MatrixManager : MonoBehaviour
         int Y = (int)Mathf.Abs(Remap(newInfo.HandPos.y, HeightMaxMin) * Height);
         float H = Remap(newInfo.HandPos.z, MaxZDistance);
         float S = 1f;
-
+        if (Y > Height || Y < 0)
+            Debug.Log("Motion: " + LM.CurrentMotion + "  Set: " + LM.CurrentSet + "  Frame: " + LM.CurrentFrame());
         return new MatrixStat(X, Y, H, S);
+        //currentDisplay
+        SingleInfo GetCorrospondingInfo()
+        {
+            if (currentDisplay == MatrixDisplay.MotionPlayback)
+                return LM.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos[MotionEditor.instance.display.Frame];
+            else if (currentDisplay == MatrixDisplay.ControllerTesting)
+                return LM.Info.GetControllerInfo(EditSide.right);
+            else if (currentDisplay == MatrixDisplay.LearnManager)
+                return LM.CurrentSingleInfo();
 
-        SingleInfo GetCorrospondingInfo() { return TestingWithControllers ?
-            LM.Info.GetControllerInfo(EditSide.right) :
-            LM.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos[MotionEditor.instance.display.Frame];}
+            return null;
+        }
+            
         float GetAngle()
         {
             Vector3 LevelCamPos = new Vector3(newInfo.HeadPos.x, 0, newInfo.HeadPos.z);

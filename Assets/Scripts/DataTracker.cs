@@ -6,32 +6,41 @@ public class DataTracker : SerializedMonoBehaviour
 {
     public static DataTracker instance;
     private void Awake() { instance = this; }
-    [Header("RightVSWrong")]
-    public Vector2 Current;
-    public Vector2 CurrentTotal;
-    public Vector2 AbsoluteTotal;
-    public List<Vector2> Past;
-    public List<AIStat> Stats;
+    [FoldoutGroup("CurrentInfo"), ReadOnly] public int TotalLogCount;
+    [FoldoutGroup("CurrentInfo"), ReadOnly] public Vector2 Current;
+    [FoldoutGroup("CurrentInfo"), ReadOnly] public Vector2 CurrentTotal;
+    [FoldoutGroup("CurrentInfo"), ReadOnly] public Vector2 AbsoluteTotal;
+    [FoldoutGroup("CurrentInfo"), ReadOnly] public List<Vector2> Past;
 
-    public List<float> PastFitness;
+    [FoldoutGroup("CurrentInfo"), ReadOnly] public List<AIStat> Stats;
 
-    [Header("Stats")]
+    [FoldoutGroup("CurrentInfo"), ReadOnly] public List<int> SpellCalls;
+
+    //[FoldoutGroup("Stats")] 
     public float RefreshInterval = 2f;
+    //[FoldoutGroup("Stats")] 
     public bool DebugOnRefresh;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
             CurrentTotal = Vector2.zero;
     }
-    public void LogGuess(int Motion, int Set)
+    public void LogGuess()
     {
-        //List<CurrentLearn> Guesses = LearnManager.instance.gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.GetChild(0).GetComponent<UnitySharpNEAT.LearningAgent>().Guesses;
-        //List<CurrentLearn> Truths = LearnManager.instance.GetAllMotions(Motion, Set);
-        UnitySharpNEAT.LearningAgent agent = LearnManager.instance.gameObject.GetComponent<UnitySharpNEAT.NeatSupervisor>()._spawnParent.GetChild(0).GetComponent<UnitySharpNEAT.LearningAgent>();
-        CurrentLearn Guess = agent.CurrentGuess;
+        //Debug.Log("aa");
+        LearnManager LM = LearnManager.instance;
+        TotalLogCount += 1;
+        
+        int Motion = LM.LoggingAI().MotionIndex;
+        int Set = LM.LoggingAI().Set;
 
-        CurrentLearn Truth = LearnManager.instance.MovementList[Motion].Motions[Set].AtFrameState(agent.Frame) ? (CurrentLearn)Motion: CurrentLearn.Nothing;
-        int PlayCount = LearnManager.instance.MovementList[Motion].Motions[Set].PlayCount;
+        SpellCalls[Motion] += 1;
+
+        CurrentLearn Guess = LM.LoggingAI().CurrentGuess;
+
+        bool AtFrameState = LM.MovementList[Motion].Motions[Set].AtFrameState(LM.LoggingAI().Frame);
+        CurrentLearn Truth = (LM.AtFrameStateAlwaysTrue) ? ((CurrentLearn)Motion) : (AtFrameState ? (CurrentLearn)Motion : CurrentLearn.Nothing); ;
+        int PlayCount = LM.MovementList[Motion].Motions[Set].PlayCount;
         
         Current = (Guess == Truth) ? new Vector2(Current.x + 1, Current.y) : new Vector2(Current.x, Current.y + 1);
         CurrentTotal = (Guess == Truth) ? new Vector2(CurrentTotal.x + 1, CurrentTotal.y) : new Vector2(CurrentTotal.x, CurrentTotal.y + 1);
@@ -39,11 +48,13 @@ public class DataTracker : SerializedMonoBehaviour
         //stat.
         Stats.Add(new AIStat(Motion, Set, PlayCount, Guess, Truth));
     }
-
-
     
     void Start()
     {
+        for (int i = 0; i < LearnManager.instance.MovementList.Count; ++i)
+            SpellCalls.Add(0);
+
+
         StartCoroutine(RefreshWait());
     }
     IEnumerator RefreshWait()
@@ -67,6 +78,7 @@ public class AIStat
 {
     public int Motion, Set;
     public int MotionPlayNum;
+    public float Timer;
     public CurrentLearn Guess, Truth;
     public AIStat(int MotionStat, int SetStat, int MotionPlayNumStat, CurrentLearn GuessStat, CurrentLearn TruthStat)
     {
@@ -75,6 +87,7 @@ public class AIStat
         MotionPlayNum = MotionPlayNumStat;
         Guess = GuessStat;
         Truth = TruthStat;
+        Timer = Time.timeSinceLevelLoad;
     }
 }
 

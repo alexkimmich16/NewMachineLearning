@@ -101,12 +101,13 @@ namespace UnitySharpNEAT
                         }
                     }
                 }
+
                 ///OVVERITTEN CODE!!!!
                 ///---------------------------------------------------------------------------------------------------------------------------------------------------------
                 // wait until the next trail, i.e. when the next evaluation should happen
-                //yield return new WaitForSeconds(_neatSupervisor.TrialDuration);
-                yield return new WaitUntil(() => LearnManager.instance.FinishedAndWaiting);
-                LearnManager.instance.FinishedAndWaiting = false;
+                yield return new WaitForSeconds(_neatSupervisor.TrialDuration);
+                //yield return new WaitUntil(() => LearnManager.instance.FinishedAndWaiting);
+                //LearnManager.instance.FinishedAndWaiting = false;
                 ///---------------------------------------------------------------------------------------------------------------------------------------------------------
 
                 // evaluate the fitness of all phenomes (IBlackBox) during this trial duration.

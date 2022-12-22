@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -289,11 +289,13 @@ MonoBehaviour:
   Reward: 0
   CurrentGuess: 0
   RealMotion: 0
-  Iscorrect: 0
   GuessStreak: 0
   lastGuess: 0
-  Guesses: 
-  IsLogger: 0
+  InterpolateFrames: []
+  CanGiveAnswer: 0
+  CanRecieveInfo: 0
+  LastWorldTime: 0
+  LargestTime: 0
 --- !u!4 &20299532
 Transform:
   m_ObjectHideFlags: 0
@@ -4656,8 +4658,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1023122170}
-  - component: {fileID: 1023122169}
   - component: {fileID: 1023122172}
+  - component: {fileID: 1023122171}
   m_Layer: 0
   m_Name: Stats
   m_TagString: Untagged
@@ -4665,7 +4667,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1023122169
+--- !u!4 &1023122170
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023122167}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1023122171
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4699,7 +4716,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 4
     - Name: 
       Entry: 7
       Data: 
@@ -4737,27 +4754,24 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Timer
+    - Name: $v
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
-  Written: 0
---- !u!4 &1023122170
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023122167}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  WriteToSpreadsheetInterval: 10.01
 --- !u!114 &1023122172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4767,10 +4781,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1023122167}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1f6a925497ad564480499686cfad018, type: 3}
+  m_Script: {fileID: 11500000, guid: e0b611303c55e724ca255d2e67a14cd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentState: 0
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  TotalLogCount: 0
+  Current: {x: 0, y: 0}
+  CurrentTotal: {x: 0, y: 0}
+  AbsoluteTotal: {x: 0, y: 0}
+  Past: []
+  Stats: []
+  SpellCalls: 
+  RefreshInterval: 60
+  DebugOnRefresh: 0
 --- !u!1 &1036540669
 GameObject:
   m_ObjectHideFlags: 0
@@ -5441,11 +5472,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1445321409653632785, guid: ad437abf9ab109a4dbad807b68210a9f, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1445321410496625076, guid: ad437abf9ab109a4dbad807b68210a9f, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1445321410908044321, guid: ad437abf9ab109a4dbad807b68210a9f, type: 3}
       propertyPath: m_Name
@@ -5453,7 +5484,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1445321410908044321, guid: ad437abf9ab109a4dbad807b68210a9f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1445321410908044326, guid: ad437abf9ab109a4dbad807b68210a9f, type: 3}
       propertyPath: m_Pivot.x
@@ -5549,7 +5580,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1445321410908044327, guid: ad437abf9ab109a4dbad807b68210a9f, type: 3}
       propertyPath: _initialTimeScale
-      value: 0.96
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad437abf9ab109a4dbad807b68210a9f, type: 3}
@@ -5811,17 +5842,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79d00422c2ee8134381ba5e6736fa766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: GridStats
+      Entry: 7
+      Data: 0|UnityEngine.Vector2[,], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: ranks
+      Entry: 1
+      Data: 0|0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  currentDisplay: 1
   Width: 80
   Height: 20
   HeightMaxMin: {x: -1, y: 1}
   MaxZDistance: {x: -0.85, y: 1}
-  STimeMultiplier: 0.73
+  STimeMultiplier: 3.5
   MatrixStats: []
   Display: {fileID: 2129805708}
-  DisplayColor: {r: 0, g: 0, b: 0, a: 0}
-  UpdateInterval: 0.2
-  TestingWithControllers: 1
-  InterprolateFrames: 10
+  ResetFrames: 1
+  FramesWaited: 0
 --- !u!4 &1341764516
 Transform:
   m_ObjectHideFlags: 0
@@ -6804,7 +6858,6 @@ GameObject:
   - component: {fileID: 1615791728}
   - component: {fileID: 1615791727}
   - component: {fileID: 1615791729}
-  - component: {fileID: 1615791730}
   m_Layer: 0
   m_Name: NEAT
   m_TagString: Untagged
@@ -6825,10 +6878,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _experimentConfigFileName: experiment.config
-  _networkInputCount: 30
+  _networkInputCount: 3200
   _networkOutputCount: 4
   Trials: 1
-  TrialDuration: 100
+  TrialDuration: 5
   StoppingFitness: 1e+9
   _unitControllerPrefab: {fileID: 7013353487439660062, guid: 5d36c706c3d324e4bbe2994f2486b6e2, type: 3}
   _spawnParent: {fileID: 701478116}
@@ -6860,19 +6913,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a6b77184d7afe14d9ed77ce7cd9cc7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   state: 0
   motions: {fileID: 11400000, guid: b43c4ee0449caaa419408f76f3c4b51f, type: 2}
+  LearnOnStart: 1
   MovementList:
   - {fileID: 11400000, guid: ba1f4e16a66abfc4d89b53dab8ca7864, type: 2}
   - {fileID: 11400000, guid: b43c4ee0449caaa419408f76f3c4b51f, type: 2}
   - {fileID: 11400000, guid: 18a3b38a205183d40bd01ea7eb1a28e4, type: 2}
   - {fileID: 11400000, guid: 1597bbe8291baf34382b91150b268f3a, type: 2}
-  HeadPos: 0
-  HeadRot: 0
-  HandPos: 1
-  HandRot: 1
-  HandVel: 0
-  AdjustedHandPos: 0
   Left: {fileID: 1867183570487954632}
   Right: {fileID: 1867183570734329137}
   Cam: {fileID: 1867183570494687147}
@@ -6889,54 +6946,45 @@ MonoBehaviour:
     TestHand:
     - {fileID: 1654231988}
     - {fileID: 778150131}
-  AgentsWaiting: 0
-  Set: 0
-  SpawnGap: 0.38
   CurrentMotion: 0
   CurrentSet: 0
+  NextMotion: 0
+  NextSet: 0
   RightInfo: []
   LeftInfo: []
+  AgentsWaiting: 0
+  WeightedRewardMultiplier: []
   MaxStoreInfo: 10
   ConvertToBytes: 0
-  ShouldRewardMultiplier: 1
+  UseWeightedRewardMultiplier: 0
+  MultiplyByHighestGuess: 0
+  RewardOnInterpolation: 0
   ShouldPunishStreakGuess: 0
-  MultiplyByHighestGuess: 1
   MaxStreakPunish: 10
-  RewardOnFalse: 1
-  AllowMotions: 01010101
-  FramesToFeedAI: 5
-  MotionRewardMultiplier: []
-  TotalValues: {x: 0, y: 0}
-  FinishedAndWaiting: 0
---- !u!114 &1615791730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1615791726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0b611303c55e724ca255d2e67a14cd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  Current: {x: 0, y: 0}
-  CurrentTotal: {x: 0, y: 0}
-  AbsoluteTotal: {x: 0, y: 0}
-  Past: []
-  Stats: []
-  PastFitness: []
-  RefreshInterval: 1.03
-  DebugOnRefresh: 0
+  RewardNothingGuess: 0
+  AtFrameStateAlwaysTrue: 1
+  WeightedMotionPick: 1
+  AutoPickChance: 1
+  OverridePickChances:
+  - 1
+  - 1
+  - 1
+  - 1
+  DisallowMotions: 0
+  UnallowedMotions: 00000000
+  SpawnGap: 0.38
+  ShouldDebug: 0
+  SecondsPerAiAction: 3.2
+  TotalInterprolateFrames: 10
+  interpolateFrames: []
+  TotalFrameCount: 
+  PickChances:
+  - 2.2395
+  - 7.5956
+  - 7.4474
+  - 3.4775
+  TotalPicks: 
+  AverageFrames: []
 --- !u!1 &1650534507
 GameObject:
   m_ObjectHideFlags: 0
@@ -10368,11 +10416,13 @@ MonoBehaviour:
   Reward: 0
   CurrentGuess: 0
   RealMotion: 0
-  Iscorrect: 0
   GuessStreak: 0
   lastGuess: 0
-  Guesses: 
-  IsLogger: 0
+  InterpolateFrames: []
+  CanGiveAnswer: 0
+  CanRecieveInfo: 0
+  LastWorldTime: 0
+  LargestTime: 0
 --- !u!114 &2591947932039339695
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -161,8 +161,6 @@ namespace UnitySharpNEAT
             CanGiveAnswer = false;
             if (IsInterpolating())
                 return;
-            if(false)
-                Debug.Log("ISLOgger: " + IsLogger());
             if (IsLogger())
                 DataTracker.instance.LogGuess();
 

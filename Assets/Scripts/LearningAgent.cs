@@ -93,7 +93,7 @@ namespace UnitySharpNEAT
             //Debug.Log("StartedUpCount" + StartedUpCount);
             if (StartedUpCount == TotalMaxAgents)
             {
-                //Debug.Log("done");
+                Debug.Log("done");
                 LearnManager.instance.StartAlgorithmSequence();
             }
 

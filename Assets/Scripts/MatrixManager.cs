@@ -119,7 +119,7 @@ public class MatrixManager : SerializedMonoBehaviour
     {
         if (currentDisplay == MatrixDisplay.ControllerTesting && LM.Info.MyHand(EditSide.right).TriggerPressed() == false)
             return;
-        if (currentDisplay == MatrixDisplay.LearnManager && LM.CurrentSingleInfo() == null)
+        if (currentDisplay == MatrixDisplay.LearnManager && LM.CurrentSingleInfo() == null || LearnManager.instance == null)
             return;
         AddToMatrixList(GetCorrospondingMatrixStat());
     }

@@ -87,7 +87,10 @@ namespace UnitySharpNEAT
 
         public void StartupCountAdd()
         {
+            if (StartedUpCount % 100 == 0)
+                StartedUpCount = 0;
             StartedUpCount += 1;
+            //Debug.Log("StartedUpCount" + StartedUpCount);
             if (StartedUpCount == TotalMaxAgents)
             {
                 //Debug.Log("done");
@@ -147,17 +150,14 @@ namespace UnitySharpNEAT
         }
         protected override void UseBlackBoxOutpts(ISignalArray outputSignalArray)//on output
         {
-            IsInterpolatingDsplay = IsInterpolating();
-            IsLoggerDisplay = IsLogger();
+            CurrentLearn Truth = TrueMotion();
+            CurrentLearn Guess = (CurrentLearn)GetHighest(out Conflict);
+
+            SetVariablesPublic();
             if (!Active())
                 return;
 
             CustomDebug("OnActionReceived");
-
-            CurrentLearn Truth = TrueMotion();
-            CurrentLearn Guess = (CurrentLearn)GetHighest(out Conflict);
-            SetVariablesPublic();
-
             if (CanGiveAnswer == false)
                 return;
             CanGiveAnswer = false;
@@ -166,7 +166,7 @@ namespace UnitySharpNEAT
             if (IsLogger())
                 OnLog();
 
-
+            Reward = FitnessIncrease();
             Fitness += FitnessIncrease();
 
             ChangeSameGuessStreak(Guess);
@@ -204,9 +204,11 @@ namespace UnitySharpNEAT
             }
             void SetVariablesPublic()
             {
+                IsInterpolatingDsplay = IsInterpolating();
+                IsLoggerDisplay = IsLogger();
                 CurrentGuess = Guess;
                 RealMotion = Truth;
-                Reward = FitnessIncrease();
+                
                 handToChange.material = FalseTrue[Convert.ToInt32(IsCorrect())];
             }
             int GetHighest(out bool ConflictingGuesses)

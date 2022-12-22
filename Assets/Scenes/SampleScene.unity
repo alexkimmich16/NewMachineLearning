@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -296,6 +296,8 @@ MonoBehaviour:
   CanRecieveInfo: 0
   LastWorldTime: 0
   LargestTime: 0
+  IsInterpolatingDsplay: 0
+  IsLoggerDisplay: 0
 --- !u!4 &20299532
 Transform:
   m_ObjectHideFlags: 0
@@ -6881,7 +6883,7 @@ MonoBehaviour:
   _networkInputCount: 3200
   _networkOutputCount: 4
   Trials: 1
-  TrialDuration: 5
+  TrialDuration: 50
   StoppingFitness: 1e+9
   _unitControllerPrefab: {fileID: 7013353487439660062, guid: 5d36c706c3d324e4bbe2994f2486b6e2, type: 3}
   _spawnParent: {fileID: 701478116}
@@ -6974,7 +6976,7 @@ MonoBehaviour:
   UnallowedMotions: 00000000
   SpawnGap: 0.38
   ShouldDebug: 0
-  SecondsPerAiAction: 3.2
+  SecondsPerAiAction: 0.3
   TotalInterprolateFrames: 10
   interpolateFrames: []
   TotalFrameCount: 
@@ -10423,6 +10425,8 @@ MonoBehaviour:
   CanRecieveInfo: 0
   LastWorldTime: 0
   LargestTime: 0
+  IsInterpolatingDsplay: 0
+  IsLoggerDisplay: 0
 --- !u!114 &2591947932039339695
 MonoBehaviour:
   m_ObjectHideFlags: 0

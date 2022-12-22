@@ -39,6 +39,8 @@ namespace UnitySharpNEAT
 
         public delegate void NewFrame();
         public event NewFrame OnNewFrame;
+        public static event NewFrame OnLog;
+
         [Header("Other")]
         public EditSide side;
 
@@ -162,7 +164,11 @@ namespace UnitySharpNEAT
             if (IsInterpolating())
                 return;
             if (IsLogger())
-                DataTracker.instance.LogGuess();
+            {
+                Debug.Log("call issue");
+                OnLog();
+            }
+                
 
             Fitness += FitnessIncrease();
 

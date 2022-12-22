@@ -28,6 +28,8 @@ public class DataTracker : SerializedMonoBehaviour
     public void LogGuess()
     {
         //Debug.Log("aa");
+
+        //DataTracker.instance.LogGuess();
         LearnManager LM = LearnManager.instance;
         TotalLogCount += 1;
         
@@ -48,12 +50,11 @@ public class DataTracker : SerializedMonoBehaviour
         //stat.
         Stats.Add(new AIStat(Motion, Set, PlayCount, Guess, Truth));
     }
-    
     void Start()
     {
         for (int i = 0; i < LearnManager.instance.MovementList.Count; ++i)
             SpellCalls.Add(0);
-
+        UnitySharpNEAT.LearningAgent.OnLog += LogGuess;
 
         StartCoroutine(RefreshWait());
     }

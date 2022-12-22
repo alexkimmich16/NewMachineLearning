@@ -164,11 +164,8 @@ namespace UnitySharpNEAT
             if (IsInterpolating())
                 return;
             if (IsLogger())
-            {
-                Debug.Log("call issue");
                 OnLog();
-            }
-                
+
 
             Fitness += FitnessIncrease();
 

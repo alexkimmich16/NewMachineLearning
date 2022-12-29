@@ -44,9 +44,6 @@ namespace UnitySharpNEAT
         [Header("Other")]
         public EditSide side;
 
-        
-        //public bool AngleTest;
-
         [HideInInspector] public SingleInfo MyInfo;
         
         public int Streak;
@@ -210,6 +207,8 @@ namespace UnitySharpNEAT
                 RealMotion = Truth;
                 
                 handToChange.material = FalseTrue[Convert.ToInt32(IsCorrect())];
+
+                //GetHighest(out bool Conflict);
             }
             int GetHighest(out bool ConflictingGuesses)
             {

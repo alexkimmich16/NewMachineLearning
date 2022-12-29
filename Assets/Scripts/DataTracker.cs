@@ -27,21 +27,20 @@ public class DataTracker : SerializedMonoBehaviour
     }
     public void LogGuess()
     {
-        //Debug.Log("aa");
-
-        //DataTracker.instance.LogGuess();
         LearnManager LM = LearnManager.instance;
         TotalLogCount += 1;
-        
+
         int Motion = LM.LoggingAI().MotionIndex;
         int Set = LM.LoggingAI().Set;
 
-        SpellCalls[Motion] += 1;
+        bool AtFrameState = LM.MovementList[Motion].Motions[Set].AtFrameState(LM.LoggingAI().Frame);
+        CurrentLearn Truth = (LM.AtFrameStateAlwaysTrue) ? ((CurrentLearn)Motion) : (AtFrameState ? (CurrentLearn)Motion : CurrentLearn.Nothing);
+        //Debug.Log("Motion: " + (CurrentLearn)Motion + "  Truth: " + Truth + "");
+        //Debug.Log("Same: " + ((CurrentLearn)Motion == Truth));
+        SpellCalls[(int)Truth] += 1;
 
         CurrentLearn Guess = LM.LoggingAI().CurrentGuess;
 
-        bool AtFrameState = LM.MovementList[Motion].Motions[Set].AtFrameState(LM.LoggingAI().Frame);
-        CurrentLearn Truth = (LM.AtFrameStateAlwaysTrue) ? ((CurrentLearn)Motion) : (AtFrameState ? (CurrentLearn)Motion : CurrentLearn.Nothing); ;
         int PlayCount = LM.MovementList[Motion].Motions[Set].PlayCount;
         
         Current = (Guess == Truth) ? new Vector2(Current.x + 1, Current.y) : new Vector2(Current.x, Current.y + 1);

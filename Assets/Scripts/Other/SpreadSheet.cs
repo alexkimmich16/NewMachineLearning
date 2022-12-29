@@ -17,24 +17,19 @@ public class SpreadSheet : SerializedMonoBehaviour
     public float WriteToSpreadsheetInterval = 60f;
 
     public Dictionary<string, bool> IsActiveDictionary;
-            //
     public void PrintStats()
     {
-        TextWriter tw;
+        TextWriter tw = new StreamWriter(Location(), true);
         if (HasWritten == false)
         {
-            tw = new StreamWriter(Location(), false);
             string LineWrite = "Motion, Set";
             if (IsActiveDictionary["MotionFinishedCount"] == true) { LineWrite = LineWrite + ", MotionFinishedCount"; }
             if (IsActiveDictionary["Guess"] == true) { LineWrite = LineWrite + ", Guess"; }
             if (IsActiveDictionary["Truth"] == true) { LineWrite = LineWrite + ", Truth"; }
             if (IsActiveDictionary["Timer"] == true) { LineWrite = LineWrite + ", Timer"; }
+            LineWrite = LineWrite + ", " + ProceduralTesting.instance.ComplexityCurrent + ", " + ProceduralTesting.instance.TrialDurationCurrent;
             tw.WriteLine(LineWrite);
             HasWritten = true;
-        }
-        else
-        {
-            tw = new StreamWriter(Location(), true);
         }
         
         DataTracker DT = DataTracker.instance;
@@ -48,6 +43,12 @@ public class SpreadSheet : SerializedMonoBehaviour
             tw.WriteLine(CombinedString);
         }
         DT.Stats.Clear();
+        tw.Close();
+    }
+    public void PrintSpace()
+    {
+        TextWriter tw = new StreamWriter(Location(), true); 
+        tw.WriteLine("");
         tw.Close();
     }
     IEnumerator CallPrintStats()
@@ -64,6 +65,15 @@ public class SpreadSheet : SerializedMonoBehaviour
         if (Motions.Motions.Count == 0)
             return;
         StartCoroutine(CallPrintStats());
+
+        ProceduralTesting.OnBeforeRestart += BeforeRestart;
+    }
+
+    public void BeforeRestart()
+    {
+        //PrintStats();
+        PrintSpace();
+        //seperate spreadsheet;
     }
 }
 

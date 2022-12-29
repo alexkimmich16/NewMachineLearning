@@ -87,10 +87,13 @@ public class LearnManager : SerializedMonoBehaviour
     [FoldoutGroup("FrameData"), ReadOnly] public List<int> TotalFrameCount;
     [FoldoutGroup("FrameData"), ReadOnly] public List<float> PickChances;
     [FoldoutGroup("FrameData"), ReadOnly] public List<int> TotalPicks;
+    [FoldoutGroup("FrameData"), ReadOnly] public List<float> AverageFramesInMotions;
     #region Events
     public delegate void NoInfo();
     public static event NoInfo OnIntervalReached;
     public static event NoInfo OnAlgorithmStart;
+
+    
     public void StartAlgorithmSequence() { StartCoroutine(AlgorithmSequence()); }
     public IEnumerator AlgorithmSequence()
     {
@@ -109,6 +112,10 @@ public class LearnManager : SerializedMonoBehaviour
     public delegate void NewMotion(int Motion, int Set, List<SingleInfo> InterpolateFrames);
     public static event NewMotion OnNewMotion;
     #endregion
+
+    public bool Multiplier;
+
+
     [System.Serializable]
     public class MotionFrames
     {
@@ -134,58 +141,108 @@ public class LearnManager : SerializedMonoBehaviour
                     FrameCountList[i].MotionCounts[ListAdd] += 1;
                 }
             }
-
         }
         return FrameCountList;
     }
-    public bool Multiplier;
     public List<float> GetPickChances()
     {
         List<float> Chances = new List<float>();
+        AverageFramesInMotions = new List<float>();
         //AtFrameStateAlwaysTrue
-        
+        float CombinedAverageFrames = 0;
+        float TotalFramesInAllMotions = 0;
+        //TotalFrameCount = GetTotalFrames();
         for (int i = 0; i < EachMotionFrameCount.Count; ++i)
+        {
             Chances.Add(0f);
-        for (int i = 0; i < EachMotionFrameCount.Count; ++i)
-        {
-            float TotalFramesMotionParent = 0;
-            for (int j = 0; j < EachMotionFrameCount[i].MotionCounts.Count; ++j)
-                TotalFramesMotionParent += EachMotionFrameCount[i].MotionCounts[j];
+            TotalFramesInAllMotions += GetTotalMotionFrames(i);
 
+            TotalFrameCount.Add(GetTotalMotionFrames(i));
             
-            for (int j = 0; j < EachMotionFrameCount[i].MotionCounts.Count; ++j)
-            {
-                float AverageFramesPerMotion = TotalFramesMotionParent / MovementList[i].Motions.Count;
-                float MyFrames = EachMotionFrameCount[i].MotionCounts[j];
-                float MyWeightOfTotal = MyFrames / TotalFramesMotionParent;
-                
-                float ChanceAddForThisMotion = (MyFrames != 0f) ? ((1/ AverageFramesPerMotion) * MyWeightOfTotal) : 0f;
-
-                
-                Chances[j] += ChanceAddForThisMotion;
-                if (MyFrames != 0)
-                    Debug.Log("I: " + i + "  J: " + j +
-                    "  ChanceAddForThisMotion: " + ChanceAddForThisMotion + 
-                    "  MyWeightOfTotal: " + MyWeightOfTotal + 
-                    "  AverageFramesPerMotion: " + AverageFramesPerMotion +
-                    "  MyFrames: " + MyFrames +
-                    "  TotalFramesMotionParent: " + TotalFramesMotionParent + 
-                    "  Value: " + ((MyWeightOfTotal * AverageFramesPerMotion)));
-                
-            }
+            float AverageFramesInMotion = (float)GetTotalMotionFrames(i) / (float)MovementList[i].Motions.Count;
+            Debug.Log(AverageFramesInMotion);
+            AverageFramesInMotions.Add(AverageFramesInMotion);
+            CombinedAverageFrames += AverageFramesInMotion;
         }
 
-        //chances is total average frames occupied
-        float Total = GetTotal();
+
+        if (AtFrameStateAlwaysTrue)
+        {
+            
+            for (int i = 0; i < EachMotionFrameCount.Count; ++i)
+            {
+                //Chances[i] = 1f/ (GetTotalMotionFrames(i) / TotalFramesInMotion);
+                Debug.Log(GetTotalMotionFrames(i));
+                float FramesPerMotionAverage = GetTotalMotionFrames(i) / TotalFramesInAllMotions;
+                float Inverse = 1f / AverageFramesInMotions[i];
+                float Value = Inverse * MovementList.Count;
+                Chances[i] = (Value);
+            }
+            
+
+            /*
+            for (int i = 0; i < EachMotionFrameCount.Count; ++i)
+            {
+                //Chances[i] = 1f/ (GetTotalMotionFrames(i) / TotalFramesInMotion);
+                float FramesPerMotionAverage = GetTotalMotionFrames(i) / MovementList[i].Motions.Count;
+                float Inverse = 1f / FramesPerMotionAverage;
+                float Value = Inverse;
+                Chances[i] = (Value);
+            }
+            */
+        }
+        else
+        {
+            for (int i = 0; i < EachMotionFrameCount.Count; ++i)
+                for (int j = 0; j < EachMotionFrameCount[i].MotionCounts.Count; ++j)
+                {
+                    float ThisSubFrameCount = EachMotionFrameCount[i].MotionCounts[j]; // current frames in parent     //10 sets
+                    float PercentOfAverageFramesPerMotion = ThisSubFrameCount / GetTotalMotionFrames(i); //40 flame frames out of 100 = 40% are flame (0.4)
+                    float ThisFramesOfAverage = PercentOfAverageFramesPerMotion * AverageFramesInMotions[i]; //40% average frames per motion (10) = 4 average flame frames per motion
+                    float InverseOfAverageThisFrame = ThisFramesOfAverage; //the opposite number of the average frames: 1 / 4 = 0.25
+                    float ChanceAddForThisMotion = (ThisSubFrameCount != 0f) ? InverseOfAverageThisFrame : 0f; //if 0 frames do nothing
+
+                    Chances[j] += ChanceAddForThisMotion;
+                    if (ThisSubFrameCount != 0f)
+                        Debug.Log("I: " + (CurrentLearn)i + "  J: " + (CurrentLearn)j +
+                        "  ThisSubFrameCount: " + ThisSubFrameCount +
+                        "  TotalFramesMotionParent: " + GetTotalMotionFrames(i) +
+                        "  MyWeightOfTotal: " + (PercentOfAverageFramesPerMotion * 100f) + "%" +
+                        "  AverageFramesPerMotion: " + AverageFramesInMotions[i] +
+                        "  ThisFramesOfAverage: " + ThisFramesOfAverage +
+                        "  ChanceAddForThisMotion: " + ChanceAddForThisMotion
+                        //"  Value: " + (EachMotionFrameCount[i].MotionCounts[j] / MovementList[i].Motions.Count)
+                        );
+
+                    
+                }
+            float CurrentTotal = GetTotal(Chances);
+            for (int i = 0; i < Chances.Count; ++i)
+            {
+
+                float PercentOfWhole = Chances[i] / CurrentTotal;
+                //Debug.Log("i: " + i + "  PercentOfWhole: " + PercentOfWhole);
+                //Chances[i] = 1f / Chances[i];
+                Chances[i] = 1f / PercentOfWhole;
+
+                //Chances[i] = 1f / Chances[i];
+            }
+
+            //Debug.Log("Total: " + Total);
+            //for (int i = 0; i < Chances.Count; ++i)
+            //Debug.Log("i: " + i + "  Weight2: " + Chances[i]);
+        }
+        /*
+        float TotalCurrent = 0;
         for (int i = 0; i < Chances.Count; ++i)
         {
-            Debug.Log("i: " + i + "  Weight: " + Chances[i]);
-            Chances[i] = Total - Chances[i];
+            TotalCurrent += Chances[i];
+            Debug.Log("Chances: " + TotalCurrent); 
         }
-        for (int i = 0; i < Chances.Count; ++i)
-            Debug.Log("total: " + Total);
+        */
 
-        Total = GetTotal();
+
+        float Total = GetTotal(Chances);
         if (Multiplier)
         {
             float Multiplier = 100f / Total;
@@ -193,8 +250,15 @@ public class LearnManager : SerializedMonoBehaviour
                 Chances[i] = Multiplier * Chances[i];
         }
         return Chances;
-
-        float GetTotal()
+        int GetTotalMotionFrames(int Index)
+        {
+            int Total = 0;
+            for (int j = 0; j < EachMotionFrameCount.Count; ++j)
+                Total += EachMotionFrameCount[Index].MotionCounts[j];
+            //Debug.Log(Total);
+            return Total;
+        }
+        float GetTotal(List<float> Chances)
         {
             float Total = 0;
             for (int i = 0; i < Chances.Count; ++i)
@@ -219,16 +283,11 @@ public class LearnManager : SerializedMonoBehaviour
         StartCoroutine(ManageLists(1 / 60));
         EachMotionFrameCount = GetEachMotionFrameCount();
 
-
-        TotalFrameCount = GetTotalFrames();
         PickChances = (AutoPickChance) ? GetPickChances() : OverridePickChances;
         for (int i = 0; i < MovementList.Count; ++i)
             TotalPicks.Add(0);
         if (ShouldDebug)
             Debug.Log("IdealCapacity: " + 2 * MatrixManager.instance.Height * MatrixManager.instance.Width);
-        
-
-        //GetRandomMotionAndEvent();
 
         for (int i = 0; i < MovementList.Count; ++i)
             for (int j = 0; j < MovementList[i].Motions.Count; ++j)
@@ -250,6 +309,51 @@ public class LearnManager : SerializedMonoBehaviour
         interpolateFrames = InterpolatePositions(From, To);
         if (OnNewMotion != null)
             OnNewMotion(CurrentMotion, CurrentSet, interpolateFrames);
+
+        void GetRandomMotion(out int Motion, out int Set)
+        {
+            Motion = GetMotion();
+            //Debug.Log("Motion: " + Motion);
+            Set = Random.Range(0, MovementList[Motion].Motions.Count);
+
+            int GetMotion()
+            {
+                if (WeightedMotionPick)
+                {
+                    float Max = 0;
+                    for (int i = 0; i < PickChances.Count; i++)
+                        Max += PickChances[i];
+                    float RandomPick = Random.Range(0, Max);
+                    float CorrectMax = 0;
+                    for (int i = 0; i < PickChances.Count; i++)
+                    {
+                        CorrectMax += PickChances[i];
+                        if (RandomPick < CorrectMax)
+                        {
+                            if (ShouldDebug)
+                                Debug.Log("RandomPick: " + RandomPick + "  Motion: " + (CurrentLearn)i);
+                            return i;
+                        }
+                    }
+                    Debug.LogError("no pick at  Max: " + Max + "  RandomPick: " + RandomPick);
+                    return 5;
+                }
+                else
+                {
+                    if (!DisallowMotions)
+                        return Random.Range(0, MovementList.Count);
+
+                    while (true)
+                    {
+                        int CurrentGuess = Random.Range(0, MovementList.Count);
+                        if (UnallowedMotions[CurrentGuess] == true)
+                            return CurrentGuess;
+                    }
+
+
+                }
+            }
+        }
     }
     IEnumerator IntervalMotion()
     {
@@ -265,83 +369,6 @@ public class LearnManager : SerializedMonoBehaviour
         }
     }
     public bool ShouldPunish(int Streak) { return Streak >= MaxStreakPunish && ShouldPunishStreakGuess == true; }
-    List<int> GetTotalFrames()
-    {
-        List<int> TotalFramesEachMotion = new List<int>();
-        for (int i = 0; i < MovementList.Count; ++i)
-            TotalFramesEachMotion.Add(0);
-        for (int i = 0; i < MovementList.Count; ++i)
-        {
-            for (int j = 0; j < MovementList[i].Motions.Count; ++j)
-            {
-                if(AtFrameStateAlwaysTrue)
-                    TotalFramesEachMotion[i] += MovementList[i].Motions[j].Infos.Count;
-                else
-                {
-                    for (int k = 0; k < MovementList[i].Motions[j].Infos.Count; ++k)
-                    {
-                        int ListAdd = MovementList[i].Motions[j].AtFrameState(k) ? i : 0;
-                        TotalFramesEachMotion[ListAdd] += 1;
-                    }
-                }
-                
-            }
-        }
-        return TotalFramesEachMotion;
-
-    }
-    public List<float> GetRewardMultiplier()
-    {
-        List<float> RewardMultiplier = new List<float>();
-        List<float> InverseMovements = new List<float>();
-        
-        for (int i = 0; i < MovementList.Count; ++i)
-        {
-            InverseMovements.Add(0f);
-            TotalFrameCount.Add(0);
-        }
-            
-        WeightedRewardMultiplier = new List<float>(InverseMovements);
-        
-        for (int i = 0; i < InverseMovements.Count; ++i)
-        {
-            for (int j = 0; j < MovementList[i].Motions.Count; ++j)
-            {
-                MovementList[i].Motions[j].PlayCount = 0;
-
-                List<int> FramesTotal = TotalOfMotion(i, j);
-                float Weight = (1f/MovementList.Count) * (1f/MovementList[i].Motions.Count);
-                float FrameCount = MovementList[i].Motions[j].Infos.Count;
-
-                TotalFrameCount[i] += MovementList[i].Motions[j].Infos.Count;
-
-                for (int k = 0; k < FramesTotal.Count; ++k)
-                {
-                    float FrameValue = Weight * (FramesTotal[k] / FrameCount);
-                    //Debug.Log(" Weight: " + Weight + " FrameCount: " + FrameCount + " FramesTotal: " + FramesTotal[k] + " FrameValue: " + FrameValue + " K: " + k);
-                    InverseMovements[k] += FrameValue;
-                }
-            }
-        }
-
-        for (int i = 0; i < InverseMovements.Count; ++i)
-            RewardMultiplier[i] = 1f - InverseMovements[i];
-        return RewardMultiplier;
-
-        List<int> TotalOfMotion(int Motion, int Set)
-        {
-            List<int> Total = new List<int>();
-            for (int i = 0; i < MovementList.Count; ++i)
-                Total.Add(0);
-            for (int i = 0; i < MovementList[Motion].Motions[Set].Infos.Count; ++i)
-            {
-                int ListAdd = MovementList[Motion].Motions[Set].AtFrameState(i) ? Motion : 0;
-                Total[ListAdd] += 1;
-            }
-            return Total;
-        }
-
-    }
     private void Update()
     {
         int Generation = (int)GetComponent<UnitySharpNEAT.NeatSupervisor>().CurrentGeneration;
@@ -383,55 +410,8 @@ public class LearnManager : SerializedMonoBehaviour
         //OnNewMotion(CurrentMotion, CurrentSet);
     }
 
-    public void GetRandomMotion(out int Motion, out int Set)
-    {
-        Motion = GetMotion();
-        //Debug.Log("Motion: " + Motion);
-        Set = Random.Range(0, MovementList[Motion].Motions.Count);
+    
 
-        int GetMotion()
-        {
-            if (WeightedMotionPick)
-            {
-                float Max = 0;
-                for (int i = 0; i < PickChances.Count; i++)
-                    Max += PickChances[i];
-                float RandomPick = Random.Range(0, Max);
-                float CorrectMax = 0;
-                for (int i = 0; i < PickChances.Count; i++)
-                {
-                    CorrectMax += PickChances[i];
-                    if (RandomPick < CorrectMax)
-                    {
-                        if(ShouldDebug)
-                            Debug.Log("RandomPick: " + RandomPick + "  Motion: " + (CurrentLearn)i);
-                        return i;
-                    }
-                }
-                Debug.LogError("no pick at  Max: " + Max + "  RandomPick: " + RandomPick);
-                return 5;
-            }
-            else
-            {
-                if (!DisallowMotions)
-                    return Random.Range(0, MovementList.Count);
-                
-                while (true)
-                {
-                    int CurrentGuess = Random.Range(0, MovementList.Count);
-                    if (UnallowedMotions[CurrentGuess] == true)
-                        return CurrentGuess;
-                }
-
-                    
-            }
-        }
-    }
-    public SingleInfo PastFrame(EditSide side, int FramesAgo)
-    {
-        List<SingleInfo> SideList = (side == EditSide.right) ? RightInfo : LeftInfo;
-        return SideList[SideList.Count - FramesAgo];
-    }
     
     IEnumerator ManageLists(float Interval)
     {
@@ -564,6 +544,11 @@ public class LearnManager : SerializedMonoBehaviour
             }
         }
 
+    }
+    public SingleInfo PastFrame(EditSide side, int FramesAgo)
+    {
+        List<SingleInfo> SideList = (side == EditSide.right) ? RightInfo : LeftInfo;
+        return SideList[SideList.Count - FramesAgo];
     }
 }
 [System.Serializable]

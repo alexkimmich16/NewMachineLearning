@@ -8,6 +8,5 @@
         <Scheme>Acyclic</Scheme>
       </Activation>
       <ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
-      <ComplexityThreshold>20</ComplexityThreshold>
-      <Description>AI made to decipher the intended motion of the player</Description>
+      <ComplexityThreshold>6</ComplexityThreshold><Description>AI made to decipher the intended motion of the player</Description>
     </Config>

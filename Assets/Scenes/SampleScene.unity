@@ -5582,7 +5582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1445321410908044327, guid: ad437abf9ab109a4dbad807b68210a9f, type: 3}
       propertyPath: _initialTimeScale
-      value: 1
+      value: 15.03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad437abf9ab109a4dbad807b68210a9f, type: 3}
@@ -6860,6 +6860,7 @@ GameObject:
   - component: {fileID: 1615791728}
   - component: {fileID: 1615791727}
   - component: {fileID: 1615791729}
+  - component: {fileID: 1615791730}
   m_Layer: 0
   m_Name: NEAT
   m_TagString: Untagged
@@ -6964,19 +6965,19 @@ MonoBehaviour:
   ShouldPunishStreakGuess: 0
   MaxStreakPunish: 10
   RewardNothingGuess: 0
-  AtFrameStateAlwaysTrue: 0
+  AtFrameStateAlwaysTrue: 1
   WeightedMotionPick: 1
   AutoPickChance: 1
   OverridePickChances:
-  - 1
-  - 1
-  - 1
-  - 1
+  - 2.923409
+  - 11.15226
+  - 3.478819
+  - 3.561104
   DisallowMotions: 0
   UnallowedMotions: 00000000
   SpawnGap: 0.38
   ShouldDebug: 0
-  SecondsPerAiAction: 3.34
+  SecondsPerAiAction: 3.09
   TotalInterprolateFrames: 10
   interpolateFrames: []
   EachMotionFrameCount: []
@@ -6987,7 +6988,98 @@ MonoBehaviour:
   - 7.4474
   - 3.4775
   TotalPicks: 
+  AverageFramesInMotions: []
   Multiplier: 1
+--- !u!114 &1615791730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615791726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b10e615ec578bbe4e95764a60bcf16b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: StatChanges
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Boolean,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Complexity
+    - Name: $v
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: TrialDuration
+    - Name: $v
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: GridFadeSpeed
+    - Name: $v
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  UseProceduralTesting: 1
+  UseRandomTesting: 1
+  NewTestThreshold: 15000
+  XMLPath: 
+  ComplexityRange: {x: 1, y: 60}
+  TrialDurationRange: {x: 5, y: 200}
+  GridFadeSpeedRange: {x: 1, y: 10}
+  ComplexityBase: 20
+  TrialDurationBase: 50
+  GridFadeSpeedBase: 3.5
+  ComplexityCurrent: 0
+  TrialDurationCurrent: 0
+  GridFadeSpeedCurrent: 0
 --- !u!1 &1650534507
 GameObject:
   m_ObjectHideFlags: 0

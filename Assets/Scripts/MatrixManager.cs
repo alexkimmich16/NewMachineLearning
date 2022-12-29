@@ -14,7 +14,6 @@ public class MatrixManager : SerializedMonoBehaviour
     public static MatrixManager instance;
     private void Awake() { instance = this; }
 
-    LearnManager LM;
     [Header("MatrixStats")]
     public MatrixDisplay currentDisplay;
 
@@ -60,8 +59,6 @@ public class MatrixManager : SerializedMonoBehaviour
         GridStats = new Vector2[Width, Height];
         TextureMap = new Texture2D(Width, Height);
         TextureMap.filterMode = FilterMode.Point;
-
-        LM = LearnManager.instance;
 
         if (currentDisplay == MatrixDisplay.MotionPlayback)
         {
@@ -117,9 +114,9 @@ public class MatrixManager : SerializedMonoBehaviour
     }
     public void OnNewFrame()
     {
-        if (currentDisplay == MatrixDisplay.ControllerTesting && LM.Info.MyHand(EditSide.right).TriggerPressed() == false)
+        if (currentDisplay == MatrixDisplay.ControllerTesting && LearnManager.instance.Info.MyHand(EditSide.right).TriggerPressed() == false)
             return;
-        if (currentDisplay == MatrixDisplay.LearnManager && LM.CurrentSingleInfo() == null || LearnManager.instance == null)
+        if (currentDisplay == MatrixDisplay.LearnManager && LearnManager.instance.CurrentSingleInfo() == null)
             return;
         AddToMatrixList(GetCorrospondingMatrixStat());
     }
@@ -182,11 +179,12 @@ public class MatrixManager : SerializedMonoBehaviour
         float H = Remap(newInfo.HandPos.z, MaxZDistance);
         float S = 1f;
         if (Y > Height || Y < 0)
-            Debug.Log("Motion: " + LM.CurrentMotion + "  Set: " + LM.CurrentSet + "  Frame: " + LM.CurrentFrame());
+            Debug.Log("Motion: " + LearnManager.instance.CurrentMotion + "  Set: " + LearnManager.instance.CurrentSet + "  Frame: " + LearnManager.instance.CurrentFrame());
         return new MatrixStat(X, Y, H, S);
         //currentDisplay
         SingleInfo GetCorrospondingInfo()
         {
+            LearnManager LM = LearnManager.instance;
             if (currentDisplay == MatrixDisplay.MotionPlayback)
                 return LM.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos[MotionEditor.instance.display.Frame];
             else if (currentDisplay == MatrixDisplay.ControllerTesting)

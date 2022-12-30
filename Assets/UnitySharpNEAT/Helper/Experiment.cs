@@ -112,8 +112,11 @@ namespace UnitySharpNEAT
             _populationSize = XmlUtils.GetValueAsInt(xmlConfig, "PopulationSize");
             _specieCount = XmlUtils.GetValueAsInt(xmlConfig, "SpecieCount");
             _activationScheme = ExperimentUtils.CreateActivationScheme(xmlConfig, "Activation");
+
             _complexityRegulationStr = XmlUtils.TryGetValueAsString(xmlConfig, "ComplexityRegulationStrategy");
+            //Debug.Log(_complexityRegulationStr);
             _complexityThreshold = XmlUtils.TryGetValueAsInt(xmlConfig, "ComplexityThreshold");
+            //Debug.Log(_complexityThreshold);
             _description = XmlUtils.TryGetValueAsString(xmlConfig, "Description");
 
             _eaParams = new NeatEvolutionAlgorithmParameters();

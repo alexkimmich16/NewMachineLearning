@@ -50,6 +50,7 @@ public class LearnManager : SerializedMonoBehaviour
 
         return null;
     }
+    public int AICount() { return NeatSupervisor().Experiment.DefaultPopulationSize; }
     #endregion
     [FoldoutGroup("NeatDisplay"), ReadOnly] public List<SingleInfo> RightInfo;
     [FoldoutGroup("NeatDisplay"), ReadOnly] public List<SingleInfo> LeftInfo;
@@ -61,12 +62,15 @@ public class LearnManager : SerializedMonoBehaviour
     [FoldoutGroup("NEAT Settings")] public bool UseWeightedRewardMultiplier;
     [FoldoutGroup("NEAT Settings")] public bool MultiplyByHighestGuess;
     [FoldoutGroup("NEAT Settings")] public bool RewardOnInterpolation = false;
-
+    ///multiply by certainty value
     [FoldoutGroup("NEAT Settings")] public bool ShouldPunishStreakGuess;
     [FoldoutGroup("NEAT Settings"), ShowIf("ShouldPunishStreakGuess")] public int MaxStreakPunish;
+    [FoldoutGroup("NEAT Settings"), ShowIf("ShouldPunishStreakGuess")] public int StreakPunishAmount;
 
     [FoldoutGroup("NEAT Settings")] public bool RewardNothingGuess;
     [FoldoutGroup("NEAT Settings")] public bool AtFrameStateAlwaysTrue;
+
+    [FoldoutGroup("NEAT Settings")] public bool InputAllGrid;
 
     [FoldoutGroup("NEAT Settings")] public bool WeightedMotionPick;
     [FoldoutGroup("NEAT Settings"), ShowIf("WeightedMotionPick")] public bool AutoPickChance;
@@ -74,6 +78,8 @@ public class LearnManager : SerializedMonoBehaviour
 
     [FoldoutGroup("NEAT Settings")] public bool DisallowMotions;
     [FoldoutGroup("NEAT Settings"), ShowIf("DisallowMotions")] public List<bool> UnallowedMotions;
+
+    [FoldoutGroup("NEAT Settings")] public bool UseAgentSingleOutput;
 
     private int LastGeneration;
     public float SpawnGap = 0.38f;
@@ -83,11 +89,7 @@ public class LearnManager : SerializedMonoBehaviour
     [FoldoutGroup("Interpolation")] public int TotalInterprolateFrames;
     [FoldoutGroup("Interpolation"), ReadOnly] public List<SingleInfo> interpolateFrames;
 
-    [FoldoutGroup("FrameData"), ReadOnly] public List<MotionFrames> EachMotionFrameCount;
-    [FoldoutGroup("FrameData"), ReadOnly] public List<int> TotalFrameCount;
-    [FoldoutGroup("FrameData"), ReadOnly] public List<float> PickChances;
-    [FoldoutGroup("FrameData"), ReadOnly] public List<int> TotalPicks;
-    [FoldoutGroup("FrameData"), ReadOnly] public List<float> AverageFramesInMotions;
+    //public List<int> TotalPicks;
     #region Events
     public delegate void NoInfo();
     public static event NoInfo OnIntervalReached;
@@ -115,157 +117,9 @@ public class LearnManager : SerializedMonoBehaviour
 
     public bool Multiplier;
 
-
-    [System.Serializable]
-    public class MotionFrames
-    {
-        public List<int> MotionCounts = new List<int>();
-        public MotionFrames(int Count)
-        {
-            for (int i = 0; i < Count; ++i)
-                MotionCounts.Add(0);
-        }
-    }
-    public List<MotionFrames> GetEachMotionFrameCount()
-    {
-        List<MotionFrames> FrameCountList = new List<MotionFrames>();
-        for (int i = 0; i < MovementList.Count; ++i)
-            FrameCountList.Add(new MotionFrames(MovementList.Count));
-        for (int i = 0; i < MovementList.Count; ++i)
-        {
-            for (int j = 0; j < MovementList[i].Motions.Count; ++j)
-            {
-                for (int k = 0; k < MovementList[i].Motions[j].Infos.Count; ++k)
-                {
-                    int ListAdd = (AtFrameStateAlwaysTrue) ? i : (MovementList[i].Motions[j].AtFrameState(k) ? i : 0);
-                    FrameCountList[i].MotionCounts[ListAdd] += 1;
-                }
-            }
-        }
-        return FrameCountList;
-    }
-    public List<float> GetPickChances()
-    {
-        List<float> Chances = new List<float>();
-        AverageFramesInMotions = new List<float>();
-        //AtFrameStateAlwaysTrue
-        float CombinedAverageFrames = 0;
-        float TotalFramesInAllMotions = 0;
-        //TotalFrameCount = GetTotalFrames();
-        for (int i = 0; i < EachMotionFrameCount.Count; ++i)
-        {
-            Chances.Add(0f);
-            TotalFramesInAllMotions += GetTotalMotionFrames(i);
-
-            TotalFrameCount.Add(GetTotalMotionFrames(i));
-            
-            float AverageFramesInMotion = (float)GetTotalMotionFrames(i) / (float)MovementList[i].Motions.Count;
-            Debug.Log(AverageFramesInMotion);
-            AverageFramesInMotions.Add(AverageFramesInMotion);
-            CombinedAverageFrames += AverageFramesInMotion;
-        }
+    public float InputWaitTime;
 
 
-        if (AtFrameStateAlwaysTrue)
-        {
-            
-            for (int i = 0; i < EachMotionFrameCount.Count; ++i)
-            {
-                //Chances[i] = 1f/ (GetTotalMotionFrames(i) / TotalFramesInMotion);
-                Debug.Log(GetTotalMotionFrames(i));
-                float FramesPerMotionAverage = GetTotalMotionFrames(i) / TotalFramesInAllMotions;
-                float Inverse = 1f / AverageFramesInMotions[i];
-                float Value = Inverse * MovementList.Count;
-                Chances[i] = (Value);
-            }
-            
-
-            /*
-            for (int i = 0; i < EachMotionFrameCount.Count; ++i)
-            {
-                //Chances[i] = 1f/ (GetTotalMotionFrames(i) / TotalFramesInMotion);
-                float FramesPerMotionAverage = GetTotalMotionFrames(i) / MovementList[i].Motions.Count;
-                float Inverse = 1f / FramesPerMotionAverage;
-                float Value = Inverse;
-                Chances[i] = (Value);
-            }
-            */
-        }
-        else
-        {
-            for (int i = 0; i < EachMotionFrameCount.Count; ++i)
-                for (int j = 0; j < EachMotionFrameCount[i].MotionCounts.Count; ++j)
-                {
-                    float ThisSubFrameCount = EachMotionFrameCount[i].MotionCounts[j]; // current frames in parent     //10 sets
-                    float PercentOfAverageFramesPerMotion = ThisSubFrameCount / GetTotalMotionFrames(i); //40 flame frames out of 100 = 40% are flame (0.4)
-                    float ThisFramesOfAverage = PercentOfAverageFramesPerMotion * AverageFramesInMotions[i]; //40% average frames per motion (10) = 4 average flame frames per motion
-                    float InverseOfAverageThisFrame = ThisFramesOfAverage; //the opposite number of the average frames: 1 / 4 = 0.25
-                    float ChanceAddForThisMotion = (ThisSubFrameCount != 0f) ? InverseOfAverageThisFrame : 0f; //if 0 frames do nothing
-
-                    Chances[j] += ChanceAddForThisMotion;
-                    if (ThisSubFrameCount != 0f)
-                        Debug.Log("I: " + (CurrentLearn)i + "  J: " + (CurrentLearn)j +
-                        "  ThisSubFrameCount: " + ThisSubFrameCount +
-                        "  TotalFramesMotionParent: " + GetTotalMotionFrames(i) +
-                        "  MyWeightOfTotal: " + (PercentOfAverageFramesPerMotion * 100f) + "%" +
-                        "  AverageFramesPerMotion: " + AverageFramesInMotions[i] +
-                        "  ThisFramesOfAverage: " + ThisFramesOfAverage +
-                        "  ChanceAddForThisMotion: " + ChanceAddForThisMotion
-                        //"  Value: " + (EachMotionFrameCount[i].MotionCounts[j] / MovementList[i].Motions.Count)
-                        );
-
-                    
-                }
-            float CurrentTotal = GetTotal(Chances);
-            for (int i = 0; i < Chances.Count; ++i)
-            {
-
-                float PercentOfWhole = Chances[i] / CurrentTotal;
-                //Debug.Log("i: " + i + "  PercentOfWhole: " + PercentOfWhole);
-                //Chances[i] = 1f / Chances[i];
-                Chances[i] = 1f / PercentOfWhole;
-
-                //Chances[i] = 1f / Chances[i];
-            }
-
-            //Debug.Log("Total: " + Total);
-            //for (int i = 0; i < Chances.Count; ++i)
-            //Debug.Log("i: " + i + "  Weight2: " + Chances[i]);
-        }
-        /*
-        float TotalCurrent = 0;
-        for (int i = 0; i < Chances.Count; ++i)
-        {
-            TotalCurrent += Chances[i];
-            Debug.Log("Chances: " + TotalCurrent); 
-        }
-        */
-
-
-        float Total = GetTotal(Chances);
-        if (Multiplier)
-        {
-            float Multiplier = 100f / Total;
-            for (int i = 0; i < MovementList.Count; ++i)
-                Chances[i] = Multiplier * Chances[i];
-        }
-        return Chances;
-        int GetTotalMotionFrames(int Index)
-        {
-            int Total = 0;
-            for (int j = 0; j < EachMotionFrameCount.Count; ++j)
-                Total += EachMotionFrameCount[Index].MotionCounts[j];
-            //Debug.Log(Total);
-            return Total;
-        }
-        float GetTotal(List<float> Chances)
-        {
-            float Total = 0;
-            for (int i = 0; i < Chances.Count; ++i)
-                Total += Chances[i];
-            return Total;
-        }
-    }
     public List<SingleInfo> InterpolatePositions(Vector3 from, Vector3 to)
     {
         List<SingleInfo> LerpList = new List<SingleInfo>();
@@ -281,17 +135,13 @@ public class LearnManager : SerializedMonoBehaviour
     void Start()
     {
         StartCoroutine(ManageLists(1 / 60));
-        EachMotionFrameCount = GetEachMotionFrameCount();
-
-        PickChances = (AutoPickChance) ? GetPickChances() : OverridePickChances;
-        for (int i = 0; i < MovementList.Count; ++i)
-            TotalPicks.Add(0);
-        if (ShouldDebug)
-            Debug.Log("IdealCapacity: " + 2 * MatrixManager.instance.Height * MatrixManager.instance.Width);
 
         for (int i = 0; i < MovementList.Count; ++i)
             for (int j = 0; j < MovementList[i].Motions.Count; ++j)
                 MovementList[i].Motions[j].PlayCount = 0;
+
+        NeatSupervisor()._networkInputCount = MatrixManager.instance.Width * MatrixManager.instance.Height * 2;
+        NeatSupervisor()._networkOutputCount = UseAgentSingleOutput ? 1 : 4;
 
         UnitySharpNEAT.ExperimentIO.DeleteAllSaveFiles(NeatSupervisor().Experiment);
         NeatSupervisor().StartEvolution();
@@ -302,7 +152,8 @@ public class LearnManager : SerializedMonoBehaviour
         CurrentMotion = NextMotion;
         CurrentSet = NextSet;
         GetRandomMotion(out NextMotion, out NextSet);
-        TotalPicks[CurrentMotion] += 1;
+        PickManager.instance.TotalPicks[CurrentMotion] += 1;
+        PickManager.instance.UpdateAdjustedPickChances();
         int MaxFrom = MovementList[CurrentMotion].Motions[CurrentSet].Infos.Count - 1;
         Vector3 From = MovementList[CurrentMotion].Motions[CurrentSet].Infos[MaxFrom].HandPos;
         Vector3 To = MovementList[NextMotion].Motions[NextSet].Infos[0].HandPos;
@@ -321,13 +172,13 @@ public class LearnManager : SerializedMonoBehaviour
                 if (WeightedMotionPick)
                 {
                     float Max = 0;
-                    for (int i = 0; i < PickChances.Count; i++)
-                        Max += PickChances[i];
+                    for (int i = 0; i < PickManager.instance.AdjustedPickChances.Count; i++)
+                        Max += PickManager.instance.AdjustedPickChances[i];
                     float RandomPick = Random.Range(0, Max);
                     float CorrectMax = 0;
-                    for (int i = 0; i < PickChances.Count; i++)
+                    for (int i = 0; i < PickManager.instance.AdjustedPickChances.Count; i++)
                     {
-                        CorrectMax += PickChances[i];
+                        CorrectMax += PickManager.instance.AdjustedPickChances[i];
                         if (RandomPick < CorrectMax)
                         {
                             if (ShouldDebug)
@@ -363,12 +214,9 @@ public class LearnManager : SerializedMonoBehaviour
             //
             if (OnIntervalReached != null)
                 OnIntervalReached();
-
-            //MatrixManager.instance.ResetMatrix();
-            //GetRandomMotionAndEvent();
         }
     }
-    public bool ShouldPunish(int Streak) { return Streak >= MaxStreakPunish && ShouldPunishStreakGuess == true; }
+    public bool ShouldPunishStreak(int Streak) { return Streak >= MaxStreakPunish && ShouldPunishStreakGuess == true; }
     private void Update()
     {
         int Generation = (int)GetComponent<UnitySharpNEAT.NeatSupervisor>().CurrentGeneration;

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -296,6 +296,7 @@ MonoBehaviour:
   CanRecieveInfo: 0
   LastWorldTime: 0
   LargestTime: 0
+  LastInputWaitTime: 0
   IsInterpolatingDsplay: 0
   IsLoggerDisplay: 0
 --- !u!4 &20299532
@@ -4801,9 +4802,11 @@ MonoBehaviour:
   AbsoluteTotal: {x: 0, y: 0}
   Past: []
   Stats: []
+  PastFrameInfoKeepForTesting: []
   SpellCalls: 
   RefreshInterval: 60
   DebugOnRefresh: 0
+  PastFrameInfoKeep: 100
 --- !u!1 &1036540669
 GameObject:
   m_ObjectHideFlags: 0
@@ -5869,12 +5872,15 @@ MonoBehaviour:
       Entry: 8
       Data: 
   currentDisplay: 1
-  Width: 80
+  Width: 60
   Height: 20
-  HeightMaxMin: {x: -1, y: 1}
-  MaxZDistance: {x: -0.85, y: 1}
-  STimeMultiplier: 3.5
+  HeightMaxMin: {x: -1.15, y: 1.09}
+  MaxZDistance: {x: -0.91, y: 1.09}
+  STimeMultiplier: 3.44
+  DisplaySizeMultiplier: 1.33
   MatrixStats: []
+  AILastMatrixStats: []
+  DisplayLastMatrixStats: []
   Display: {fileID: 2129805708}
   ResetFrames: 1
   FramesWaited: 0
@@ -6861,6 +6867,7 @@ GameObject:
   - component: {fileID: 1615791727}
   - component: {fileID: 1615791729}
   - component: {fileID: 1615791730}
+  - component: {fileID: 1615791731}
   m_Layer: 0
   m_Name: NEAT
   m_TagString: Untagged
@@ -6963,9 +6970,11 @@ MonoBehaviour:
   MultiplyByHighestGuess: 0
   RewardOnInterpolation: 0
   ShouldPunishStreakGuess: 0
-  MaxStreakPunish: 10
+  MaxStreakPunish: 80
+  StreakPunishAmount: 1000
   RewardNothingGuess: 0
   AtFrameStateAlwaysTrue: 1
+  InputAllGrid: 1
   WeightedMotionPick: 1
   AutoPickChance: 1
   OverridePickChances:
@@ -6975,21 +6984,14 @@ MonoBehaviour:
   - 3.561104
   DisallowMotions: 0
   UnallowedMotions: 00000000
+  UseAgentSingleOutput: 0
   SpawnGap: 0.38
   ShouldDebug: 0
-  SecondsPerAiAction: 3.09
-  TotalInterprolateFrames: 10
+  SecondsPerAiAction: 0.97
+  TotalInterprolateFrames: 5
   interpolateFrames: []
-  EachMotionFrameCount: []
-  TotalFrameCount: 
-  PickChances:
-  - 2.2395
-  - 7.5956
-  - 7.4474
-  - 3.4775
-  TotalPicks: 
-  AverageFramesInMotions: []
   Multiplier: 1
+  InputWaitTime: 0.1
 --- !u!114 &1615791730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7068,18 +7070,50 @@ MonoBehaviour:
       Entry: 8
       Data: 
   UseProceduralTesting: 1
-  UseRandomTesting: 1
-  NewTestThreshold: 15000
+  UseRandomTesting: 0
+  NewTestThreshold: 5000
   XMLPath: 
+  PastTrialInfoHolder: {fileID: 11400000, guid: 80680744b3d93174ab11b5d5400b1884, type: 2}
+  InfoPath: B:\GitProjects\NewMachineLearning\NewMachineLearning\Assets\Scripts\Test.asset
   ComplexityRange: {x: 1, y: 60}
-  TrialDurationRange: {x: 5, y: 200}
+  TrialDurationRange: {x: 5, y: 150}
   GridFadeSpeedRange: {x: 1, y: 10}
-  ComplexityBase: 20
-  TrialDurationBase: 50
-  GridFadeSpeedBase: 3.5
+  ComplexityBase: 30
+  TrialDurationBase: 100
+  GridFadeSpeedBase: 3.4
   ComplexityCurrent: 0
   TrialDurationCurrent: 0
   GridFadeSpeedCurrent: 0
+  XMLInfo: {fileID: 4900000, guid: f2e21d6c261114c439a0c597a47d190e, type: 3}
+--- !u!114 &1615791731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615791726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4395417d7dd8a13488aab6759f8a7c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  EachMotionFrameCount: []
+  TotalFrameCount: 
+  PickChances: []
+  AdjustedPickChances: []
+  TotalPicks: 
+  AverageFramesInMotions: []
+  ShouldDebug: 0
+  PastFrameReduce: 2
 --- !u!1 &1650534507
 GameObject:
   m_ObjectHideFlags: 0
@@ -10518,6 +10552,7 @@ MonoBehaviour:
   CanRecieveInfo: 0
   LastWorldTime: 0
   LargestTime: 0
+  LastInputWaitTime: 0
   IsInterpolatingDsplay: 0
   IsLoggerDisplay: 0
 --- !u!114 &2591947932039339695

@@ -4,8 +4,6 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.SceneManagement;
 using System.IO;
-using System.Xml.Serialization;
-using UnityEditor;
 public class ProceduralTesting : SerializedMonoBehaviour
 {
     public static ProceduralTesting instance;
@@ -13,6 +11,8 @@ public class ProceduralTesting : SerializedMonoBehaviour
     [FoldoutGroup("Settings"), ShowIf("UseProceduralTesting")] public bool UseRandomTesting;
     [FoldoutGroup("Settings"), ShowIf("UseProceduralTesting")] public int NewTestThreshold;
     [FoldoutGroup("Settings"), ReadOnly] public string XMLPath;
+    [FoldoutGroup("Settings")] public PastTrialHolder PastTrialInfoHolder;
+    [FoldoutGroup("Settings")] public string InfoPath;
     
     [FoldoutGroup("Stats")]
     public Dictionary<string, bool> StatChanges;
@@ -30,9 +30,24 @@ public class ProceduralTesting : SerializedMonoBehaviour
 
     public delegate void BeforeRestart();
     public static event BeforeRestart OnBeforeRestart;
+
+    public TextAsset XMLInfo;
+
+    public float GetCorrectPercentStat()
+    {
+        int FrameKeepCount = DataTracker.instance.PastFrameInfoKeep;
+        int TrueCount = 0;
+        for (int i = 0; i < DataTracker.instance.PastFrameInfoKeepForTesting.Count; ++i)
+            if (DataTracker.instance.PastFrameInfoKeepForTesting[i].Guess == DataTracker.instance.PastFrameInfoKeepForTesting[i].Truth)
+                TrueCount += 1;
+        return (float)TrueCount / (float)FrameKeepCount;
+
+    }
+
     private void SetComplexity()
     {
-        TextAsset Asset = (TextAsset)AssetDatabase.LoadAssetAtPath("Assets/UnitySharpNEAT/Resources/experiment.config.xml", typeof(TextAsset));  //(TextAsset) xmlFile.text;
+        //TextAsset Asset = (TextAsset)AssetDatabase.LoadAssetAtPath("Assets/UnitySharpNEAT/Resources/experiment.config.xml", typeof(TextAsset));  //(TextAsset) xmlFile.text;
+        TextAsset Asset = XMLInfo;
         string TrueText = Asset.text;
         int Start = TrueText.IndexOf("<ComplexityThreshold>");
         int End = TrueText.IndexOf("<Description>");
@@ -48,19 +63,36 @@ public class ProceduralTesting : SerializedMonoBehaviour
 
         UnitySharpNEAT.LearningAgent.OnLog += NewFrame;
 
-        if(UseProceduralTesting && UseRandomTesting)
+
+        if (UseProceduralTesting)
         {
-            ComplexityCurrent = StatChanges["Complexity"] ? (int)Random.Range(ComplexityRange.x, ComplexityRange.y) : ComplexityBase;
+            ComplexityCurrent = StatChanges["Complexity"] && UseRandomTesting ? (int)Random.Range(ComplexityRange.x, ComplexityRange.y) : ComplexityBase;
             SetComplexity();
 
-            TrialDurationCurrent = StatChanges["TrialDuration"] ? Random.Range(TrialDurationRange.x, TrialDurationRange.y) : TrialDurationBase;
+            TrialDurationCurrent = StatChanges["TrialDuration"] && UseRandomTesting ? Random.Range(TrialDurationRange.x, TrialDurationRange.y) : TrialDurationBase;
             GetComponent<UnitySharpNEAT.NeatSupervisor>().TrialDuration = TrialDurationCurrent;
 
-            GridFadeSpeedCurrent = StatChanges["GridFadeSpeed"] ? Random.Range(GridFadeSpeedRange.x, GridFadeSpeedRange.y) : GridFadeSpeedBase;
+            GridFadeSpeedCurrent = StatChanges["GridFadeSpeed"] && UseRandomTesting ? Random.Range(GridFadeSpeedRange.x, GridFadeSpeedRange.y) : GridFadeSpeedBase;
             MatrixManager.instance.STimeMultiplier = GridFadeSpeedCurrent;
         }
     }
+    /*
+    public void AddToScriptableObject(SinglePastTrialInfo info)
+    {
+        FileStream stream = new FileStream(Path, FileMode.Open, FileAccess.ReadWrite);
+        BinaryFormatter formatter = new BinaryFormatter();
+        string Path = "B:/GitProjects/NewMachineLearning/NewMachineLearning/Assets/Scripts/Test.asset";
+        
 
+        PastTrialHolder data = formatter.Deserialize(stream) as PastTrialHolder;
+        Debug.Log(data.AllInfoList.Count);
+        
+        data.AllInfoList.Add(info);
+        formatter.Serialize(stream, data);
+        
+        stream.Close();
+    }
+    */
 
     public void NewFrame()
     {
@@ -70,6 +102,8 @@ public class ProceduralTesting : SerializedMonoBehaviour
             return;
 
         OnBeforeRestart();
+        //AddToScriptableObject(new SinglePastTrialInfo(ComplexityCurrent, TrialDurationCurrent, GridFadeSpeedCurrent, GetCorrectPercentStat()));
+        PastTrialInfoHolder.AllInfoList.Add(new SinglePastTrialInfo(ComplexityCurrent, TrialDurationCurrent, GridFadeSpeedCurrent, GetCorrectPercentStat()));
 
         //reload scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

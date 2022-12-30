@@ -24,21 +24,29 @@ public class MatrixManager : SerializedMonoBehaviour
     public Vector2 MaxZDistance;
     public float STimeMultiplier;
 
+    public float DisplaySizeMultiplier = 1;
+
     //[BoxGroup("ReadOnly table")]
     //[TableMatrix(IsReadOnly = true)]
     [HideInInspector] public Vector2[,] GridStats;
 
 
-    [HideInInspector]public List<MatrixStat> MatrixStats;
-
+    [FoldoutGroup("GridStats")] public List<MatrixStat> MatrixStats;
+    [FoldoutGroup("GridStats")] public List<MatrixStat> AILastMatrixStats;
+    [FoldoutGroup("GridStats")] public List<MatrixStat> DisplayLastMatrixStats;
+    
     private Texture2D TextureMap;
     public Image Display;
     private Sprite mySprite;
+
+    
 
     private Vector3 DefultHSV = new Vector3(0f, 0f, 0.5f);
 
     [PropertyRange(1, 200)]public int ResetFrames;
     public int FramesWaited;
+
+    private int CalledCount;
     public List<float> GridToFloats()
     {
         List<float> AllFloats = new List<float>();
@@ -56,10 +64,9 @@ public class MatrixManager : SerializedMonoBehaviour
     }
     void Start()
     {
-        GridStats = new Vector2[Width, Height];
         TextureMap = new Texture2D(Width, Height);
         TextureMap.filterMode = FilterMode.Point;
-
+        ResetMatrix();
         if (currentDisplay == MatrixDisplay.MotionPlayback)
         {
             MotionPlayback.OnNewFrame += OnNewFrame;
@@ -76,7 +83,9 @@ public class MatrixManager : SerializedMonoBehaviour
 
         StartCoroutine(UpdateGraphic());
 
-        ResetMatrix();
+        //ResetMatrix();
+
+        //LastMatrixStats = 
     }
     public void ResetMatrix()
     {
@@ -93,10 +102,51 @@ public class MatrixManager : SerializedMonoBehaviour
         mySprite = Sprite.Create(TextureMap, new Rect(0.0f, 0.0f, TextureMap.width, TextureMap.height), new Vector2(0.5f, 0.5f), 1000.0f);
         Display.sprite = mySprite;
     }
-    private void Update()
+
+    public List<MatrixStat> MatrixChanges(bool IsAgent)
     {
-        if (Input.GetKey(KeyCode.KeypadEnter))
-            ResetMatrix();
+        List<MatrixStat> Changes = new List<MatrixStat>();
+        List<MatrixStat> LastMatrixAccess = IsAgent ? AILastMatrixStats : DisplayLastMatrixStats;
+
+        //add new
+        for (int i = 0; i < MatrixStats.Count; i++)
+            Changes.Add(new MatrixStat(MatrixStats[i].X, MatrixStats[i].Y, MatrixStats[i].H, MatrixStats[i].S));
+
+        //check for deleted
+        for (int i = 0; i < LastMatrixAccess.Count; i++)
+            if (LastMatrixGone(i))
+                Changes.Add(new MatrixStat(LastMatrixAccess[i].X, LastMatrixAccess[i].Y, 0f, 0f));
+
+        if(IsAgent == false)
+            UpdateLastMatrixStats();
+
+        CalledCount += IsAgent ? 1 : 0;
+        if (CalledCount == LearnManager.instance.AICount())
+        {
+            CalledCount = 0;
+            UpdateLastMatrixStats();
+        }
+
+
+
+        bool LastMatrixGone(int LastMatrixIndex)
+        {
+            for (int j = 0; j < MatrixStats.Count; j++)
+                if (LastMatrixAccess[LastMatrixIndex].X == MatrixStats[j].X && LastMatrixAccess[LastMatrixIndex].Y == MatrixStats[j].Y)
+                    return false;
+            return true;
+        }
+        void UpdateLastMatrixStats()
+        {
+            LastMatrixAccess.Clear();
+            for (int i = 0; i < MatrixStats.Count; i++)
+            {
+                MatrixStat stat = new MatrixStat(MatrixStats[i].X, MatrixStats[i].Y, MatrixStats[i].H, MatrixStats[i].S);
+                LastMatrixAccess.Add(stat);
+            }
+        }
+        
+        return Changes;
     }
     IEnumerator UpdateGraphic()
     {
@@ -110,6 +160,8 @@ public class MatrixManager : SerializedMonoBehaviour
                 
             UpdateGrid();
             FramesWaited = 0;
+
+            Display.rectTransform.sizeDelta = new Vector2(Width * DisplaySizeMultiplier, Height * DisplaySizeMultiplier);
         }
     }
     public void OnNewFrame()
@@ -122,8 +174,6 @@ public class MatrixManager : SerializedMonoBehaviour
     }
     public void AddToMatrixList(MatrixStat Stat)
     {
-        if (Stat.X > Width || Stat.X < 0 || Stat.Y > Height || Stat.Y < 0)
-            Debug.LogError("larger than array at  Motion: " + LearnManager.instance.CurrentMotion + "  Set: " + LearnManager.instance.CurrentSet);
         for (int i = 0; i < MatrixStats.Count; i++)
             if (MatrixStats[i].X == Stat.X && MatrixStats[i].Y == Stat.Y)
                 MatrixStats.RemoveAt(i);
@@ -132,40 +182,25 @@ public class MatrixManager : SerializedMonoBehaviour
 
         MatrixStats.Add(Stat);
     }
-    public void UpdateMatrixTimes()
+    public void UpdateGrid()
     {
         for (int i = 0; i < MatrixStats.Count; i++)
         {
             float SValueTime = (1f - (STimeMultiplier * MatrixStats[i].TimeSinceCreation()));
             MatrixStats[i].S = SValueTime;
             if (SValueTime < 0)
-            {
-                TextureMap.SetPixel(MatrixStats[i].X, MatrixStats[i].Y, Color.HSVToRGB(0f, 0f, DefultHSV.z));
-                TextureMap.Apply();
-
-                GridStats[MatrixStats[i].X, MatrixStats[i].Y] = Vector2.zero;
                 MatrixStats.RemoveAt(i);
-                
-            }
-            else
-            {
-                GridStats[MatrixStats[i].X, MatrixStats[i].Y] = new Vector2(MatrixStats[i].H, MatrixStats[i].S);
-            }
         }
-    }
 
-    public void UpdateGrid()
-    {
-        UpdateMatrixTimes();
-        for (int i = 0; i < MatrixStats.Count; i++)
+        List<MatrixStat> ChangeStats = MatrixChanges(false);
+        for (int i = 0; i < ChangeStats.Count; i++)
         {
-            int X = MatrixStats[i].X;
-            int Y = MatrixStats[i].Y;
-            GridStats[X, Y] = new Vector2(MatrixStats[i].H, MatrixStats[i].S);
+            int X = ChangeStats[i].X;
+            int Y = ChangeStats[i].Y;
+            GridStats[X, Y] = new Vector2(ChangeStats[i].H, ChangeStats[i].S);
             TextureMap.SetPixel(X, Y, Color.HSVToRGB(GridStats[X, Y].x, GridStats[X, Y].y, DefultHSV.z));
             TextureMap.Apply();
         }
-            
         mySprite = Sprite.Create(TextureMap, new Rect(0.0f, 0.0f, TextureMap.width, TextureMap.height), new Vector2(0.5f, 0.5f), 1000.0f);
         Display.sprite = mySprite;
     }
@@ -173,13 +208,17 @@ public class MatrixManager : SerializedMonoBehaviour
     public MatrixStat GetCorrospondingMatrixStat()
     {
         SingleInfo newInfo = GetCorrospondingInfo();
+        float Angle = GetAngle() < 0 ? GetAngle() + 360f: GetAngle();
+        int X = (int)(Angle / 360f * Width);
+        if (X >= Width || X < 0)
+            Debug.LogError("X Not In Range: " + X + "  Motion: " + LearnManager.instance.CurrentMotion + "  Set: " + LearnManager.instance.CurrentSet + "  Frame: " + LearnManager.instance.CurrentFrame());
 
-        int X = (int)Mathf.Abs((GetAngle() / 360f) * Width);
         int Y = (int)Mathf.Abs(Remap(newInfo.HandPos.y, HeightMaxMin) * Height);
+        if (Y > Height || Y < 0)
+            Debug.Log("X Not In Range: " + Y + "  Motion: " + LearnManager.instance.CurrentMotion + "  Set: " + LearnManager.instance.CurrentSet + "  Frame: " + LearnManager.instance.CurrentFrame());
         float H = Remap(newInfo.HandPos.z, MaxZDistance);
         float S = 1f;
-        if (Y > Height || Y < 0)
-            Debug.Log("Motion: " + LearnManager.instance.CurrentMotion + "  Set: " + LearnManager.instance.CurrentSet + "  Frame: " + LearnManager.instance.CurrentFrame());
+        
         return new MatrixStat(X, Y, H, S);
         //currentDisplay
         SingleInfo GetCorrospondingInfo()

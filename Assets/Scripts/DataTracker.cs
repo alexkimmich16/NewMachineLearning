@@ -13,13 +13,17 @@ public class DataTracker : SerializedMonoBehaviour
     [FoldoutGroup("CurrentInfo"), ReadOnly] public List<Vector2> Past;
 
     [FoldoutGroup("CurrentInfo"), ReadOnly] public List<AIStat> Stats;
+    [FoldoutGroup("CurrentInfo"), ReadOnly] public List<AIStat> PastFrameInfoKeepForTesting;
 
     [FoldoutGroup("CurrentInfo"), ReadOnly] public List<int> SpellCalls;
+
 
     //[FoldoutGroup("Stats")] 
     public float RefreshInterval = 2f;
     //[FoldoutGroup("Stats")] 
     public bool DebugOnRefresh;
+    public int PastFrameInfoKeep;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
@@ -48,11 +52,14 @@ public class DataTracker : SerializedMonoBehaviour
         AbsoluteTotal = (Guess == Truth) ? new Vector2(AbsoluteTotal.x + 1, AbsoluteTotal.y) : new Vector2(AbsoluteTotal.x, AbsoluteTotal.y + 1);
         //stat.
         Stats.Add(new AIStat(Motion, Set, PlayCount, Guess, Truth));
+        PastFrameInfoKeepForTesting.Add(new AIStat(Motion, Set, PlayCount, Guess, Truth));
+        if (PastFrameInfoKeepForTesting.Count > PastFrameInfoKeep)
+            PastFrameInfoKeepForTesting.RemoveAt(0);
     }
     void Start()
     {
         for (int i = 0; i < LearnManager.instance.MovementList.Count; ++i)
-            SpellCalls.Add(0);
+            SpellCalls.Add(1);
         UnitySharpNEAT.LearningAgent.OnLog += LogGuess;
 
         StartCoroutine(RefreshWait());

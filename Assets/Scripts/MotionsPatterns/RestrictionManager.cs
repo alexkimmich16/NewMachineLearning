@@ -26,7 +26,6 @@ namespace RestrictionSystem
         Y = 1,
         Z = 2,
     }
-
     public enum VelocityType
     {
         Head = 0,
@@ -143,6 +142,13 @@ namespace RestrictionSystem
         {
             Vector3 HandDir = (Quaternion.Euler(frame2.HandRot + restriction.Offset) * Vector3.forward);
             Vector3 HandToHeadDir = (-frame2.HandPos).normalized;
+
+            if (restriction.ExcludeHeight)
+            {
+                HandDir.y = 0f;
+                HandToHeadDir.y = 0f;
+            }
+
             if (restriction.ShouldDebug)
             {
                 Debug.DrawLine(frame2.HandPos, frame2.HandPos + (HandToHeadDir * DebugRestrictions.instance.LineLength), Color.yellow);

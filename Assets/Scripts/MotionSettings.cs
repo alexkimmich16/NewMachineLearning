@@ -53,16 +53,18 @@ namespace RestrictionSystem
         public float MaxFalloff;
 
         
-        //private bool VelocityInHandOrHead() { return restriction == Restriction.VelocityInHandDirection || restriction == Restriction.VelocityInHeadDirection; }
+        private bool RequiresOffset() { return restriction == Restriction.VelocityInDirection || restriction == Restriction.HandFacingHead; }
 
 
-        [ShowIf("restriction", Restriction.VelocityInDirection)] public Vector3 Offset;
+        [ShowIf("RequiresOffset")] public Vector3 Offset;
+
+        [ShowIf("restriction", Restriction.HandFacingHead)] public bool ExcludeHeight;
         //[ShowIf("VelocityInHandOrHead")] public Vector3 ForwardDirection;
 
         //[ShowIf("restriction", Restriction.HandFacingHead)] public Axis UseAxis;
 
 
-        [ShowIf("restriction", Restriction.HandHeadDistance)] public List<Axis> UseAxisList;
+        [ShowIf("restriction", Restriction.HandHeadDistance)] public List<Axis> UseAxisList = new List<Axis>() { Axis.X, Axis.Y, Axis.Z };
 
         public bool ShouldDebug;
         [ReadOnly] public float Value;

@@ -20,11 +20,7 @@ namespace RestrictionSystem
         [FoldoutGroup("Testing")] public bool DebugHand;
         [FoldoutGroup("Testing")] public int FramesAgo = 2;
 
-        public bool Lock;
-
         //public bool ABS;
-
-        public int Add;
 
         public bool DebugVelocity;
         public float LineLength;

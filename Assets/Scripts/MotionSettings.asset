@@ -23,18 +23,45 @@ MonoBehaviour:
     SerializationNodes: []
   Iteration: 0
   MotionRestrictions:
-  - Motion: fire
-    WeightedValueThreshold: 0.8
+  - Motion: Fireball
+    WeightedValueThreshold: 1
     Restrictions:
-    - Label: fire
-      Active: 1
-      Weight: 0
+    - Label: speed
+      Active: 0
+      Weight: 1
       restriction: 0
       CheckType: 0
-      MaxSafe: 0
+      MaxSafe: 53.32
+      MinSafe: 5.3
+      MinFalloff: 0
+      MaxFalloff: 0
+      Offset: {x: 0, y: 0, z: 0}
+      UseAxisList: 
+      ShouldDebug: 0
+      Value: 0.011439922
+    - Label: hand straight
+      Active: 1
+      Weight: 1
+      restriction: 1
+      CheckType: 1
+      MaxSafe: 50.6
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
       Offset: {x: 0, y: 0, z: 0}
-      UseAxis: 0
       UseAxisList: 
+      ShouldDebug: 0
+      Value: 73.83095
+    - Label: headforwardvel
+      Active: 1
+      Weight: 1
+      restriction: 1
+      CheckType: 0
+      MaxSafe: 50.6
+      MinSafe: 0
+      MinFalloff: 0
+      MaxFalloff: 0
+      Offset: {x: 0, y: 0, z: 0}
+      UseAxisList: 
+      ShouldDebug: 0
+      Value: 92.085464

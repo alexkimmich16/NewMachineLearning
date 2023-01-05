@@ -10,7 +10,6 @@ public class SpreadSheet : SerializedMonoBehaviour
     
     //public string OutputName;
     public string Location() { return Application.dataPath + "/SpreadSheets/AIStatHolder.csv"; }
-    private AllMotions Motions;
 
     private bool HasWritten;
 
@@ -61,9 +60,6 @@ public class SpreadSheet : SerializedMonoBehaviour
     }
     void Start()
     {
-        Motions = LearnManager.instance.motions;
-        if (Motions.Motions.Count == 0)
-            return;
         StartCoroutine(CallPrintStats());
 
         ProceduralTesting.OnBeforeRestart += BeforeRestart;

@@ -309,16 +309,18 @@ namespace UnitySharpNEAT
                 }
                 else
                 {
-                    
-                    
                     List<MatrixStat> Changes = MatrixManager.instance.MatrixChanges(true);
-                    //if(IsLogger())
-                        //Debug.Log(Changes.Count);
+
                     for (int i = 0; i < Changes.Count; i++)
                     {
-                        int Index = (Changes[i].X * MatrixManager.instance.Height + Changes[i].Y) * 2;
-                        inputSignalArray[Index] = Changes[i].H; 
-                        inputSignalArray[Index + 1] = Changes[i].S;
+                        int Index1 = (Changes[i].X * MatrixManager.instance.Height + Changes[i].Y) * LearnManager.instance.InfoCountInMatrixSingle();
+                        //if (IsLogger())
+                            //Debug.Log("Index: " + Index1 + "  Length: " + inputSignalArray.Length);
+                        inputSignalArray[Index1] = Changes[i].H; 
+                        inputSignalArray[Index1 + 1] = Changes[i].S;
+                        inputSignalArray[Index1 + 2] = Changes[i].RotX;
+                        inputSignalArray[Index1 + 3] = Changes[i].RotY;
+                        inputSignalArray[Index1 + 4] = Changes[i].RotZ;
                         //MatrixManager.instance.GridStats[Changes[i].X, Changes[i].Y].y
                     }
 

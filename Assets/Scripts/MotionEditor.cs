@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using Sirenix.OdinInspector;
 public enum EditSide
 {
     left = 0,
     right = 1,
 }
-public class MotionEditor : MonoBehaviour
+public class MotionEditor : SerializedMonoBehaviour
 {
     public static MotionEditor instance;
     private void Awake() { instance = this; }

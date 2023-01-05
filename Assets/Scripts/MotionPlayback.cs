@@ -40,7 +40,6 @@ public class MotionPlayback : MonoBehaviour
     {
         if(type == PlayType.WatchAI)
             LA = transform.parent.GetComponent<UnitySharpNEAT.LearningAgent>();
-
     }
     void Update()
     {
@@ -82,7 +81,8 @@ public class MotionPlayback : MonoBehaviour
                     MotionEditor.instance.MotionNum += 1;
                 }
             }
-
+            bool State = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].AtFrameState(Frame);
+            handToChange.material = LearnManager.instance.FalseTrue[State ? 1 : 0];
             SingleInfo info = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos[Frame];
             
             moveAll(info);

@@ -138,20 +138,28 @@ public class PickManager : SerializedMonoBehaviour
             for (int i = 0; i < EachMotionFrameCount.Count; ++i)
                 for (int j = 0; j < EachMotionFrameCount[i].MotionCounts.Count; ++j)
                 {
+                    //AverageFramesInMotions
+                    
                     float ThisSubFrameCount = EachMotionFrameCount[i].MotionCounts[j]; // current frames in parent     //10 sets
-                    float PercentOfAverageFramesPerMotion = ThisSubFrameCount / GetTotalMotionFrames(i); //40 flame frames out of 100 = 40% are flame (0.4)
-                    float ThisFramesOfAverage = PercentOfAverageFramesPerMotion * AverageFramesInMotions[i]; //40% average frames per motion (10) = 4 average flame frames per motion
-                    float InverseOfAverageThisFrame = ThisFramesOfAverage; //the opposite number of the average frames: 1 / 4 = 0.25
+                    float MyWeightOfTotal = ThisSubFrameCount / (float)GetTotalMotionFrames(i); //40 flame frames out of 100 = 40% are flame (0.4)
+
+
+                    float MyCutOfAverageFrames = (MyWeightOfTotal) * AverageFramesInMotions[i];
+                    float InverseOfAverageThisFrame = MyCutOfAverageFrames; //the opposite number of the average frames: 1 / 4 = 0.25
                     float ChanceAddForThisMotion = (ThisSubFrameCount != 0f) ? InverseOfAverageThisFrame : 0f; //if 0 frames do nothing
 
-                    Chances[j] += ChanceAddForThisMotion;
-                    if (ThisSubFrameCount != 0f)
+                    //float ThisFramesOfAverage = PercentOfAverageFramesPerMotion * AverageFramesInMotions[i]; //40% average frames per motion (10) = 4 average flame frames per motion
+                    //float InverseOfAverageThisFrame = ThisFramesOfAverage; //the opposite number of the average frames: 1 / 4 = 0.25
+                    
+                    
+                    Chances[j] += ChanceAddForThisMotion; //total average
+                    if (ThisSubFrameCount != 0f && ShouldDebug)
                         Debug.Log("I: " + (CurrentLearn)i + "  J: " + (CurrentLearn)j +
                         "  ThisSubFrameCount: " + ThisSubFrameCount +
                         "  TotalFramesMotionParent: " + GetTotalMotionFrames(i) +
-                        "  MyWeightOfTotal: " + (PercentOfAverageFramesPerMotion * 100f) + "%" +
+                        "  MyWeightOfTotal: " + (MyWeightOfTotal * 100f) + "%" +
                         "  AverageFramesPerMotion: " + AverageFramesInMotions[i] +
-                        "  ThisFramesOfAverage: " + ThisFramesOfAverage +
+                        //"  ThisFramesOfAverage: " + ThisFramesOfAverage +
                         "  ChanceAddForThisMotion: " + ChanceAddForThisMotion
                         //"  Value: " + (EachMotionFrameCount[i].MotionCounts[j] / MovementList[i].Motions.Count)
                         );
@@ -163,7 +171,7 @@ public class PickManager : SerializedMonoBehaviour
             {
 
                 float PercentOfWhole = Chances[i] / CurrentTotal;
-                //Debug.Log("i: " + i + "  PercentOfWhole: " + PercentOfWhole);
+               // Debug.Log("i: " + i + "  PercentOfWhole: " + PercentOfWhole);
                 //Chances[i] = 1f / Chances[i];
                 Chances[i] = 1f / PercentOfWhole;
 

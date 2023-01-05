@@ -23,8 +23,8 @@ public class MatrixManager : SerializedMonoBehaviour
     public Vector2 HeightMaxMin;
     public Vector2 MaxZDistance;
     public float STimeMultiplier;
-
-    public float DisplaySizeMultiplier = 1;
+    public bool DisplayActive;
+    [ShowIf("DisplayActive")]public float DisplaySizeMultiplier = 1;
 
     //[BoxGroup("ReadOnly table")]
     //[TableMatrix(IsReadOnly = true)]
@@ -110,12 +110,12 @@ public class MatrixManager : SerializedMonoBehaviour
 
         //add new
         for (int i = 0; i < MatrixStats.Count; i++)
-            Changes.Add(new MatrixStat(MatrixStats[i].X, MatrixStats[i].Y, MatrixStats[i].H, MatrixStats[i].S));
+            Changes.Add(new MatrixStat(MatrixStats[i].X, MatrixStats[i].Y, MatrixStats[i].H, MatrixStats[i].S, MatrixStats[i].RotX, MatrixStats[i].RotY, MatrixStats[i].RotZ));
 
         //check for deleted
         for (int i = 0; i < LastMatrixAccess.Count; i++)
             if (LastMatrixGone(i))
-                Changes.Add(new MatrixStat(LastMatrixAccess[i].X, LastMatrixAccess[i].Y, 0f, 0f));
+                Changes.Add(new MatrixStat(LastMatrixAccess[i].X, LastMatrixAccess[i].Y, 0f, 0f, 0f, 0f, 0f));
 
         if(IsAgent == false)
             UpdateLastMatrixStats();
@@ -141,7 +141,7 @@ public class MatrixManager : SerializedMonoBehaviour
             LastMatrixAccess.Clear();
             for (int i = 0; i < MatrixStats.Count; i++)
             {
-                MatrixStat stat = new MatrixStat(MatrixStats[i].X, MatrixStats[i].Y, MatrixStats[i].H, MatrixStats[i].S);
+                MatrixStat stat = new MatrixStat(MatrixStats[i].X, MatrixStats[i].Y, MatrixStats[i].H, MatrixStats[i].S, MatrixStats[i].RotX, MatrixStats[i].RotY, MatrixStats[i].RotZ);
                 LastMatrixAccess.Add(stat);
             }
         }
@@ -162,6 +162,7 @@ public class MatrixManager : SerializedMonoBehaviour
             FramesWaited = 0;
 
             Display.rectTransform.sizeDelta = new Vector2(Width * DisplaySizeMultiplier, Height * DisplaySizeMultiplier);
+            Display.enabled = DisplayActive;
         }
     }
     public void OnNewFrame()
@@ -208,18 +209,23 @@ public class MatrixManager : SerializedMonoBehaviour
     public MatrixStat GetCorrospondingMatrixStat()
     {
         SingleInfo newInfo = GetCorrospondingInfo();
-        float Angle = GetAngle() < 0 ? GetAngle() + 360f: GetAngle();
+        float Angle = GetAngle() < 0f ? GetAngle() + 360f: GetAngle();
         int X = (int)(Angle / 360f * Width);
         if (X >= Width || X < 0)
             Debug.LogError("X Not In Range: " + X + "  Motion: " + LearnManager.instance.CurrentMotion + "  Set: " + LearnManager.instance.CurrentSet + "  Frame: " + LearnManager.instance.CurrentFrame());
 
         int Y = (int)Mathf.Abs(Remap(newInfo.HandPos.y, HeightMaxMin) * Height);
-        if (Y > Height || Y < 0)
+        if (Y > Height || Y < 0f)
             Debug.Log("X Not In Range: " + Y + "  Motion: " + LearnManager.instance.CurrentMotion + "  Set: " + LearnManager.instance.CurrentSet + "  Frame: " + LearnManager.instance.CurrentFrame());
         float H = Remap(newInfo.HandPos.z, MaxZDistance);
         float S = 1f;
-        
-        return new MatrixStat(X, Y, H, S);
+
+        float XRot = newInfo.HandRot.x / 360f;
+        float YRot = newInfo.HandRot.y / 360f;
+        float ZRot = newInfo.HandRot.z / 360f;
+
+
+        return new MatrixStat(X, Y, H, S, XRot, YRot, ZRot);
         //currentDisplay
         SingleInfo GetCorrospondingInfo()
         {
@@ -258,10 +264,23 @@ public class MatrixStat
 {
     public int X, Y;
     public float H, S;
+    public float RotX, RotY, RotZ;
     public float CreationTime;
     public float TimeSinceCreation()
     {
         return Time.timeSinceLevelLoad - CreationTime;
+    }
+    public MatrixStat(int XStat, int YStat, float HStat, float SStat, float RotXStat, float RotYStat, float RotZStat)
+    {
+        X = XStat;
+        Y = YStat;
+        H = HStat;
+        S = SStat;
+
+        RotX = RotXStat;
+        RotY = RotYStat;
+        RotZ = RotZStat;
+        CreationTime = Time.timeSinceLevelLoad;
     }
     public MatrixStat(int XStat, int YStat, float HStat, float SStat)
     {
@@ -269,6 +288,7 @@ public class MatrixStat
         Y = YStat;
         H = HStat;
         S = SStat;
+
         CreationTime = Time.timeSinceLevelLoad;
     }
 }

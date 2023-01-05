@@ -5,9 +5,9 @@ public class RecordMotions : MonoBehaviour
 {
     public int FramesPerSecond;
     private float FrameInterval;
-    private AllMotions Motions;
 
-    public Motion currentMotion;
+    public List<SingleInfo> CurrentMotionRecord = new List<SingleInfo>();
+    public CurrentLearn motion;
     private bool RecordingMotion;
     public bool ShouldRecord;
 
@@ -16,7 +16,6 @@ public class RecordMotions : MonoBehaviour
     public List<bool> Values;
     private void Start()
     {
-        Motions = LearnManager.instance.motions;
         FrameInterval = 1 / FramesPerSecond;
     }
     private void FixedUpdate()
@@ -44,9 +43,9 @@ public class RecordMotions : MonoBehaviour
             FinalMotion.IntoRange(Values);
             Values.Clear();
 
-            FinalMotion.Infos = new List<SingleInfo>(currentMotion.Infos);
-            Motions.Motions.Add(FinalMotion);
-            currentMotion.Infos.Clear();
+            FinalMotion.Infos = new List<SingleInfo>(CurrentMotionRecord);
+            LearnManager.instance.MovementList[(int)motion].Motions.Add(FinalMotion);
+            CurrentMotionRecord.Clear();
         }
 
         if (RecordingMotion == false)
@@ -54,6 +53,6 @@ public class RecordMotions : MonoBehaviour
 
         SingleInfo info = LearnManager.instance.Info.GetControllerInfo(EditSide.right);
         Values.Add(LearnManager.instance.Right.TriggerPressed());
-        currentMotion.Infos.Add(info);
+        CurrentMotionRecord.Add(info);
     }
 }

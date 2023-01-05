@@ -17,10 +17,14 @@ public class LearnManager : SerializedMonoBehaviour
     public static LearnManager instance;
     public static List<Vector2> ListNegitives = new List<Vector2>() { new Vector2(1, 1), new Vector2(-1, 1), new Vector2(-1, -1), new Vector2(1, -1) };
     public static List<bool> InvertAngles = new List<bool>() { false, true, false, true };
-    private void Awake() { instance = this; }
+    private void Awake()
+    {
+        instance = this;
+        NeatSupervisor()._networkInputCount = MatrixManager.instance.Width * MatrixManager.instance.Height * InfoCountInMatrixSingle();
+        NeatSupervisor()._networkOutputCount = UseAgentSingleOutput ? 1 : 4;
+    }
     //public CurrentLearn LearnType;
     [HideInInspector] public learningState state;
-    [HideInInspector] public AllMotions motions;
     public bool LearnOnStart;
 
     [FoldoutGroup("References")] public List<AllMotions> MovementList;
@@ -51,6 +55,8 @@ public class LearnManager : SerializedMonoBehaviour
         return null;
     }
     public int AICount() { return NeatSupervisor().Experiment.DefaultPopulationSize; }
+
+    public int InfoCountInMatrixSingle() { return 5; }
     #endregion
     [FoldoutGroup("NeatDisplay"), ReadOnly] public List<SingleInfo> RightInfo;
     [FoldoutGroup("NeatDisplay"), ReadOnly] public List<SingleInfo> LeftInfo;
@@ -95,7 +101,6 @@ public class LearnManager : SerializedMonoBehaviour
     public static event NoInfo OnIntervalReached;
     public static event NoInfo OnAlgorithmStart;
 
-    
     public void StartAlgorithmSequence() { StartCoroutine(AlgorithmSequence()); }
     public IEnumerator AlgorithmSequence()
     {
@@ -119,7 +124,6 @@ public class LearnManager : SerializedMonoBehaviour
 
     public float InputWaitTime;
 
-
     public List<SingleInfo> InterpolatePositions(Vector3 from, Vector3 to)
     {
         List<SingleInfo> LerpList = new List<SingleInfo>();
@@ -140,9 +144,9 @@ public class LearnManager : SerializedMonoBehaviour
             for (int j = 0; j < MovementList[i].Motions.Count; ++j)
                 MovementList[i].Motions[j].PlayCount = 0;
 
-        NeatSupervisor()._networkInputCount = MatrixManager.instance.Width * MatrixManager.instance.Height * 2;
-        NeatSupervisor()._networkOutputCount = UseAgentSingleOutput ? 1 : 4;
 
+        if (!LearnOnStart)
+            return; 
         UnitySharpNEAT.ExperimentIO.DeleteAllSaveFiles(NeatSupervisor().Experiment);
         NeatSupervisor().StartEvolution();
     }
@@ -265,17 +269,71 @@ public class LearnManager : SerializedMonoBehaviour
     {
         while (true)
         {
-            RightInfo.Add(CurrentControllerInfo(EditSide.right));
+            RightInfo.Add(Info.GetControllerInfo(EditSide.right));
             if (RightInfo.Count > MaxStoreInfo)
                 RightInfo.RemoveAt(0);
 
-            LeftInfo.Add(CurrentControllerInfo(EditSide.left));
+            LeftInfo.Add(Info.GetControllerInfo(EditSide.left));
             if (LeftInfo.Count > MaxStoreInfo)
                 LeftInfo.RemoveAt(0);
 
             yield return new WaitForSeconds(Interval);
         }
     }
+    
+    public SingleInfo PastFrame(EditSide side, int FramesAgo)
+    {
+        List<SingleInfo> SideList = (side == EditSide.right) ? RightInfo : LeftInfo;
+        return SideList[SideList.Count - FramesAgo];
+    }
+}
+[System.Serializable]
+public class ControllerInfo
+{
+    
+    public List<Transform> TestMain;
+    public List<Transform> TestCam;
+    public List<Transform> TestHand;
+
+    public HandActions MyHand(EditSide side) { return (side == EditSide.right) ? LearnManager.instance.Right : LearnManager.instance.Left; }
+    public SingleInfo GetControllerInfo(EditSide side)
+    {
+        Transform Cam = LearnManager.instance.Cam;
+        ResetStats();
+        Vector3 CamPos = Cam.localPosition;
+        TestCam[(int)side].position = Vector3.zero;
+        TestHand[(int)side].position = TestHand[(int)side].position - CamPos;
+
+        float YDifference = -Cam.localRotation.eulerAngles.y;
+        
+        //invert main to y distance
+        if (side == EditSide.left)
+        {
+            TestMain[(int)side].localScale = new Vector3(-1, 1, 1);
+            Vector3 Rot = TestCam[(int)side].eulerAngles;
+            TestCam[(int)side].eulerAngles = new Vector3(Rot.x, -Rot.y, -Rot.z);
+        }
+            
+        TestMain[(int)side].rotation = Quaternion.Euler(0, YDifference, 0);
+        //TestCam[(int)side].localRotation = Cam.localRotation;
+        return new SingleInfo(TestHand[(int)side].position, TestHand[(int)side].rotation.eulerAngles, TestCam[(int)side].position, TestCam[(int)side].rotation.eulerAngles);
+
+        void ResetStats()
+        {
+            TestMain[(int)side].position = Vector3.zero;
+            TestMain[(int)side].rotation = Quaternion.identity;
+            TestMain[(int)side].localScale = new Vector3(1, 1, 1);
+            SetEqual(Cam, TestCam[(int)side]);
+            SetEqual(MyHand(side).transform, TestHand[(int)side]);
+            void SetEqual(Transform Info, Transform Set)
+            {
+                Set.localPosition = Info.localPosition;
+                Set.localRotation = Info.localRotation;
+            }
+        }
+    }
+}
+/*
     public SingleInfo CurrentControllerInfo(EditSide side)
     {
         LearnManager LM = LearnManager.instance;
@@ -393,55 +451,4 @@ public class LearnManager : SerializedMonoBehaviour
         }
 
     }
-    public SingleInfo PastFrame(EditSide side, int FramesAgo)
-    {
-        List<SingleInfo> SideList = (side == EditSide.right) ? RightInfo : LeftInfo;
-        return SideList[SideList.Count - FramesAgo];
-    }
-}
-[System.Serializable]
-public class ControllerInfo
-{
-    
-    public List<Transform> TestMain;
-    public List<Transform> TestCam;
-    public List<Transform> TestHand;
-
-    public HandActions MyHand(EditSide side) { return (side == EditSide.right) ? LearnManager.instance.Right : LearnManager.instance.Left; }
-    public SingleInfo GetControllerInfo(EditSide side)
-    {
-        Transform Cam = LearnManager.instance.Cam;
-        SetReferences();
-        Vector3 CamPos = Cam.localPosition;
-        TestCam[(int)side].position = Vector3.zero;
-        TestHand[(int)side].position = TestHand[(int)side].position - CamPos;
-
-        float YDifference = -Cam.localRotation.eulerAngles.y;
-        
-        //invert main to y distance
-        if (side == EditSide.left)
-        {
-            TestMain[(int)side].localScale = new Vector3(-1, 1, 1);
-            Vector3 Rot = TestCam[(int)side].eulerAngles;
-            TestCam[(int)side].eulerAngles = new Vector3(Rot.x, -Rot.y, -Rot.z);
-        }
-            
-        TestMain[(int)side].rotation = Quaternion.Euler(0, YDifference, 0);
-        //TestCam[(int)side].localRotation = Cam.localRotation;
-        return new SingleInfo(TestHand[(int)side].position, TestHand[(int)side].rotation.eulerAngles, TestCam[(int)side].position, TestCam[(int)side].rotation.eulerAngles); ;
-
-        void SetReferences()
-        {
-            TestMain[(int)side].position = Vector3.zero;
-            TestMain[(int)side].rotation = Quaternion.identity;
-            TestMain[(int)side].localScale = new Vector3(1, 1, 1);
-            SetEqual(Cam, TestCam[(int)side]);
-            SetEqual(MyHand(side).transform, TestHand[(int)side]);
-            void SetEqual(Transform Info, Transform Set)
-            {
-                Set.localPosition = Info.localPosition;
-                Set.localRotation = Info.localRotation;
-            }
-        }
-    }
-}
+    */

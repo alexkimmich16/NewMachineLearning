@@ -57,6 +57,7 @@ namespace RestrictionSystem
 
 
         [ShowIf("RequiresOffset")] public Vector3 Offset;
+        [ShowIf("RequiresOffset")] public Vector3 Direction;
 
         [ShowIf("restriction", Restriction.HandFacingHead)] public bool ExcludeHeight;
         //[ShowIf("VelocityInHandOrHead")] public Vector3 ForwardDirection;

@@ -4,6 +4,12 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 namespace RestrictionSystem
 {
+    public enum DebugType
+    {
+        None = 0,
+        Single = 1,
+        MotionSettings = 2,
+    }
     public class DebugRestrictions : SerializedMonoBehaviour
     {
         public static DebugRestrictions instance;
@@ -11,13 +17,17 @@ namespace RestrictionSystem
         [FoldoutGroup("References")] public SkinnedMeshRenderer handToChange;
 
         [FoldoutGroup("Values"), ReadOnly] public float Velocity;
+
+        [FoldoutGroup("References")] public List<Material> Materials;
         //[FoldoutGroup("Values"), ReadOnly] public Vector3 VelocityDirection;
         //[FoldoutGroup("Values"), ReadOnly] public float AngleDistance;
         //[FoldoutGroup("Values"), ReadOnly] public Vector3 HandPosition;
         //[FoldoutGroup("Values"), ReadOnly] public float HandToHeadDir;
 
         [FoldoutGroup("Testing")] public MotionRestriction Restrictions;
-        [FoldoutGroup("Testing")] public bool DebugHand;
+        //[FoldoutGroup("Testing")] public bool DebugHand;
+        [FoldoutGroup("Testing")] public DebugType debugType;
+        
         [FoldoutGroup("Testing")] public int FramesAgo = 2;
 
         //public bool ABS;
@@ -42,10 +52,12 @@ namespace RestrictionSystem
             //HandPosition = frame2.HandPos;
 
 
-
-            if (DebugHand)
-                handToChange.material = LearnManager.instance.FalseTrue[RestrictionManager.instance.MotionWorks(frame1, frame2, Restrictions) ? 1 : 0]; //set hand
-
+            if (debugType == DebugType.Single)
+                handToChange.material = Materials[RestrictionManager.instance.MotionWorks(frame1, frame2, Restrictions) ? 1 : 0]; //set hand
+            else if(debugType == DebugType.MotionSettings)
+            {
+                handToChange.material = Materials[(int)RestrictionManager.instance.GetCurrentMotion(frame1, frame2)];
+            }
         }
         /*
         public float GetVelocity(SingleInfo frame1, SingleInfo frame2) { return Vector3.Distance(frame1.HandPos, frame2.HandPos) / (1f / 60f); }

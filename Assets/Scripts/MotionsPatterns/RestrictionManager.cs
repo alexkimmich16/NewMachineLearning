@@ -44,14 +44,13 @@ namespace RestrictionSystem
             {Restriction.HandFacingHead, HandFacingHeadWorks},
             {Restriction.HandHeadDistance, HandHeadDistanceWorks},
             {Restriction.HandToHeadAngle, HandToHeadDirectionWorks},
-
         };
 
         public bool UseMotionCurves = false; //0 == bad, 1 == good
 
 
         //[ListDrawerSettings(DraggableItems = false, ShowIndexLabels = true, ListElementLabelName = "Title")] public List<MotionRestriction> MotionRestrictions;
-        [ListDrawerSettings(DraggableItems = false, ShowIndexLabels = true, ListElementLabelName = "Title")] public MotionSettings RestrictionSettings;
+        public MotionSettings RestrictionSettings;
         public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, MotionRestriction restriction)
         {
             if (UseMotionCurves)
@@ -114,6 +113,8 @@ namespace RestrictionSystem
 
             return CurrentLearn.Nothing;
         }
+
+        #region bools
         public static float VelocityThresholdWorks(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
             float Distance = Vector3.Distance(frame1.HandPos, frame2.HandPos);
@@ -126,7 +127,7 @@ namespace RestrictionSystem
             Vector3 VelocityDirection = (frame2.HandPos - frame1.HandPos).normalized;
 
             Vector3 ForwardInput = restriction.CheckType == VelocityType.Head ? frame2.HeadRot : frame2.HandRot;
-            Vector3 forwardDir = (Quaternion.Euler(ForwardInput + restriction.Offset) * Vector3.forward);
+            Vector3 forwardDir = (Quaternion.Euler(ForwardInput + restriction.Offset) * restriction.Direction);
             if(restriction.ShouldDebug)
                 Debug.DrawLine(frame2.HandPos, frame2.HandPos + (forwardDir * DebugRestrictions.instance.LineLength), restriction.CheckType == VelocityType.Head ? Color.yellow : Color.red);
 
@@ -140,7 +141,7 @@ namespace RestrictionSystem
         }
         public static float HandFacingHeadWorks(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
-            Vector3 HandDir = (Quaternion.Euler(frame2.HandRot + restriction.Offset) * Vector3.forward);
+            Vector3 HandDir = (Quaternion.Euler(frame2.HandRot + restriction.Offset) * restriction.Direction);
             Vector3 HandToHeadDir = (-frame2.HandPos).normalized;
 
             if (restriction.ExcludeHeight)
@@ -194,8 +195,9 @@ namespace RestrictionSystem
             return restriction.GetValue(Angle);
             
         }
+        #endregion
     }
-    
+
     [Serializable]
     public class SingleCondition
     {

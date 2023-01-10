@@ -16,7 +16,7 @@ namespace RestrictionSystem
         public AllMotions CurrentMotion() { return LearnManager.instance.MovementList[(int)MotionType]; }
 
         //motion curves are formulas multiplied by their weight then added
-
+        /*
         public void PreformMotionState()
         {
             RestrictionManager RM = RestrictionManager.instance;
@@ -36,6 +36,6 @@ namespace RestrictionSystem
 
 
         }
-
+        */
     }
 }

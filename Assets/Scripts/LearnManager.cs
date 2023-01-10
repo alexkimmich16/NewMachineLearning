@@ -34,7 +34,7 @@ public class LearnManager : SerializedMonoBehaviour
     [FoldoutGroup("References")] public Transform Cam;
     [FoldoutGroup("References")] public List<Material> FalseTrue;
 
-    [FoldoutGroup("NeatDisplay"), ReadOnly] public ControllerInfo Info;
+    
     [FoldoutGroup("NeatDisplay"), ReadOnly] public int CurrentMotion;
     [FoldoutGroup("NeatDisplay"), ReadOnly] public int CurrentSet;
 
@@ -58,11 +58,9 @@ public class LearnManager : SerializedMonoBehaviour
 
     public int InfoCountInMatrixSingle() { return 5; }
     #endregion
-    [FoldoutGroup("NeatDisplay"), ReadOnly] public List<SingleInfo> RightInfo;
-    [FoldoutGroup("NeatDisplay"), ReadOnly] public List<SingleInfo> LeftInfo;
     [FoldoutGroup("NeatDisplay"), ReadOnly] public int AgentsWaiting;
     [FoldoutGroup("NeatDisplay"), ReadOnly] public List<float> WeightedRewardMultiplier;
-    [HideInInspector] public int MaxStoreInfo = 10;
+    
 
     [FoldoutGroup("NEAT Settings")] public bool ConvertToBytes;
     [FoldoutGroup("NEAT Settings")] public bool UseWeightedRewardMultiplier;
@@ -138,7 +136,7 @@ public class LearnManager : SerializedMonoBehaviour
     }
     void Start()
     {
-        StartCoroutine(ManageLists(1 / 60));
+        
 
         for (int i = 0; i < MovementList.Count; ++i)
             for (int j = 0; j < MovementList[i].Motions.Count; ++j)
@@ -265,74 +263,11 @@ public class LearnManager : SerializedMonoBehaviour
     
 
     
-    IEnumerator ManageLists(float Interval)
-    {
-        while (true)
-        {
-            RightInfo.Add(Info.GetControllerInfo(EditSide.right));
-            if (RightInfo.Count > MaxStoreInfo)
-                RightInfo.RemoveAt(0);
-
-            LeftInfo.Add(Info.GetControllerInfo(EditSide.left));
-            if (LeftInfo.Count > MaxStoreInfo)
-                LeftInfo.RemoveAt(0);
-
-            yield return new WaitForSeconds(Interval);
-        }
-    }
     
-    public SingleInfo PastFrame(EditSide side, int FramesAgo)
-    {
-        List<SingleInfo> SideList = (side == EditSide.right) ? RightInfo : LeftInfo;
-        return SideList[SideList.Count - FramesAgo];
-    }
-}
-[System.Serializable]
-public class ControllerInfo
-{
     
-    public List<Transform> TestMain;
-    public List<Transform> TestCam;
-    public List<Transform> TestHand;
-
-    public HandActions MyHand(EditSide side) { return (side == EditSide.right) ? LearnManager.instance.Right : LearnManager.instance.Left; }
-    public SingleInfo GetControllerInfo(EditSide side)
-    {
-        Transform Cam = LearnManager.instance.Cam;
-        ResetStats();
-        Vector3 CamPos = Cam.localPosition;
-        TestCam[(int)side].position = Vector3.zero;
-        TestHand[(int)side].position = TestHand[(int)side].position - CamPos;
-
-        float YDifference = -Cam.localRotation.eulerAngles.y;
-        
-        //invert main to y distance
-        if (side == EditSide.left)
-        {
-            TestMain[(int)side].localScale = new Vector3(-1, 1, 1);
-            Vector3 Rot = TestCam[(int)side].eulerAngles;
-            TestCam[(int)side].eulerAngles = new Vector3(Rot.x, -Rot.y, -Rot.z);
-        }
-            
-        TestMain[(int)side].rotation = Quaternion.Euler(0, YDifference, 0);
-        //TestCam[(int)side].localRotation = Cam.localRotation;
-        return new SingleInfo(TestHand[(int)side].position, TestHand[(int)side].rotation.eulerAngles, TestCam[(int)side].position, TestCam[(int)side].rotation.eulerAngles);
-
-        void ResetStats()
-        {
-            TestMain[(int)side].position = Vector3.zero;
-            TestMain[(int)side].rotation = Quaternion.identity;
-            TestMain[(int)side].localScale = new Vector3(1, 1, 1);
-            SetEqual(Cam, TestCam[(int)side]);
-            SetEqual(MyHand(side).transform, TestHand[(int)side]);
-            void SetEqual(Transform Info, Transform Set)
-            {
-                Set.localPosition = Info.localPosition;
-                Set.localRotation = Info.localRotation;
-            }
-        }
-    }
+    
 }
+
 /*
     public SingleInfo CurrentControllerInfo(EditSide side)
     {

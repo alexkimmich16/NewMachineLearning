@@ -167,7 +167,7 @@ public class MatrixManager : SerializedMonoBehaviour
     }
     public void OnNewFrame()
     {
-        if (currentDisplay == MatrixDisplay.ControllerTesting && LearnManager.instance.Info.MyHand(EditSide.right).TriggerPressed() == false)
+        if (currentDisplay == MatrixDisplay.ControllerTesting && RestrictionSystem.PastFrameRecorder.instance.PlayerHands[(int)EditSide.right].GetComponent<HandActions>().TriggerPressed() == false)
             return;
         if (currentDisplay == MatrixDisplay.LearnManager && LearnManager.instance.CurrentSingleInfo() == null)
             return;
@@ -232,8 +232,8 @@ public class MatrixManager : SerializedMonoBehaviour
             LearnManager LM = LearnManager.instance;
             if (currentDisplay == MatrixDisplay.MotionPlayback)
                 return LM.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos[MotionEditor.instance.display.Frame];
-            else if (currentDisplay == MatrixDisplay.ControllerTesting)
-                return LM.Info.GetControllerInfo(EditSide.right);
+            //else if (currentDisplay == MatrixDisplay.ControllerTesting)
+                //return RestrictionSystem.PastFrameRecorder.instance.GetControllerInfo(EditSide.right);
             else if (currentDisplay == MatrixDisplay.LearnManager)
                 return LM.CurrentSingleInfo();
 

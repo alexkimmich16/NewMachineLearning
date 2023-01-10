@@ -113,6 +113,7 @@ public class MotionEditor : SerializedMonoBehaviour
             CurrentValue.text = "X: " + "\n" + "Y: ";
         if(Input.GetKey(KeyCode.LeftAlt) == false)
         {
+            //Debug.Log("check");
             if (Input.GetKeyDown(KeyCode.UpArrow) && MotionNum < LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1)
             {
                 MotionNum += 1;

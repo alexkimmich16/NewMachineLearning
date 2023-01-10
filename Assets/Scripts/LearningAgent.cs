@@ -365,22 +365,4 @@ namespace UnitySharpNEAT
             Debug.Log(text + FrameReference);
         }
     }
-    
-   
-
-    ///should contain: velocity, hand rot, hand pos, head rot, head pos, 
-    ///
-    ///possible ways of input/recording:
-    ///1: as lists containing info, generated from player motions
-    ///2: randomly generated motions
-    ///3: doing it in engine
-    ///
-    ///possible ways of learning given info:
-    ///1: operator gives start and end time if at all(would require display and repeat motion)
-    ///2: 
-    ///
-
-    ///should be able to tell if motion is true between 2 given frames
-
-    ///OR give it lists, with active times determined ahead of time when given
 }

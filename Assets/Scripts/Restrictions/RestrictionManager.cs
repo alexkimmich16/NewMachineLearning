@@ -14,12 +14,7 @@ namespace RestrictionSystem
         HandHeadDistance = 3,
         HandToHeadAngle = 4,
     }
-    public enum Condition
-    {
-        Time = 0,
-        Distance = 1,
-        Position = 2,
-    }
+    
     public enum Axis
     {
         X = 0,
@@ -31,6 +26,20 @@ namespace RestrictionSystem
         Head = 0,
         Hand = 1,
     }
+    public enum Side
+    {
+        right = 0,
+        left = 1,
+    }
+    public enum CurrentLearn
+    {
+        Nothing = 0,
+        Fireball = 1,
+        Flames = 2,
+        FlameBlock = 3,
+    }
+
+
 
     public delegate float MotionTest(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2);
     public class RestrictionManager : SerializedMonoBehaviour
@@ -39,49 +48,47 @@ namespace RestrictionSystem
         private void Awake() { instance = this; }
 
         public static Dictionary<Restriction, MotionTest> RestrictionDictionary = new Dictionary<Restriction, MotionTest>(){
-            {Restriction.VelocityThreshold, VelocityThresholdWorks},
-            {Restriction.VelocityInDirection, VelocityInDirectionWorks},
-            {Restriction.HandFacingHead, HandFacingHeadWorks},
-            {Restriction.HandHeadDistance, HandHeadDistanceWorks},
-            {Restriction.HandToHeadAngle, HandToHeadDirectionWorks},
+            {Restriction.VelocityThreshold, VelocityMagnitude},
+            {Restriction.VelocityInDirection, VelocityDirection},
+            {Restriction.HandFacingHead, HandFacingHead},
+            {Restriction.HandHeadDistance, HandHeadDistance},
+            {Restriction.HandToHeadAngle, HandToHeadAngle},
         };
 
-        public bool UseMotionCurves = false; //0 == bad, 1 == good
+        public delegate void OutPutMotion(CurrentLearn motion);
+        public event OutPutMotion NewFrameMotionRight;
+        public event OutPutMotion NewFrameMotionLeft;
 
+        
+        public void TriggerFrameEvents()
+        {
+            PastFrameRecorder PR = PastFrameRecorder.instance;
 
-        //[ListDrawerSettings(DraggableItems = false, ShowIndexLabels = true, ListElementLabelName = "Title")] public List<MotionRestriction> MotionRestrictions;
+            if (NewFrameMotionRight != null)
+                NewFrameMotionRight(GetCurrentMotion(PR.PastFrame(Side.right), PastFrameRecorder.instance.GetControllerInfo(Side.right)));
+
+            if (NewFrameMotionLeft != null)
+                NewFrameMotionLeft(GetCurrentMotion(PR.PastFrame(Side.left), PastFrameRecorder.instance.GetControllerInfo(Side.left)));
+        }
+
         public MotionSettings RestrictionSettings;
         public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, MotionRestriction restriction)
         {
-            if (UseMotionCurves)
+            float TotalWeightValue = 0f;
+            float TotalWeight = 0f;
+            //Debug.Log(restriction.Restrictions.Count);
+            for (int i = 0; i < restriction.Restrictions.Count; i++)
             {
-                float TotalWeightValue = 0f;
-                float TotalWeight = 0f;
-                
-                for (int j = 0; j < restriction.Restrictions.Count; j++)
-                {
-                    MotionTest RestrictionType = RestrictionDictionary[restriction.Restrictions[j].restriction];
-                    float RestrictionWorks = RestrictionType.Invoke(restriction.Restrictions[j], frame1, frame2);
-                    TotalWeightValue += restriction.Restrictions[j].Active ? RestrictionWorks * restriction.Restrictions[j].Weight : 0;
-                    TotalWeight += restriction.Restrictions[j].Active ? restriction.Restrictions[j].Weight : 0;
-                }
-                float MinWeightThreshold = restriction.WeightedValueThreshold * TotalWeight;
-                return TotalWeightValue >= MinWeightThreshold;
+                //Debug.Log(i);
+
+                MotionTest RestrictionType = RestrictionDictionary[restriction.Restrictions[i].restriction];
+                float RawRestrictionValue = RestrictionType.Invoke(restriction.Restrictions[i], frame1, frame2);
+                float RestrictionValue = restriction.Restrictions[i].GetValue(RawRestrictionValue);
+                TotalWeightValue += restriction.Restrictions[i].Active ? RestrictionValue * restriction.Restrictions[i].Weight : 0;
+                TotalWeight += restriction.Restrictions[i].Active ? restriction.Restrictions[i].Weight : 0;
             }
-            else
-            {
-                for (int j = 0; j < restriction.Restrictions.Count; j++)
-                {
-                    MotionTest RestrictionType = RestrictionDictionary[restriction.Restrictions[j].restriction];
-                    float RestrictionWorks = RestrictionType.Invoke(restriction.Restrictions[j], frame1, frame2);
-                    if (RestrictionWorks != 1f && restriction.Restrictions[j].Active == false)
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            
+            float MinWeightThreshold = restriction.WeightedValueThreshold * TotalWeight;
+            return TotalWeightValue >= MinWeightThreshold;
         }
         public CurrentLearn GetCurrentMotion(SingleInfo frame1, SingleInfo frame2)
         {
@@ -89,7 +96,7 @@ namespace RestrictionSystem
             //if nothing == nothing
             List<bool> AllWorks = new List<bool>();
             
-            for (int i = 0; i < RestrictionSettings.MotionRestrictions.Count; i++) //check each motion
+            for (int i = 0; i < RestrictionSettings.MotionRestrictions.Count; i++) //check each motion (3)
             {
                 AllWorks.Add(MotionWorks(frame1, frame2, RestrictionSettings.MotionRestrictions[i]));
             }
@@ -97,7 +104,7 @@ namespace RestrictionSystem
             List<int> WorkingList = new List<int>();
             for (int i = 0; i < AllWorks.Count; i++)
                 if (AllWorks[i] == true)
-                    WorkingList.Add(i);
+                    WorkingList.Add(i + 1);
 
             if (WorkingList.Count == 1)
                 return (CurrentLearn)WorkingList[0];
@@ -115,31 +122,26 @@ namespace RestrictionSystem
         }
 
         #region bools
-        public static float VelocityThresholdWorks(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
+        public static float VelocityMagnitude(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
             float Distance = Vector3.Distance(frame1.HandPos, frame2.HandPos);
             float Speed = Distance / (1f / 60f);
-            return restriction.GetValue(Speed);
-
+            return Speed;
         }
-        public static float VelocityInDirectionWorks(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
+        public static float VelocityDirection(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
             Vector3 VelocityDirection = (frame2.HandPos - frame1.HandPos).normalized;
 
             Vector3 ForwardInput = restriction.CheckType == VelocityType.Head ? frame2.HeadRot : frame2.HandRot;
             Vector3 forwardDir = (Quaternion.Euler(ForwardInput + restriction.Offset) * restriction.Direction);
-            if(restriction.ShouldDebug)
-                Debug.DrawLine(frame2.HandPos, frame2.HandPos + (forwardDir * DebugRestrictions.instance.LineLength), restriction.CheckType == VelocityType.Head ? Color.yellow : Color.red);
+            //if(restriction.ShouldDebug)
+                //Debug.DrawLine(frame2.HandPos, frame2.HandPos + (forwardDir * DebugRestrictions.instance.LineLength), restriction.CheckType == VelocityType.Head ? Color.yellow : Color.red);
 
             float AngleDistance = Vector3.Angle(VelocityDirection, forwardDir);
 
-            return restriction.GetValue(AngleDistance);
-
-            //Vector3 Future = forwardDir *
-
-
+            return AngleDistance;
         }
-        public static float HandFacingHeadWorks(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
+        public static float HandFacingHead(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
             Vector3 HandDir = (Quaternion.Euler(frame2.HandRot + restriction.Offset) * restriction.Direction);
             Vector3 HandToHeadDir = (-frame2.HandPos).normalized;
@@ -149,17 +151,17 @@ namespace RestrictionSystem
                 HandDir.y = 0f;
                 HandToHeadDir.y = 0f;
             }
-
+            /*
             if (restriction.ShouldDebug)
             {
                 Debug.DrawLine(frame2.HandPos, frame2.HandPos + (HandToHeadDir * DebugRestrictions.instance.LineLength), Color.yellow);
                 Debug.DrawLine(frame2.HandPos, frame2.HandPos + (HandDir * DebugRestrictions.instance.LineLength), Color.red);
             }
-                
+             */   
 
-            return restriction.GetValue(Vector3.Angle(HandDir, HandToHeadDir));
+            return Vector3.Angle(HandDir, HandToHeadDir);
         }
-        public static float HandHeadDistanceWorks(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
+        public static float HandHeadDistance(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
             Vector3 HeadPos = frame2.HeadPos;
             Vector3 HandPos = frame2.HandPos;
@@ -179,10 +181,10 @@ namespace RestrictionSystem
                 HandPos = new Vector3(HandPos.x, HandPos.y, 0);
             }
             float Distance = Vector3.Distance(HeadPos, HandPos);
-            return restriction.GetValue(Distance);
+            return Distance;
 
         }
-        public static float HandToHeadDirectionWorks(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
+        public static float HandToHeadAngle(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
             Vector3 targetDir = new Vector3(frame2.HandPos.x, 0, frame2.HandPos.z).normalized;
             Quaternion quat = Quaternion.Euler(new Vector3(frame2.HeadPos.x, 0, frame2.HeadPos.z));
@@ -192,7 +194,7 @@ namespace RestrictionSystem
             if (Angle > 360 || Angle < -360)
                 Angle += Angle > 360 ? -360 : 360;
 
-            return restriction.GetValue(Angle);
+            return Angle;
             
         }
         #endregion
@@ -202,6 +204,13 @@ namespace RestrictionSystem
     public class SingleCondition
     {
         public Condition condition;
+
+        public enum Condition
+        {
+            Time = 0,
+            Distance = 1,
+            Position = 2,
+        }
     }
 }
 

@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using System;
 namespace RestrictionSystem
 {
+    
     [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/MotionSettings", order = 2)]
     public class MotionSettings : SerializedScriptableObject
     {
@@ -24,19 +25,8 @@ namespace RestrictionSystem
 
         [ListDrawerSettings(ListElementLabelName = "Label")]
         public List<SingleRestriction> Restrictions;
-        //{ return "11"; }
-        /*
-        public int MeInList()
-        {
-            for (int i = 0; i < TrueFalseAssigner.instance.MotionRestrictions.Count; i++)
-                if (this == TrueFalseAssigner.instance.MotionRestrictions[i])
-                    return i;
-            Debug.LogError("no Exist");
-            return 0;
-        }
-        */
+
         public string Title { get { return Motion; } }
-        //public string Title { get { return ((CurrentLearn)MeInList()).ToString(); } }
 
     }
     [Serializable]
@@ -53,6 +43,7 @@ namespace RestrictionSystem
         public float MaxFalloff;
 
         
+
         private bool RequiresOffset() { return restriction == Restriction.VelocityInDirection || restriction == Restriction.HandFacingHead; }
 
 
@@ -73,6 +64,7 @@ namespace RestrictionSystem
         {
             //if()
             Value = Input;
+            //Debug.Log("Label: " + Label);
             if (Input < MaxSafe && Input > MinSafe)
                 return 1f;
             else if (Input < MinFalloff || Input > MaxFalloff)

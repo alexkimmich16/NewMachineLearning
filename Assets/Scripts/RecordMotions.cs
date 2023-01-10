@@ -18,6 +18,7 @@ public class RecordMotions : MonoBehaviour
     {
         FrameInterval = 1 / FramesPerSecond;
     }
+    
     private void FixedUpdate()
     {
         if (ShouldRecord == false)
@@ -51,8 +52,10 @@ public class RecordMotions : MonoBehaviour
         if (RecordingMotion == false)
             return;
 
-        SingleInfo info = LearnManager.instance.Info.GetControllerInfo(EditSide.right);
+        RestrictionSystem.SingleInfo Oldinfo = RestrictionSystem.PastFrameRecorder.instance.GetControllerInfo(RestrictionSystem.Side.right);
+        SingleInfo info = new SingleInfo(Oldinfo.HandPos, Oldinfo.HandRot, Oldinfo.HeadPos, Oldinfo.HeadRot);
         Values.Add(LearnManager.instance.Right.TriggerPressed());
         CurrentMotionRecord.Add(info);
     }
+    
 }

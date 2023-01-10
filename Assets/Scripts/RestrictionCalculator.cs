@@ -4,6 +4,17 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using RestrictionSystem;
 
+[System.Serializable]
+public class SingleFrameRestrictionInfo
+{
+    [ListDrawerSettings(HideRemoveButton = false, Expanded = true)]
+    public List<float> OutputRestrictions;
+    public bool IsGoodMotion;
+    public SingleFrameRestrictionInfo(List<float> OutputRestrictionsStat)
+    {
+        OutputRestrictions = OutputRestrictionsStat;
+    }
+}
 public class RestrictionCalculator : SerializedMonoBehaviour
 {
     public CurrentLearn motionGet;
@@ -20,25 +31,16 @@ public class RestrictionCalculator : SerializedMonoBehaviour
     [ListDrawerSettings(HideRemoveButton = false, Expanded = true)]
     public List<SingleFrameRestrictionInfo> ThisSetInfo;
     public int Set;
+    public bool GetAdjustedRestrictionValue;
     [Button(ButtonSizes.Small)]
     public void RecalculateRestrictionInfo()
     {
-        ThisSetInfo = GetRestrictionsForSingleMotion(motionGet, Set);
+        ThisSetInfo = GetRestrictionsForSingleMotion(motionGet, Set, GetAdjustedRestrictionValue);
     }
 
-    [System.Serializable]
-    public class SingleFrameRestrictionInfo
-    {
-        [ListDrawerSettings(HideRemoveButton = false, Expanded = true)]
-        public List<float> OutputRestrictions;
-        public bool IsGoodMotion;
-        public SingleFrameRestrictionInfo(List<float> OutputRestrictionsStat)
-        {
-            OutputRestrictions = OutputRestrictionsStat;
-        }
-    }
     
-    public List<SingleFrameRestrictionInfo> GetRestrictionsForSingleMotion(CurrentLearn motion, int Set)
+    
+    public List<SingleFrameRestrictionInfo> GetRestrictionsForSingleMotion(CurrentLearn motion, int Set, bool GetAdjustedRestrictionValue)
     {
         List<SingleFrameRestrictionInfo> ReturnValue = new List<SingleFrameRestrictionInfo>();
 
@@ -55,7 +57,9 @@ public class RestrictionCalculator : SerializedMonoBehaviour
             {
                 MotionTest RestrictionType = RestrictionManager.RestrictionDictionary[Restrictions[k].restriction];
                 //OutputRestrictions.Add(Restrictions[k].GetValue(RawRestrictionValue));
-                OutputRestrictions.Add(RestrictionType.Invoke(Restrictions[k], frame1, frame2));
+                float RawValue = RestrictionType.Invoke(Restrictions[k], frame1, frame2);
+                float Value = GetAdjustedRestrictionValue ? Restrictions[k].GetValue(RawValue) : RawValue;
+                OutputRestrictions.Add(Value);
             }
             ReturnValue.Add(new SingleFrameRestrictionInfo(OutputRestrictions));
         }

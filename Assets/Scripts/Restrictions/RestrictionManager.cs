@@ -92,8 +92,6 @@ namespace RestrictionSystem
         }
         public CurrentLearn GetCurrentMotion(SingleInfo frame1, SingleInfo frame2)
         {
-            //ask for others
-            //if nothing == nothing
             List<bool> AllWorks = new List<bool>();
             
             for (int i = 0; i < RestrictionSettings.MotionRestrictions.Count; i++) //check each motion (3)

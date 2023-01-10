@@ -19,25 +19,29 @@ public class RestrictionCalculator : SerializedMonoBehaviour
 {
     public CurrentLearn motionGet;
 
-    [FoldoutGroup("GetStats"), ReadOnly] public int NextSet;
-    public int PastFrameLookup;
-    public List<Vector2> Result;
-    [Button(ButtonSizes.Small)]
-    public void CalculateStats()
-    {
-        Result = GetMaxMinValues();
-    }
+    //[FoldoutGroup("Stats"), ReadOnly] public int NextSet;
+    [FoldoutGroup("Stats")] public int Set;
+    [FoldoutGroup("Stats")] public bool GetAdjustedRestrictionValue;
+    [FoldoutGroup("Stats")] public int PastFrameLookup;
+    [FoldoutGroup("Stats")] public Dictionary<CurrentLearn, int> RestrictionIndex;
 
-    [ListDrawerSettings(HideRemoveButton = false, Expanded = true)]
+    [FoldoutGroup("MaxMin"), ReadOnly] public List<Vector2> MaxMin;
+    [Button(ButtonSizes.Small)]
+    [FoldoutGroup("MaxMin")] public void CalculateMaxMin() { MaxMin = GetMaxMinValues(); }
+
+
+
+    [FoldoutGroup("RestrictionInfo"), Button(ButtonSizes.Small)] public void RecalculateRestrictionInfo() { ThisSetInfo = GetRestrictionsForSingleMotion(motionGet, Set, GetAdjustedRestrictionValue); }
+    [FoldoutGroup("RestrictionInfo"), Button(ButtonSizes.Small)] public void ExportToExcel() { SpreadSheet.instance.PrintRestrictionStats(motionGet, ThisSetInfo); }
+
+    ///expanded removes arrow
+    [FoldoutGroup("RestrictionInfo"), ReadOnly, ListDrawerSettings(HideRemoveButton = false)]
     public List<SingleFrameRestrictionInfo> ThisSetInfo;
-    public int Set;
-    public bool GetAdjustedRestrictionValue;
-    [Button(ButtonSizes.Small)]
-    public void RecalculateRestrictionInfo()
-    {
-        ThisSetInfo = GetRestrictionsForSingleMotion(motionGet, Set, GetAdjustedRestrictionValue);
-    }
 
+
+
+
+    
     
     
     public List<SingleFrameRestrictionInfo> GetRestrictionsForSingleMotion(CurrentLearn motion, int Set, bool GetAdjustedRestrictionValue)
@@ -66,15 +70,15 @@ public class RestrictionCalculator : SerializedMonoBehaviour
         return ReturnValue;
     }
     
-    [Button(ButtonSizes.Small)]
+    [FoldoutGroup("MaxMin"), Button(ButtonSizes.Small)]
     public void CopyToDebug()
     {
         RestrictionManager RM = RestrictionManager.instance;
         DebugRestrictions.instance.Restrictions.Restrictions = new List<SingleRestriction>(RM.RestrictionSettings.MotionRestrictions[(int)motionGet + 1].Restrictions);
         for (int i = 0; i < DebugRestrictions.instance.Restrictions.Restrictions.Count; i++)
         {
-            DebugRestrictions.instance.Restrictions.Restrictions[i].MinSafe = Result[i].x;
-            DebugRestrictions.instance.Restrictions.Restrictions[i].MaxSafe = Result[i].y;
+            DebugRestrictions.instance.Restrictions.Restrictions[i].MinSafe = MaxMin[i].x;
+            DebugRestrictions.instance.Restrictions.Restrictions[i].MaxSafe = MaxMin[i].y;
         }
     }
     public List<Vector2> GetMaxMinValues()

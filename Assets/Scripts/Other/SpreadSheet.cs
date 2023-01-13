@@ -64,7 +64,7 @@ public class SpreadSheet : SerializedMonoBehaviour
             {
                 LineWrite = LineWrite + info[i].OutputRestrictions[j] + ", ";
             }
-            LineWrite = LineWrite + info[i].IsGoodMotion + ", ";
+            LineWrite = LineWrite + info[i].AtMotionState + ", ";
             tw.WriteLine(LineWrite);
         }
         tw.Close();

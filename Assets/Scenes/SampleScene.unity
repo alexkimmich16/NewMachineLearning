@@ -3319,11 +3319,15 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: RestrictionIndex
+      Entry: 6
+      Data: 
   motionGet: 1
-  NextSet: 0
+  Set: 0
+  GetAdjustedRestrictionValue: 0
   PastFrameLookup: 4
-  Result: []
+  MaxMin: []
   ThisSetInfo:
   - OutputRestrictions:
     - 1
@@ -3331,218 +3335,285 @@ MonoBehaviour:
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 1
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 0
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 0
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
+    AtMotionState: 0
   - OutputRestrictions:
     - 1
     - 0
     - 0
     - 1
     - 1
-    IsGoodMotion: 0
-  Set: 0
+    AtMotionState: 0
+  CheckPerFrame: 1000
+  RunningBruteForce: 0
+  AllChange:
+    ParentWeightThreshold:
+      Max: 1
+      Min: 0
+      MiddleSteps: 50
+      CurrentStep: 0
+    Restrictions:
+    - Max:
+        Max: 50
+        Min: 25
+        MiddleSteps: 25
+        CurrentStep: 0
+      Min:
+        Max: 9
+        Min: 1
+        MiddleSteps: 26
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 10
+        CurrentStep: 0
+    - Max:
+        Max: 60
+        Min: 30
+        MiddleSteps: 32
+        CurrentStep: 0
+      Min:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 10
+        CurrentStep: 0
+    - Max:
+        Max: 60
+        Min: 30
+        MiddleSteps: 30
+        CurrentStep: 0
+      Min:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 10
+        CurrentStep: 0
+  BestBruteForceInfo:
+    Highest: 0
+    ParentWeightThreshold: 0
+    RestrictionInfos: []
+  BruteForceSettings:
+    Motion: Fireball
+    WeightedValueThreshold: 1
+    Restrictions: []
+  FrameInfo: []
+  PossibleCombinations: 2
+  SecondsRequired: 0
+  MinutesRequired: 0
+  CurrentFramesDone: 0
+  PercentDone: 0
 --- !u!114 &944444322
 MonoBehaviour:
   m_ObjectHideFlags: 0

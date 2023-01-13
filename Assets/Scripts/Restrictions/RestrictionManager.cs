@@ -76,11 +76,8 @@ namespace RestrictionSystem
         {
             float TotalWeightValue = 0f;
             float TotalWeight = 0f;
-            //Debug.Log(restriction.Restrictions.Count);
             for (int i = 0; i < restriction.Restrictions.Count; i++)
             {
-                //Debug.Log(i);
-
                 MotionTest RestrictionType = RestrictionDictionary[restriction.Restrictions[i].restriction];
                 float RawRestrictionValue = RestrictionType.Invoke(restriction.Restrictions[i], frame1, frame2);
                 float RestrictionValue = restriction.Restrictions[i].GetValue(RawRestrictionValue);

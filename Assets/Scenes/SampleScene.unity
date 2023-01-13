@@ -3151,6 +3151,7 @@ GameObject:
   - component: {fileID: 944444317}
   - component: {fileID: 944444321}
   - component: {fileID: 944444322}
+  - component: {fileID: 944444323}
   m_Layer: 0
   m_Name: Restictions
   m_TagString: Untagged
@@ -3546,74 +3547,6 @@ MonoBehaviour:
     - 1
     - 1
     AtMotionState: 0
-  CheckPerFrame: 1000
-  RunningBruteForce: 0
-  AllChange:
-    ParentWeightThreshold:
-      Max: 1
-      Min: 0
-      MiddleSteps: 50
-      CurrentStep: 0
-    Restrictions:
-    - Max:
-        Max: 50
-        Min: 25
-        MiddleSteps: 25
-        CurrentStep: 0
-      Min:
-        Max: 9
-        Min: 1
-        MiddleSteps: 26
-        CurrentStep: 0
-      Weight:
-        Max: 1
-        Min: 0.5
-        MiddleSteps: 10
-        CurrentStep: 0
-    - Max:
-        Max: 60
-        Min: 30
-        MiddleSteps: 32
-        CurrentStep: 0
-      Min:
-        Max: 0
-        Min: 0
-        MiddleSteps: 0
-        CurrentStep: 0
-      Weight:
-        Max: 1
-        Min: 0.5
-        MiddleSteps: 10
-        CurrentStep: 0
-    - Max:
-        Max: 60
-        Min: 30
-        MiddleSteps: 30
-        CurrentStep: 0
-      Min:
-        Max: 0
-        Min: 0
-        MiddleSteps: 0
-        CurrentStep: 0
-      Weight:
-        Max: 1
-        Min: 0.5
-        MiddleSteps: 10
-        CurrentStep: 0
-  BestBruteForceInfo:
-    Highest: 0
-    ParentWeightThreshold: 0
-    RestrictionInfos: []
-  BruteForceSettings:
-    Motion: Fireball
-    WeightedValueThreshold: 1
-    Restrictions: []
-  FrameInfo: []
-  PossibleCombinations: 2
-  SecondsRequired: 0
-  MinutesRequired: 0
-  CurrentFramesDone: 0
-  PercentDone: 0
 --- !u!114 &944444322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3652,6 +3585,92 @@ MonoBehaviour:
   - {fileID: 1867183570734329135}
   - {fileID: 1867183570487954631}
   Cam: {fileID: 1867183570494687147}
+--- !u!114 &944444323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944444316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e521cfe85cb12a24aa9d4c0d4ab5ef4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  motionGet: 1
+  PastFrameLookup: 2
+  AllChange:
+    ParentWeightThreshold:
+      Max: 1
+      Min: 0
+      MiddleSteps: 50
+      CurrentStep: 0
+    Restrictions:
+    - Max:
+        Max: 50
+        Min: 25
+        MiddleSteps: 25
+        CurrentStep: 0
+      Min:
+        Max: 9
+        Min: 1
+        MiddleSteps: 25
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0
+        MiddleSteps: 10
+        CurrentStep: 0
+    - Max:
+        Max: 60
+        Min: 30
+        MiddleSteps: 32
+        CurrentStep: 0
+      Min:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0
+        MiddleSteps: 10
+        CurrentStep: 0
+    - Max:
+        Max: 60
+        Min: 30
+        MiddleSteps: 30
+        CurrentStep: 0
+      Min:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0
+        MiddleSteps: 10
+        CurrentStep: 0
+  BestBruteForceInfo:
+    Highest: 0
+    ParentWeightThreshold: 0
+    RestrictionInfos: []
+  BruteForceSettings:
+    Motion: 
+    WeightedValueThreshold: 0
+    Restrictions: []
+  FrameInfo: []
+  UseFrameCount: 1
+  MaxFrames: 100000
 --- !u!1 &960757780
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,7 +22,7 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("BruteForce")] public bool UseFrameCount;
     [FoldoutGroup("BruteForce"), ShowIf("UseFrameCount")] public int MaxFrames;
 
-    [BurstCompile(OptimizeFor = OptimizeFor.FastCompilation)]
+    [BurstCompile]
     private struct AllBruteForce : IJob
     {
         private struct SingleInfo
@@ -74,15 +74,10 @@ public class BruteForce : SerializedMonoBehaviour
             }
             while (WaitingForFinish)
             {
-                if (UseFrameCount && CountNumber > MaxFrames)
-                    WaitingForFinish = false;
-                bool CalledOnce = false;
-                
-                while (HasOverLap(ConvertedSingles) == true || CalledOnce == false)
+                while (true)
                 {
                     CountNumber += 1;
-                    CalledOnce = true;
-                    for (int i = 0; i < ConvertedSingles.Length; i++)
+                    for (int i = 0; i < ConvertedSingles.Length; i++) //next frame
                     {
                         ConvertedSingles[i].NextStep(out bool HitMax);
                         if (HitMax == false)
@@ -92,22 +87,21 @@ public class BruteForce : SerializedMonoBehaviour
                             WaitingForFinish = false;
                             break;
                         }
-                            
-                    }
 
+                    }
+                    bool HasConflict = false;
+                    for (int i = 0; i < (ConvertedSingles.Length + 1) / 3; i++)
+                        if (ConvertedSingles[(i * 3) + 1].GetCurrentValue() <= ConvertedSingles[(i * 3) + 2].GetCurrentValue())
+                            HasConflict = true;
+
+                    if (HasConflict == false)
+                        break;
                 }
-                if (!WaitingForFinish)
+
+                if (!WaitingForFinish || UseFrameCount && CountNumber > MaxFrames)
                     break;
-                //OnStop();
-                bool HasOverLap(NativeArray<SingleInfo> Singles)
-                {
-                    ///use linq for check ehre if any in return true
-                    for (int i = 0; i < (Singles.Length + 1) / 3; i++)
-                        if (Singles[(i * 3) + 1].GetCurrentValue() <= Singles[(i * 3) + 2].GetCurrentValue())
-                            return true;
-                    return false;
-                }
-                //check values
+
+                
                 int Correct = 0;
                 int InCorrect = 0;
                 for (int i = 0; i < FlatRawValues.Length / ExpandValue; i++) // all raw value inputs
@@ -117,7 +111,7 @@ public class BruteForce : SerializedMonoBehaviour
                     for (int j = 0; j < ExpandValue; j++)// all restrictions
                     {
                         float Weight = ConvertedSingles[(j * 3) + 3].GetCurrentValue();
-                        TotalWeightValue += GetValue(ConvertedSingles[(j * 3) + 1].GetCurrentValue(), ConvertedSingles[(j * 3) + 2].GetCurrentValue(), FlatRawValues[(i * ExpandValue) + j]) * Weight;
+                        TotalWeightValue += Weight * FlatRawValues[(i * ExpandValue) + j] < ConvertedSingles[(j * 3) + 1].GetCurrentValue() && FlatRawValues[(i * ExpandValue) + j] > ConvertedSingles[(j * 3) + 2].GetCurrentValue() ? 1 : 0;;
                         TotalWeight += Weight;
                     }
                     float MinWeightThreshold = ConvertedSingles[0].GetCurrentValue() * TotalWeight;
@@ -132,11 +126,8 @@ public class BruteForce : SerializedMonoBehaviour
                     for (int i = 1; i < ConvertedSingles.Length; i++)
                         OutputValues[i] = ConvertedSingles[i].GetCurrentValue();
                 }
-                
-                
             }
             ConvertedSingles.Dispose();
-            float GetValue(float Max, float Min, float Input) { return Input < Max && Input > Min ? 1 : 0; }
         }
     }
     [FoldoutGroup("BruteForce"), Button(ButtonSizes.Small)]
@@ -183,8 +174,8 @@ public class BruteForce : SerializedMonoBehaviour
             //AllChangeStats = new AllChanges(AllChange),
         };
         JobHandle jobHandle = BruteForceRun.Schedule();
-        //BruteForceRun.Run();
         jobHandle.Complete();
+        //BruteForceRun.Run();
         List<float> EncodedValues = new List<float>();
         for (int i = 0; i < BruteForceRun.OutputValues.Length; i++)
         {

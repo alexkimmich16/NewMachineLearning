@@ -106,7 +106,8 @@ MonoBehaviour:
       HeadRot: {x: 21.402843, y: -0.000000028656656, z: 358.66125}
       HandPos: {x: -0.010359049, y: -0.08021712, z: 0.58834076}
       HandRot: {x: 334.17505, y: 334.84442, z: 68.124985}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 2, y: 11}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -202,7 +203,8 @@ MonoBehaviour:
       HeadRot: {x: 22.791698, y: -0.000007104791, z: 0.8089781}
       HandPos: {x: 0.011601448, y: -0.14790869, z: 0.5436249}
       HandRot: {x: 349.10834, y: 334.6384, z: 80.31737}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 2, y: 11}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -294,7 +296,8 @@ MonoBehaviour:
       HeadRot: {x: 12.562696, y: 0.000008528476, z: 4.5321984}
       HandPos: {x: -0.19701767, y: -0.17208767, z: 0.5165272}
       HandRot: {x: 343.10263, y: 313.40005, z: 75.55022}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 7, y: 12}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -378,7 +381,8 @@ MonoBehaviour:
       HeadRot: {x: 26.904772, y: 0.000002154157, z: 4.476591}
       HandPos: {x: 0.00029301643, y: -0.09846854, z: 0.5412102}
       HandRot: {x: 348.48788, y: 329.12238, z: 86.0029}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 6, y: 14}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -458,7 +462,8 @@ MonoBehaviour:
       HeadRot: {x: 16.563795, y: 0.000009185721, z: 5.624613}
       HandPos: {x: 0.00574708, y: -0.09840298, z: 0.5767174}
       HandRot: {x: 343.09265, y: 333.12567, z: 83.19704}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 3, y: 12}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -542,7 +547,8 @@ MonoBehaviour:
       HeadRot: {x: 19.629118, y: -0.00000056653136, z: 9.457884}
       HandPos: {x: -0.055202723, y: -0.10791707, z: 0.5444441}
       HandRot: {x: 346.93854, y: 324.63742, z: 84.34604}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 3, y: 12}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -638,7 +644,8 @@ MonoBehaviour:
       HeadRot: {x: 23.244482, y: 0.000005342884, z: 8.785097}
       HandPos: {x: -0.046211004, y: -0.11951542, z: 0.53827953}
       HandRot: {x: 342.9744, y: 322.56757, z: 83.167114}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 8, y: 15}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -714,79 +721,8 @@ MonoBehaviour:
       HeadRot: {x: 18.937855, y: -0.00000016924349, z: 5.138493}
       HandPos: {x: -0.19349122, y: -0.03942561, z: 0.4966545}
       HandRot: {x: 339.28928, y: 312.34613, z: 79.37689}
-    TrueRanges: []
-    TrueIndex: 0
-    PlayCount: 0
-  - Infos:
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 15.2254925, y: -0.000014572068, z: 2.1273053}
-      HandPos: {x: 0.07380104, y: -0.3615539, z: 0.10746002}
-      HandRot: {x: 342.6344, y: 343.01236, z: 19.938536}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 15.920473, y: 0.000011292057, z: 2.667883}
-      HandPos: {x: 0.08174968, y: -0.34959888, z: 0.13247585}
-      HandRot: {x: 341.41055, y: 339.48196, z: 27.466526}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 17.0989, y: 0.000005527026, z: 3.536458}
-      HandPos: {x: 0.089625835, y: -0.33086467, z: 0.16993237}
-      HandRot: {x: 339.92923, y: 337.35654, z: 33.08048}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 18.5051, y: 0.000004670433, z: 3.8836024}
-      HandPos: {x: 0.09982252, y: -0.299546, z: 0.22542286}
-      HandRot: {x: 337.18866, y: 336.43243, z: 39.544228}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 20.203833, y: 0.0000013646259, z: 3.2422848}
-      HandPos: {x: 0.10920143, y: -0.2637427, z: 0.28523254}
-      HandRot: {x: 333.82626, y: 336.84937, z: 42.741283}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 21.761515, y: -0.00000020109391, z: 2.2278814}
-      HandPos: {x: 0.12144637, y: -0.22000575, z: 0.35145664}
-      HandRot: {x: 330.7433, y: 338.8257, z: 44.993576}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 22.823256, y: -0.0000025762645, z: 2.1146202}
-      HandPos: {x: 0.12809587, y: -0.17863488, z: 0.4109831}
-      HandRot: {x: 329.55884, y: 340.22003, z: 48.35694}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 23.674314, y: 0.0000035541166, z: 2.9410834}
-      HandPos: {x: 0.13910913, y: -0.13769197, z: 0.4635687}
-      HandRot: {x: 329.32556, y: 341.46124, z: 51.781185}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 24.320127, y: 0.0000012882606, z: 3.5457013}
-      HandPos: {x: 0.16962719, y: -0.095350266, z: 0.51035786}
-      HandRot: {x: 329.82858, y: 343.01498, z: 56.531796}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 24.47358, y: 0.0000075630737, z: 3.444089}
-      HandPos: {x: 0.18423247, y: -0.06915474, z: 0.5446358}
-      HandRot: {x: 329.38245, y: 343.90527, z: 57.356297}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 24.513025, y: -0.000002169934, z: 3.158579}
-      HandPos: {x: 0.21178961, y: -0.042426586, z: 0.57049656}
-      HandRot: {x: 331.88553, y: 350.9647, z: 57.5458}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 24.547071, y: 0.000008036799, z: 2.8491068}
-      HandPos: {x: 0.23184443, y: -0.029003859, z: 0.58103275}
-      HandRot: {x: 333.606, y: 355.7459, z: 62.880306}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 24.614868, y: 0.0000079237625, z: 2.6397133}
-      HandPos: {x: 0.24895072, y: -0.016038656, z: 0.5879307}
-      HandRot: {x: 334.69266, y: 358.51807, z: 66.270935}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 24.41539, y: -0.00000046881127, z: 2.499402}
-      HandPos: {x: 0.25990272, y: -0.0071771145, z: 0.5869255}
-      HandRot: {x: 337.4796, y: 1.0201393, z: 66.6052}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 24.00088, y: 0.0000030373787, z: 2.4063537}
-      HandPos: {x: 0.27252293, y: -0.003440857, z: 0.5813551}
-      HandRot: {x: 339.87137, y: 2.4993303, z: 67.211205}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 23.46231, y: -0.0000006398726, z: 2.2416728}
-      HandPos: {x: 0.28293753, y: 0.0023248196, z: 0.5756769}
-      HandRot: {x: 337.91718, y: 6.430951, z: 64.97051}
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 22.97395, y: 0.0000074765726, z: 1.9036294}
-      HandPos: {x: 0.2910447, y: 0.0063626766, z: 0.57232285}
-      HandRot: {x: 335.89352, y: 6.927407, z: 65.94833}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 3, y: 8}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -854,7 +790,8 @@ MonoBehaviour:
       HeadRot: {x: 22.008146, y: 0.0000062159224, z: 7.3984566}
       HandPos: {x: -0.03694105, y: 0.016864538, z: 0.5719614}
       HandRot: {x: 334.22446, y: 330.6392, z: 68.584816}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 6, y: 11}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -926,7 +863,8 @@ MonoBehaviour:
       HeadRot: {x: 16.365147, y: 0.000006006315, z: 4.1250453}
       HandPos: {x: -0.15229869, y: -0.17176867, z: 0.5510187}
       HandRot: {x: 346.01648, y: 320.8287, z: 74.40634}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 6, y: 10}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -998,7 +936,8 @@ MonoBehaviour:
       HeadRot: {x: 20.729351, y: 0, z: 11.472229}
       HandPos: {x: -0.31544983, y: -0.16763496, z: 0.43802452}
       HandRot: {x: 344.62836, y: 300.7504, z: 72.265274}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 7, y: 14}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1066,7 +1005,8 @@ MonoBehaviour:
       HeadRot: {x: 16.771837, y: -0.000004124138, z: 355.5411}
       HandPos: {x: 0.14092469, y: -0.1671524, z: 0.61419964}
       HandRot: {x: 345.27487, y: 352.1815, z: 66.06305}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 5, y: 10}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1134,7 +1074,8 @@ MonoBehaviour:
       HeadRot: {x: 18.003551, y: 0.000008247883, z: 4.5953174}
       HandPos: {x: -0.12595582, y: -0.0236485, z: 0.51389694}
       HandRot: {x: 343.2016, y: 318.07562, z: 79.083405}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 3, y: 12}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1210,7 +1151,8 @@ MonoBehaviour:
       HeadRot: {x: 8.096216, y: 0.0000008893179, z: 4.748802}
       HandPos: {x: -0.2274983, y: -0.1813407, z: 0.50945187}
       HandRot: {x: 344.08167, y: 316.79785, z: 61.990395}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 5, y: 12}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1278,7 +1220,8 @@ MonoBehaviour:
       HeadRot: {x: 8.41361, y: 0.0000048277543, z: 3.8345819}
       HandPos: {x: -0.25616503, y: -0.04492736, z: 0.49975014}
       HandRot: {x: 348.16812, y: 309.3864, z: 81.734116}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 6, y: 12}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1366,7 +1309,8 @@ MonoBehaviour:
       HeadRot: {x: 0.79173666, y: 0.000008653205, z: 0.13310313}
       HandPos: {x: -0.0075905323, y: 0.014386892, z: 0.5562229}
       HandRot: {x: 351.08203, y: 339.1434, z: 76.94764}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 7, y: 18}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1450,7 +1394,8 @@ MonoBehaviour:
       HeadRot: {x: 6.0098987, y: 0.0000068679365, z: 2.127105}
       HandPos: {x: -0.26375413, y: -0.0014083385, z: 0.5018444}
       HandRot: {x: 335.68796, y: 310.95966, z: 71.93567}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 5, y: 15}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1534,7 +1479,8 @@ MonoBehaviour:
       HeadRot: {x: 12.5400915, y: -0.000016809465, z: 2.3035586}
       HandPos: {x: 0.17550206, y: -0.01685834, z: 0.5264578}
       HandRot: {x: 325.5877, y: 348.7026, z: 53.699387}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 5, y: 17}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1634,6 +1580,7 @@ MonoBehaviour:
       HeadRot: {x: 9.330603, y: 0.000008111449, z: 5.562341}
       HandPos: {x: -0.1678195, y: -0.042644262, z: 0.5293703}
       HandRot: {x: 334.29333, y: 318.16125, z: 59.294456}
-    TrueRanges: []
+    TrueRanges:
+    - {x: 7, y: 20}
     TrueIndex: 0
     PlayCount: 0

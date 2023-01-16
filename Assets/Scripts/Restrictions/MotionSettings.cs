@@ -24,7 +24,6 @@ namespace RestrictionSystem
             this.WeightedValueThreshold = All.WeightedValueThreshold;
             this.Restrictions = new List<SingleRestriction>(All.Restrictions);
         }
-
         public string Motion;
 
         [Range(0f, 1f)] public float WeightedValueThreshold = 0.8f;
@@ -48,8 +47,6 @@ namespace RestrictionSystem
         public float MinSafe;
         public float MinFalloff;
         public float MaxFalloff;
-
-        
 
         private bool RequiresOffset() { return restriction == Restriction.VelocityInDirection || restriction == Restriction.HandFacingHead; }
 

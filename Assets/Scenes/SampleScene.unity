@@ -3611,29 +3611,29 @@ MonoBehaviour:
   AllChange:
     ParentWeightThreshold:
       Max: 1
-      Min: 0
-      MiddleSteps: 50
+      Min: 0.75
+      MiddleSteps: 3
       CurrentStep: 0
     Restrictions:
     - Max:
         Max: 50
         Min: 25
-        MiddleSteps: 25
+        MiddleSteps: 10
         CurrentStep: 0
       Min:
         Max: 9
         Min: 1
-        MiddleSteps: 25
+        MiddleSteps: 10
         CurrentStep: 0
       Weight:
         Max: 1
         Min: 0
-        MiddleSteps: 10
+        MiddleSteps: 3
         CurrentStep: 0
     - Max:
         Max: 60
         Min: 30
-        MiddleSteps: 32
+        MiddleSteps: 5
         CurrentStep: 0
       Min:
         Max: 0
@@ -3643,12 +3643,12 @@ MonoBehaviour:
       Weight:
         Max: 1
         Min: 0
-        MiddleSteps: 10
+        MiddleSteps: 3
         CurrentStep: 0
     - Max:
         Max: 60
         Min: 30
-        MiddleSteps: 30
+        MiddleSteps: 5
         CurrentStep: 0
       Min:
         Max: 0
@@ -3658,7 +3658,7 @@ MonoBehaviour:
       Weight:
         Max: 1
         Min: 0
-        MiddleSteps: 10
+        MiddleSteps: 3
         CurrentStep: 0
   BestBruteForceInfo:
     Highest: 0
@@ -3670,7 +3670,18 @@ MonoBehaviour:
     Restrictions: []
   FrameInfo: []
   UseFrameCount: 1
-  MaxFrames: 100000
+  UseAllBruteForce: 0
+  PatchSize: 1
+  MaxFrames: 10000
+  Values: []
+  Indexs: 
+  Test1: []
+  Test2: []
+  Test3: []
+  Input: 0
+  Output: 
+  MiddleStepCounts: 
+  ReInput: 0
 --- !u!1 &960757780
 GameObject:
   m_ObjectHideFlags: 0

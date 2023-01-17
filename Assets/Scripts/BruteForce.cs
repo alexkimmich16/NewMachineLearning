@@ -76,19 +76,22 @@ public class BruteForce : SerializedMonoBehaviour
             int CorrectOnFalse = 0;
             int InCorrectOnTrue = 0;
             int InCorrectOnFalse = 0;
-
+            //test for 2 and 4
             for (int i = 0; i < WeightedMiddleSteps.Length; i++)
             {
                 ConvertedSingles[i] = new SingleInfo(NativeSingles[(i * 3)], NativeSingles[(i * 3) + 1], Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[i]), (int)NativeSingles[(i * 3) + 2]);
                 if(i == 4)
-                {
-                    CorrectOnTrue = Mathf.FloorToInt(Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[i]) * 100);
-                    CorrectOnFalse = Mathf.FloorToInt(WeightedMiddleSteps[5] * 100); // 5 == 1
-                    InCorrectOnTrue = Mathf.FloorToInt(WeightedMiddleSteps[i] * 100); //4 == 52
-                    InCorrectOnFalse = Mathf.FloorToInt(WeightedMiddleSteps[3] * 100); // 3 == 52
+                    CorrectOnFalse = Mathf.FloorToInt(Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[4]) * 100); // 5 == 1
+
+                
                     
-                }
                     
+                    //InCorrectOnFalse = Mathf.FloorToInt(Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[2]) * 100); // 3 == 52
+                    
+                if(i == 3)
+                    InCorrectOnTrue = Mathf.FloorToInt(Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[3]) * 100); //4 == 52
+                if (i == 5)
+                    CorrectOnTrue = Mathf.FloorToInt(Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[5]) * 100);
                 LeftCount -= (Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[i]) * WeightedMiddleSteps[i]);
             }
 

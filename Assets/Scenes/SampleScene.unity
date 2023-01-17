@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3761,7 +3761,7 @@ MonoBehaviour:
       Min:
         Max: 20
         Min: 0
-        MiddleSteps: 50
+        MiddleSteps: 20
         CurrentStep: 0
       Weight:
         Max: 1
@@ -3771,7 +3771,7 @@ MonoBehaviour:
     - Max:
         Max: 90
         Min: 0
-        MiddleSteps: 50
+        MiddleSteps: 20
         CurrentStep: 0
       Min:
         Max: 0
@@ -3786,7 +3786,7 @@ MonoBehaviour:
     - Max:
         Max: 60
         Min: 0
-        MiddleSteps: 50
+        MiddleSteps: 20
         CurrentStep: 0
       Min:
         Max: 0
@@ -3848,13 +3848,13 @@ MonoBehaviour:
       ShouldDebug: 0
       Value: 42.27158
   FrameInfo: []
-  MaxFrames: 140608
+  MaxFrames: 10648
   BatchSize: 1
   MaxGroup: 2000000
-  FramesToCaptureDebug: 140608
+  FramesToCaptureDebug: 10648
   Test1: 1
   Test2: 0
-  TotalFrameCount: 140608
+  TotalFrameCount: 10648
   Values: 
   CorrectOnTrue: 
   CorrectOnFalse: 

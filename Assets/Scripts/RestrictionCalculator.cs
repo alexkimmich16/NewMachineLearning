@@ -48,19 +48,6 @@ public class RestrictionCalculator : SerializedMonoBehaviour
     */
    
     
-    
-    
-    [FoldoutGroup("MaxMin"), Button(ButtonSizes.Small)]
-    public void CopyToDebug()
-    {
-        RestrictionManager RM = RestrictionManager.instance;
-        DebugRestrictions.instance.Restrictions.Restrictions = new List<SingleRestriction>(RM.RestrictionSettings.MotionRestrictions[(int)motionGet + 1].Restrictions);
-        for (int i = 0; i < DebugRestrictions.instance.Restrictions.Restrictions.Count; i++)
-        {
-            DebugRestrictions.instance.Restrictions.Restrictions[i].MinSafe = MaxMin[i].x;
-            DebugRestrictions.instance.Restrictions.Restrictions[i].MaxSafe = MaxMin[i].y;
-        }
-    }
     public List<Vector2> GetMaxMinValues()
     {
         RestrictionManager RM = RestrictionManager.instance;

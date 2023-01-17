@@ -16,7 +16,7 @@ namespace RestrictionSystem
     
 
     [System.Serializable]
-    public class MotionRestriction
+    public struct MotionRestriction
     {
         public MotionRestriction(MotionRestriction All)
         {
@@ -26,7 +26,7 @@ namespace RestrictionSystem
         }
         public string Motion;
 
-        [Range(0f, 1f)] public float WeightedValueThreshold = 0.8f;
+        [Range(0f, 1f)] public float WeightedValueThreshold;
 
 
         [ListDrawerSettings(ListElementLabelName = "Label")]
@@ -36,11 +36,11 @@ namespace RestrictionSystem
 
     }
     [Serializable]
-    public class SingleRestriction
+    public struct SingleRestriction
     {
         public string Label;
-        public bool Active = true;
-        [ShowIf("Active"), Range(0f, 1f)] public float Weight = 1f;
+        public bool Active;
+        [ShowIf("Active"), Range(0f, 1f)] public float Weight;
         public Restriction restriction;
         [ShowIf("restriction", Restriction.VelocityInDirection)] public VelocityType CheckType;
         public float MaxSafe;
@@ -55,12 +55,8 @@ namespace RestrictionSystem
         [ShowIf("RequiresOffset")] public Vector3 Direction;
 
         [ShowIf("restriction", Restriction.HandFacingHead)] public bool ExcludeHeight;
-        //[ShowIf("VelocityInHandOrHead")] public Vector3 ForwardDirection;
 
-        //[ShowIf("restriction", Restriction.HandFacingHead)] public Axis UseAxis;
-
-
-        [ShowIf("restriction", Restriction.HandHeadDistance)] public List<Axis> UseAxisList = new List<Axis>() { Axis.X, Axis.Y, Axis.Z };
+        [ShowIf("restriction", Restriction.HandHeadDistance)] public List<Axis> UseAxisList;
 
         public bool ShouldDebug;
         [ReadOnly] public float Value;

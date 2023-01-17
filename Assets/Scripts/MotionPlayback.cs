@@ -36,6 +36,7 @@ public class MotionPlayback : MonoBehaviour
 
     public bool OneInterprolate;
     public List<SingleInfo> interpolating;
+
     private void Start()
     {
         if(type == PlayType.WatchAI)
@@ -68,27 +69,22 @@ public class MotionPlayback : MonoBehaviour
             Frame += 1;
             if (LastMotion != Motion)
                 Frame = 0;
-            if (Frame >= LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos.Count)
+
+            MotionEditor ME = MotionEditor.instance;
+            if (Frame >= LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].Infos.Count)
             {
                 Frame = 0;
-                if (OneInterprolate)
-                {
-                    int MaxFromCount = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos.Count - 1;
-                    Vector3 From = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos[MaxFromCount].HandPos;
-                    Vector3 To = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum + 1].Infos[0].HandPos;
-                    interpolating = LearnManager.instance.InterpolatePositions(From, To);
-                    OneInterprolate = false;
-                    MotionEditor.instance.MotionNum += 1;
-                }
             }
-            bool State = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].AtFrameState(Frame);
-            handToChange.material = LearnManager.instance.FalseTrue[State ? 1 : 0];
-            SingleInfo info = LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions[MotionEditor.instance.MotionNum].Infos[Frame];
+            bool State = ME.Setting == EditSettings.Editing ? LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].AtFrameState(Frame) : GetMotionFromInput();
+            handToChange.material = LM.FalseTrue[State ? 1 : 0];
+            SingleInfo info = LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].Infos[Frame];
             
             moveAll(info);
             LastMotion = Motion;
             if(OnNewFrame != null)
                 OnNewFrame();
+
+            bool GetMotionFromInput() { return Frame - BruteForce.instance.PastFrameLookup >= 0 ? RestrictionSystem.RestrictionManager.instance.MotionWorks(LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame), BruteForce.instance.BruteForceSettings) : false; }
         }
         void moveAll(SingleInfo info)
         {

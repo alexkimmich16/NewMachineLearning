@@ -9,6 +9,11 @@ public enum EditSide
     left = 0,
     right = 1,
 }
+public enum EditSettings
+{
+    Editing = 0,
+    Displaying = 1,
+}
 public class MotionEditor : SerializedMonoBehaviour
 {
     public static MotionEditor instance;
@@ -16,6 +21,7 @@ public class MotionEditor : SerializedMonoBehaviour
 
     public int MotionNum;
     public CurrentLearn MotionType;
+    public EditSettings Setting;
     public bool Typing;
     public TMP_InputField input;
     public TextMeshProUGUI sideText;
@@ -25,6 +31,7 @@ public class MotionEditor : SerializedMonoBehaviour
     public TextMeshProUGUI FrameNum;
     public TextMeshProUGUI PlaybackSpeed;
     public TextMeshProUGUI MotionTypeText;
+    public TextMeshProUGUI SettingText;
     public MotionPlayback display;
     
 
@@ -104,6 +111,7 @@ public class MotionEditor : SerializedMonoBehaviour
         sideText.text = "#" + MotionNum;
         FrameNum.text = "Frame: " + display.Frame;
         MotionTypeText.text = "Motion: " + MotionType.ToString();
+        SettingText.text = "Settings: " + Setting.ToString();
         display.PlaybackSpeed += SpeedChangeAdd();
         PlaybackSpeed.text = "Speed: " + display.PlaybackSpeed.ToString("F2");
         Max.text = "Max: " + LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].Infos.Count;

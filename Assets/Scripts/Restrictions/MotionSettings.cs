@@ -31,9 +31,6 @@ namespace RestrictionSystem
 
         [ListDrawerSettings(ListElementLabelName = "Label")]
         public List<SingleRestriction> Restrictions;
-
-        public string Title { get { return Motion; } }
-
     }
     [Serializable]
     public struct SingleRestriction

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1017,6 +1017,7 @@ MonoBehaviour:
   MaxMinEditing: 0
   SpeedChangePerSecond: 10
   SpeedMultiplier: 2
+  CurrentTestMotion: 1
 --- !u!114 &253952445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3287,9 +3288,9 @@ GameObject:
   - component: {fileID: 944444319}
   - component: {fileID: 944444318}
   - component: {fileID: 944444317}
-  - component: {fileID: 944444321}
   - component: {fileID: 944444322}
   - component: {fileID: 944444323}
+  - component: {fileID: 944444324}
   m_Layer: 0
   m_Name: Restictions
   m_TagString: Untagged
@@ -3438,253 +3439,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &944444321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 944444316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd43d2c5f48323244bceab9760b9e871, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: RestrictionIndex
-      Entry: 6
-      Data: 
-  motionGet: 1
-  Set: 0
-  GetAdjustedRestrictionValue: 0
-  PastFrameLookup: 4
-  MaxMin: []
-  ThisSetInfo:
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 1
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 0
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 0
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
-  - OutputRestrictions:
-    - 1
-    - 0
-    - 0
-    - 1
-    - 1
-    AtMotionState: 0
 --- !u!114 &944444322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3749,8 +3503,8 @@ MonoBehaviour:
   AllChange:
     ParentWeightThreshold:
       Max: 1
-      Min: 1
-      MiddleSteps: 0
+      Min: 0.7
+      MiddleSteps: 6
       CurrentStep: 0
     Restrictions:
     - Max:
@@ -3761,17 +3515,17 @@ MonoBehaviour:
       Min:
         Max: 20
         Min: 0
-        MiddleSteps: 20
+        MiddleSteps: 5
         CurrentStep: 0
       Weight:
         Max: 1
-        Min: 1
-        MiddleSteps: 0
+        Min: 0.7
+        MiddleSteps: 5
         CurrentStep: 0
     - Max:
         Max: 90
         Min: 0
-        MiddleSteps: 20
+        MiddleSteps: 40
         CurrentStep: 0
       Min:
         Max: 0
@@ -3780,13 +3534,13 @@ MonoBehaviour:
         CurrentStep: 0
       Weight:
         Max: 1
-        Min: 1
-        MiddleSteps: 0
+        Min: 0.7
+        MiddleSteps: 5
         CurrentStep: 0
     - Max:
         Max: 60
         Min: 0
-        MiddleSteps: 20
+        MiddleSteps: 15
         CurrentStep: 0
       Min:
         Max: 0
@@ -3795,20 +3549,20 @@ MonoBehaviour:
         CurrentStep: 0
       Weight:
         Max: 1
-        Min: 1
-        MiddleSteps: 0
+        Min: 0.7
+        MiddleSteps: 5
         CurrentStep: 0
   BruteForceSettings:
     Motion: Fireball
-    WeightedValueThreshold: 1
+    WeightedValueThreshold: 0.7
     Restrictions:
     - Label: speed
       Active: 1
-      Weight: 1
+      Weight: 0.75
       restriction: 0
       CheckType: 0
-      MaxSafe: 53.32
-      MinSafe: 5.3
+      MaxSafe: 500
+      MinSafe: 6.666667
       MinFalloff: 0
       MaxFalloff: 0
       Offset: {x: 0, y: 0, z: 0}
@@ -3822,7 +3576,7 @@ MonoBehaviour:
       Weight: 1
       restriction: 1
       CheckType: 1
-      MaxSafe: 50.6
+      MaxSafe: 21.95122
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -3834,10 +3588,10 @@ MonoBehaviour:
       Value: 74.87649
     - Label: headforwardvel
       Active: 1
-      Weight: 1
+      Weight: 0.7
       restriction: 1
       CheckType: 0
-      MaxSafe: 50.6
+      MaxSafe: 0
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -3848,22 +3602,65 @@ MonoBehaviour:
       ShouldDebug: 0
       Value: 42.27158
   FrameInfo: []
-  MaxFrames: 10648
+  MaxFrames: 13714512
   BatchSize: 1
-  MaxGroup: 2000000
+  MaxGroup: 1000000
+  ShouldDebug: 0
   FramesToCaptureDebug: 10648
-  Test1: 1
+  Test1: 0
   Test2: 0
-  TotalFrameCount: 10648
+  TotalFrameCount: 13714512
   Values: 
-  CorrectOnTrue: 
-  CorrectOnFalse: 
-  InCorrectOnTrue: 
-  InCorrectOnFalse: 
   Input: 0
   Output: 
   MiddleStepCounts: 
   ReInput: 0
+--- !u!114 &944444324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944444316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2272e7395951f914b98bcaa7394f4e80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  MotionConditions:
+  - Motion: Fireball
+    CurrentStage: 0
+    ResetOnMax: 0
+    ConditionLists:
+    - Label: Warmup
+      SingleConditions:
+      - Label: FireDis
+        Active: 0
+        condition: 1
+        Amount: 0.5
+        LastState: 0
+        StartTime: 0
+        StartPos: {x: 0, y: 0, z: 0}
+        Value: 0
+    - Label: Cast
+      SingleConditions:
+      - Label: CastDis
+        Active: 0
+        condition: 1
+        Amount: 0.15
+        LastState: 0
+        StartTime: 0
+        StartPos: {x: 0, y: 0, z: 0}
+        Value: 0
 --- !u!1 &960757780
 GameObject:
   m_ObjectHideFlags: 0

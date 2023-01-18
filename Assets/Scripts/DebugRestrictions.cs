@@ -36,11 +36,20 @@ namespace RestrictionSystem
 
         public bool DebugVelocity;
         public float LineLength;
+        private void Start()
+        {
+           ConditionManager.instance.MotionConditions[0].OnNewState += MotionDone;
+        }
+        public void MotionDone(EditSide side, bool NewState, int Index)
+        {
+            Debug.Log("NewState: " + NewState + "  Index: " + Index);
+        }
 
         void Update()
         {
             if (!Active)
                 return;
+
             PastFrameRecorder PR = PastFrameRecorder.instance;
             if (PR.RightInfo.Count < PR.MaxStoreInfo - 1)
                 return;
@@ -71,6 +80,8 @@ namespace RestrictionSystem
                 handToChange.material = Materials[RestrictionManager.instance.MotionWorks(frame1, frame2, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionTry - 1]) ? 1 : 0]; //set hand
                 //Debug.Log("Motion: " + Motion.ToString());
             }
+
+
         }
         /*
         public float GetVelocity(SingleInfo frame1, SingleInfo frame2) { return Vector3.Distance(frame1.HandPos, frame2.HandPos) / (1f / 60f); }

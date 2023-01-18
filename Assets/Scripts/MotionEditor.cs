@@ -12,7 +12,8 @@ public enum EditSide
 public enum EditSettings
 {
     Editing = 0,
-    Displaying = 1,
+    DisplayingBrute = 1,
+    DisplayingMotion = 2,
 }
 public class MotionEditor : SerializedMonoBehaviour
 {
@@ -47,6 +48,9 @@ public class MotionEditor : SerializedMonoBehaviour
 
     public delegate void ChangeMotion();
     public static event ChangeMotion OnChangeMotion;
+
+    //[ShowIf("Setting", EditSettings.DisplayingMotion)] 
+    public RestrictionSystem.CurrentLearn CurrentTestMotion;
 
     private void Start()
     {

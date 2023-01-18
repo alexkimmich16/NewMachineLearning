@@ -41,13 +41,13 @@ namespace RestrictionSystem
 
 
 
-    public delegate float MotionTest(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2);
+    public delegate float RestrictionTest(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2);
     public class RestrictionManager : SerializedMonoBehaviour
     {
         public static RestrictionManager instance;
         private void Awake() { instance = this; }
 
-        public static Dictionary<Restriction, MotionTest> RestrictionDictionary = new Dictionary<Restriction, MotionTest>(){
+        public static Dictionary<Restriction, RestrictionTest> RestrictionDictionary = new Dictionary<Restriction, RestrictionTest>(){
             {Restriction.VelocityThreshold, VelocityMagnitude},
             {Restriction.VelocityInDirection, VelocityDirection},
             {Restriction.HandFacingHead, HandFacingHead},
@@ -78,7 +78,7 @@ namespace RestrictionSystem
             float TotalWeight = 0f;
             for (int i = 0; i < restriction.Restrictions.Count; i++)
             {
-                MotionTest RestrictionType = RestrictionDictionary[restriction.Restrictions[i].restriction];
+                RestrictionTest RestrictionType = RestrictionDictionary[restriction.Restrictions[i].restriction];
                 float RawRestrictionValue = RestrictionType.Invoke(restriction.Restrictions[i], frame1, frame2);
                 float RestrictionValue = restriction.Restrictions[i].GetValue(RawRestrictionValue);
                 TotalWeightValue += restriction.Restrictions[i].Active ? RestrictionValue * restriction.Restrictions[i].Weight : 0;
@@ -116,7 +116,7 @@ namespace RestrictionSystem
             return CurrentLearn.Nothing;
         }
 
-        #region bools
+        #region Values
         public static float VelocityMagnitude(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
             float Distance = Vector3.Distance(frame1.HandPos, frame2.HandPos);
@@ -194,18 +194,6 @@ namespace RestrictionSystem
         }
         #endregion
     }
-
-    [Serializable]
-    public class SingleCondition
-    {
-        public Condition condition;
-
-        public enum Condition
-        {
-            Time = 0,
-            Distance = 1,
-            Position = 2,
-        }
-    }
+    
 }
 

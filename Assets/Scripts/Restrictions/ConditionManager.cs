@@ -49,14 +49,14 @@ namespace RestrictionSystem
         {
             if (Condition.LastState == false && NewState == true)
             {
-                Debug.Log("restart");
+                //Debug.Log("restart");
                 Condition.StartPos = CurrentFrame.HandPos;
             }
             else if (NewState == true && Condition.LastState == true)
             {
                 
                 Condition.Value = Vector3.Distance(Condition.StartPos, CurrentFrame.HandPos);
-                Debug.Log("ongoing: " + (Vector3.Distance(Condition.StartPos, CurrentFrame.HandPos) > Condition.Amount));
+                //Debug.Log("ongoing: " + (Vector3.Distance(Condition.StartPos, CurrentFrame.HandPos) > Condition.Amount));
                 if (Vector3.Distance(Condition.StartPos, CurrentFrame.HandPos) > Condition.Amount)
                 {
                     return true;
@@ -104,7 +104,7 @@ namespace RestrictionSystem
 
         public void PassValueToAll(bool State)
         {
-            Debug.Log("pass");
+            //Debug.Log("pass");
             bool AllWorkingSoFar = true;
             for (int i = 0; i < ConditionLists[CurrentStage].SingleConditions.Count; i++)
             {
@@ -117,13 +117,13 @@ namespace RestrictionSystem
                 if (Working == false)
                     AllWorkingSoFar = false;
                 info.LastState = State;
-                Debug.Log("once: " + Working);
+                //Debug.Log("once: " + Working);
             }
 
             if (AllWorkingSoFar) //ready to move to next
             {
                 ///what when get to top?
-                Debug.Log("Done");
+                //Debug.Log("Done");
                 OnNewState?.Invoke(EditSide.right, true, CurrentStage);
                 if (CurrentStage < ConditionLists.Count - 1)//0 1 == true, 1, 1 == false
                     CurrentStage += 1;

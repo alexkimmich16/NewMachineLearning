@@ -3285,7 +3285,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 944444320}
-  - component: {fileID: 944444319}
   - component: {fileID: 944444318}
   - component: {fileID: 944444317}
   - component: {fileID: 944444322}
@@ -3402,28 +3401,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   RestrictionSettings: {fileID: 11400000, guid: 76ee955c20c73154b977ecc314c5bbe4, type: 2}
---- !u!114 &944444319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 944444316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4cfc17ce5863b64ca1b9464973aadf0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  MotionType: 1
 --- !u!4 &944444320
 Transform:
   m_ObjectHideFlags: 0
@@ -3503,8 +3480,8 @@ MonoBehaviour:
   AllChange:
     ParentWeightThreshold:
       Max: 1
-      Min: 0.7
-      MiddleSteps: 6
+      Min: 0.4
+      MiddleSteps: 5
       CurrentStep: 0
     Restrictions:
     - Max:
@@ -3515,17 +3492,17 @@ MonoBehaviour:
       Min:
         Max: 20
         Min: 0
-        MiddleSteps: 5
+        MiddleSteps: 6
         CurrentStep: 0
       Weight:
         Max: 1
-        Min: 0.7
-        MiddleSteps: 5
+        Min: 0.5
+        MiddleSteps: 3
         CurrentStep: 0
     - Max:
         Max: 90
         Min: 0
-        MiddleSteps: 40
+        MiddleSteps: 10
         CurrentStep: 0
       Min:
         Max: 0
@@ -3534,8 +3511,8 @@ MonoBehaviour:
         CurrentStep: 0
       Weight:
         Max: 1
-        Min: 0.7
-        MiddleSteps: 5
+        Min: 0.5
+        MiddleSteps: 3
         CurrentStep: 0
     - Max:
         Max: 60
@@ -3549,20 +3526,20 @@ MonoBehaviour:
         CurrentStep: 0
       Weight:
         Max: 1
-        Min: 0.7
-        MiddleSteps: 5
+        Min: 0.5
+        MiddleSteps: 3
         CurrentStep: 0
   BruteForceSettings:
     Motion: Fireball
-    WeightedValueThreshold: 0.7
+    WeightedValueThreshold: 0.0006949938
     Restrictions:
     - Label: speed
       Active: 1
-      Weight: 0.75
+      Weight: 0.000106073094
       restriction: 0
       CheckType: 0
       MaxSafe: 500
-      MinSafe: 6.666667
+      MinSafe: 3.905033
       MinFalloff: 0
       MaxFalloff: 0
       Offset: {x: 0, y: 0, z: 0}
@@ -3573,10 +3550,10 @@ MonoBehaviour:
       Value: 0.030020434
     - Label: hand straight
       Active: 1
-      Weight: 1
+      Weight: 0.0002418279
       restriction: 1
       CheckType: 1
-      MaxSafe: 21.95122
+      MaxSafe: 20.885164
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -3588,10 +3565,10 @@ MonoBehaviour:
       Value: 74.87649
     - Label: headforwardvel
       Active: 1
-      Weight: 0.7
+      Weight: 0.17966661
       restriction: 1
       CheckType: 0
-      MaxSafe: 0
+      MaxSafe: 0.0062289387
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -3602,19 +3579,24 @@ MonoBehaviour:
       ShouldDebug: 0
       Value: 42.27158
   FrameInfo: []
-  MaxFrames: 13714512
+  MaxFrames: 1428000
   BatchSize: 1
   MaxGroup: 1000000
   ShouldDebug: 0
   FramesToCaptureDebug: 10648
   Test1: 0
   Test2: 0
-  TotalFrameCount: 13714512
+  TotalFrameCount: 1428000
   Values: 
+  FloatValues: 
+  UseAllMotions: 1
   Input: 0
   Output: 
   MiddleStepCounts: 
   ReInput: 0
+  LockValues: 1
+  Sequences: 25
+  Confidence: 0.75
 --- !u!114 &944444324
 MonoBehaviour:
   m_ObjectHideFlags: 0

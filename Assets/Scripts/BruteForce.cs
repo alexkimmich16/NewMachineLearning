@@ -322,7 +322,7 @@ public class BruteForce : SerializedMonoBehaviour
     public List<SingleFrameRestrictionInfo> GetRestrictionsForMotions(CurrentLearn FrameDataMotion, MotionRestriction RestrictionsMotion)
     {
         List<SingleFrameRestrictionInfo> ReturnValue = new List<SingleFrameRestrictionInfo>();
-        List<int> ToCheck = UseAllMotions ? new List<int>(){ 0, (int)FrameDataMotion } : new List<int>() { 0, 1, 2, 3 };
+        List<int> ToCheck = UseAllMotions ? new List<int>() { 0, 1, 2, 3 } : new List<int>(){ 0, (int)FrameDataMotion };
         for (int i = 0; i < ToCheck.Count; i++)//motions
             for (int j = 0; j < LearnManager.instance.MovementList[ToCheck[i]].Motions.Count; j++)//set
                 for (int k = PastFrameLookup; k < LearnManager.instance.MovementList[ToCheck[i]].Motions[j].Infos.Count; k++)//frame

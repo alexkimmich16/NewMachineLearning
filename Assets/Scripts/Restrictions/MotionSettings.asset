@@ -24,15 +24,15 @@ MonoBehaviour:
   Iteration: 2
   MotionRestrictions:
   - Motion: Fireball
-    WeightedValueThreshold: 0.0006949938
+    WeightedValueThreshold: 0.67250246
     Restrictions:
     - Label: speed
       Active: 1
-      Weight: 0.000106073094
+      Weight: 0.008410186
       restriction: 0
       CheckType: 0
       MaxSafe: 500
-      MinSafe: 3.905033
+      MinSafe: 4.2431927
       MinFalloff: 0
       MaxFalloff: 0
       Offset: {x: 0, y: 0, z: 0}
@@ -43,10 +43,10 @@ MonoBehaviour:
       Value: 0.030020434
     - Label: hand straight
       Active: 1
-      Weight: 0.0002418279
+      Weight: 0.008410186
       restriction: 1
       CheckType: 1
-      MaxSafe: 20.885164
+      MaxSafe: 26.604448
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -58,10 +58,10 @@ MonoBehaviour:
       Value: 74.87649
     - Label: headforwardvel
       Active: 1
-      Weight: 0.17966661
+      Weight: 0.008410186
       restriction: 1
       CheckType: 0
-      MaxSafe: 0.0062289387
+      MaxSafe: 71.45013
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0

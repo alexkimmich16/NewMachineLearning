@@ -78,7 +78,9 @@ namespace RestrictionSystem
                 if (LeftInfo.Count > MaxStoreInfo)
                     LeftInfo.RemoveAt(0);
 
-                RestrictionManager.instance.TriggerFrameEvents();
+                
+                ///if(RightInfo.Count > FramesAgo)
+                    ///RestrictionManager.instance.TriggerFrameEvents();
 
                 yield return new WaitForSeconds(Interval);
             }

@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEditor;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/AllData", order = 1)]
+[System.Serializable]
 public class AllMotions : ScriptableObject
 {
     public List<Motion> Motions;
@@ -25,6 +27,9 @@ public class AllMotions : ScriptableObject
         return NewMotions;
         //return null;
     }
+    
+    
+    
 }
 [System.Serializable]
 public class SingleInfo
@@ -43,7 +48,7 @@ public class Motion
 {
     //[HideInInspector]
     public List<SingleInfo> Infos;
-    [HideInInspector] public List<Vector2> TrueRanges;
+    public List<Vector2> TrueRanges;
     [HideInInspector] public int TrueIndex;
     [HideInInspector] public int PlayCount;
     

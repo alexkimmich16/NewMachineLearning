@@ -38,11 +38,12 @@ namespace RestrictionSystem
         public float LineLength;
         private void Start()
         {
-           ConditionManager.instance.MotionConditions[0].OnNewState += MotionDone;
+            ConditionManager.instance.MotionConditions[0].OnNewState += MotionDone;
         }
-        public void MotionDone(EditSide side, bool NewState, int Index)
+        public void MotionDone(Side side, bool NewState, int Index)
         {
-            Debug.Log("NewState: " + NewState + "  Index: " + Index);
+            if(NewState == true)
+                Debug.Log("NewState: " + NewState + "  Index: " + Index);
         }
 
         void Update()
@@ -70,8 +71,8 @@ namespace RestrictionSystem
                 handToChange.material = Materials[RestrictionManager.instance.MotionWorks(frame1, frame2, Restrictions) ? 1 : 0]; //set hand
             else if(debugType == DebugType.MotionSettings)
             {
-                CurrentLearn Motion = RestrictionManager.instance.GetCurrentMotion(frame1, frame2);
-                handToChange.material = Materials[(int)Motion];
+                ///CurrentLearn Motion = RestrictionManager.instance.GetCurrentMotion(frame1, frame2);
+                ///handToChange.material = Materials[(int)Motion];
                 //Debug.Log("Motion: " + Motion.ToString());
             }
             else if(debugType == DebugType.OneMotionSetting)

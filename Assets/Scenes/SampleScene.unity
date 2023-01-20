@@ -2885,7 +2885,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FramesPerSecond: 60
   CurrentMotionRecord: []
-  motion: 1
+  motion: 3
   ShouldRecord: 1
   Values: 
 --- !u!4 &795205100
@@ -3375,7 +3375,7 @@ MonoBehaviour:
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0.36753172
-  debugType: 1
+  debugType: 2
   MotionTry: 1
   DebugVelocity: 0
   LineLength: 2
@@ -3620,29 +3620,206 @@ MonoBehaviour:
     SerializationNodes: []
   MotionConditions:
   - Motion: Fireball
-    CurrentStage: 0
+    CurrentStage: 0000000000000000
     ResetOnMax: 0
+    WaitingForFalse: 0000
     ConditionLists:
     - Label: Warmup
       SingleConditions:
       - Label: FireDis
-        Active: 0
         condition: 1
-        Amount: 0.5
-        LastState: 0
-        StartTime: 0
-        StartPos: {x: 0, y: 0, z: 0}
-        Value: 0
+        Amount: 0.05
+        restriction:
+          Label: 
+          Active: 0
+          Weight: 0
+          restriction: 0
+          CheckType: 0
+          MaxSafe: 0
+          MinSafe: 0
+          MinFalloff: 0
+          MaxFalloff: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          ExcludeHeight: 0
+          UseAxisList: 
+          ShouldDebug: 0
+          Value: 0
+        LastState: 0000
+        StartTime:
+        - 0
+        - 0
+        StartPos:
+        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0}
+        Value:
+        - 0
+        - 0
     - Label: Cast
       SingleConditions:
-      - Label: CastDis
-        Active: 0
+      - Label: Cast
+        condition: 2
+        Amount: 0
+        restriction:
+          Label: DistFromHead
+          Active: 1
+          Weight: 1
+          restriction: 3
+          CheckType: 0
+          MaxSafe: 1000
+          MinSafe: 0.3
+          MinFalloff: 0
+          MaxFalloff: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          ExcludeHeight: 0
+          UseAxisList: 000000000100000002000000
+          ShouldDebug: 0
+          Value: 0
+        LastState: 0000
+        StartTime:
+        - 0
+        - 0
+        StartPos:
+        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0}
+        Value:
+        - 0
+        - 0
+  - Motion: Flames
+    CurrentStage: 0000000000000000
+    ResetOnMax: 0
+    WaitingForFalse: 0000
+    ConditionLists:
+    - Label: Warmup
+      SingleConditions:
+      - Label: FireDis
         condition: 1
-        Amount: 0.15
-        LastState: 0
-        StartTime: 0
-        StartPos: {x: 0, y: 0, z: 0}
-        Value: 0
+        Amount: 0.05
+        restriction:
+          Label: 
+          Active: 0
+          Weight: 0
+          restriction: 0
+          CheckType: 0
+          MaxSafe: 0
+          MinSafe: 0
+          MinFalloff: 0
+          MaxFalloff: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          ExcludeHeight: 0
+          UseAxisList: 
+          ShouldDebug: 0
+          Value: 0
+        LastState: 0000
+        StartTime:
+        - 0
+        - 0
+        StartPos:
+        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0}
+        Value:
+        - 0
+        - 0
+    - Label: Cast
+      SingleConditions:
+      - Label: Cast
+        condition: 2
+        Amount: 0
+        restriction:
+          Label: DistFromHead
+          Active: 1
+          Weight: 1
+          restriction: 3
+          CheckType: 0
+          MaxSafe: 1000
+          MinSafe: 0.3
+          MinFalloff: 0
+          MaxFalloff: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          ExcludeHeight: 0
+          UseAxisList: 000000000100000002000000
+          ShouldDebug: 0
+          Value: 0
+        LastState: 0000
+        StartTime:
+        - 0
+        - 0
+        StartPos:
+        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0}
+        Value:
+        - 0
+        - 0
+  - Motion: FlameBlock
+    CurrentStage: 0000000000000000
+    ResetOnMax: 0
+    WaitingForFalse: 0000
+    ConditionLists:
+    - Label: Warmup
+      SingleConditions:
+      - Label: FireDis
+        condition: 1
+        Amount: 0.05
+        restriction:
+          Label: 
+          Active: 0
+          Weight: 0
+          restriction: 0
+          CheckType: 0
+          MaxSafe: 0
+          MinSafe: 0
+          MinFalloff: 0
+          MaxFalloff: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          ExcludeHeight: 0
+          UseAxisList: 
+          ShouldDebug: 0
+          Value: 0
+        LastState: 0000
+        StartTime:
+        - 0
+        - 0
+        StartPos:
+        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0}
+        Value:
+        - 0
+        - 0
+    - Label: Cast
+      SingleConditions:
+      - Label: Cast
+        condition: 2
+        Amount: 0
+        restriction:
+          Label: DistFromHead
+          Active: 1
+          Weight: 1
+          restriction: 3
+          CheckType: 0
+          MaxSafe: 1000
+          MinSafe: 0.3
+          MinFalloff: 0
+          MaxFalloff: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          ExcludeHeight: 0
+          UseAxisList: 000000000100000002000000
+          ShouldDebug: 0
+          Value: 0
+        LastState: 0000
+        StartTime:
+        - 0
+        - 0
+        StartPos:
+        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0}
+        Value:
+        - 0
+        - 0
 --- !u!1 &960757780
 GameObject:
   m_ObjectHideFlags: 0
@@ -5306,8 +5483,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1615791726}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.7900598, y: -2.42384, z: -1.7550313}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.79006, y: -2.42384, z: -1.7550316}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6334,7 +6511,6 @@ MonoBehaviour:
   Left: {fileID: 0}
   Right: {fileID: 209071109}
   handToChange: {fileID: 137539835}
-  LA: {fileID: 0}
   OneInterprolate: 0
   interpolating: []
 --- !u!1 &1893873062

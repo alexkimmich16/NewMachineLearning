@@ -63,12 +63,20 @@ namespace RestrictionSystem
         public void TriggerFrameEvents()
         {
             PastFrameRecorder PR = PastFrameRecorder.instance;
-
+            /*
             if (NewFrameMotionRight != null)
                 NewFrameMotionRight(GetCurrentMotion(PR.PastFrame(Side.right), PastFrameRecorder.instance.GetControllerInfo(Side.right)));
 
             if (NewFrameMotionLeft != null)
                 NewFrameMotionLeft(GetCurrentMotion(PR.PastFrame(Side.left), PastFrameRecorder.instance.GetControllerInfo(Side.left)));
+            */
+            for (int i = 0; i < 2; i++)
+            {
+                CurrentLearn TrueMotion = GetCurrentMotion(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i));
+                for (int j = 0; j < RestrictionSettings.MotionRestrictions.Count; j++)
+                    ConditionManager.instance.PassValue(TrueMotion == (CurrentLearn)(j + 1), (CurrentLearn)(j + 1), (Side)i);
+            }
+                
         }
 
         public MotionSettings RestrictionSettings;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using UnityEditor;
 public enum CurrentLearn
 {
     Nothing = 0,
@@ -26,6 +27,12 @@ public class LearnManager : SerializedMonoBehaviour
     //public CurrentLearn LearnType;
     [HideInInspector] public learningState state;
     public bool LearnOnStart;
+
+    public void Save()
+    {
+        //AssetDatabase
+    }
+
 
     [FoldoutGroup("References")] public List<AllMotions> MovementList;
 

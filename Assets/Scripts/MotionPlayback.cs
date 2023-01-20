@@ -30,32 +30,19 @@ public class MotionPlayback : MonoBehaviour
 
     public SkinnedMeshRenderer handToChange;
 
-    public UnitySharpNEAT.LearningAgent LA;
-
     public delegate void NewFrame();
     public static event NewFrame OnNewFrame;
 
     public bool OneInterprolate;
     public List<SingleInfo> interpolating;
 
-    private void Start()
-    {
-        if(type == PlayType.WatchAI)
-            LA = transform.parent.GetComponent<UnitySharpNEAT.LearningAgent>();
-    }
-    public RestrictionSystem.SingleInfo GetFrameInfo() { return LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].GetRestrictionInfoAtIndex(MotionEditor.instance.MotionNum, Frame); }
+    public RestrictionSystem.SingleInfo GetFrameInfo(bool Old) { return LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].GetRestrictionInfoAtIndex(MotionEditor.instance.MotionNum, Old ? MinFramesAgo() : Frame); }
+    public int MinFramesAgo() { return Frame - PastFrameRecorder.instance.FramesAgo > 0 ? Frame - PastFrameRecorder.instance.FramesAgo : 0; }
+
     void Update()
     {
         LearnManager LM = LearnManager.instance;
-        if (type == PlayType.WatchAI)
-        {
-            //Debug.Log("|Motion: " + LA.MotionIndex + " |Set: " + LA.Set + " |Frame: " + LA.Frame + "|");
-            if (LA.Active() && LA.IsInterpolating() == false)
-                moveAll(LA.CurrentMotion().Infos[LA.Frame]);
-            else if (LA.IsInterpolating())
-                moveAll(LA.InterpolateFrames[0]);
-        }
-        else if (type == PlayType.Repeat)
+        if (type == PlayType.Repeat)
         {
             NextTime = 1 / PlaybackSpeed;
             Timer += Time.deltaTime;
@@ -81,7 +68,7 @@ public class MotionPlayback : MonoBehaviour
 
             if(ME.Setting == EditSettings.DisplayingBrute)
             {
-                ConditionManager.instance.PassValue(State, ME.CurrentTestMotion);
+                ConditionManager.instance.PassValue(State, ME.CurrentTestMotion, Side.right);
             }
 
             SingleInfo info = LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].Infos[Frame];
@@ -91,8 +78,8 @@ public class MotionPlayback : MonoBehaviour
             if(OnNewFrame != null)
                 OnNewFrame();
 
-            bool GetMotionFromInput() { return Frame - BruteForce.instance.PastFrameLookup >= 0 ? RestrictionSystem.RestrictionManager.instance.MotionWorks(LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame), GetMotionRestriction()) : false; }
-            RestrictionSystem.MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionSystem.RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.CurrentTestMotion - 1]; }
+            bool GetMotionFromInput() { return Frame - BruteForce.instance.PastFrameLookup >= 0 ? RestrictionManager.instance.MotionWorks(LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame), GetMotionRestriction()) : false; }
+            MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.CurrentTestMotion - 1]; }
         }
         void moveAll(SingleInfo info)
         {

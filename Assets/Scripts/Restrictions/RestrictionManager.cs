@@ -64,10 +64,11 @@ namespace RestrictionSystem
             {
                 if(Sides[i] == true)
                 {
+                    //List<CurrentLearn> TrueMotions = AllWorkingMotions(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i));
                     CurrentLearn TrueMotion = GetCurrentMotion(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i));
                     //CurrentLearn TrueMotion = GetCurrentMotion(MotionEditor.instance.display.GetFrameInfo(true), MotionEditor.instance.display.GetFrameInfo(false));
-                    for (int j = 0; j < RestrictionSettings.MotionRestrictions.Count; j++)
-                        ConditionManager.instance.PassValue(TrueMotion == (CurrentLearn)(j + 1), (CurrentLearn)(j + 1), (Side)i);
+                    for (int j = 1; j < RestrictionSettings.MotionRestrictions.Count + 1; j++)
+                        ConditionManager.instance.PassValue(TrueMotion == (CurrentLearn)j, (CurrentLearn)j, (Side)i);
                 }
             }
                 
@@ -89,6 +90,16 @@ namespace RestrictionSystem
             float MinWeightThreshold = restriction.WeightedValueThreshold * TotalWeight;
             return TotalWeightValue >= MinWeightThreshold;
         }
+        /*
+        public List<CurrentLearn> AllWorkingMotions(SingleInfo frame1, SingleInfo frame2)
+        {
+            List<CurrentLearn> MotionsReturn = new List<CurrentLearn>();
+            for (int i = 0; i < RestrictionSettings.MotionRestrictions.Count; i++)
+                if (MotionWorks(frame1, frame2, RestrictionSettings.MotionRestrictions[i]))
+                    MotionsReturn.Add((CurrentLearn)i);
+            return MotionsReturn;
+        }
+        */
         public CurrentLearn GetCurrentMotion(SingleInfo frame1, SingleInfo frame2)
         {
             List<bool> AllWorks = new List<bool>();

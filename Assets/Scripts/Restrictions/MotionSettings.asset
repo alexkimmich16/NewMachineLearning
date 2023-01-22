@@ -24,15 +24,15 @@ MonoBehaviour:
   Iteration: 2
   MotionRestrictions:
   - Motion: Fireball
-    WeightedValueThreshold: 0.67250246
+    WeightedValueThreshold: 0.67417634
     Restrictions:
     - Label: speed
       Active: 1
-      Weight: 0.008410186
+      Weight: 0.23448934
       restriction: 0
       CheckType: 0
       MaxSafe: 500
-      MinSafe: 4.2431927
+      MinSafe: 2.0875316
       MinFalloff: 0
       MaxFalloff: 0
       Offset: {x: 0, y: 0, z: 0}
@@ -43,10 +43,10 @@ MonoBehaviour:
       Value: 0.030020434
     - Label: hand straight
       Active: 1
-      Weight: 0.008410186
+      Weight: 0.23294929
       restriction: 1
       CheckType: 1
-      MaxSafe: 26.604448
+      MaxSafe: 26.447481
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -58,10 +58,10 @@ MonoBehaviour:
       Value: 74.87649
     - Label: headforwardvel
       Active: 1
-      Weight: 0.008410186
+      Weight: 0.23294929
       restriction: 1
       CheckType: 0
-      MaxSafe: 71.45013
+      MaxSafe: 71.17476
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -72,15 +72,15 @@ MonoBehaviour:
       ShouldDebug: 0
       Value: 42.27158
   - Motion: Flames
-    WeightedValueThreshold: 0.8
+    WeightedValueThreshold: 0.578125
     Restrictions:
     - Label: speed
       Active: 1
-      Weight: 1
+      Weight: 0.65930176
       restriction: 0
       CheckType: 0
-      MaxSafe: 53.32
-      MinSafe: 5.3
+      MaxSafe: 500
+      MinSafe: 3.896386
       MinFalloff: 0
       MaxFalloff: 0
       Offset: {x: 0, y: 0, z: 0}
@@ -89,27 +89,12 @@ MonoBehaviour:
       UseAxisList: 
       ShouldDebug: 0
       Value: 0.030020434
-    - Label: hand straight
-      Active: 1
-      Weight: 1
-      restriction: 1
-      CheckType: 1
-      MaxSafe: 50.6
-      MinSafe: 0
-      MinFalloff: 0
-      MaxFalloff: 0
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 1}
-      ExcludeHeight: 0
-      UseAxisList: 
-      ShouldDebug: 0
-      Value: 74.87649
     - Label: headforwardvel
       Active: 1
-      Weight: 1
+      Weight: 0.43273926
       restriction: 1
       CheckType: 0
-      MaxSafe: 50.6
+      MaxSafe: 61.5735
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -121,10 +106,10 @@ MonoBehaviour:
       Value: 57.747
     - Label: handfacehead (facehead)
       Active: 1
-      Weight: 0.5
+      Weight: 0.37854004
       restriction: 2
       CheckType: 0
-      MaxSafe: 25
+      MaxSafe: 0.0015020231
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -136,10 +121,10 @@ MonoBehaviour:
       Value: 41.549423
     - Label: handfacehead (flat)
       Active: 1
-      Weight: 0.5
+      Weight: 0.444458
       restriction: 2
       CheckType: 0
-      MaxSafe: 25
+      MaxSafe: 34.234283
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -150,14 +135,14 @@ MonoBehaviour:
       ShouldDebug: 1
       Value: 150.18097
   - Motion: FlameBlock
-    WeightedValueThreshold: 1
+    WeightedValueThreshold: 0.578125
     Restrictions:
     - Label: speed
       Active: 1
-      Weight: 1
+      Weight: 0.66711426
       restriction: 0
       CheckType: 0
-      MaxSafe: 2
+      MaxSafe: 0.38838768
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -169,10 +154,10 @@ MonoBehaviour:
       Value: 0.030020434
     - Label: handfacehead
       Active: 1
-      Weight: 1
+      Weight: 0.33898926
       restriction: 2
       CheckType: 0
-      MaxSafe: 50.3
+      MaxSafe: 2.554055
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -184,10 +169,10 @@ MonoBehaviour:
       Value: 41.549423
     - Label: not too far
       Active: 1
-      Weight: 1
+      Weight: 0.52648926
       restriction: 3
       CheckType: 0
-      MaxSafe: 0.34
+      MaxSafe: 0.20833331
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -199,10 +184,10 @@ MonoBehaviour:
       Value: 0.5216863
     - Label: Not Too High
       Active: 1
-      Weight: 1
+      Weight: 0.66711426
       restriction: 3
       CheckType: 0
-      MaxSafe: 0.15
+      MaxSafe: 0.072500005
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
@@ -214,11 +199,11 @@ MonoBehaviour:
       Value: 0.043186963
     - Label: Not Crossed
       Active: 1
-      Weight: 1
+      Weight: 0.47961426
       restriction: 4
       CheckType: 0
-      MaxSafe: 180
-      MinSafe: 0
+      MaxSafe: 0
+      MinSafe: -125.90856
       MinFalloff: 0
       MaxFalloff: 0
       Offset: {x: 0, y: 0, z: 0}

@@ -996,7 +996,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   MotionNum: 2
-  MotionType: 0
+  MotionType: 1
   Setting: 1
   Typing: 0
   input: {fileID: 1167088495}
@@ -1017,7 +1017,7 @@ MonoBehaviour:
   MaxMinEditing: 0
   SpeedChangePerSecond: 10
   SpeedMultiplier: 2
-  CurrentTestMotion: 1
+  CurrentTestMotion: 3
 --- !u!114 &253952445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3440,7 +3440,7 @@ MonoBehaviour:
   RightInfo: []
   LeftInfo: []
   MaxStoreInfo: 10
-  FramesAgo: 4
+  FramesAgo: 2
   TestMain:
   - {fileID: 8326458934115850842}
   - {fileID: 8326458933306811055}
@@ -3454,6 +3454,7 @@ MonoBehaviour:
   - {fileID: 1867183570734329135}
   - {fileID: 1867183570487954631}
   Cam: {fileID: 1867183570494687147}
+  UseSides: 0101
 --- !u!114 &944444323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3477,7 +3478,8 @@ MonoBehaviour:
     SerializationNodes: []
   motionGet: 1
   PastFrameLookup: 2
-  AllChange:
+  AllChangesList:
+  - Motion: Fireball
     ParentWeightThreshold:
       Max: 1
       Min: 0.4
@@ -3492,17 +3494,17 @@ MonoBehaviour:
       Min:
         Max: 20
         Min: 0
-        MiddleSteps: 6
+        MiddleSteps: 8
         CurrentStep: 0
       Weight:
         Max: 1
         Min: 0.5
-        MiddleSteps: 3
+        MiddleSteps: 7
         CurrentStep: 0
     - Max:
         Max: 90
         Min: 0
-        MiddleSteps: 10
+        MiddleSteps: 12
         CurrentStep: 0
       Min:
         Max: 0
@@ -3529,17 +3531,166 @@ MonoBehaviour:
         Min: 0.5
         MiddleSteps: 3
         CurrentStep: 0
+  - Motion: Flames
+    ParentWeightThreshold:
+      Max: 1
+      Min: 0.4
+      MiddleSteps: 5
+      CurrentStep: 0
+    Restrictions:
+    - Max:
+        Max: 500
+        Min: 500
+        MiddleSteps: 0
+        CurrentStep: 0
+      Min:
+        Max: 70
+        Min: 0
+        MiddleSteps: 6
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 3
+        CurrentStep: 0
+    - Max:
+        Max: 70
+        Min: 0
+        MiddleSteps: 3
+        CurrentStep: 0
+      Min:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 3
+        CurrentStep: 0
+    - Max:
+        Max: 50
+        Min: 0
+        MiddleSteps: 6
+        CurrentStep: 0
+      Min:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 3
+        CurrentStep: 0
+    - Max:
+        Max: 50
+        Min: 0
+        MiddleSteps: 6
+        CurrentStep: 0
+      Min:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 3
+        CurrentStep: 0
+  - Motion: FlameBlock
+    ParentWeightThreshold:
+      Max: 1
+      Min: 0.4
+      MiddleSteps: 3
+      CurrentStep: 0
+    Restrictions:
+    - Max:
+        Max: 20
+        Min: 0
+        MiddleSteps: 5
+        CurrentStep: 0
+      Min:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 3
+        CurrentStep: 0
+    - Max:
+        Max: 40
+        Min: 0
+        MiddleSteps: 5
+        CurrentStep: 0
+      Min:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 3
+        CurrentStep: 0
+    - Max:
+        Max: 0.5
+        Min: 0
+        MiddleSteps: 5
+        CurrentStep: 0
+      Min:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 3
+        CurrentStep: 0
+    - Max:
+        Max: 0.29
+        Min: 0
+        MiddleSteps: 3
+        CurrentStep: 0
+      Min:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 3
+        CurrentStep: 0
+    - Max:
+        Max: 0
+        Min: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Min:
+        Max: 180
+        Min: 0
+        MiddleSteps: 4
+        CurrentStep: 0
+      Weight:
+        Max: 1
+        Min: 0.5
+        MiddleSteps: 3
+        CurrentStep: 0
   BruteForceSettings:
-    Motion: Fireball
-    WeightedValueThreshold: 0.0006949938
+    Motion: Flames
+    WeightedValueThreshold: 0.8
     Restrictions:
     - Label: speed
       Active: 1
-      Weight: 0.000106073094
+      Weight: 1
       restriction: 0
       CheckType: 0
-      MaxSafe: 500
-      MinSafe: 3.905033
+      MaxSafe: 200
+      MinSafe: 5.3
       MinFalloff: 0
       MaxFalloff: 0
       Offset: {x: 0, y: 0, z: 0}
@@ -3548,45 +3699,60 @@ MonoBehaviour:
       UseAxisList: 
       ShouldDebug: 0
       Value: 0.030020434
-    - Label: hand straight
-      Active: 1
-      Weight: 0.0002418279
-      restriction: 1
-      CheckType: 1
-      MaxSafe: 20.885164
-      MinSafe: 0
-      MinFalloff: 0
-      MaxFalloff: 0
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 1}
-      ExcludeHeight: 0
-      UseAxisList: 
-      ShouldDebug: 0
-      Value: 74.87649
     - Label: headforwardvel
       Active: 1
-      Weight: 0.17966661
+      Weight: 1
       restriction: 1
       CheckType: 0
-      MaxSafe: 0.0062289387
+      MaxSafe: 50.6
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
       Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 1}
+      Direction: {x: -1, y: 0, z: 0}
       ExcludeHeight: 0
       UseAxisList: 
       ShouldDebug: 0
-      Value: 42.27158
+      Value: 57.747
+    - Label: handfacehead (facehead)
+      Active: 1
+      Weight: 0.5
+      restriction: 2
+      CheckType: 0
+      MaxSafe: 25
+      MinSafe: 0
+      MinFalloff: 0
+      MaxFalloff: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: -1, y: 0, z: 0}
+      ExcludeHeight: 1
+      UseAxisList: 000000000100000002000000
+      ShouldDebug: 0
+      Value: 41.549423
+    - Label: handfacehead (flat)
+      Active: 1
+      Weight: 0.5
+      restriction: 2
+      CheckType: 0
+      MaxSafe: 25
+      MinSafe: 0
+      MinFalloff: 0
+      MaxFalloff: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 1, z: 0}
+      ExcludeHeight: 1
+      UseAxisList: 000000000100000002000000
+      ShouldDebug: 1
+      Value: 150.18097
   FrameInfo: []
-  MaxFrames: 1428000
+  MaxFrames: 1093500
   BatchSize: 1
   MaxGroup: 1000000
   ShouldDebug: 0
   FramesToCaptureDebug: 10648
   Test1: 0
   Test2: 0
-  TotalFrameCount: 1428000
+  TotalFrameCount: 1093500
   Values: 
   FloatValues: 
   UseAllMotions: 1
@@ -3595,8 +3761,9 @@ MonoBehaviour:
   MiddleStepCounts: 
   ReInput: 0
   LockValues: 1
-  Sequences: 25
+  Sequences: 1
   Confidence: 0.75
+  StopAdjustingPrecision: 0.05
 --- !u!114 &944444324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3618,17 +3785,18 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  RestrictionSettings: {fileID: 11400000, guid: 76ee955c20c73154b977ecc314c5bbe4, type: 2}
   MotionConditions:
-  - Motion: Fireball
+  - Motion: fireball
     CurrentStage: 0000000000000000
-    ResetOnMax: 0
+    ResetOnMax: 1
     WaitingForFalse: 0000
     ConditionLists:
-    - Label: Warmup
+    - Label: ParticleTrigger
       SingleConditions:
-      - Label: FireDis
+      - Label: dist from start
         condition: 1
-        Amount: 0.05
+        Amount: 0.06
         restriction:
           Label: 
           Active: 0
@@ -3655,19 +3823,19 @@ MonoBehaviour:
         Value:
         - 0
         - 0
-    - Label: Cast
+    - Label: Shoot
       SingleConditions:
-      - Label: Cast
+      - Label: dist from head
         condition: 2
         Amount: 0
         restriction:
-          Label: DistFromHead
+          Label: dist from head
           Active: 1
           Weight: 1
           restriction: 3
           CheckType: 0
           MaxSafe: 1000
-          MinSafe: 0.3
+          MinSafe: 0.21
           MinFalloff: 0
           MaxFalloff: 0
           Offset: {x: 0, y: 0, z: 0}
@@ -3686,140 +3854,16 @@ MonoBehaviour:
         Value:
         - 0
         - 0
-  - Motion: Flames
+  - Motion: flames
     CurrentStage: 0000000000000000
     ResetOnMax: 0
     WaitingForFalse: 0000
-    ConditionLists:
-    - Label: Warmup
-      SingleConditions:
-      - Label: FireDis
-        condition: 1
-        Amount: 0.05
-        restriction:
-          Label: 
-          Active: 0
-          Weight: 0
-          restriction: 0
-          CheckType: 0
-          MaxSafe: 0
-          MinSafe: 0
-          MinFalloff: 0
-          MaxFalloff: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          ExcludeHeight: 0
-          UseAxisList: 
-          ShouldDebug: 0
-          Value: 0
-        LastState: 0000
-        StartTime:
-        - 0
-        - 0
-        StartPos:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        Value:
-        - 0
-        - 0
-    - Label: Cast
-      SingleConditions:
-      - Label: Cast
-        condition: 2
-        Amount: 0
-        restriction:
-          Label: DistFromHead
-          Active: 1
-          Weight: 1
-          restriction: 3
-          CheckType: 0
-          MaxSafe: 1000
-          MinSafe: 0.3
-          MinFalloff: 0
-          MaxFalloff: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          ExcludeHeight: 0
-          UseAxisList: 000000000100000002000000
-          ShouldDebug: 0
-          Value: 0
-        LastState: 0000
-        StartTime:
-        - 0
-        - 0
-        StartPos:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        Value:
-        - 0
-        - 0
-  - Motion: FlameBlock
+    ConditionLists: []
+  - Motion: flames
     CurrentStage: 0000000000000000
     ResetOnMax: 0
     WaitingForFalse: 0000
-    ConditionLists:
-    - Label: Warmup
-      SingleConditions:
-      - Label: FireDis
-        condition: 1
-        Amount: 0.05
-        restriction:
-          Label: 
-          Active: 0
-          Weight: 0
-          restriction: 0
-          CheckType: 0
-          MaxSafe: 0
-          MinSafe: 0
-          MinFalloff: 0
-          MaxFalloff: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          ExcludeHeight: 0
-          UseAxisList: 
-          ShouldDebug: 0
-          Value: 0
-        LastState: 0000
-        StartTime:
-        - 0
-        - 0
-        StartPos:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        Value:
-        - 0
-        - 0
-    - Label: Cast
-      SingleConditions:
-      - Label: Cast
-        condition: 2
-        Amount: 0
-        restriction:
-          Label: DistFromHead
-          Active: 1
-          Weight: 1
-          restriction: 3
-          CheckType: 0
-          MaxSafe: 1000
-          MinSafe: 0.3
-          MinFalloff: 0
-          MaxFalloff: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          ExcludeHeight: 0
-          UseAxisList: 000000000100000002000000
-          ShouldDebug: 0
-          Value: 0
-        LastState: 0000
-        StartTime:
-        - 0
-        - 0
-        StartPos:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        Value:
-        - 0
-        - 0
+    ConditionLists: []
 --- !u!1 &960757780
 GameObject:
   m_ObjectHideFlags: 0

@@ -39,10 +39,12 @@ namespace RestrictionSystem
         private void Start()
         {
             ConditionManager.instance.MotionConditions[0].OnNewState += MotionDone;
+            ConditionManager.instance.MotionConditions[1].OnNewState += MotionDone;
+            ConditionManager.instance.MotionConditions[2].OnNewState += MotionDone;
         }
         public void MotionDone(Side side, bool NewState, int Index)
         {
-            if(NewState == true)
+            //if(NewState == true)
                 Debug.Log("NewState: " + NewState + "  Index: " + Index);
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using System;
+
 //using Unity.Mathematics;
 
 namespace RestrictionSystem
@@ -28,6 +29,7 @@ namespace RestrictionSystem
 
         public static ConditionManager instance;
         private void Awake() { instance = this; }
+        public MotionSettings RestrictionSettings;
         [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Motion")] public List<MotionConditionInfo> MotionConditions;
 
         public static bool TimeWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side)
@@ -66,7 +68,7 @@ namespace RestrictionSystem
         }
         public void PassValue(bool State, CurrentLearn Motion, Side side)
         {
-            //Debug.Log((int)Motion - 1);
+            //Debug.Log("Pass: " + State);
             MotionConditions[(int)Motion - 1].PassValueToAll(State, side);
         }
     }
@@ -94,45 +96,68 @@ namespace RestrictionSystem
         public void ResetAll(Side side)
         {
             //Debug.Log("")
-            for (int i = 0; i < ConditionLists[CurrentStage[(int)side]].SingleConditions.Count; i++)
+            if (ConditionLists.Count != 0)
             {
-                SingleConditionInfo info = ConditionLists[CurrentStage[(int)side]].SingleConditions[i];
-                if (info.LastState[(int)side] == true)
-                    OnNewState(Side.right, false, i);
-                info.Value[(int)side] = 0f;
-                info.LastState[(int)side] = false;
+                for (int i = 0; i < CurrentStage[(int)side]; i++)
+                {
+                    OnNewState?.Invoke(Side.right, false, i);
+                    for (int j = 0; j < ConditionLists[i].SingleConditions.Count; j++)//all conditions that have passed
+                    {
+                        SingleConditionInfo info = ConditionLists[i].SingleConditions[j];
+                        //if (info.LastState[(int)side] == true)
+
+                        info.Value[(int)side] = 0f;
+                        info.LastState[(int)side] = false;
+                    }
+                }
             }
+            else if(WaitingForFalse[(int)side] == true)
+            {
+                OnNewState?.Invoke(Side.right, false, 0);
+            }
+            WaitingForFalse[(int)side] = false;
+            //Debug.Log("CurrentStage: " + CurrentStage[(int)side]);
+
+            CurrentStage[(int)side] = 0;
         }
 
         public void PassValueToAll(bool State, Side side)
         {
-            //Debug.Log("pass");
-            if(State == false)
+            if(State == false || WaitingForFalse[(int)side] == true)
             {
-                WaitingForFalse[(int)side] = false;
-                ResetAll(side);
-                CurrentStage[(int)side] = 0;
+                //if(WaitingForFalse[(int)side] == true)
+
+                
+                if(State == false)
+                {
+                    ResetAll(side);
+                }
+                    
+                //Debug.Log("trigger1");
                 return;
             }
 
-            if (WaitingForFalse[(int)side])
-                return;
 
             bool AllWorkingSoFar = true;
-            for (int i = 0; i < ConditionLists[CurrentStage[(int)side]].SingleConditions.Count; i++)
+            if(ConditionLists.Count != 0)
             {
-                SingleConditionInfo info = ConditionLists[CurrentStage[(int)side]].SingleConditions[i];
-                ConditionWorksAndAdd WorkingConditionAndUpdate = ConditionManager.ConditionDictionary[info.condition];
+                for (int i = 0; i < ConditionLists[CurrentStage[(int)side]].SingleConditions.Count; i++)
+                {
+                    SingleConditionInfo info = ConditionLists[CurrentStage[(int)side]].SingleConditions[i];
+                    ConditionWorksAndAdd WorkingConditionAndUpdate = ConditionManager.ConditionDictionary[info.condition];
 
-                //SingleInfo CurrentFrame = MotionEditor.instance.display.GetFrameInfo(false);
-                //SingleInfo PastFrame = MotionEditor.instance.display.GetFrameInfo(true);
+                    //SingleInfo CurrentFrame = MotionEditor.instance.display.GetFrameInfo(false);
+                    //SingleInfo PastFrame = MotionEditor.instance.display.GetFrameInfo(true);
 
-                bool Working = WorkingConditionAndUpdate.Invoke(info, PastFrameRecorder.instance.GetControllerInfo(side), PastFrameRecorder.instance.PastFrame(side), State, side); ///velocity error here
-                if (Working == false)
-                    AllWorkingSoFar = false;
-                info.LastState[(int)side] = State;
-                //Debug.Log("once: " + Working);
+                    bool Working = WorkingConditionAndUpdate.Invoke(info, PastFrameRecorder.instance.GetControllerInfo(side), PastFrameRecorder.instance.PastFrame(side), State, side); ///velocity error here
+                    //bool Working = WorkingConditionAndUpdate.Invoke(info, MotionEditor.instance.display.GetFrameInfo(false), MotionEditor.instance.display.GetFrameInfo(true), State, side); ///velocity error here
+                    if (Working == false)
+                        AllWorkingSoFar = false;
+                    info.LastState[(int)side] = State;
+                    //Debug.Log("once: " + Working);
+                }
             }
+            
 
             if (AllWorkingSoFar) //ready to move to next
             {
@@ -141,26 +166,20 @@ namespace RestrictionSystem
                 if (CurrentStage[(int)side] < ConditionLists.Count - 1)
                 {
                     CurrentStage[(int)side] += 1;
-                    //reset next
                 }
                 else
                 {
+                    
                     if (ResetOnMax)// potentially problematic
                     {
-                        WaitingForFalse[(int)side] = true;
                         ResetAll(side);
-                        CurrentStage[(int)side] = 0;
                     }
                     else
                     {
-
+                        WaitingForFalse[(int)side] = true;
                     }
-                    
                 }
-                     
-
             }
-
         }
     }
     [Serializable]
@@ -176,10 +195,10 @@ namespace RestrictionSystem
         [FoldoutGroup("Values")] public List<bool> LastState = new List<bool>() { false, false};
         [FoldoutGroup("Values")] public List<float> StartTime = new List<float>() { 0f, 0f };
         [FoldoutGroup("Values")] public List<Vector3> StartPos = new List<Vector3>() { Vector3.zero, Vector3.zero };
-
+        [FoldoutGroup("Values")] public List<float> Value = new List<float>() { 0, 0 };
         private bool HasAmount() { return condition == Condition.Distance || condition == Condition.Time; }
 
-        [FoldoutGroup("Values")] public List<float> Value = new List<float>() { 0, 0 };
+        
     }
 }
 

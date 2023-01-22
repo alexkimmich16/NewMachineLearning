@@ -15,7 +15,7 @@ public class AllMotions : ScriptableObject
     public RestrictionSystem.SingleInfo GetRestrictionInfoAtIndex(int Motion, int Frame)
     {
         SingleInfo info = Motions[Motion].Infos[Frame];
-        return new RestrictionSystem.SingleInfo(info.HandPos, info.HandRot, info.HeadPos, info.HeadRot);
+        return new RestrictionSystem.SingleInfo(info.HandPos, info.HandRot, info.HeadPos, info.HeadRot, Frame / 60f);
     }
     public List<Motion> Random()
     {

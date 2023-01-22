@@ -55,26 +55,20 @@ namespace RestrictionSystem
             {Restriction.HandToHeadAngle, HandToHeadAngle},
         };
 
-        public delegate void OutPutMotion(CurrentLearn motion);
-        public event OutPutMotion NewFrameMotionRight;
-        public event OutPutMotion NewFrameMotionLeft;
-
         
-        public void TriggerFrameEvents()
+        public void TriggerFrameEvents(List<bool> Sides)
         {
             PastFrameRecorder PR = PastFrameRecorder.instance;
-            /*
-            if (NewFrameMotionRight != null)
-                NewFrameMotionRight(GetCurrentMotion(PR.PastFrame(Side.right), PastFrameRecorder.instance.GetControllerInfo(Side.right)));
 
-            if (NewFrameMotionLeft != null)
-                NewFrameMotionLeft(GetCurrentMotion(PR.PastFrame(Side.left), PastFrameRecorder.instance.GetControllerInfo(Side.left)));
-            */
             for (int i = 0; i < 2; i++)
             {
-                CurrentLearn TrueMotion = GetCurrentMotion(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i));
-                for (int j = 0; j < RestrictionSettings.MotionRestrictions.Count; j++)
-                    ConditionManager.instance.PassValue(TrueMotion == (CurrentLearn)(j + 1), (CurrentLearn)(j + 1), (Side)i);
+                if(Sides[i] == true)
+                {
+                    CurrentLearn TrueMotion = GetCurrentMotion(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i));
+                    //CurrentLearn TrueMotion = GetCurrentMotion(MotionEditor.instance.display.GetFrameInfo(true), MotionEditor.instance.display.GetFrameInfo(false));
+                    for (int j = 0; j < RestrictionSettings.MotionRestrictions.Count; j++)
+                        ConditionManager.instance.PassValue(TrueMotion == (CurrentLearn)(j + 1), (CurrentLearn)(j + 1), (Side)i);
+                }
             }
                 
         }
@@ -128,7 +122,7 @@ namespace RestrictionSystem
         public static float VelocityMagnitude(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
             float Distance = Vector3.Distance(frame1.HandPos, frame2.HandPos);
-            float Speed = Distance / (1f / 60f);
+            float Speed = Distance / (frame2.SpawnTime - frame1.SpawnTime);
             return Speed;
         }
         public static float VelocityDirection(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
@@ -137,6 +131,7 @@ namespace RestrictionSystem
 
             Vector3 ForwardInput = restriction.CheckType == VelocityType.Head ? frame2.HeadRot : frame2.HandRot;
             Vector3 forwardDir = (Quaternion.Euler(ForwardInput + restriction.Offset) * restriction.Direction);
+
             //if(restriction.ShouldDebug)
                 //Debug.DrawLine(frame2.HandPos, frame2.HandPos + (forwardDir * DebugRestrictions.instance.LineLength), restriction.CheckType == VelocityType.Head ? Color.yellow : Color.red);
 

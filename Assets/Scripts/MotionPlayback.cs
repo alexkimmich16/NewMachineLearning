@@ -35,9 +35,9 @@ public class MotionPlayback : MonoBehaviour
 
     public bool OneInterprolate;
     public List<SingleInfo> interpolating;
-
+    public bool OldFrameWorks() { return Frame - PastFrameRecorder.instance.FramesAgo >= 0; }
     public RestrictionSystem.SingleInfo GetFrameInfo(bool Old) { return LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].GetRestrictionInfoAtIndex(MotionEditor.instance.MotionNum, Old ? MinFramesAgo() : Frame); }
-    public int MinFramesAgo() { return Frame - PastFrameRecorder.instance.FramesAgo > 0 ? Frame - PastFrameRecorder.instance.FramesAgo : 0; }
+    public int MinFramesAgo() { return Frame - PastFrameRecorder.instance.FramesAgo >= 0 ? Frame - PastFrameRecorder.instance.FramesAgo : 0; }
 
     void Update()
     {
@@ -66,9 +66,9 @@ public class MotionPlayback : MonoBehaviour
             bool State = ME.Setting == EditSettings.Editing ? LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].AtFrameState(Frame) : GetMotionFromInput();
             handToChange.material = LM.FalseTrue[State ? 1 : 0];
 
-            if(ME.Setting == EditSettings.DisplayingBrute)
+            if(ME.Setting == EditSettings.DisplayingBrute || ME.Setting == EditSettings.DisplayingMotion)
             {
-                ConditionManager.instance.PassValue(State, ME.CurrentTestMotion, Side.right);
+                //ConditionManager.instance.PassValue(State, ME.CurrentTestMotion, Side.right);
             }
 
             SingleInfo info = LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].Infos[Frame];

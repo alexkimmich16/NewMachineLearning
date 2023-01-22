@@ -20,6 +20,8 @@ namespace RestrictionSystem
 
         public List<Transform> PlayerHands;
         public Transform Cam;
+
+        public List<bool> UseSides;
         public SingleInfo GetControllerInfo(Side side)
         {
             ResetStats();
@@ -79,8 +81,8 @@ namespace RestrictionSystem
                     LeftInfo.RemoveAt(0);
 
                 
-                ///if(RightInfo.Count > FramesAgo)
-                    ///RestrictionManager.instance.TriggerFrameEvents();
+                if(RightInfo.Count > FramesAgo)
+                    RestrictionManager.instance.TriggerFrameEvents(UseSides);
 
                 yield return new WaitForSeconds(Interval);
             }
@@ -91,8 +93,18 @@ namespace RestrictionSystem
     public class SingleInfo
     {
         public Vector3 HeadPos, HeadRot, HandPos, HandRot;
+        public float SpawnTime;
         public SingleInfo(Vector3 HandPosStat, Vector3 HandRotStat, Vector3 HeadPosStat, Vector3 HeadRotStat)
         {
+            SpawnTime = Time.timeSinceLevelLoad;
+            HeadPos = HeadPosStat;
+            HeadRot = HeadRotStat;
+            HandPos = HandPosStat;
+            HandRot = HandRotStat;
+        }
+        public SingleInfo(Vector3 HandPosStat, Vector3 HandRotStat, Vector3 HeadPosStat, Vector3 HeadRotStat, float SetTime)
+        {
+            SpawnTime = SetTime;
             HeadPos = HeadPosStat;
             HeadRot = HeadRotStat;
             HandPos = HandPosStat;

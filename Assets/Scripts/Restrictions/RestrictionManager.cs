@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using System;
-
+using System.Linq;
 namespace RestrictionSystem
 {
     public enum Restriction
@@ -54,8 +54,6 @@ namespace RestrictionSystem
             {Restriction.HandHeadDistance, HandHeadDistance},
             {Restriction.HandToHeadAngle, HandToHeadAngle},
         };
-
-        
         public void TriggerFrameEvents(List<bool> Sides)
         {
             PastFrameRecorder PR = PastFrameRecorder.instance;
@@ -100,6 +98,28 @@ namespace RestrictionSystem
             return MotionsReturn;
         }
         */
+        public List<CurrentLearn> AllWorkingMotions(SingleInfo frame1, SingleInfo frame2)
+        {
+            return Enum.GetValues(typeof(CurrentLearn)).Cast<CurrentLearn>().Where(t => MotionWorks(frame1, frame2, RestrictionSettings.MotionRestrictions[(int)t])).Select(t => (t + 1)).ToList();
+            /*
+            List<CurrentLearn> AllWorks = new List<CurrentLearn>();
+
+            for (int i = 0; i < RestrictionSettings.MotionRestrictions.Count; i++) //check each motion (3)
+            {
+                AllWorks.Add(MotionWorks(frame1, frame2, RestrictionSettings.MotionRestrictions[i]));
+            }
+
+            List<int> WorkingList = new List<int>();
+            for (int i = 0; i < AllWorks.Count; i++)
+                if (AllWorks[i] == true)
+                    WorkingList.Add(i + 1);
+
+            if (WorkingList.Count == 1)
+                return (CurrentLearn)WorkingList[0];
+
+            return CurrentLearn.Nothing;
+            */
+        }
         public CurrentLearn GetCurrentMotion(SingleInfo frame1, SingleInfo frame2)
         {
             List<bool> AllWorks = new List<bool>();

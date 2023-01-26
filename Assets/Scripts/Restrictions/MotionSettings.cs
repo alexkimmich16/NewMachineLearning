@@ -45,6 +45,7 @@ namespace RestrictionSystem
             this.Restrictions = new List<SingleRestriction>(All.Restrictions);
         }
         public string Motion;
+        //public CurrentLearn Motion;
 
         [Range(0f, 1f)] public float WeightedValueThreshold;
 

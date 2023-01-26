@@ -35,6 +35,8 @@ public class MotionPlayback : MonoBehaviour
 
     public bool OneInterprolate;
     public List<SingleInfo> interpolating;
+
+    public List<CurrentLearn> CurrentMotions;
     public bool OldFrameWorks() { return Frame - PastFrameRecorder.instance.FramesAgo >= 0; }
     public RestrictionSystem.SingleInfo GetFrameInfo(bool Old) { return LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].GetRestrictionInfoAtIndex(MotionEditor.instance.MotionNum, Old ? MinFramesAgo() : Frame); }
     public int MinFramesAgo() { return Frame - PastFrameRecorder.instance.FramesAgo >= 0 ? Frame - PastFrameRecorder.instance.FramesAgo : 0; }
@@ -62,7 +64,7 @@ public class MotionPlayback : MonoBehaviour
             MotionEditor ME = MotionEditor.instance;
             if (Frame >= LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].Infos.Count)
                 Frame = 0;
-
+            
             bool State = ME.Setting == EditSettings.Editing ? LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].AtFrameState(Frame) : GetMotionFromInput();
             handToChange.material = LM.FalseTrue[State ? 1 : 0];
 

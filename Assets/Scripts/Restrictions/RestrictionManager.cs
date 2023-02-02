@@ -54,25 +54,20 @@ namespace RestrictionSystem
             {Restriction.HandHeadDistance, HandHeadDistance},
             {Restriction.HandToHeadAngle, HandToHeadAngle},
         };
+        public MotionSettings RestrictionSettings;
+
         public void TriggerFrameEvents(List<bool> Sides)
         {
             PastFrameRecorder PR = PastFrameRecorder.instance;
-
             for (int i = 0; i < 2; i++)
             {
-                if(Sides[i] == true)
-                {
-                    //List<CurrentLearn> TrueMotions = AllWorkingMotions(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i));
-                    CurrentLearn TrueMotion = GetCurrentMotion(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i));
-                    //CurrentLearn TrueMotion = GetCurrentMotion(MotionEditor.instance.display.GetFrameInfo(true), MotionEditor.instance.display.GetFrameInfo(false));
+                List<CurrentLearn> WorkingMotions = AllWorkingMotions(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i));
+                if (Sides[i] == true)
                     for (int j = 1; j < RestrictionSettings.MotionRestrictions.Count + 1; j++)
-                        ConditionManager.instance.PassValue(TrueMotion == (CurrentLearn)j, (CurrentLearn)j, (Side)i);
-                }
+                        ConditionManager.instance.PassValue(WorkingMotions.Contains((CurrentLearn)j), (CurrentLearn)j, (Side)i);
             }
-                
         }
 
-        public MotionSettings RestrictionSettings;
         public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, MotionRestriction restriction)
         {
             float TotalWeightValue = 0f;
@@ -88,66 +83,7 @@ namespace RestrictionSystem
             float MinWeightThreshold = restriction.WeightedValueThreshold * TotalWeight;
             return TotalWeightValue >= MinWeightThreshold;
         }
-        /*
-        public List<CurrentLearn> AllWorkingMotions(SingleInfo frame1, SingleInfo frame2)
-        {
-            List<CurrentLearn> MotionsReturn = new List<CurrentLearn>();
-            for (int i = 0; i < RestrictionSettings.MotionRestrictions.Count; i++)
-                if (MotionWorks(frame1, frame2, RestrictionSettings.MotionRestrictions[i]))
-                    MotionsReturn.Add((CurrentLearn)i);
-            return MotionsReturn;
-        }
-        */
-        public List<CurrentLearn> AllWorkingMotions(SingleInfo frame1, SingleInfo frame2)
-        {
-            return Enum.GetValues(typeof(CurrentLearn)).Cast<CurrentLearn>().Where(t => MotionWorks(frame1, frame2, RestrictionSettings.MotionRestrictions[(int)t])).Select(t => (t + 1)).ToList();
-            /*
-            List<CurrentLearn> AllWorks = new List<CurrentLearn>();
-
-            for (int i = 0; i < RestrictionSettings.MotionRestrictions.Count; i++) //check each motion (3)
-            {
-                AllWorks.Add(MotionWorks(frame1, frame2, RestrictionSettings.MotionRestrictions[i]));
-            }
-
-            List<int> WorkingList = new List<int>();
-            for (int i = 0; i < AllWorks.Count; i++)
-                if (AllWorks[i] == true)
-                    WorkingList.Add(i + 1);
-
-            if (WorkingList.Count == 1)
-                return (CurrentLearn)WorkingList[0];
-
-            return CurrentLearn.Nothing;
-            */
-        }
-        public CurrentLearn GetCurrentMotion(SingleInfo frame1, SingleInfo frame2)
-        {
-            List<bool> AllWorks = new List<bool>();
-            
-            for (int i = 0; i < RestrictionSettings.MotionRestrictions.Count; i++) //check each motion (3)
-            {
-                AllWorks.Add(MotionWorks(frame1, frame2, RestrictionSettings.MotionRestrictions[i]));
-            }
-
-            List<int> WorkingList = new List<int>();
-            for (int i = 0; i < AllWorks.Count; i++)
-                if (AllWorks[i] == true)
-                    WorkingList.Add(i + 1);
-
-            if (WorkingList.Count == 1)
-                return (CurrentLearn)WorkingList[0];
-            else if(WorkingList.Count > 1)
-            {
-                string ErrorString = "Conflict between: ";
-                for (int i = 0; i < WorkingList.Count; i++)
-                {
-                    ErrorString = ErrorString + ((CurrentLearn)WorkingList[i]).ToString() + ", ";
-                }
-                Debug.LogError(ErrorString);
-            }
-
-            return CurrentLearn.Nothing;
-        }
+        public List<CurrentLearn> AllWorkingMotions(SingleInfo frame1, SingleInfo frame2) { return Enumerable.Range(0, RestrictionSettings.MotionRestrictions.Count).Where(t => MotionWorks(frame1, frame2, RestrictionSettings.MotionRestrictions[t])).Select(t => (CurrentLearn)(t + 1)).ToList(); }
 
         #region Values
         public static float VelocityMagnitude(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
@@ -228,6 +164,48 @@ namespace RestrictionSystem
         }
         #endregion
     }
-    
+    /*
+     using System;
+
+class GradientDescentExample
+{
+    static double Sigmoid(double x)
+    {
+        return 1 / (1 + Math.Exp(-x));
+    }
+
+    static double Loss(double yPred, double yTrue)
+    {
+        return -(yTrue * Math.Log(yPred) + (1 - yTrue) * Math.Log(1 - yPred));
+    }
+
+    static double[] Gradient(double[][] X, double[] yTrue, double[] yPred)
+    {
+        int m = yTrue.Length;
+        int n = X[0].Length;
+        double[] gradient = new double[n];
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+                gradient[i] += (yPred[j] - yTrue[j]) * X[j][i];
+            }
+            gradient[i] /= m;
+        }
+
+        return gradient;
+    }
+
+    static double[] Predict(double[][] X, double[] W)
+    {
+        int m = X.Length;
+        int n = X[0].Length;
+        double[] yPred = new double[m];
+
+        for (int i = 0; i < m;
+
+     
+    */
 }
 

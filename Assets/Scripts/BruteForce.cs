@@ -20,7 +20,7 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("BruteForce")] public List<SingleFrameRestrictionInfo> FrameInfo;
 
     [FoldoutGroup("BruteForce")] public long MaxFrames;
-    [FoldoutGroup("BruteForce")] public int BatchSize;
+    [FoldoutGroup("BruteForce")] private int BatchSize = 1;
     [FoldoutGroup("BruteForce")] public int MaxGroup;
     [FoldoutGroup("BruteForce")] public bool ShouldDebug;
     [FoldoutGroup("BruteForce"), ShowIf("ShouldDebug")] public int FramesToCaptureDebug;
@@ -44,8 +44,39 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("CustomCheck"), Range(0,1)] public float Confidence;
     [FoldoutGroup("CustomCheck")] public float StopAdjustingPrecision = 0.005f; //range at which stops
 
-    
+    /*
+    public float GetCorrectValueAt(MotionRestriction restrictions)
+    {
+        float Value = 0f;
+        SingleBruteForce BruteForceRun = new SingleBruteForce
+        {
+            NativeSingles = GetAllChangeStatsInput(),
+            States = GetStatesStat(),
+            StartAt = StartAt,
+            FlatRawValues = GetFlatRawStat(),
+            AllValues = new NativeArray<float>(RunCount, Allocator.TempJob),
+            WeightedMiddleSteps = GetMiddleValueList(),
+        };
 
+        JobHandle jobHandle = BruteForceRun.Schedule(1, BatchSize);
+        jobHandle.Complete();
+        //Debug.Log("Average: " + (Value / CorrectOnTrue.Count));
+
+        Highest = 0;
+        Index = 0;
+        for (int i = 0; i < BruteForceRun.AllValues.Length; i++)
+        {
+            if (BruteForceRun.AllValues[i] > Highest)
+            {
+                Highest = BruteForceRun.AllValues[i];
+                Index = i;
+            }
+        }
+
+        BruteForceRun.AllValues.Dispose();
+        return Value;
+    }
+    */
     //, FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Low, OptimizeFor = OptimizeFor.FastCompilation
     [BurstCompile(CompileSynchronously = true)]
     private struct SingleBruteForce : IJobParallelFor

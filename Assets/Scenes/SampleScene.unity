@@ -3454,7 +3454,7 @@ MonoBehaviour:
   - {fileID: 1867183570734329135}
   - {fileID: 1867183570487954631}
   Cam: {fileID: 1867183570494687147}
-  UseSides: 0101
+  UseSides: 0000
 --- !u!114 &944444323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6557,6 +6557,7 @@ MonoBehaviour:
   handToChange: {fileID: 137539835}
   OneInterprolate: 0
   interpolating: []
+  CurrentMotions: 
 --- !u!1 &1893873062
 GameObject:
   m_ObjectHideFlags: 0

@@ -45,7 +45,7 @@ public class SpreadSheet : SerializedMonoBehaviour
         tw.Close();
     }
     
-    public void PrintRestrictionStats(CurrentLearn motion, List<SingleFrameRestrictionInfo> info)
+    public void PrintRestrictionStats(CurrentLearn motion, List<SingleFrameRestrictionValues> info)
     {
         TextWriter tw = new StreamWriter(RestrictionLocation(), false);
         string LineWrite = "";

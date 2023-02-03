@@ -24,191 +24,176 @@ MonoBehaviour:
   Iteration: 2
   MotionRestrictions:
   - Motion: Fireball
-    WeightedValueThreshold: 0.67417634
     Restrictions:
     - Label: speed
       Active: 1
-      Weight: 0.23448934
       restriction: 0
-      CheckType: 0
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
       MaxSafe: 500
-      MinSafe: 2.0875316
-      MinFalloff: 0
-      MaxFalloff: 0
+      MinSafe: 2.0114162
+      MinFalloff: -56.81556
+      MaxFalloff: 500
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
-      ExcludeHeight: 0
-      UseAxisList: 
+      UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0.030020434
     - Label: hand straight
       Active: 1
-      Weight: 0.23294929
       restriction: 1
-      CheckType: 1
-      MaxSafe: 26.447481
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      MaxSafe: 23.671728
       MinSafe: 0
       MinFalloff: 0
-      MaxFalloff: 0
+      MaxFalloff: 28.968493
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
-      ExcludeHeight: 0
       UseAxisList: 
       ShouldDebug: 0
       Value: 74.87649
     - Label: headforwardvel
       Active: 1
-      Weight: 0.23294929
       restriction: 1
-      CheckType: 0
-      MaxSafe: 71.17476
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      MaxSafe: 1.4430879
       MinSafe: 0
       MinFalloff: 0
-      MaxFalloff: 0
+      MaxFalloff: 72.88449
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
-      ExcludeHeight: 0
       UseAxisList: 
       ShouldDebug: 0
       Value: 42.27158
   - Motion: Flames
-    WeightedValueThreshold: 0.578125
     Restrictions:
-    - Label: speed
+    - Label: YSpeed
       Active: 1
-      Weight: 0.65930176
       restriction: 0
-      CheckType: 0
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
       MaxSafe: 500
-      MinSafe: 3.896386
-      MinFalloff: 0
-      MaxFalloff: 0
+      MinSafe: 15.448305
+      MinFalloff: 13.07209
+      MaxFalloff: 500
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
-      ExcludeHeight: 0
-      UseAxisList: 
+      UseAxisList: 01000000
       ShouldDebug: 0
       Value: 0.030020434
-    - Label: headforwardvel
+    - Label: VerticalSpeed
       Active: 1
-      Weight: 0.43273926
-      restriction: 1
-      CheckType: 0
-      MaxSafe: 61.5735
+      restriction: 0
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      MaxSafe: 31.790813
+      MinSafe: 31.790813
+      MinFalloff: 5.012211
+      MaxFalloff: 31.790813
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 0000000002000000
+      ShouldDebug: 0
+      Value: 0.030020434
+    - Label: HandEdgeFaceGround
+      Active: 1
+      restriction: 2
+      checkType: 2
+      OtherDirection: {x: 0, y: -1, z: 0}
+      MaxSafe: 0.00020823149
       MinSafe: 0
       MinFalloff: 0
-      MaxFalloff: 0
+      MaxFalloff: 53.506886
       Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: -1, y: 0, z: 0}
-      ExcludeHeight: 0
-      UseAxisList: 
+      Direction: {x: 0, y: -1, z: 0}
+      UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 57.747
-    - Label: handfacehead (facehead)
+    - Label: NearForwardDirection
       Active: 1
-      Weight: 0.37854004
-      restriction: 2
-      CheckType: 0
-      MaxSafe: 0.0015020231
+      restriction: 1
+      checkType: 1
+      OtherDirection: {x: 0, y: 0, z: 0}
+      MaxSafe: 0
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 0
       Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: -1, y: 0, z: 0}
-      ExcludeHeight: 1
-      UseAxisList: 000000000100000002000000
+      Direction: {x: 0, y: 1, z: 1}
+      UseAxisList: 0000000002000000
       ShouldDebug: 0
-      Value: 41.549423
-    - Label: handfacehead (flat)
-      Active: 1
-      Weight: 0.444458
-      restriction: 2
-      CheckType: 0
-      MaxSafe: 34.234283
-      MinSafe: 0
-      MinFalloff: 0
-      MaxFalloff: 0
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 1, z: 0}
-      ExcludeHeight: 1
-      UseAxisList: 000000000100000002000000
-      ShouldDebug: 1
-      Value: 150.18097
+      Value: 0
   - Motion: FlameBlock
-    WeightedValueThreshold: 0.578125
     Restrictions:
     - Label: speed
       Active: 1
-      Weight: 0.66711426
       restriction: 0
-      CheckType: 0
-      MaxSafe: 0.38838768
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      MaxSafe: 0.23324853
       MinSafe: 0
       MinFalloff: 0
-      MaxFalloff: 0
+      MaxFalloff: 0.25942308
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
-      ExcludeHeight: 0
-      UseAxisList: 
+      UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0.030020434
     - Label: handfacehead
       Active: 1
-      Weight: 0.33898926
       restriction: 2
-      CheckType: 0
-      MaxSafe: 2.554055
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      MaxSafe: 15.355182
       MinSafe: 0
       MinFalloff: 0
-      MaxFalloff: 0
+      MaxFalloff: 15.682421
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: -1, y: 0, z: 0}
-      ExcludeHeight: 1
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 41.549423
     - Label: not too far
       Active: 1
-      Weight: 0.52648926
       restriction: 3
-      CheckType: 0
-      MaxSafe: 0.20833331
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      MaxSafe: 0.21582252
       MinSafe: 0
       MinFalloff: 0
-      MaxFalloff: 0
+      MaxFalloff: 0.21687959
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
-      ExcludeHeight: 0
       UseAxisList: 0000000002000000
       ShouldDebug: 0
       Value: 0.5216863
     - Label: Not Too High
       Active: 1
-      Weight: 0.66711426
       restriction: 3
-      CheckType: 0
-      MaxSafe: 0.072500005
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      MaxSafe: 0.07786472
       MinSafe: 0
       MinFalloff: 0
-      MaxFalloff: 0
+      MaxFalloff: 0.07786472
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
-      ExcludeHeight: 0
       UseAxisList: 01000000
       ShouldDebug: 0
       Value: 0.043186963
     - Label: Not Crossed
       Active: 1
-      Weight: 0.47961426
       restriction: 4
-      CheckType: 0
-      MaxSafe: 0
-      MinSafe: -125.90856
-      MinFalloff: 0
-      MaxFalloff: 0
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      MaxSafe: -24.99842
+      MinSafe: -58.331966
+      MinFalloff: -58.33228
+      MaxFalloff: -8.332271
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
-      ExcludeHeight: 0
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 13.547823

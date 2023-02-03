@@ -70,7 +70,7 @@ namespace RestrictionSystem
 
 
             if (debugType == DebugType.ThisDebugTest)
-                handToChange.material = Materials[RestrictionManager.instance.MotionWorks(frame1, frame2, Restrictions) ? 1 : 0]; //set hand
+                handToChange.material = Materials[RestrictionManager.MotionWorks(frame1, frame2, Restrictions) ? 1 : 0]; //set hand
             else if(debugType == DebugType.MotionSettings)
             {
                 ///CurrentLearn Motion = RestrictionManager.instance.GetCurrentMotion(frame1, frame2);
@@ -80,11 +80,9 @@ namespace RestrictionSystem
             else if(debugType == DebugType.OneMotionSetting)
             {
                 //
-                handToChange.material = Materials[RestrictionManager.instance.MotionWorks(frame1, frame2, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionTry - 1]) ? 1 : 0]; //set hand
+                handToChange.material = Materials[RestrictionManager.MotionWorks(frame1, frame2, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionTry - 1]) ? 1 : 0]; //set hand
                 //Debug.Log("Motion: " + Motion.ToString());
             }
-
-
         }
         /*
         public float GetVelocity(SingleInfo frame1, SingleInfo frame2) { return Vector3.Distance(frame1.HandPos, frame2.HandPos) / (1f / 60f); }

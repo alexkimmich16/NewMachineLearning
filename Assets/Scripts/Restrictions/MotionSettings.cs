@@ -36,53 +36,49 @@ namespace RestrictionSystem
         */
     }
     [System.Serializable]
-    public struct MotionRestriction
+    public class MotionRestriction
     {
         public MotionRestriction(MotionRestriction All)
         {
             this.Motion = All.Motion;
-            this.WeightedValueThreshold = All.WeightedValueThreshold;
             this.Restrictions = new List<SingleRestriction>(All.Restrictions);
         }
         public string Motion;
-        //public CurrentLearn Motion;
-
-        [Range(0f, 1f)] public float WeightedValueThreshold;
-
 
         [ListDrawerSettings(ListElementLabelName = "Label")]
         public List<SingleRestriction> Restrictions;
     }
     [Serializable]
-    public struct SingleRestriction
+    public class SingleRestriction
     {
         public string Label;
         public bool Active;
-        [ShowIf("Active"), Range(0f, 1f)] public float Weight;
         public Restriction restriction;
-        [ShowIf("restriction", Restriction.VelocityInDirection)] public VelocityType CheckType;
+        [ShowIf("RequiresCheckType")] public CheckType checkType;
+        private bool RequiresCheckType() { return restriction == Restriction.VelocityInDirection || restriction == Restriction.HandFacing; }
+        [ShowIf("checkType", CheckType.Other)]
+        public Vector3 OtherDirection;
+
+
         public float MaxSafe;
         public float MinSafe;
         public float MinFalloff;
         public float MaxFalloff;
 
-        private bool RequiresOffset() { return restriction == Restriction.VelocityInDirection || restriction == Restriction.HandFacingHead; }
+        private bool RequiresOffset() { return restriction == Restriction.VelocityInDirection || restriction == Restriction.HandFacing; }
+        private bool RequiresAxisList() { return restriction == Restriction.HandHeadDistance || restriction == Restriction.VelocityThreshold || restriction == Restriction.HandFacing || restriction == Restriction.VelocityInDirection; }
 
 
         [ShowIf("RequiresOffset")] public Vector3 Offset;
         [ShowIf("RequiresOffset")] public Vector3 Direction;
 
-        [ShowIf("restriction", Restriction.HandFacingHead)] public bool ExcludeHeight;
-
-        [ShowIf("restriction", Restriction.HandHeadDistance)] public List<Axis> UseAxisList;
+        [ShowIf("RequiresAxisList")] public List<Axis> UseAxisList;
 
         public bool ShouldDebug;
         [ReadOnly] public float Value;
         public float GetValue(float Input)
         {
-            //if()
             Value = Input;
-            //Debug.Log("Label: " + Label);
             if (Input < MaxSafe && Input > MinSafe)
                 return 1f;
             else if (Input < MinFalloff || Input > MaxFalloff)
@@ -92,8 +88,6 @@ namespace RestrictionSystem
                 bool IsLowSide = Input > MinFalloff && Input < MinSafe;
                 float DistanceValue = IsLowSide ? 1f - Remap(Input, new Vector2(MinFalloff, MinSafe)) : Remap(Input, new Vector2(MaxSafe, MaxFalloff));
                 return DistanceValue;
-                //input falloff value -> chart to get the true value
-                //compair to restriction to get falloff value
             }
             float Remap(float Input, Vector2 MaxMin) { return (Input - MaxMin.x) / (MaxMin.y - MaxMin.x); }
         }

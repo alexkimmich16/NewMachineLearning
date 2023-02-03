@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3331,6 +3331,7 @@ MonoBehaviour:
     Restrictions:
     - Label: YSpeed
       Active: 1
+      Weight: 0
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -3345,6 +3346,7 @@ MonoBehaviour:
       Value: 0.030020434
     - Label: VerticalSpeed
       Active: 1
+      Weight: 0
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -3359,6 +3361,7 @@ MonoBehaviour:
       Value: 0.030020434
     - Label: HandEdgeFaceGround
       Active: 1
+      Weight: 0
       restriction: 2
       checkType: 2
       OtherDirection: {x: 0, y: -1, z: 0}
@@ -3373,6 +3376,7 @@ MonoBehaviour:
       Value: 57.747
     - Label: NearForwardDirection
       Active: 1
+      Weight: 0
       restriction: 1
       checkType: 1
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -3571,7 +3575,7 @@ MonoBehaviour:
     - Max:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 3
+        MiddleSteps: 5
         CurrentStep: 0
       Min:
         GuessingMax: 0
@@ -3581,7 +3585,7 @@ MonoBehaviour:
       MaxFalloff:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 3
+        MiddleSteps: 5
         CurrentStep: 0
       MinFalloff:
         GuessingMax: 0
@@ -3589,9 +3593,9 @@ MonoBehaviour:
         MiddleSteps: 0
         CurrentStep: 0
       Weight:
-        GuessingMax: 0
+        GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 0
+        MiddleSteps: 5
         CurrentStep: 0
     - Max:
         GuessingMax: 500
@@ -3614,9 +3618,9 @@ MonoBehaviour:
         MiddleSteps: 5
         CurrentStep: 0
       Weight:
-        GuessingMax: 0
+        GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 0
+        MiddleSteps: 5
         CurrentStep: 0
     - Max:
         GuessingMax: 50
@@ -3639,9 +3643,9 @@ MonoBehaviour:
         MiddleSteps: 0
         CurrentStep: 0
       Weight:
-        GuessingMax: 0
+        GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 0
+        MiddleSteps: 5
         CurrentStep: 0
     - Max:
         GuessingMax: 50
@@ -3664,9 +3668,9 @@ MonoBehaviour:
         MiddleSteps: 0
         CurrentStep: 0
       Weight:
-        GuessingMax: 0
+        GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 0
+        MiddleSteps: 5
         CurrentStep: 0
   - Motion: FlameBlock
     Restrictions:
@@ -3800,6 +3804,7 @@ MonoBehaviour:
     Restrictions:
     - Label: YSpeed
       Active: 1
+      Weight: 0
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -3814,6 +3819,7 @@ MonoBehaviour:
       Value: 0.030020434
     - Label: VerticalSpeed
       Active: 1
+      Weight: 0
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -3828,6 +3834,7 @@ MonoBehaviour:
       Value: 0.030020434
     - Label: HandEdgeFaceGround
       Active: 1
+      Weight: 0
       restriction: 2
       checkType: 2
       OtherDirection: {x: 0, y: -1, z: 0}
@@ -3842,6 +3849,7 @@ MonoBehaviour:
       Value: 57.747
     - Label: NearForwardDirection
       Active: 1
+      Weight: 0
       restriction: 1
       checkType: 1
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -3855,13 +3863,13 @@ MonoBehaviour:
       ShouldDebug: 0
       Value: 0
   FrameInfo: []
-  MaxFrames: 1953125
+  MaxFrames: 1220703125
   MaxGroup: 1000000
   ShouldDebug: 0
   FramesToCaptureDebug: 10648
   Test1: 0
   Test2: 0
-  TotalFrameCount: 1953125
+  TotalFrameCount: 1220703125
   Values: 
   FloatValues: 
   UseAllMotions: 1
@@ -3909,6 +3917,7 @@ MonoBehaviour:
         restriction:
           Label: 
           Active: 0
+          Weight: 0
           restriction: 0
           checkType: 0
           OtherDirection: {x: 0, y: 0, z: 0}
@@ -3939,6 +3948,7 @@ MonoBehaviour:
         restriction:
           Label: dist from head
           Active: 1
+          Weight: 0
           restriction: 3
           checkType: 0
           OtherDirection: {x: 0, y: 0, z: 0}

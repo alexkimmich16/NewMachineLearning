@@ -74,10 +74,7 @@ public class BruteForce : SerializedMonoBehaviour
         {
             long LeftCount = Index + StartAt;
             int RestrictionCount = FlatRawValues.Length / States.Length;
-            //int ValuesPerRestriction = (NativeSingles.Length / 3) / RestrictionCount;
-
-            //4 restrictions
-            //5 singles
+            int SinglesPerRestriction = (NativeSingles.Length / 3) / RestrictionCount;//5
 
             NativeArray<SingleInfo> ConvertedSingles = new NativeArray<SingleInfo>(NativeSingles.Length / 3, Allocator.Temp);
             for (int i = 0; i < WeightedMiddleSteps.Length; i++)
@@ -87,11 +84,11 @@ public class BruteForce : SerializedMonoBehaviour
             }
 
             NativeArray<int2> Checks = new NativeArray<int2>(3, Allocator.Temp) { [0] = new int2(3,1), [1] = new int2(1, 0), [2] = new int2(0, 2) }; 
-            for (int i = 0; i < ConvertedSingles.Length / RestrictionCount; i++)//5 (checks all in restriction)
+            for (int i = 0; i < RestrictionCount; i++)//4 checks all restrictions
                 for (int j = 0; j < Checks.Length; j++)//3
-                    if (ConvertedSingles[(i * RestrictionCount) + Checks[j].x].GetCurrentValue() > ConvertedSingles[(i * RestrictionCount) + Checks[j].y].GetCurrentValue())
+                    if (ConvertedSingles[(i * SinglesPerRestriction) + Checks[j].x].GetCurrentValue() > ConvertedSingles[(i * SinglesPerRestriction) + Checks[j].y].GetCurrentValue())
                         return;// check if max is smaller than min to save processing power
-
+            //i * 4 + 2
 
             for (int i = 0; i < ConvertedSingles.Length; i++) //stop repeats for already found variables
                 if (ConvertedSingles[i].Max == ConvertedSingles[i].Min && ConvertedSingles[i].CurrentStep != ConvertedSingles[i].MiddleSteps - 1)//if already found and not top
@@ -130,7 +127,7 @@ public class BruteForce : SerializedMonoBehaviour
                     }
 
                 }
-                bool Guess = TotalWeightValue >= 1;
+                bool Guess = TotalWeightValue >= (float)RestrictionCount * 0.85f;
                 bool IsCorrect = Guess == States[i];
                 Corrects = new Vector2(Corrects.x + (IsCorrect ? 1f : 0f), Corrects.y + (!IsCorrect ? 1f : 0f));
             }
@@ -248,13 +245,17 @@ public class BruteForce : SerializedMonoBehaviour
 
             List<SingleRestriction> NewList = new List<SingleRestriction>();
 
+
+            int SinglesPerRestriction = Changes.Count / BruteForceSettings.Restrictions.Count;
             for (int i = 0; i < BruteForceSettings.Restrictions.Count; i++)
             {
                 SingleRestriction NewRestriction = BruteForceSettings.Restrictions[i];
-                NewRestriction.MaxSafe = Changes[(i * 4) + 0].GetCurrentValueAt((int)FinalStats[(i * 4) + 0]);
-                NewRestriction.MinSafe = Changes[(i * 4) + 1].GetCurrentValueAt((int)FinalStats[(i * 4) + 1]);
-                NewRestriction.MaxFalloff = Changes[(i * 4) + 2].GetCurrentValueAt((int)FinalStats[(i * 4) + 2]);
-                NewRestriction.MinFalloff = Changes[(i * 4) + 3].GetCurrentValueAt((int)FinalStats[(i * 4) + 3]);
+                NewRestriction.MaxSafe = Changes[(i * SinglesPerRestriction) + 0].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 0]);
+                NewRestriction.MinSafe = Changes[(i * SinglesPerRestriction) + 1].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 1]);
+                NewRestriction.MaxFalloff = Changes[(i * SinglesPerRestriction) + 2].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 2]);
+                NewRestriction.MinFalloff = Changes[(i * SinglesPerRestriction) + 3].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 3]);
+                //Debug.Log(Changes[(i * SinglesPerRestriction) + 4].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 4]));
+                NewRestriction.Weight = Changes[(i * SinglesPerRestriction) + 4].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 4]);
                 NewList.Add(NewRestriction);
             }
 
@@ -270,9 +271,9 @@ public class BruteForce : SerializedMonoBehaviour
                     float NewMax = Range > StopAdjustingPrecision ? Changes[i].GetCurrentValueAt((int)FinalStats[i]) + Range : Changes[i].GetCurrentValueAt((int)FinalStats[i]);
                     float NewMin = Range > StopAdjustingPrecision ? Changes[i].GetCurrentValueAt((int)FinalStats[i]) - Range : Changes[i].GetCurrentValueAt((int)FinalStats[i]);
 
-
-                    int Restriction = Mathf.FloorToInt(i / 4);
-                    int CountLeft = i - Restriction * 4;
+                    //4 = (4 / 5) -> 0 && 4 - 0 * 5 = 4
+                    int Restriction = Mathf.FloorToInt(i / 5);
+                    int CountLeft = i - Restriction * 5;
 
                     AllChanges.OneRestrictionChange Rest = AllChangesList[(int)motionGet - 1].Restrictions[Restriction];
                     if (CountLeft == 0)
@@ -364,14 +365,16 @@ public struct AllChanges
     public AllChanges(List<SingleChange> NewInfo)
     {
         Motion = "";
+        int SinglesPerRestriction = 5;
         List<OneRestrictionChange> NewRestrictions = new List<OneRestrictionChange>();
-        for (int i = 0; i < (NewInfo.Count / 4); i++)
+        for (int i = 0; i < (NewInfo.Count / SinglesPerRestriction); i++)
         {
             OneRestrictionChange MainRestriction = new OneRestrictionChange();
-            MainRestriction.Max = NewInfo[(i * 4) + 0];
-            MainRestriction.Min = NewInfo[(i * 4) + 1];
-            MainRestriction.MaxFalloff = NewInfo[(i * 4) + 2];
-            MainRestriction.MinFalloff = NewInfo[(i * 4) + 3];
+            MainRestriction.Max = NewInfo[(i * SinglesPerRestriction) + 0];
+            MainRestriction.Min = NewInfo[(i * SinglesPerRestriction) + 1];
+            MainRestriction.MaxFalloff = NewInfo[(i * SinglesPerRestriction) + 2];
+            MainRestriction.MinFalloff = NewInfo[(i * SinglesPerRestriction) + 3];
+            MainRestriction.Weight = NewInfo[(i * SinglesPerRestriction) + 4];
             NewRestrictions.Add(MainRestriction);
         }
         Restrictions = NewRestrictions;

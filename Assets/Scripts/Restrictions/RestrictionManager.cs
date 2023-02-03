@@ -79,9 +79,9 @@ namespace RestrictionSystem
                 float RestrictionValue = restriction.Restrictions[i].GetValue(RawRestrictionValue);
 
                 if (restriction.Restrictions[i].Active)
-                    TotalWeightValue += RestrictionValue;
+                    TotalWeightValue += RestrictionValue * restriction.Restrictions[i].Weight;
             }
-            return TotalWeightValue >= restriction.Restrictions.Count * 0.75f;
+            return TotalWeightValue >= (float)restriction.Restrictions.Count * 0.85f;
         }
         public List<CurrentLearn> AllWorkingMotions(SingleInfo frame1, SingleInfo frame2) { return Enumerable.Range(0, RestrictionSettings.MotionRestrictions.Count).Where(t => MotionWorks(frame1, frame2, RestrictionSettings.MotionRestrictions[t])).Select(t => (CurrentLearn)(t + 1)).ToList(); }
         public static Vector3 EliminateAxis(List<Axis> AllAxis, Vector3 Value) { return new Vector3(AllAxis.Contains(Axis.X) ? Value.x : 0, AllAxis.Contains(Axis.Y) ? Value.y : 0, AllAxis.Contains(Axis.Z) ? Value.z : 0); }

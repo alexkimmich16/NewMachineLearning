@@ -74,6 +74,10 @@ public class BruteForce : SerializedMonoBehaviour
         {
             long LeftCount = Index + StartAt;
             int RestrictionCount = FlatRawValues.Length / States.Length;
+            //int ValuesPerRestriction = (NativeSingles.Length / 3) / RestrictionCount;
+
+            //4 restrictions
+            //5 singles
 
             NativeArray<SingleInfo> ConvertedSingles = new NativeArray<SingleInfo>(NativeSingles.Length / 3, Allocator.Temp);
             for (int i = 0; i < WeightedMiddleSteps.Length; i++)
@@ -82,11 +86,12 @@ public class BruteForce : SerializedMonoBehaviour
                 LeftCount -= (Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[i]) * WeightedMiddleSteps[i]);
             }
 
-            NativeArray<int2> Checks = new NativeArray<int2>(3, Allocator.Temp) { [0] = new int2(3,1), [1] = new int2(1, 0), [2] = new int2(0, 2) };
-            for (int i = 0; i < ConvertedSingles.Length / 4; i++)// check if max is smaller than min to save processing power
-                for (int j = 0; j < Checks.Length; j++)
-                    if (ConvertedSingles[(i * 4) + Checks[j].x].GetCurrentValue() > ConvertedSingles[(i * 4) + Checks[j].y].GetCurrentValue())
-                        return;
+            NativeArray<int2> Checks = new NativeArray<int2>(3, Allocator.Temp) { [0] = new int2(3,1), [1] = new int2(1, 0), [2] = new int2(0, 2) }; 
+            for (int i = 0; i < ConvertedSingles.Length / RestrictionCount; i++)//5 (checks all in restriction)
+                for (int j = 0; j < Checks.Length; j++)//3
+                    if (ConvertedSingles[(i * RestrictionCount) + Checks[j].x].GetCurrentValue() > ConvertedSingles[(i * RestrictionCount) + Checks[j].y].GetCurrentValue())
+                        return;// check if max is smaller than min to save processing power
+
 
             for (int i = 0; i < ConvertedSingles.Length; i++) //stop repeats for already found variables
                 if (ConvertedSingles[i].Max == ConvertedSingles[i].Min && ConvertedSingles[i].CurrentStep != ConvertedSingles[i].MiddleSteps - 1)//if already found and not top
@@ -98,13 +103,14 @@ public class BruteForce : SerializedMonoBehaviour
                 float TotalWeightValue = 0f;
                 for (int j = 0; j < RestrictionCount; j++)// all restrictions
                 {
-                    float MaxSafe = ConvertedSingles[(j * 4) + 0].GetCurrentValue(); //1
-                    float MinSafe = ConvertedSingles[(j * 4) + 1].GetCurrentValue();
-                    float MaxFalloff = ConvertedSingles[(j * 4) + 2].GetCurrentValue();
-                    float MinFalloff = ConvertedSingles[(j * 4) + 3].GetCurrentValue();
+                    float MaxSafe = ConvertedSingles[(j * RestrictionCount) + 0].GetCurrentValue(); //1
+                    float MinSafe = ConvertedSingles[(j * RestrictionCount) + 1].GetCurrentValue();
+                    float MaxFalloff = ConvertedSingles[(j * RestrictionCount) + 2].GetCurrentValue();
+                    float MinFalloff = ConvertedSingles[(j * RestrictionCount) + 3].GetCurrentValue();
+                    float Weight = ConvertedSingles[(j * RestrictionCount) + 4].GetCurrentValue();
 
                     float Value = FlatRawValues[(i * RestrictionCount) + j];
-                    TotalWeightValue += GetOutput(Value);
+                    TotalWeightValue += GetOutput(Value) * Weight;
                     //Debug.Log("Value: " + Values[i].Values[j] + "  Max: " + Max + "  Min: " + Min + "  j: " + j);
 
                     float GetOutput(float Input)
@@ -124,7 +130,7 @@ public class BruteForce : SerializedMonoBehaviour
                     }
 
                 }
-                bool Guess = TotalWeightValue >= RestrictionCount * 0.75f;
+                bool Guess = TotalWeightValue >= 1;
                 bool IsCorrect = Guess == States[i];
                 Corrects = new Vector2(Corrects.x + (IsCorrect ? 1f : 0f), Corrects.y + (!IsCorrect ? 1f : 0f));
             }
@@ -241,6 +247,7 @@ public class BruteForce : SerializedMonoBehaviour
             List<AllChanges.SingleChange> Changes = AllChangesList[(int)motionGet - 1].GetSingles();
 
             List<SingleRestriction> NewList = new List<SingleRestriction>();
+
             for (int i = 0; i < BruteForceSettings.Restrictions.Count; i++)
             {
                 SingleRestriction NewRestriction = BruteForceSettings.Restrictions[i];
@@ -267,9 +274,6 @@ public class BruteForce : SerializedMonoBehaviour
                     int Restriction = Mathf.FloorToInt(i / 4);
                     int CountLeft = i - Restriction * 4;
 
-                    //Debug.Log("Restriction: " + Restriction + "CountLeft: " + CountLeft +  "  i: " + i);
-
-
                     AllChanges.OneRestrictionChange Rest = AllChangesList[(int)motionGet - 1].Restrictions[Restriction];
                     if (CountLeft == 0)
                         NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.Max.MiddleSteps, Rest.Max.CurrentStep));
@@ -279,6 +283,8 @@ public class BruteForce : SerializedMonoBehaviour
                         NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.MaxFalloff.MiddleSteps, Rest.MaxFalloff.CurrentStep));
                     if (CountLeft == 3)
                         NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.MinFalloff.MiddleSteps, Rest.MinFalloff.CurrentStep));
+                    if (CountLeft == 4)
+                        NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.Weight.MiddleSteps, Rest.Weight.CurrentStep));
                 }
                 //Debug.Log("NewChanges: " + NewChanges.Count);
                 AllChangesList[(int)motionGet - 1] = new AllChanges(NewChanges);
@@ -379,6 +385,7 @@ public struct AllChanges
             SinglesList.Add(Restrictions[i].Min);
             SinglesList.Add(Restrictions[i].MaxFalloff);
             SinglesList.Add(Restrictions[i].MinFalloff);
+            SinglesList.Add(Restrictions[i].Weight);
         }
         return SinglesList;
     }
@@ -391,6 +398,7 @@ public struct AllChanges
             ReturnInfo.Add(Restrictions[i].Min.GetCurrentValue());
             ReturnInfo.Add(Restrictions[i].MaxFalloff.GetCurrentValue());
             ReturnInfo.Add(Restrictions[i].MinFalloff.GetCurrentValue());
+            ReturnInfo.Add(Restrictions[i].Weight.GetCurrentValue());
         }
         return ReturnInfo;
     }
@@ -402,6 +410,7 @@ public struct AllChanges
         public SingleChange Min;
         public SingleChange MaxFalloff;
         public SingleChange MinFalloff;
+        public SingleChange Weight;
     }
     [System.Serializable]
     public struct SingleChange

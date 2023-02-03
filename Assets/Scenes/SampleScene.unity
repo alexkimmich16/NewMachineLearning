@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3511,6 +3511,11 @@ MonoBehaviour:
         GuessingMin: 0
         MiddleSteps: 10
         CurrentStep: 0
+      Weight:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
     - Max:
         GuessingMax: 50
         GuessingMin: 0
@@ -3531,6 +3536,11 @@ MonoBehaviour:
         GuessingMin: 0
         MiddleSteps: 0
         CurrentStep: 0
+      Weight:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
     - Max:
         GuessingMax: 90
         GuessingMin: 0
@@ -3547,6 +3557,11 @@ MonoBehaviour:
         MiddleSteps: 10
         CurrentStep: 0
       MinFalloff:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
         GuessingMax: 0
         GuessingMin: 0
         MiddleSteps: 0
@@ -3556,7 +3571,7 @@ MonoBehaviour:
     - Max:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 3
         CurrentStep: 0
       Min:
         GuessingMax: 0
@@ -3566,9 +3581,14 @@ MonoBehaviour:
       MaxFalloff:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 3
         CurrentStep: 0
       MinFalloff:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
         GuessingMax: 0
         GuessingMin: 0
         MiddleSteps: 0
@@ -3593,22 +3613,7 @@ MonoBehaviour:
         GuessingMin: 0
         MiddleSteps: 5
         CurrentStep: 0
-    - Max:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 5
-        CurrentStep: 0
-      Min:
-        GuessingMax: 0
-        GuessingMin: 0
-        MiddleSteps: 0
-        CurrentStep: 0
-      MaxFalloff:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 5
-        CurrentStep: 0
-      MinFalloff:
+      Weight:
         GuessingMax: 0
         GuessingMin: 0
         MiddleSteps: 0
@@ -3629,6 +3634,36 @@ MonoBehaviour:
         MiddleSteps: 5
         CurrentStep: 0
       MinFalloff:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+    - Max:
+        GuessingMax: 50
+        GuessingMin: 0
+        MiddleSteps: 5
+        CurrentStep: 0
+      Min:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      MaxFalloff:
+        GuessingMax: 50
+        GuessingMin: 0
+        MiddleSteps: 5
+        CurrentStep: 0
+      MinFalloff:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
         GuessingMax: 0
         GuessingMin: 0
         MiddleSteps: 0
@@ -3655,6 +3690,11 @@ MonoBehaviour:
         GuessingMin: 0
         MiddleSteps: 0
         CurrentStep: 0
+      Weight:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
     - Max:
         GuessingMax: 30
         GuessingMin: 0
@@ -3675,22 +3715,7 @@ MonoBehaviour:
         GuessingMin: 0
         MiddleSteps: 0
         CurrentStep: 0
-    - Max:
-        GuessingMax: 1
-        GuessingMin: 0
-        MiddleSteps: 3
-        CurrentStep: 0
-      Min:
-        GuessingMax: 0
-        GuessingMin: 0
-        MiddleSteps: 0
-        CurrentStep: 0
-      MaxFalloff:
-        GuessingMax: 1
-        GuessingMin: 0
-        MiddleSteps: 3
-        CurrentStep: 0
-      MinFalloff:
+      Weight:
         GuessingMax: 0
         GuessingMin: 0
         MiddleSteps: 0
@@ -3711,6 +3736,36 @@ MonoBehaviour:
         MiddleSteps: 3
         CurrentStep: 0
       MinFalloff:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+    - Max:
+        GuessingMax: 1
+        GuessingMin: 0
+        MiddleSteps: 3
+        CurrentStep: 0
+      Min:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      MaxFalloff:
+        GuessingMax: 1
+        GuessingMin: 0
+        MiddleSteps: 3
+        CurrentStep: 0
+      MinFalloff:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
+        CurrentStep: 0
+      Weight:
         GuessingMax: 0
         GuessingMin: 0
         MiddleSteps: 0
@@ -3734,6 +3789,11 @@ MonoBehaviour:
         GuessingMax: 0
         GuessingMin: -50
         MiddleSteps: 2
+        CurrentStep: 0
+      Weight:
+        GuessingMax: 0
+        GuessingMin: 0
+        MiddleSteps: 0
         CurrentStep: 0
   BruteForceSettings:
     Motion: Flames

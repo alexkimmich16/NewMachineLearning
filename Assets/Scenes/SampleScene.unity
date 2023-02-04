@@ -3573,9 +3573,9 @@ MonoBehaviour:
   - Motion: Flames
     Restrictions:
     - Max:
-        GuessingMax: 50
+        GuessingMax: 15
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
         CurrentStep: 0
       Min:
         GuessingMax: 0
@@ -3583,9 +3583,9 @@ MonoBehaviour:
         MiddleSteps: 0
         CurrentStep: 0
       MaxFalloff:
-        GuessingMax: 50
+        GuessingMax: 15
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
         CurrentStep: 0
       MinFalloff:
         GuessingMax: 0
@@ -3595,7 +3595,7 @@ MonoBehaviour:
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
         CurrentStep: 0
     - Max:
         GuessingMax: 500
@@ -3605,7 +3605,7 @@ MonoBehaviour:
       Min:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
         CurrentStep: 0
       MaxFalloff:
         GuessingMax: 500
@@ -3615,17 +3615,17 @@ MonoBehaviour:
       MinFalloff:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
         CurrentStep: 0
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
         CurrentStep: 0
     - Max:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
         CurrentStep: 0
       Min:
         GuessingMax: 0
@@ -3635,7 +3635,7 @@ MonoBehaviour:
       MaxFalloff:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
         CurrentStep: 0
       MinFalloff:
         GuessingMax: 0
@@ -3645,12 +3645,12 @@ MonoBehaviour:
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
         CurrentStep: 0
     - Max:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
         CurrentStep: 0
       Min:
         GuessingMax: 0
@@ -3660,7 +3660,7 @@ MonoBehaviour:
       MaxFalloff:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
         CurrentStep: 0
       MinFalloff:
         GuessingMax: 0
@@ -3670,7 +3670,32 @@ MonoBehaviour:
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 5
+        MiddleSteps: 2
+        CurrentStep: 0
+    - Max:
+        GuessingMax: 10
+        GuessingMin: 5
+        MiddleSteps: 2
+        CurrentStep: 0
+      Min:
+        GuessingMax: 5
+        GuessingMin: 0
+        MiddleSteps: 2
+        CurrentStep: 0
+      MaxFalloff:
+        GuessingMax: 10
+        GuessingMin: 5
+        MiddleSteps: 2
+        CurrentStep: 0
+      MinFalloff:
+        GuessingMax: 5
+        GuessingMin: 0
+        MiddleSteps: 2
+        CurrentStep: 0
+      Weight:
+        GuessingMax: 1
+        GuessingMin: 0
+        MiddleSteps: 2
         CurrentStep: 0
   - Motion: FlameBlock
     Restrictions:
@@ -3847,29 +3872,14 @@ MonoBehaviour:
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 57.747
-    - Label: NearForwardDirection
-      Active: 1
-      Weight: 0
-      restriction: 1
-      checkType: 1
-      OtherDirection: {x: 0, y: 0, z: 0}
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
-      MaxFalloff: 0
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 1, z: 1}
-      UseAxisList: 0000000002000000
-      ShouldDebug: 0
-      Value: 0
   FrameInfo: []
-  MaxFrames: 1220703125
+  MaxFrames: 262144
   MaxGroup: 1000000
   ShouldDebug: 0
   FramesToCaptureDebug: 10648
   Test1: 0
   Test2: 0
-  TotalFrameCount: 1220703125
+  TotalFrameCount: 262144
   Values: 
   FloatValues: 
   UseAllMotions: 1
@@ -3879,7 +3889,7 @@ MonoBehaviour:
   ReInput: 0
   LockValues: 1
   Sequences: 1
-  Confidence: 0.75
+  Confidence: 0.975
   StopAdjustingPrecision: 0.001
 --- !u!114 &944444324
 MonoBehaviour:

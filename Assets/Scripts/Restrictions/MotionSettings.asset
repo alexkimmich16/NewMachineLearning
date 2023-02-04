@@ -27,6 +27,7 @@ MonoBehaviour:
     Restrictions:
     - Label: speed
       Active: 1
+      Weight: 0
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -38,9 +39,10 @@ MonoBehaviour:
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
-      Value: 0.030020434
+      Value: 0
     - Label: hand straight
       Active: 1
+      Weight: 0
       restriction: 1
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -52,9 +54,10 @@ MonoBehaviour:
       Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 
       ShouldDebug: 0
-      Value: 74.87649
+      Value: 0
     - Label: headforwardvel
       Active: 1
+      Weight: 0
       restriction: 1
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -66,62 +69,81 @@ MonoBehaviour:
       Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 
       ShouldDebug: 0
-      Value: 42.27158
+      Value: 0
   - Motion: Flames
     Restrictions:
     - Label: YSpeed
       Active: 1
+      Weight: 0.14957611
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
-      MaxSafe: 500
-      MinSafe: 15.448305
-      MinFalloff: 13.07209
-      MaxFalloff: 500
+      MaxSafe: 3.6249733
+      MinSafe: 0
+      MinFalloff: 0
+      MaxFalloff: 3.6324987
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 01000000
       ShouldDebug: 0
-      Value: 0.030020434
+      Value: 0
     - Label: VerticalSpeed
       Active: 1
+      Weight: 0.21113907
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
-      MaxSafe: 31.790813
-      MinSafe: 31.790813
-      MinFalloff: 5.012211
-      MaxFalloff: 31.790813
+      MaxSafe: 500
+      MinSafe: 3.365666
+      MinFalloff: -169.22995
+      MaxFalloff: 500
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 0000000002000000
       ShouldDebug: 0
-      Value: 0.030020434
+      Value: 0
     - Label: HandEdgeFaceGround
       Active: 1
+      Weight: 0.30043402
       restriction: 2
       checkType: 2
       OtherDirection: {x: 0, y: -1, z: 0}
-      MaxSafe: 0.00020823149
+      MaxSafe: 1.1673169
       MinSafe: 0
       MinFalloff: 0
-      MaxFalloff: 53.506886
+      MaxFalloff: 49.418858
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: -1, z: 0}
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
-      Value: 57.747
+      Value: 0
     - Label: NearForwardDirection
       Active: 1
+      Weight: 0.4781648
       restriction: 1
       checkType: 1
       OtherDirection: {x: 0, y: 0, z: 0}
-      MaxSafe: 0
+      MaxSafe: 55.459682
       MinSafe: 0
       MinFalloff: 0
-      MaxFalloff: 0
+      MaxFalloff: 55.459682
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 1, z: 1}
+      UseAxisList: 0000000002000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: Distance
+      Active: 1
+      Weight: 0.11334071
+      restriction: 3
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      MaxSafe: 1.982783
+      MinSafe: 1.9618217
+      MinFalloff: -5.5568438
+      MaxFalloff: 1.982783
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 0000000002000000
       ShouldDebug: 0
       Value: 0
@@ -129,6 +151,7 @@ MonoBehaviour:
     Restrictions:
     - Label: speed
       Active: 1
+      Weight: 0
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -140,9 +163,10 @@ MonoBehaviour:
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
-      Value: 0.030020434
+      Value: 0
     - Label: handfacehead
       Active: 1
+      Weight: 0
       restriction: 2
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -154,9 +178,10 @@ MonoBehaviour:
       Direction: {x: -1, y: 0, z: 0}
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
-      Value: 41.549423
+      Value: 0
     - Label: not too far
       Active: 1
+      Weight: 0
       restriction: 3
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -168,9 +193,10 @@ MonoBehaviour:
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 0000000002000000
       ShouldDebug: 0
-      Value: 0.5216863
+      Value: 0
     - Label: Not Too High
       Active: 1
+      Weight: 0
       restriction: 3
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -182,9 +208,10 @@ MonoBehaviour:
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 01000000
       ShouldDebug: 0
-      Value: 0.043186963
+      Value: 0
     - Label: Not Crossed
       Active: 1
+      Weight: 0
       restriction: 4
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -196,4 +223,4 @@ MonoBehaviour:
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
-      Value: 13.547823
+      Value: 180

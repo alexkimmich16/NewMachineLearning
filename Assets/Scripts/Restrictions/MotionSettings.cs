@@ -53,7 +53,7 @@ namespace RestrictionSystem
     {
         public string Label;
         public bool Active;
-        [Range(0, 1)] public float Weight;
+        public float Weight;
         public Restriction restriction;
         [ShowIf("RequiresCheckType")] public CheckType checkType;
         private bool RequiresCheckType() { return restriction == Restriction.VelocityInDirection || restriction == Restriction.HandFacing; }

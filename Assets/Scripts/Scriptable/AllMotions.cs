@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEditor;
+using RestrictionSystem;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/AllData", order = 1)]
 [System.Serializable]
 public class AllMotions : ScriptableObject
@@ -30,18 +31,6 @@ public class AllMotions : ScriptableObject
     
     
     
-}
-[System.Serializable]
-public class SingleInfo
-{
-    public Vector3 HeadPos, HeadRot, HandPos, HandRot;
-    public SingleInfo(Vector3 HandPosStat, Vector3 HandRotStat, Vector3 HeadPosStat, Vector3 HeadRotStat)
-    {
-        HeadPos = HeadPosStat;
-        HeadRot = HeadRotStat;
-        HandPos = HandPosStat;
-        HandRot = HandRotStat;
-    }
 }
 [System.Serializable]
 public class Motion

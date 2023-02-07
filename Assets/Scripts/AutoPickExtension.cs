@@ -2,26 +2,58 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using System.Linq;
 namespace RestrictionSystem
 {
     public delegate bool CompletionUpdate(float Percent);
-
+    
     public class AutoPickExtension : SerializedMonoBehaviour
     {
+        //public static List<int> GetValuesWithMax(int Value, List<int> Maxes)
+
         public static List<int> ByType = new List<int>() { 3, 27, 2, 2, 27, 8};
 
         public Restriction TestingRestriction;
-        public int TestValue;
-        [ReadOnly] public int MaxValue;
-        public List<>
-        public SingleRestriction OutputRestriction;
-        
+        public int MaxRestrictions = 2;
 
-        //public CompletionUpdate OnCompletionUpdate;
+        [FoldoutGroup("GeometricTest")] public int TestValue;
+        [FoldoutGroup("GeometricTest")] [ReadOnly] public int MaxValue;
+        [FoldoutGroup("GeometricTest")] public SingleRestriction OutputRestriction;
+
+
+        [FoldoutGroup("IndexToRestrictionTest")] public int RestrictionTypeIndexTest;
+        [FoldoutGroup("IndexToRestrictionTest")] public long RestrictionSettingsIndexTest;
+        [FoldoutGroup("IndexToRestrictionTest")] public List<int> RestrictionTypes;
+        [FoldoutGroup("IndexToRestrictionTest")] public List<int> RestrictionTypes;
+        [FoldoutGroup("IndexToRestrictionTest")] public List<SingleRestriction> IndexRestricions;
+        //[FoldoutGroup("IndexToRestrictionTest")] public SingleRestriction IndexRestricion;
+
+
+        [FoldoutGroup("AutoPickTesting"), Button(ButtonSizes.Small)]
+        public void RunTest() { StartCoroutine(AutoPickRunning()); }
+        [FoldoutGroup("AutoPickTesting"), ReadOnly] public float HighestValue;
+        ///geometric works, do indexing via restrictions
+        ///all restrictions can be 
+
+        public CompletionUpdate OnCompletionUpdate;
+
+        public List<int> GetRestrictionByIndex(long Index)
+        {
+            long LeftCount = Index;
+            List<int> Output = new List<int>();
+            for (int i = 0; i < System.Enum.GetValues(typeof(Restriction)).Length; i++)
+            {
+                Output.Add(Mathf.FloorToInt(LeftCount / MaxRestrictions));
+                LeftCount -= Mathf.FloorToInt(LeftCount / MaxRestrictions) * MaxRestrictions;
+            }
+            return Output;
+        }
+
         private void Update()
         {
             OutputRestriction = GetSingleRestrictionAtIndex(TestingRestriction, TestValue);
             MaxValue = TotalFramesToCheck();
+            RestrictionTypes = GetRestrictionByIndex(RestrictionTypeIndexTest);
         }
         public int TotalFramesToCheck()
         {
@@ -70,16 +102,14 @@ namespace RestrictionSystem
                     Output.Add((long)Mathf.Floor(LeftCount / Possibilities[i]));
                     LeftCount -= (long)Mathf.Floor(LeftCount / Possibilities[i]) * Possibilities[i];
                 }
-
                 List<Axis> AxisList = new List<Axis>();
                 for (int i = 0; i < 3; i++)
                     if (Output[i] == 1)
                         AxisList.Add((Axis)i);
-
                 return AxisList;
             }
         }
-
+        
         private List<long> GetMiddleStats(List<bool> WorkingList)
         {
             List<long> Output = new List<long>();
@@ -106,13 +136,11 @@ namespace RestrictionSystem
                 {
                     Output.Add((long)Mathf.Floor(LeftCount / MiddleStepCounts[i]));
                     LeftCount -= (long)Mathf.Floor(LeftCount / MiddleStepCounts[i]) * MiddleStepCounts[i];
-
                 }
                 
             }
             return Output;
         }
-
         public List<bool> DependantVariableList(Restriction restriction)
         {
             List<bool> Variables = new List<bool>();
@@ -131,23 +159,17 @@ namespace RestrictionSystem
             List<SingleRestriction> Restrictions = new List<SingleRestriction>();
             return Restrictions;
         }
-        /*
-         * public void StartAutoBruteForce()
-        {
-            StartCoroutine(AutoPickRunning());
-        }
-        public SingleRestriction SingleRestrictionByIndex(int Index)
-        {
-
-        }
         IEnumerator AutoPickRunning()
         {
             while (true)
             {
 
+                //run brute force
+                //check if higher than last
+                OnCompletionUpdate(1f);
             }
         }
-        */
+        
     }
     //public static Dictionary<VariableType, int> VariablePossibilities = new Dictionary<VariableType, int>() { { VariableType.Vector3, 27 }, { VariableType.Bool, 2 } };
 
@@ -184,29 +206,3 @@ namespace RestrictionSystem
         None = 3,
     }
 }
-/*
-        public VariableStore(Vector3 Vector3Store)
-        {
-            variableType = VariableType.Vector3;
-            this.Vector3Store = Vector3Store;
-            BoolStore = false;
-            IntStore = 0;
-        }
-        public VariableStore(bool BoolStore)
-        {
-            variableType = VariableType.Bool;
-            this.Vector3Store = Vector3.zero;
-            this.BoolStore = BoolStore;
-            IntStore = 0;
-        }
-        public VariableStore(int IntStore)
-        {
-            variableType = VariableType.IntRange;
-            Vector3Store = Vector3.zero;
-            BoolStore = false;
-            this.IntStore = IntStore;
-        }
-
-        public Vector3 Vector3Store;
-        public bool BoolStore;
-        */

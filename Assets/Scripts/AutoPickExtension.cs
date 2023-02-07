@@ -9,62 +9,103 @@ namespace RestrictionSystem
     
     public class AutoPickExtension : SerializedMonoBehaviour
     {
-        //public static List<int> GetValuesWithMax(int Value, List<int> Maxes)
-
+        public static List<int> GetValuesWithMax(int Value, List<int> Maxes)
+        {
+            long LeftCount = Value;
+            List<int> Output = new List<int>();
+            for (int i = 0; i < Maxes.Count; i++)
+            {
+                Output.Add(Mathf.FloorToInt(LeftCount / Maxes[i]));
+                LeftCount -= Mathf.FloorToInt(LeftCount / Maxes[i]) * Maxes[i];
+            }
+            return Output;
+        }
+        public static List<int> Seperate(List<int> ToSeperate)
+        {
+            List<int> Output = new List<int>();
+            for (int i = 0; i < ToSeperate.Count; i++)
+                for (int j = 0; j < ToSeperate[i]; j++)
+                    Output.Add(i);
+            return Output;
+        }
         public static List<int> ByType = new List<int>() { 3, 27, 2, 2, 27, 8};
 
         public Restriction TestingRestriction;
         public int MaxRestrictions = 2;
+        [FoldoutGroup("Test")] public int PerEnumAdd;
+        [FoldoutGroup("Test"), ReadOnly] public int MaxValue;
 
-        [FoldoutGroup("GeometricTest")] public int TestValue;
-        [FoldoutGroup("GeometricTest")] [ReadOnly] public int MaxValue;
+        [FoldoutGroup("GeometricTest")] public int TestValue; 
         [FoldoutGroup("GeometricTest")] public SingleRestriction OutputRestriction;
 
 
         [FoldoutGroup("IndexToRestrictionTest")] public int RestrictionTypeIndexTest;
-        [FoldoutGroup("IndexToRestrictionTest")] public long RestrictionSettingsIndexTest;
+        //[FoldoutGroup("IndexToRestrictionTest")] public int RestrictionSettingsIndexTest;
         [FoldoutGroup("IndexToRestrictionTest")] public List<int> RestrictionTypes;
-        [FoldoutGroup("IndexToRestrictionTest")] public List<int> RestrictionTypes;
+        [FoldoutGroup("IndexToRestrictionTest")] public List<int> RestrictionValues;
         [FoldoutGroup("IndexToRestrictionTest")] public List<SingleRestriction> IndexRestricions;
-        //[FoldoutGroup("IndexToRestrictionTest")] public SingleRestriction IndexRestricion;
-
+        [FoldoutGroup("IndexToRestrictionTest"), ReadOnly] public int TotalRequiredRuns;
 
         [FoldoutGroup("AutoPickTesting"), Button(ButtonSizes.Small)]
         public void RunTest() { StartCoroutine(AutoPickRunning()); }
-        [FoldoutGroup("AutoPickTesting"), ReadOnly] public float HighestValue;
-        ///geometric works, do indexing via restrictions
-        ///all restrictions can be 
 
-        public CompletionUpdate OnCompletionUpdate;
 
-        public List<int> GetRestrictionByIndex(long Index)
+        public int GetTotalRequiredRuns()
         {
-            long LeftCount = Index;
-            List<int> Output = new List<int>();
+            List<int> NumberOfEachRequirement = new List<int>();
             for (int i = 0; i < System.Enum.GetValues(typeof(Restriction)).Length; i++)
+                NumberOfEachRequirement.Add(0);
+
+            //3 ^ 5;
+            Debug.Log(ValuesOfMax().Aggregate((total, next) => total * next));
+            //all possible combinations
+            for (int i = 0; i < Mathf.Pow(3, System.Enum.GetValues(typeof(Restriction)).Length) ;i++)
             {
-                Output.Add(Mathf.FloorToInt(LeftCount / MaxRestrictions));
-                LeftCount -= Mathf.FloorToInt(LeftCount / MaxRestrictions) * MaxRestrictions;
+                List<int> Values = GetValuesWithMax(RestrictionTypeIndexTest, ValuesOfMax());
+                for (int j = 0; j < 50; j++)
+                    NumberOfEachRequirement[j] += Values[j];
             }
-            return Output;
+            return 1;
         }
+        public void AddToValues(out bool BaseMax, out bool AbsoluteMax)
+        {
+            AbsoluteMax = false;
+            BaseMax = false;
+            for (int i = 0; i < RestrictionTypes.Count; i++) //hit max
+            {
+                if (RestrictionValues[i] == TotalFramesToCheck((Restriction)RestrictionTypes[i]))
+                    RestrictionValues[i] = 0;
+                else
+                {
+                    RestrictionValues[i] += 1;
+                    return;
+                }
+            }
+            BaseMax = true;
+            RestrictionTypeIndexTest += 1;
+            if(RestrictionTypeIndexTest == 50)
+                AbsoluteMax = true;
+            //move to next
+
+        }
+        public CompletionUpdate OnCompletionUpdate;
 
         private void Update()
         {
             OutputRestriction = GetSingleRestrictionAtIndex(TestingRestriction, TestValue);
-            MaxValue = TotalFramesToCheck();
-            RestrictionTypes = GetRestrictionByIndex(RestrictionTypeIndexTest);
+            MaxValue = TotalFramesToCheck(TestingRestriction);
+
+            IndexRestricions = GenerateRestrictions(RestrictionTypes, RestrictionValues);
         }
-        public int TotalFramesToCheck()
+        public int TotalFramesToCheck(Restriction restriction)
         {
-            List<bool> TestingValues = DependantVariableList(TestingRestriction);
+            List<bool> TestingValues = DependantVariableList(restriction);
             int Total = 0;
             for (int i = 1; i < TestingValues.Count; i++)
                 if(TestingValues[i])
                     Total = Total != 0 ? Total * ByType[i] : ByType[i];
             return Total;
         }
-
         SingleRestriction GetSingleRestrictionAtIndex(Restriction restriction, int index)
         {
             List<long> FinalStats = GetOutputList(index, GetMiddleStats(DependantVariableList(restriction)));
@@ -109,7 +150,6 @@ namespace RestrictionSystem
                 return AxisList;
             }
         }
-        
         private List<long> GetMiddleStats(List<bool> WorkingList)
         {
             List<long> Output = new List<long>();
@@ -154,22 +194,58 @@ namespace RestrictionSystem
 
             return Variables;
         }
-        public List<SingleRestriction> GenerateRestrictions()
+        public List<SingleRestriction> GenerateRestrictions(List<int> RestrictionTypes, List<int> RestrictionValues)
         {
             List<SingleRestriction> Restrictions = new List<SingleRestriction>();
+            for (int i = 0; i < RestrictionTypes.Count; i++)
+                Restrictions.Add(GetSingleRestrictionAtIndex((Restriction)RestrictionTypes[i], RestrictionValues[i]));
             return Restrictions;
         }
         IEnumerator AutoPickRunning()
         {
+            RestrictionTypeIndexTest = 1;
+            TotalRequiredRuns = GetTotalRequiredRuns();
+            UpdateValues();
+
             while (true)
             {
+                yield return new WaitForEndOfFrame();
+                for (int i = 0; i < PerEnumAdd; i++)
+                {
+                    AddToValues(out bool BaseMax, out bool Max);
+                    if (BaseMax)
+                        UpdateValues();
 
+                    if (Max)
+                        break;
+                }
                 //run brute force
                 //check if higher than last
-                OnCompletionUpdate(1f);
+                //OnCompletionUpdate(1f);
             }
+            void UpdateValues()
+            {
+                RestrictionTypes = Seperate(GetValuesWithMax(RestrictionTypeIndexTest, ValuesOfMax()));
+                RestrictionValues.Clear();
+                for (int i = 0; i < RestrictionTypes.Count; i++)
+                    RestrictionValues.Add(0);
+            }
+            
         }
-        
+        List<int> ValuesOfMax()
+        {
+            List<int> NewList = new List<int>();
+            int Last = 1;
+            NewList.Add(Last);
+
+            for (int i = 1; i < System.Enum.GetValues(typeof(Restriction)).Length; i++)
+            {
+                Last = Last * (MaxRestrictions + 1);
+                NewList.Add(Last);
+            }
+            //NewList.Reverse();
+            return NewList;
+        }
     }
     //public static Dictionary<VariableType, int> VariablePossibilities = new Dictionary<VariableType, int>() { { VariableType.Vector3, 27 }, { VariableType.Bool, 2 } };
 

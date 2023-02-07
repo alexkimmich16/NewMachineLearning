@@ -24,6 +24,7 @@ public class MotionEditor : SerializedMonoBehaviour
     public CurrentLearn MotionType;
     public EditSettings Setting;
     public bool Typing;
+    
     public TMP_InputField input;
     public TextMeshProUGUI sideText;
     public TextMeshProUGUI CurrentValue;
@@ -135,7 +136,6 @@ public class MotionEditor : SerializedMonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.DownArrow) && MotionNum > 0)
             {
-                
                 MotionNum -= 1;
                 display.Motion = MotionNum;
                 if (OnChangeMotion != null)

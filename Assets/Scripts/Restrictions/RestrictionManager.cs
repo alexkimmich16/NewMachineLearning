@@ -89,20 +89,20 @@ namespace RestrictionSystem
         public static float VelocityMagnitude(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
             
-            float Distance = Vector3.Distance(EliminateAxis(restriction.UseAxisList, frame1.HandPos), EliminateAxis(restriction.UseAxisList, frame2.HandPos));
+            float Distance = Vector3.Distance(EliminateAxis(restriction.UseAxisList, frame1.HandPosType(restriction.UseLocalHandPos)), EliminateAxis(restriction.UseAxisList, frame2.HandPosType(restriction.UseLocalHandPos)));
             float Speed = Distance / (frame2.SpawnTime - frame1.SpawnTime);
             //restriction.Value = Speed;
             return Speed;
         }
         public static float VelocityDirection(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
-            Vector3 ForwardInput = restriction.checkType == CheckType.Other ? restriction.OtherDirection : restriction.checkType == CheckType.Head ? frame2.HeadRot : frame2.HandRot;
+            Vector3 ForwardInput = restriction.checkType == CheckType.Other ? restriction.OtherDirection : restriction.checkType == CheckType.Head ? frame2.HeadRot : frame2.HandRotType(restriction.UseLocalHandRot);
             Vector3 forwardDir = EliminateAxis(restriction.UseAxisList, Quaternion.Euler(ForwardInput + restriction.Offset) * restriction.Direction);
 
-            float AngleDistance = Vector3.Angle(EliminateAxis(restriction.UseAxisList, (frame2.HandPos - frame1.HandPos).normalized), forwardDir);
+            float AngleDistance = Vector3.Angle(EliminateAxis(restriction.UseAxisList, (frame2.HandPosType(restriction.UseLocalHandPos) - frame1.HandPosType(restriction.UseLocalHandPos)).normalized), forwardDir);
             if (restriction.ShouldDebug)
             {
-                Debug.DrawLine(frame2.HandPos, frame2.HandPos + EliminateAxis(restriction.UseAxisList, (frame2.HandPos - frame1.HandPos).normalized) * DebugRestrictions.instance.LineLength, Color.yellow);
+                Debug.DrawLine(frame2.HandPos, frame2.HandPos + EliminateAxis(restriction.UseAxisList, (frame2.HandPosType(restriction.UseLocalHandPos) - frame1.HandPosType(restriction.UseLocalHandPos)).normalized) * DebugRestrictions.instance.LineLength, Color.yellow);
                 Debug.DrawLine(frame2.HandPos, frame2.HandPos + (forwardDir * DebugRestrictions.instance.LineLength), Color.red);
             }
             //restriction.Value = AngleDistance;
@@ -110,8 +110,8 @@ namespace RestrictionSystem
         }
         public static float HandFacing(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
-            Vector3 HandDir = EliminateAxis(restriction.UseAxisList, (Quaternion.Euler(frame2.HandRot + restriction.Offset) * restriction.Direction));
-            Vector3 OtherDir = EliminateAxis(restriction.UseAxisList, restriction.checkType == CheckType.Other ? restriction.OtherDirection : (-frame2.HandPos).normalized);
+            Vector3 HandDir = EliminateAxis(restriction.UseAxisList, (Quaternion.Euler(frame2.HandRotType(restriction.UseLocalHandRot) + restriction.Offset) * restriction.Direction));
+            Vector3 OtherDir = EliminateAxis(restriction.UseAxisList, restriction.checkType == CheckType.Other ? restriction.OtherDirection : -(frame2.HandPosType(restriction.UseLocalHandPos)).normalized);
             if (restriction.ShouldDebug)
             {
                 Debug.DrawLine(frame2.HandPos, frame2.HandPos + (OtherDir * DebugRestrictions.instance.LineLength), Color.yellow);

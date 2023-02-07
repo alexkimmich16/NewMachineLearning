@@ -53,27 +53,44 @@ namespace RestrictionSystem
     {
         public string Label;
         public bool Active;
-        public float Weight;
+        
         public Restriction restriction;
+
+        
+        
+
         [ShowIf("RequiresCheckType")] public CheckType checkType;
-        private bool RequiresCheckType() { return restriction == Restriction.VelocityInDirection || restriction == Restriction.HandFacing; }
-        [ShowIf("checkType", CheckType.Other)]
-        public Vector3 OtherDirection;
+        private bool RequiresCheckType() { return CheckTypeRestrictions.Contains(restriction); }
+        public static List<Restriction> CheckTypeRestrictions = new List<Restriction>() { Restriction.VelocityInDirection, Restriction.HandFacing };
+
+        [ShowIf("checkType", CheckType.Other)] public Vector3 OtherDirection;
+
+        [ShowIf("RequiresLocalPosOption")] public bool UseLocalHandPos;
+        private bool RequiresLocalPosOption() { return LocalHandPosRestrictions.Contains(restriction); }
+        public static List<Restriction> LocalHandPosRestrictions = new List<Restriction>() { Restriction.VelocityInDirection, Restriction.HandFacing, Restriction.VelocityThreshold };
+
+        [ShowIf("RequiresLocalRotOption")] public bool UseLocalHandRot;
+        private bool RequiresLocalRotOption() { return LocalHandRotRestrictions.Contains(restriction); }
+        public static List<Restriction> LocalHandRotRestrictions = new List<Restriction>() { Restriction.VelocityInDirection, Restriction.HandFacing};
+
+        
+
+        [ShowIf("RequiresOffset")] public Vector3 Offset;
+        [ShowIf("RequiresOffset")] public Vector3 Direction;
+        private bool RequiresOffset() { return RequiresOffsetRestrictions.Contains(restriction); }
+        public static List<Restriction> RequiresOffsetRestrictions = new List<Restriction>() { Restriction.VelocityInDirection, Restriction.HandFacing };
+
+        [ShowIf("RequiresAxisList")] public List<Axis> UseAxisList;
+        private bool RequiresAxisList() { return AxisListRestrictions.Contains(restriction); }
+        public static List<Restriction> AxisListRestrictions = new List<Restriction>() { Restriction.HandHeadDistance, Restriction.VelocityThreshold, Restriction.HandFacing, Restriction.VelocityInDirection };
 
 
+        public float Weight;
         public float MaxSafe;
         public float MinSafe;
         public float MinFalloff;
         public float MaxFalloff;
 
-        private bool RequiresOffset() { return restriction == Restriction.VelocityInDirection || restriction == Restriction.HandFacing; }
-        private bool RequiresAxisList() { return restriction == Restriction.HandHeadDistance || restriction == Restriction.VelocityThreshold || restriction == Restriction.HandFacing || restriction == Restriction.VelocityInDirection; }
-
-
-        [ShowIf("RequiresOffset")] public Vector3 Offset;
-        [ShowIf("RequiresOffset")] public Vector3 Direction;
-
-        [ShowIf("RequiresAxisList")] public List<Axis> UseAxisList;
 
         public bool ShouldDebug;
         [ReadOnly] public float Value;

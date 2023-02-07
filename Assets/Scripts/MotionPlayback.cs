@@ -17,6 +17,7 @@ public class MotionPlayback : MonoBehaviour
     private int LastMotion;
     public float PlaybackSpeed = 1f;
     public PlayType type;
+    public bool DisplayLocal;
 
     [Header("Info")]
     public int Frame;
@@ -35,6 +36,8 @@ public class MotionPlayback : MonoBehaviour
 
     public bool OneInterprolate;
     public List<SingleInfo> interpolating;
+
+
 
     public List<RestrictionSystem.CurrentLearn> CurrentMotions;
     public bool OldFrameWorks() { return Frame - PastFrameRecorder.instance.FramesAgo >= 0; }
@@ -70,7 +73,8 @@ public class MotionPlayback : MonoBehaviour
             bool State = ME.Setting == EditSettings.Editing ? LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].AtFrameState(Frame) : GetMotionFromInput();
             handToChange.material = LM.FalseTrue[State ? 1 : 0];
 
-            if(ME.Setting == EditSettings.DisplayingBrute || ME.Setting == EditSettings.DisplayingMotion)
+            
+            if (ME.Setting == EditSettings.DisplayingBrute || ME.Setting == EditSettings.DisplayingMotion)
             {
                 //ConditionManager.instance.PassValue(State, ME.CurrentTestMotion, Side.right);
             }
@@ -79,9 +83,9 @@ public class MotionPlayback : MonoBehaviour
             
             moveAll(info);
             LastMotion = Motion;
-            if(OnNewFrame != null)
-                OnNewFrame();
+            OnNewFrame?.Invoke();
 
+            
             bool GetMotionFromInput() { return Frame - BruteForce.instance.PastFrameLookup >= 0 ? RestrictionManager.MotionWorks(LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame), GetMotionRestriction()) : false; }
             MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.CurrentTestMotion - 1]; }
         }
@@ -93,8 +97,8 @@ public class MotionPlayback : MonoBehaviour
     }
     public void MoveController(Transform trans, SingleInfo info)
     {
-        trans.localPosition = info.HandPos;
-        trans.localEulerAngles = info.HandRot;
+        trans.localPosition = info.HandPosType(DisplayLocal);
+        trans.localEulerAngles = info.HandRotType(DisplayLocal);
     }
     public void MoveHead(SingleInfo info)
     {

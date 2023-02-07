@@ -281,6 +281,9 @@ MonoBehaviour:
     HeadRot: {x: 0, y: 0, z: 0}
     HandPos: {x: 0, y: 0, z: 0}
     HandRot: {x: 0, y: 0, z: 0}
+    UncenteredHandPos: {x: 0, y: 0, z: 0}
+    UncenteredHandRot: {x: 0, y: 0, z: 0}
+    SpawnTime: 0
   Streak: 0
   Fitness: 0
   SentLearnManagerFinish: 0
@@ -3293,6 +3296,7 @@ GameObject:
   - component: {fileID: 944444322}
   - component: {fileID: 944444323}
   - component: {fileID: 944444324}
+  - component: {fileID: 944444325}
   m_Layer: 0
   m_Name: Restictions
   m_TagString: Untagged
@@ -3334,62 +3338,70 @@ MonoBehaviour:
     Restrictions:
     - Label: YSpeed
       Active: 1
-      Weight: 0
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 01000000
+      Weight: 0
       MaxSafe: 500
       MinSafe: 9.641811
       MinFalloff: -0.13090637
       MaxFalloff: 500
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 01000000
       ShouldDebug: 0
       Value: 0.030020434
     - Label: VerticalSpeed
       Active: 1
-      Weight: 0
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 0000000002000000
+      Weight: 0
       MaxSafe: 500
       MinSafe: 19.793509
       MinFalloff: 5.730709
       MaxFalloff: 500
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 0000000002000000
       ShouldDebug: 0
       Value: 0.030020434
     - Label: HandEdgeFaceGround
       Active: 1
-      Weight: 0
       restriction: 2
       checkType: 2
       OtherDirection: {x: 0, y: -1, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: -1, z: 0}
+      UseAxisList: 000000000100000002000000
+      Weight: 0
       MaxSafe: 46.971046
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 47.826508
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: -1, z: 0}
-      UseAxisList: 000000000100000002000000
       ShouldDebug: 1
       Value: 57.747
     - Label: NearForwardDirection
       Active: 1
-      Weight: 0
       restriction: 1
       checkType: 1
       OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 1}
+      UseAxisList: 0000000002000000
+      Weight: 0
       MaxSafe: 65.195114
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 75.07904
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 1}
-      UseAxisList: 0000000002000000
       ShouldDebug: 0
       Value: 0
   debugType: 3
@@ -3598,7 +3610,7 @@ MonoBehaviour:
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
     - Max:
         GuessingMax: 500
@@ -3623,7 +3635,7 @@ MonoBehaviour:
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
     - Max:
         GuessingMax: 50
@@ -3648,7 +3660,7 @@ MonoBehaviour:
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
     - Max:
         GuessingMax: 50
@@ -3673,32 +3685,7 @@ MonoBehaviour:
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-    - Max:
-        GuessingMax: 10
-        GuessingMin: 5
-        MiddleSteps: 2
-        CurrentStep: 0
-      Min:
-        GuessingMax: 5
-        GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-      MaxFalloff:
-        GuessingMax: 10
-        GuessingMin: 5
-        MiddleSteps: 2
-        CurrentStep: 0
-      MinFalloff:
-        GuessingMax: 5
-        GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-      Weight:
-        GuessingMax: 1
-        GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
   - Motion: FlameBlock
     Restrictions:
@@ -3832,57 +3819,63 @@ MonoBehaviour:
     Restrictions:
     - Label: YSpeed
       Active: 1
-      Weight: 0
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 01000000
+      Weight: 0
       MaxSafe: 500
       MinSafe: 15.448305
       MinFalloff: 13.07209
       MaxFalloff: 500
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 01000000
       ShouldDebug: 0
       Value: 0.030020434
     - Label: VerticalSpeed
       Active: 1
-      Weight: 0
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 1
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 0000000002000000
+      Weight: 0
       MaxSafe: 31.790813
       MinSafe: 31.790813
       MinFalloff: 5.012211
       MaxFalloff: 31.790813
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 0000000002000000
       ShouldDebug: 0
       Value: 0.030020434
     - Label: HandEdgeFaceGround
       Active: 1
-      Weight: 0
       restriction: 2
       checkType: 2
       OtherDirection: {x: 0, y: -1, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: -1, z: 0}
+      UseAxisList: 000000000100000002000000
+      Weight: 0
       MaxSafe: 0.00020823149
       MinSafe: 0
       MinFalloff: 0
       MaxFalloff: 53.506886
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: -1, z: 0}
-      UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 57.747
   FrameInfo: []
-  MaxFrames: 262144
+  MaxFrames: 41472
   MaxGroup: 1000000
   ShouldDebug: 0
   FramesToCaptureDebug: 10648
   Test1: 0
   Test2: 0
-  TotalFrameCount: 262144
+  TotalFrameCount: 41472
   Values: 
   FloatValues: 
   UseAllMotions: 1
@@ -3890,8 +3883,7 @@ MonoBehaviour:
   Output: 
   MiddleStepCounts: 
   ReInput: 0
-  LockValues: 1
-  Sequences: 1
+  Sequences: 50
   Confidence: 0.975
   StopAdjustingPrecision: 0.001
 --- !u!114 &944444324
@@ -3930,17 +3922,19 @@ MonoBehaviour:
         restriction:
           Label: 
           Active: 0
-          Weight: 0
           restriction: 0
           checkType: 0
           OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 
+          Weight: 0
           MaxSafe: 0
           MinSafe: 0
           MinFalloff: 0
           MaxFalloff: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          UseAxisList: 
           ShouldDebug: 0
           Value: 0
         LastState: 0000
@@ -3961,17 +3955,19 @@ MonoBehaviour:
         restriction:
           Label: dist from head
           Active: 1
-          Weight: 0
           restriction: 3
           checkType: 0
           OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 000000000100000002000000
+          Weight: 0
           MaxSafe: 1000
           MinSafe: 0.21
           MinFalloff: 0
           MaxFalloff: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          UseAxisList: 000000000100000002000000
           ShouldDebug: 0
           Value: 0
         LastState: 0000
@@ -3994,6 +3990,48 @@ MonoBehaviour:
     ResetOnMax: 0
     WaitingForFalse: 0000
     ConditionLists: []
+--- !u!114 &944444325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944444316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 410097314fb25da46b76c7bdd9585a52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  TestingRestriction: 1
+  TestValue: 0
+  MaxValue: 0
+  OutputRestriction:
+    Label: 
+    Active: 0
+    restriction: 0
+    checkType: 0
+    OtherDirection: {x: 0, y: 0, z: 0}
+    UseLocalHandPos: 0
+    UseLocalHandRot: 0
+    Offset: {x: 0, y: 0, z: 0}
+    Direction: {x: 0, y: 0, z: 0}
+    UseAxisList: 
+    Weight: 0
+    MaxSafe: 0
+    MinSafe: 0
+    MinFalloff: 0
+    MaxFalloff: 0
+    ShouldDebug: 0
+    Value: 0
 --- !u!1 &960757780
 GameObject:
   m_ObjectHideFlags: 0
@@ -6678,6 +6716,7 @@ MonoBehaviour:
   Motion: 0
   PlaybackSpeed: 60
   type: 3
+  DisplayLocal: 1
   Frame: 0
   NextTime: 0
   Timer: 0
@@ -8609,6 +8648,9 @@ MonoBehaviour:
     HeadRot: {x: 0, y: 0, z: 0}
     HandPos: {x: 0, y: 0, z: 0}
     HandRot: {x: 0, y: 0, z: 0}
+    UncenteredHandPos: {x: 0, y: 0, z: 0}
+    UncenteredHandRot: {x: 0, y: 0, z: 0}
+    SpawnTime: 0
   Streak: 0
   Fitness: 0
   SentLearnManagerFinish: 0

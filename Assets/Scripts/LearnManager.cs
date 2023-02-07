@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using UnityEditor;
+using RestrictionSystem;
 public enum CurrentLearn
 {
     Nothing = 0,
@@ -136,7 +137,7 @@ public class LearnManager : SerializedMonoBehaviour
         float Current = EachChange;
         for (int i = 0; i < TotalInterprolateFrames; i++)
         {
-            LerpList.Add(new SingleInfo(Vector3.Lerp(from, to, Current), Vector3.zero, Vector3.zero, Vector3.zero));
+            LerpList.Add(new SingleInfo(Vector3.Lerp(from, to, Current), Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero));
             Current += EachChange;
         }
         return LerpList;

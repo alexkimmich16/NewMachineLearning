@@ -30,7 +30,9 @@ namespace RestrictionSystem
             TestHand[(int)side].position = TestHand[(int)side].position - CamPos;
 
             float YDifference = -Cam.localRotation.eulerAngles.y;
+            //float CenterChange = Cam.localRotation.eulerAngles.y;
 
+            
             //invert main to y distance
             if (side == Side.left)
             {
@@ -38,10 +40,11 @@ namespace RestrictionSystem
                 Vector3 Rot = TestCam[(int)side].eulerAngles;
                 TestCam[(int)side].eulerAngles = new Vector3(Rot.x, -Rot.y, -Rot.z);
             }
-
+            Vector3 UncenteredHandPos = TestHand[(int)side].position;
+            Vector3 UncenteredHandRot = TestHand[(int)side].rotation.eulerAngles;
             TestMain[(int)side].rotation = Quaternion.Euler(0, YDifference, 0);
             //TestCam[(int)side].localRotation = Cam.localRotation;
-            return new SingleInfo(TestHand[(int)side].position, TestHand[(int)side].rotation.eulerAngles, TestCam[(int)side].position, TestCam[(int)side].rotation.eulerAngles);
+            return new SingleInfo(TestHand[(int)side].position, TestHand[(int)side].rotation.eulerAngles, TestCam[(int)side].position, TestCam[(int)side].rotation.eulerAngles, UncenteredHandPos, UncenteredHandRot);
 
             void ResetStats()
             {
@@ -92,23 +95,30 @@ namespace RestrictionSystem
     [System.Serializable]
     public class SingleInfo
     {
-        public Vector3 HeadPos, HeadRot, HandPos, HandRot;
+        public Vector3 HandPosType(bool IsLocal) { return IsLocal ? UncenteredHandPos : HandPos; }
+        public Vector3 HandRotType(bool IsLocal) { return IsLocal ? UncenteredHandRot : HandRot; }
+        
+        public Vector3 HeadPos, HeadRot, HandPos, HandRot, UncenteredHandPos, UncenteredHandRot;
         public float SpawnTime;
-        public SingleInfo(Vector3 HandPosStat, Vector3 HandRotStat, Vector3 HeadPosStat, Vector3 HeadRotStat)
+        public SingleInfo(Vector3 HandPosStat, Vector3 HandRotStat, Vector3 HeadPosStat, Vector3 HeadRotStat, Vector3 UncenteredHandPos, Vector3 UncenteredHandRot)
         {
             SpawnTime = Time.timeSinceLevelLoad;
             HeadPos = HeadPosStat;
             HeadRot = HeadRotStat;
             HandPos = HandPosStat;
             HandRot = HandRotStat;
+            this.UncenteredHandRot = UncenteredHandRot;
+            this.UncenteredHandPos = UncenteredHandPos;
         }
-        public SingleInfo(Vector3 HandPosStat, Vector3 HandRotStat, Vector3 HeadPosStat, Vector3 HeadRotStat, float SetTime)
+        public SingleInfo(Vector3 HandPosStat, Vector3 HandRotStat, Vector3 HeadPosStat, Vector3 HeadRotStat, Vector3 UncenteredHandPos, Vector3 UncenteredHandRot, float SetTime)
         {
             SpawnTime = SetTime;
             HeadPos = HeadPosStat;
             HeadRot = HeadRotStat;
             HandPos = HandPosStat;
             HandRot = HandRotStat;
+            this.UncenteredHandRot = UncenteredHandRot;
+            this.UncenteredHandPos = UncenteredHandPos;
         }
     }
 }

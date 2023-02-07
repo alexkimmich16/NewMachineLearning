@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RestrictionSystem;
 public class RecordMotions : MonoBehaviour
 {
     public int FramesPerSecond;
@@ -52,8 +53,7 @@ public class RecordMotions : MonoBehaviour
         if (RecordingMotion == false)
             return;
 
-        RestrictionSystem.SingleInfo Oldinfo = RestrictionSystem.PastFrameRecorder.instance.GetControllerInfo(RestrictionSystem.Side.right);
-        SingleInfo info = new SingleInfo(Oldinfo.HandPos, Oldinfo.HandRot, Oldinfo.HeadPos, Oldinfo.HeadRot);
+        SingleInfo info = PastFrameRecorder.instance.GetControllerInfo(Side.right);
         Values.Add(LearnManager.instance.Right.TriggerPressed());
         CurrentMotionRecord.Add(info);
     }

@@ -13,11 +13,7 @@ public class AllMotions : ScriptableObject
     //public Vector2 Reward = new Vector2(1,1);
 
     //x is i guessed false
-    public RestrictionSystem.SingleInfo GetRestrictionInfoAtIndex(int Motion, int Frame)
-    {
-        SingleInfo info = Motions[Motion].Infos[Frame];
-        return new RestrictionSystem.SingleInfo(info.HandPos, info.HandRot, info.HeadPos, info.HeadRot, Frame / 60f);
-    }
+    public SingleInfo GetRestrictionInfoAtIndex(int Motion, int Frame) { return Motions[Motion].Infos[Frame]; }
     public List<Motion> Random()
     {
         List<Motion> NewMotions = new List<Motion>(Motions);

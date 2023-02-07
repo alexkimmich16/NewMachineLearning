@@ -40,7 +40,6 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("Check")] public List<long> MiddleStepCounts = new List<long>();
     [FoldoutGroup("Check")] public long ReInput;
 
-    [FoldoutGroup("CustomCheck")] public bool LockValues;
     [FoldoutGroup("CustomCheck")] public int Sequences;
     [FoldoutGroup("CustomCheck"), Range(0,1)] public float Confidence;
     [FoldoutGroup("CustomCheck")] public float StopAdjustingPrecision = 0.005f; //range at which stops
@@ -214,8 +213,7 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("BruteForce"), Button(ButtonSizes.Small)]
     public void RunBruteForce()
     {
-        int Locks = LockValues ? Sequences : 1;
-        for (int v = 0; v < Locks; v++)
+        for (int v = 0; v < Sequences; v++)
         {
             float StartTime = Time.realtimeSinceStartup;
             BruteForceSettings = new MotionRestriction(RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)motionGet - 1]); //restrictions
@@ -263,35 +261,32 @@ public class BruteForce : SerializedMonoBehaviour
             }
 
             BruteForceSettings.Restrictions = NewList;
-            if (LockValues)
+            List<AllChanges.SingleChange> NewChanges = new List<AllChanges.SingleChange>();
+            for (int i = 0; i < Changes.Count; i++)
             {
-                List<AllChanges.SingleChange> NewChanges = new List<AllChanges.SingleChange>();
-                for (int i = 0; i < Changes.Count; i++)
-                {
-                    
-                    float Range = ((Changes[i].GuessingMax - Changes[i].GuessingMin) / 2) * Confidence;
-                    float NewMax = Range > StopAdjustingPrecision ? Changes[i].GetCurrentValueAt((int)FinalStats[i]) + Range : Changes[i].GetCurrentValueAt((int)FinalStats[i]);
-                    float NewMin = Range > StopAdjustingPrecision ? Changes[i].GetCurrentValueAt((int)FinalStats[i]) - Range : Changes[i].GetCurrentValueAt((int)FinalStats[i]);
 
-                    //4 = (4 / 5) -> 0 && 4 - 0 * 5 = 4
-                    int Restriction = Mathf.FloorToInt(i / 5);
-                    int CountLeft = i - Restriction * 5;
+                float Range = ((Changes[i].GuessingMax - Changes[i].GuessingMin) / 2) * Confidence;
+                float NewMax = Range > StopAdjustingPrecision ? Changes[i].GetCurrentValueAt((int)FinalStats[i]) + Range : Changes[i].GetCurrentValueAt((int)FinalStats[i]);
+                float NewMin = Range > StopAdjustingPrecision ? Changes[i].GetCurrentValueAt((int)FinalStats[i]) - Range : Changes[i].GetCurrentValueAt((int)FinalStats[i]);
 
-                    AllChanges.OneRestrictionChange Rest = AllChangesList[(int)motionGet - 1].Restrictions[Restriction];
-                    if (CountLeft == 0)
-                        NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.Max.MiddleSteps, Rest.Max.CurrentStep));
-                    if (CountLeft == 1)
-                        NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.Min.MiddleSteps, Rest.Min.CurrentStep));
-                    if (CountLeft == 2)
-                        NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.MaxFalloff.MiddleSteps, Rest.MaxFalloff.CurrentStep));
-                    if (CountLeft == 3)
-                        NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.MinFalloff.MiddleSteps, Rest.MinFalloff.CurrentStep));
-                    if (CountLeft == 4)
-                        NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.Weight.MiddleSteps, Rest.Weight.CurrentStep));
-                }
-                //Debug.Log("NewChanges: " + NewChanges.Count);
-                AllChangesList[(int)motionGet - 1] = new AllChanges(NewChanges);
+                //4 = (4 / 5) -> 0 && 4 - 0 * 5 = 4
+                int Restriction = Mathf.FloorToInt(i / 5);
+                int CountLeft = i - Restriction * 5;
+
+                AllChanges.OneRestrictionChange Rest = AllChangesList[(int)motionGet - 1].Restrictions[Restriction];
+                if (CountLeft == 0)
+                    NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.Max.MiddleSteps, Rest.Max.CurrentStep));
+                if (CountLeft == 1)
+                    NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.Min.MiddleSteps, Rest.Min.CurrentStep));
+                if (CountLeft == 2)
+                    NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.MaxFalloff.MiddleSteps, Rest.MaxFalloff.CurrentStep));
+                if (CountLeft == 3)
+                    NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.MinFalloff.MiddleSteps, Rest.MinFalloff.CurrentStep));
+                if (CountLeft == 4)
+                    NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.Weight.MiddleSteps, Rest.Weight.CurrentStep));
             }
+            //Debug.Log("NewChanges: " + NewChanges.Count);
+            AllChangesList[(int)motionGet - 1] = new AllChanges(NewChanges);
             Debug.Log("BestIndex: " + RealIndex + "  BestValue: " + RealHighest);
             Debug.Log("Frames: " + MaxFrames + " in: " + (Time.realtimeSinceStartup - StartTime).ToString("F3") + " Seconds");
         }
@@ -394,19 +389,6 @@ public struct AllChanges
         }
         return SinglesList;
     }
-    public List<float> GetEncodedInfo()
-    {
-        List<float> ReturnInfo = new List<float>();
-        for (int i = 0; i < Restrictions.Count; i++)
-        {
-            ReturnInfo.Add(Restrictions[i].Max.GetCurrentValue());
-            ReturnInfo.Add(Restrictions[i].Min.GetCurrentValue());
-            ReturnInfo.Add(Restrictions[i].MaxFalloff.GetCurrentValue());
-            ReturnInfo.Add(Restrictions[i].MinFalloff.GetCurrentValue());
-            ReturnInfo.Add(Restrictions[i].Weight.GetCurrentValue());
-        }
-        return ReturnInfo;
-    }
 
     [System.Serializable]
     public struct OneRestrictionChange
@@ -420,9 +402,6 @@ public struct AllChanges
     [System.Serializable]
     public struct SingleChange
     {
-
-        //[MinMaxSlider("@GuessingMaxMin.x - 10f", "@GuessingMaxMin.y * + 10f", true)] public Vector2 GuessingMaxMin;
-        //[MinMaxSlider(-500, 500, true)] public Vector2 GuessingMaxMin;
         public enum Limit
         {
             Variable = 0,
@@ -430,11 +409,7 @@ public struct AllChanges
             Zero = 2,
         }
 
-        //public Limit MaxLimit;
-        //[ShowIf("MinLimit", Limit.Variable)] 
         public float GuessingMax;
-        //public Limit MinLimit;
-        //[ShowIf("MinLimit", Limit.Variable)] 
         public float GuessingMin;
 
         [Range(0,50)]public int MiddleSteps;
@@ -443,12 +418,7 @@ public struct AllChanges
 
         public SingleChange(float Max, float Min, int MiddleSteps, int CurrentStep)
         {
-            
-            
-            //this.MaxLimit = Limit.Variable;
-            //this.MinLimit = Limit.Variable;
             this.GuessingMax = Max;
-            //this.GuessingMaxMin = Vector2.zero;
             this.GuessingMin = Min;
             this.MiddleSteps = MiddleSteps;
             this.CurrentStep = CurrentStep;

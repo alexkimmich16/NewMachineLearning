@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using RestrictionSystem;
 public enum MatrixDisplay
 {
     MotionPlayback = 0,

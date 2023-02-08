@@ -43,6 +43,7 @@ namespace RestrictionSystem
         //[FoldoutGroup("IndexToRestrictionTest")] public int RestrictionSettingsIndexTest;
         [FoldoutGroup("IndexToRestrictionTest")] public List<int> RestrictionTypes;
         [FoldoutGroup("IndexToRestrictionTest")] public List<int> RestrictionValues;
+        [FoldoutGroup("IndexToRestrictionTest"), ReadOnly] public List<int> ExampleValues;
         [FoldoutGroup("IndexToRestrictionTest")] public List<SingleRestriction> IndexRestricions;
         [FoldoutGroup("IndexToRestrictionTest"), ReadOnly] public int TotalRequiredRuns;
 
@@ -57,12 +58,11 @@ namespace RestrictionSystem
                 NumberOfEachRequirement.Add(0);
 
             //3 ^ 5;
-            Debug.Log(ValuesOfMax().Aggregate((total, next) => total * next));
             //all possible combinations
-            for (int i = 0; i < Mathf.Pow(3, System.Enum.GetValues(typeof(Restriction)).Length) ;i++)
+            for (int i = 0; i < Mathf.Pow(MaxRestrictions + 1, System.Enum.GetValues(typeof(Restriction)).Length) ;i++)
             {
                 List<int> Values = GetValuesWithMax(RestrictionTypeIndexTest, ValuesOfMax());
-                for (int j = 0; j < 50; j++)
+                for (int j = 0; j < Values.Count; j++)
                     NumberOfEachRequirement[j] += Values[j];
             }
             return 1;
@@ -96,6 +96,8 @@ namespace RestrictionSystem
             MaxValue = TotalFramesToCheck(TestingRestriction);
 
             IndexRestricions = GenerateRestrictions(RestrictionTypes, RestrictionValues);
+
+            ExampleValues = 
         }
         public int TotalFramesToCheck(Restriction restriction)
         {
@@ -230,7 +232,6 @@ namespace RestrictionSystem
                 for (int i = 0; i < RestrictionTypes.Count; i++)
                     RestrictionValues.Add(0);
             }
-            
         }
         List<int> ValuesOfMax()
         {

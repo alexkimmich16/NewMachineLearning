@@ -6,7 +6,8 @@ using System.Linq;
 namespace RestrictionSystem
 {
     public delegate bool CompletionUpdate(float Percent);
-    
+
+    //public delegate float RestrictionTest(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2);
     public class AutoPickExtension : SerializedMonoBehaviour
     {
         public static List<int> GetValuesWithMax(int Value, List<int> Maxes)
@@ -29,14 +30,24 @@ namespace RestrictionSystem
             return Output;
         }
         public static List<int> ByType = new List<int>() { 3, 27, 2, 2, 27, 8};
+        public static Dictionary<RestrictionChangeValue, VariableType> RestrictionValueTypes = new Dictionary<RestrictionChangeValue, VariableType>(){
+            {RestrictionChangeValue.checkType, VariableType.CheckTypeList},
+            {RestrictionChangeValue.OtherDirection, VariableType.Vector3},
+            {RestrictionChangeValue.UseLocalHandPos, VariableType.Bool},
+            {RestrictionChangeValue.UseLocalHandRot, VariableType.Bool},
+            {RestrictionChangeValue.Direction, VariableType.Vector3},
+            {RestrictionChangeValue.UseAxisList, VariableType.AxisList},
+        };
+
+        //public List<RestrictionVariableLock> RestrictionVariableLocks;
 
         public Restriction TestingRestriction;
         public int MaxRestrictions = 2;
         [FoldoutGroup("Test")] public int PerEnumAdd;
         [FoldoutGroup("Test"), ReadOnly] public int MaxValue;
 
-        [FoldoutGroup("GeometricTest")] public int TestValue; 
-        [FoldoutGroup("GeometricTest")] public SingleRestriction OutputRestriction;
+        [FoldoutGroup("GeometricTest")] public int TestValue;
+        [FoldoutGroup("GeometricTest"), ReadOnly] public List<int> TestValues;
 
 
         [FoldoutGroup("IndexToRestrictionTest")] public int RestrictionTypeIndexTest;
@@ -92,12 +103,8 @@ namespace RestrictionSystem
 
         private void Update()
         {
-            OutputRestriction = GetSingleRestrictionAtIndex(TestingRestriction, TestValue);
             MaxValue = TotalFramesToCheck(TestingRestriction);
-
             IndexRestricions = GenerateRestrictions(RestrictionTypes, RestrictionValues);
-
-            ExampleValues = 
         }
         public int TotalFramesToCheck(Restriction restriction)
         {
@@ -152,6 +159,9 @@ namespace RestrictionSystem
                 return AxisList;
             }
         }
+        
+        
+        
         private List<long> GetMiddleStats(List<bool> WorkingList)
         {
             List<long> Output = new List<long>();
@@ -196,6 +206,7 @@ namespace RestrictionSystem
 
             return Variables;
         }
+        
         public List<SingleRestriction> GenerateRestrictions(List<int> RestrictionTypes, List<int> RestrictionValues)
         {
             List<SingleRestriction> Restrictions = new List<SingleRestriction>();
@@ -244,42 +255,39 @@ namespace RestrictionSystem
                 Last = Last * (MaxRestrictions + 1);
                 NewList.Add(Last);
             }
-            //NewList.Reverse();
+            NewList.Reverse();
             return NewList;
         }
+
     }
     //public static Dictionary<VariableType, int> VariablePossibilities = new Dictionary<VariableType, int>() { { VariableType.Vector3, 27 }, { VariableType.Bool, 2 } };
 
     [System.Serializable]
-    public struct DefinedAutoRestriction
+    public struct VariableLock
     {
-        public AllChanges.OneRestrictionChange Stats;
-        public SingleRestriction Restriction;
-    }
+        public RestrictionChangeValue ValueToChange;
 
-    [System.Serializable]
-    public struct VariableStore
-    {
-        public VariableType variableType;
-        public VariableStore(VariableType type)
-        {
-            variableType = type;
-            IntStore = 0;
-        }
-        public VariableStore(int Num)
-        {
-            variableType = VariableType.IntRange;
-            IntStore = Num;
-        }
-        
-        public int IntStore;
+        //value
     }
-    
+    [System.Serializable]
+    public struct RestrictionVariableLock
+    {
+        public List<VariableLock> VariableLocks;
+    }
     public enum VariableType
     {
         Vector3 = 0,
         Bool = 1,
-        IntRange = 2,
-        None = 3,
+        CheckTypeList = 2,
+        AxisList = 2,
+    }
+    public enum RestrictionChangeValue
+    {
+        checkType = 0,
+        OtherDirection = 1,
+        UseLocalHandPos = 2,
+        UseLocalHandRot = 3,
+        Direction = 4,
+        UseAxisList = 5,
     }
 }

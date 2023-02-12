@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System;
 using Sirenix.OdinInspector;
@@ -34,9 +35,33 @@ public class MotionEditor : SerializedMonoBehaviour
     public TextMeshProUGUI PlaybackSpeed;
     public TextMeshProUGUI MotionTypeText;
     public TextMeshProUGUI SettingText;
+
+    public TextMeshProUGUI PercentDone;
+    public TextMeshProUGUI ETA;
+
+
+    public Slider DoneSlider;
+
     public MotionPlayback display;
     
+    public void RecieveSliderInfo(float PercentDone, int ETAInSeconds)
+    {
+        this.PercentDone.text = PercentDone.ToString("f8") ;
+        DoneSlider.value = PercentDone;
 
+        int CurrentETA = ETAInSeconds;
+        int Hours = TimeSpan.FromSeconds(CurrentETA).Hours;
+        CurrentETA -= TimeSpan.FromSeconds(CurrentETA).Hours * 3600;
+        int Minutes = TimeSpan.FromSeconds(CurrentETA).Minutes;
+        CurrentETA -= TimeSpan.FromSeconds(CurrentETA).Minutes * 60;
+        int Seconds = TimeSpan.FromSeconds(CurrentETA).Seconds;
+
+        ETA.text = "ETA: " + DigitString(Hours) + ":" + DigitString(Minutes) + ":" + DigitString(Seconds);
+        string DigitString(int Info)
+        {
+            return Info > 10 ? Info.ToString() : "0" + Info.ToString();
+        }
+    }
     //public List<RectTransform> ArrowSpots;
     public List<TextMeshProUGUI> TrueRangeTexts;
 
@@ -56,6 +81,7 @@ public class MotionEditor : SerializedMonoBehaviour
     private void Start()
     {
         input.ActivateInputField();
+        RestrictionSystem.AutoPickExtension.OnCompletionUpdate += RecieveSliderInfo; 
     }
     public float SpeedChangeAdd()
     {

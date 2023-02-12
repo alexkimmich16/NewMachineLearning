@@ -7,7 +7,6 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Collections;
-using System.Linq;
 public class BruteForce : SerializedMonoBehaviour
 {
     public static BruteForce instance;
@@ -21,7 +20,6 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("BruteForce")] public List<SingleFrameRestrictionValues> FrameInfo;
 
     [FoldoutGroup("BruteForce")] public long MaxFrames;
-    [FoldoutGroup("BruteForce")] private int BatchSize = 1;
     [FoldoutGroup("BruteForce")] public int MaxGroup;
     [FoldoutGroup("BruteForce")] public bool ShouldDebug;
     [FoldoutGroup("BruteForce"), ShowIf("ShouldDebug")] public int FramesToCaptureDebug;
@@ -44,181 +42,139 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("CustomCheck"), Range(0,1)] public float Confidence;
     [FoldoutGroup("CustomCheck")] public float StopAdjustingPrecision = 0.005f; //range at which stops
 
-
-    
     //, FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Low, OptimizeFor = OptimizeFor.FastCompilation
     [BurstCompile(CompileSynchronously = true)]
     private struct SingleBruteForce : IJobParallelFor
     {
-        private struct SingleInfo
-        {
-            public float Max, Min;
-            public int CurrentStep, MiddleSteps;
-            public float GetCurrentValue() { return Mathf.Lerp(Min, Max, ((float)CurrentStep + 1f) / ((float)MiddleSteps + 1f)); }
-            public SingleInfo(float Max, float Min, int CurrentStep, int MiddleSteps) { this.Max = Max; this.Min = Min; this.CurrentStep = CurrentStep; this.MiddleSteps = MiddleSteps; }
-        }
-
-        [DeallocateOnJobCompletion, Unity.Collections.ReadOnly] public NativeArray<float> NativeSingles;
+        [DeallocateOnJobCompletion, Unity.Collections.ReadOnly] public NativeArray<float3> Natives; //x, y, z
         [DeallocateOnJobCompletion, Unity.Collections.ReadOnly] public NativeArray<long> WeightedMiddleSteps;
 
-        [NativeDisableParallelForRestriction]public NativeArray<float> AllValues;
+        [NativeDisableParallelForRestriction] public NativeArray<float> AllValues;
 
         public long StartAt;
 
         //[NativeDisableParallelForRestriction] public NativeArray<long> CorrectOnTrue, CorrectOnFalse, InCorrectOnTrue, InCorrectOnFalse;
-
+        ///min = x, max = y, middlesteps = z;
         [Unity.Collections.ReadOnly] public NativeArray<bool> States;
         [Unity.Collections.ReadOnly] public NativeArray<float> FlatRawValues;
 
+
         public void Execute(int Index)
         {
+            
+            float GetCurrentValue(float4 Values) { return Mathf.Lerp(Values.w, Values.x, (Values.y + 1f) / (Values.z + 1f)); }
             long LeftCount = Index + StartAt;
             int RestrictionCount = FlatRawValues.Length / States.Length;//4
-            int SinglesPerRestriction = (NativeSingles.Length / 3) / RestrictionCount;//5
-            //Debug.Log("SinglesPerRestriction: " + SinglesPerRestriction);
-            NativeArray<SingleInfo> ConvertedSingles = new NativeArray<SingleInfo>(NativeSingles.Length / 3, Allocator.Temp);
+            int SinglesPerRestriction = Natives.Length / RestrictionCount;//5
+
+
+            NativeArray<float4> ConvertedSingles = new NativeArray<float4>(Natives.Length, Allocator.Temp); 
             for (int i = 0; i < WeightedMiddleSteps.Length; i++)
             {
-                ConvertedSingles[i] = new SingleInfo(NativeSingles[(i * 3)], NativeSingles[(i * 3) + 1], Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[i]), (int)NativeSingles[(i * 3) + 2]);     
+                
+                ConvertedSingles[i] = new float4(Natives[i].x, Natives[i].y, Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[i]), Natives[i].z);
+                //ConvertedSingles[i] = new SingleInfo(Natives[(i * 3)], Natives[(i * 3) + 1], Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[i]), (int)Natives[(i * 3) + 2]);     
                 LeftCount -= (Mathf.FloorToInt(LeftCount / WeightedMiddleSteps[i]) * WeightedMiddleSteps[i]);
             }
 
             NativeArray<int2> Checks = new NativeArray<int2>(3, Allocator.Temp) { [0] = new int2(3,1), [1] = new int2(1, 0), [2] = new int2(0, 2) }; 
             for (int i = 0; i < RestrictionCount; i++)//4 checks all restrictions
                 for (int j = 0; j < Checks.Length; j++)//3
-                    if (ConvertedSingles[(i * SinglesPerRestriction) + Checks[j].x].GetCurrentValue() > ConvertedSingles[(i * SinglesPerRestriction) + Checks[j].y].GetCurrentValue())
-                        return;// check if max is smaller than min to save processing power
-
+                    if (GetCurrentValue(ConvertedSingles[(i * SinglesPerRestriction) + Checks[j].x]) > GetCurrentValue(ConvertedSingles[(i * SinglesPerRestriction) + Checks[j].y]))
+                    {
+                        Conclude();
+                        return;
+                    }
+            Checks.Dispose();
             for (int i = 0; i < ConvertedSingles.Length; i++) //stop repeats for already found variables
-                if (ConvertedSingles[i].Max == ConvertedSingles[i].Min && ConvertedSingles[i].CurrentStep != ConvertedSingles[i].MiddleSteps - 1)//if already found and not top
+                if (ConvertedSingles[i].w == ConvertedSingles[i].x && ConvertedSingles[i].y != ConvertedSingles[i].z - 1)//if already found and not top
+                {
+                    Conclude();
                     return;
-            
-            Vector2 Corrects = Vector2.zero;
+                }
+
+            int2 Corrects = int2.zero;
+
+            float TotalGuesses = (FlatRawValues.Length / RestrictionCount);
+            float LowestPercent = 0.60f;
+            int MaxWrongGuesses = Mathf.FloorToInt(Mathf.Log((TotalGuesses / LowestPercent/ (1f - LowestPercent)), 2));
             for (int i = 0; i < FlatRawValues.Length / RestrictionCount; i++) // all raw value input sets
             {
                 float TotalWeightValue = 0f;
-                for (int j = 0; j < RestrictionCount; j++)// all restrictions
+                for (int j = 0; j < RestrictionCount; j++)// all 3 or 4 restrictions etc velocity
                 {
-                    float MaxSafe = ConvertedSingles[(j * SinglesPerRestriction) + 0].GetCurrentValue();
-                    float MinSafe = ConvertedSingles[(j * SinglesPerRestriction) + 1].GetCurrentValue();
-                    float MaxFalloff = ConvertedSingles[(j * SinglesPerRestriction) + 2].GetCurrentValue();
-                    float MinFalloff = ConvertedSingles[(j * SinglesPerRestriction) + 3].GetCurrentValue();
-                    float Weight = ConvertedSingles[(j * SinglesPerRestriction) + 4].GetCurrentValue();
+                    float GetValue(int Index) { return GetCurrentValue(ConvertedSingles[(j * SinglesPerRestriction) + Index]); }
 
-                    //weight later after
-                    //
-                    float Value = FlatRawValues[(i * RestrictionCount) + j];
-                    TotalWeightValue += GetOutput(Value) * (Weight > 0 ? Weight : 0);
-                    //Debug.Log("Value: " + Values[i].Values[j] + "  Max: " + Max + "  Min: " + Min + "  j: " + j);
-
-                    float GetOutput(float Input)
+                    TotalWeightValue += GetOutput(FlatRawValues[(i * RestrictionCount) + j]) * (GetValue(4) > 0 ? GetValue(4) : 0);
+                    if (MaxWrongGuesses < Corrects.y)
                     {
-                        if (Input < MaxSafe && Input > MinSafe)
-                            return 1f;
-                        else if (Input < MinFalloff || Input > MaxFalloff)
-                            return 0f;
-                        else
-                        {
-                            bool IsLowSide = Input > MinFalloff && Input < MinSafe;
-                            float DistanceValue = IsLowSide ? 1f - Remap(Input, new Vector2(MinFalloff, MinSafe)) : Remap(Input, new Vector2(MaxSafe, MaxFalloff));
-                            return DistanceValue;
-                        }
-                        float Remap(float Input, Vector2 MaxMin) { return (Input - MaxMin.x) / (MaxMin.y - MaxMin.x); }
+                        Conclude();
+                        return;
                     }
 
+                    float GetOutput(float Input) { return Input < GetValue(0) && Input > GetValue(1) ? 1 : Input < GetValue(3) || Input > GetValue(4) ? 0 : Input > GetValue(3) && Input < GetValue(1) ? 1f - Remap(Input, new float2(GetValue(3), GetValue(1))) : Remap(Input, new float2(GetValue(0), GetValue(1))); }
+                    float Remap(float Input, float2 MaxMin) { return (Input - MaxMin.x) / (MaxMin.y - MaxMin.x); }
                 }
                 bool Guess = TotalWeightValue >= 1;
-                bool IsCorrect = Guess == States[i];
-                Corrects = new Vector2(Corrects.x + (IsCorrect ? 1f : 0f), Corrects.y + (!IsCorrect ? 1f : 0f));
-                //if(Index < 10)
-                    //Debug.Log("TotalWeightValue: " + TotalWeightValue);
+                Corrects = new int2(Corrects.x + (Guess == States[i] ? 1 : 0), Corrects.y + (!Guess == States[i] ? 1 : 0));
             }
-            
+            void Conclude()
+            {
+                ConvertedSingles.Dispose();
+            }
             AllValues[Index] = (Corrects.x / (Corrects.x + Corrects.y)) * 100f;
-            ConvertedSingles.Dispose();
+            Conclude();
         }
     }
-
-
-    void RunBruteForce(int RunCount, long StartAt, out float Highest, out int Index) //executor
+    #region Stats
+    NativeArray<bool> GetStatesStat()//constant
     {
-        NativeArray<bool> GetStatesStat()
-        {
-            
-            NativeArray<bool> StatesStat = new NativeArray<bool>(FrameInfo.Count, Allocator.TempJob);
-            for (int i = 0; i < FrameInfo.Count; i++)
-                StatesStat[i] = FrameInfo[i].AtMotionState;
-            //Debug.Log("GetStatesStat: " + StatesStat.Length);
-            return StatesStat;
-        }
-        NativeArray<float> GetFlatRawStat()
-        {
-            NativeArray<float> FlatRawStat = new NativeArray<float>(FrameInfo.Count * FrameInfo[0].OutputRestrictions.Count, Allocator.TempJob);
-            for (int i = 0; i < FrameInfo.Count; i++)
-                for (int j = 0; j < FrameInfo[0].OutputRestrictions.Count; j++)
-                    FlatRawStat[(i * FrameInfo[0].OutputRestrictions.Count) + j] = FrameInfo[i].OutputRestrictions[j];
-            //Debug.Log("GetFlatRawStat: " + FlatRawStat.Length);
-            return FlatRawStat;
-        }
-        NativeArray<float> GetAllChangeStatsInput()
-        {
-            List<AllChanges.SingleChange> Singles = AllChangesList[(int)motionGet - 1].GetSingles();
-            NativeArray<float> AllChangeStatsInput = new NativeArray<float>(Singles.Count * 3, Allocator.TempJob);//all change sttats
-            for (int i = 0; i < Singles.Count; i++)
-            {
-                AllChangeStatsInput[(i * 3)] = Singles[i].GuessingMax;
-                AllChangeStatsInput[(i * 3) + 1] = Singles[i].GuessingMin;
-                AllChangeStatsInput[(i * 3) + 2] = Singles[i].GetTotalSteps();
-            }
-            //Debug.Log("AllChangeStatsInput: " + AllChangeStatsInput.Length);
-            return AllChangeStatsInput;
-        }
-        NativeArray<long> GetMiddleValueList()
-        {
-            List<long> MiddleStepCounts = GetMiddleStats(AllChangesList[(int)motionGet - 1].GetSingles());
-            NativeArray<long> MiddleValueList = new NativeArray<long>(MiddleStepCounts.Count, Allocator.TempJob);
-            for (int i = 0; i < MiddleStepCounts.Count; i++)
-                MiddleValueList[i] = MiddleStepCounts[i];
-            //Debug.Log("GetMiddleValueList: " + MiddleValueList.Length);
-            return MiddleValueList;
-        }
-
-        SingleBruteForce BruteForceRun = new SingleBruteForce
-        {
-            NativeSingles = GetAllChangeStatsInput(),
-            States = GetStatesStat(),
-            StartAt = StartAt,
-            FlatRawValues = GetFlatRawStat(),
-            AllValues = new NativeArray<float>(RunCount, Allocator.TempJob),
-            WeightedMiddleSteps = GetMiddleValueList(),
-        };
-
-        JobHandle jobHandle = BruteForceRun.Schedule(RunCount, BatchSize);
-        jobHandle.Complete();
-        //Debug.Log("Average: " + (Value / CorrectOnTrue.Count));
-
-        Highest = 0;
-        Index = 0;
-        for (int i = 0; i < BruteForceRun.AllValues.Length; i++)
-        {
-            if (BruteForceRun.AllValues[i] > Highest)
-            {
-                Highest = BruteForceRun.AllValues[i];
-                Index = i;
-            }
-        }
-
-        BruteForceRun.AllValues.Dispose();
+        NativeArray<bool> StatesStat = new NativeArray<bool>(FrameInfo.Count, Allocator.TempJob);
+        for (int i = 0; i < FrameInfo.Count; i++)
+            StatesStat[i] = FrameInfo[i].AtMotionState;
+        //Debug.Log("GetStatesStat: " + StatesStat.Length);
+        return StatesStat;
     }
+    NativeArray<float> GetFlatRawStat()//constant
+    {
+        NativeArray<float> FlatRawStat = new NativeArray<float>(FrameInfo.Count * FrameInfo[0].OutputRestrictions.Count, Allocator.TempJob);
+        for (int i = 0; i < FrameInfo.Count; i++)
+            for (int j = 0; j < FrameInfo[0].OutputRestrictions.Count; j++)
+                FlatRawStat[(i * FrameInfo[0].OutputRestrictions.Count) + j] = FrameInfo[i].OutputRestrictions[j];
+        //Debug.Log("GetFlatRawStat: " + FlatRawStat.Length);
+        return FlatRawStat;
+    }
+    NativeArray<float3> GetAllChangeStatsInput(AllChanges AllChanges)
+    {
+        List<AllChanges.SingleChange> Singles = AllChanges.GetSingles();
+        NativeArray<float3> AllChangeStatsInput = new NativeArray<float3>(Singles.Count, Allocator.TempJob);//all change sttats
+        for (int i = 0; i < Singles.Count; i++)
+            AllChangeStatsInput[i] = new float3(Singles[i].GuessingMax, Singles[i].GuessingMin, Singles[i].GetTotalSteps());
+        //Debug.Log("AllChangeStatsInput: " + AllChangeStatsInput.Length);
+        return AllChangeStatsInput;
+    }
+    NativeArray<long> GetMiddleValueList(AllChanges AllChanges)
+    {
+        List<long> MiddleStepCounts = GetMiddleStats(AllChanges.GetSingles());
+        NativeArray<long> MiddleValueList = new NativeArray<long>(MiddleStepCounts.Count, Allocator.TempJob);
+        for (int i = 0; i < MiddleStepCounts.Count; i++)
+            MiddleValueList[i] = MiddleStepCounts[i];
+        //Debug.Log("GetMiddleValueList: " + MiddleValueList.Length);
+        return MiddleValueList;
+    }
+    #endregion
+
     [FoldoutGroup("BruteForce"), Button(ButtonSizes.Small)]
-    public void RunBruteForce()
+    public void RunBruteForce() { DoBruteForceTest(new MotionRestriction(RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)motionGet - 1]), AllChangesList[(int)motionGet - 1], out float Value); }
+
+    public void DoBruteForceTest(MotionRestriction Restriction, AllChanges allChanges, out float Value)
     {
+        Value = 0;
+        float StartTime = Time.realtimeSinceStartup;
         for (int v = 0; v < Sequences; v++)
         {
-            float StartTime = Time.realtimeSinceStartup;
-            BruteForceSettings = new MotionRestriction(RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)motionGet - 1]); //restrictions
             if(FrameInfo.Count == 0)
-                FrameInfo = GetRestrictionsForMotions(motionGet, BruteForceSettings); //correct
+                FrameInfo = GetRestrictionsForMotions(motionGet, Restriction); //correct
 
             int Runs = Mathf.FloorToInt(MaxFrames / MaxGroup);
             int Remainder = (int)(MaxFrames - ((long)Runs * (long)MaxGroup));
@@ -230,37 +186,48 @@ public class BruteForce : SerializedMonoBehaviour
                 int RunCount = i != Runs ? MaxGroup : Remainder;
                 long StartAt = i * MaxGroup;
 
-                RunBruteForce(RunCount, StartAt, out float Highest, out int Index);
-                if (Highest > RealHighest)
+                SingleBruteForce BruteForceRun = new SingleBruteForce
                 {
-                    RealHighest = Highest;
-                    RealIndex = Index + StartAt;
+                    Natives = GetAllChangeStatsInput(allChanges),
+                    States = GetStatesStat(),
+                    StartAt = StartAt,
+                    FlatRawValues = GetFlatRawStat(),
+                    AllValues = new NativeArray<float>(RunCount, Allocator.TempJob),
+                    WeightedMiddleSteps = GetMiddleValueList(allChanges),
+                };
+
+                JobHandle jobHandle = BruteForceRun.Schedule(RunCount, 1);
+                jobHandle.Complete();
+
+                for (int j = 0; j < BruteForceRun.AllValues.Length; j++)
+                {
+                    if (BruteForceRun.AllValues[j] > RealHighest)
+                    {
+                        RealHighest = BruteForceRun.AllValues[j];
+                        RealIndex = j + StartAt;
+                    }
                 }
+                BruteForceRun.AllValues.Dispose();
             }
 
-            List<long> FinalStats = GetOutputList(RealIndex, GetMiddleStats(AllChangesList[(int)motionGet - 1].GetSingles()));
-            Values = new List<long>(FinalStats);
+            List<long> FinalStats = GetOutputList(RealIndex, GetMiddleStats(allChanges.GetSingles()));
 
-            
-            List<AllChanges.SingleChange> Changes = AllChangesList[(int)motionGet - 1].GetSingles();
+            Values = new List<long>(FinalStats);
+            List<AllChanges.SingleChange> Changes = allChanges.GetSingles();
 
             List<SingleRestriction> NewList = new List<SingleRestriction>();
 
 
-            int SinglesPerRestriction = Changes.Count / BruteForceSettings.Restrictions.Count;
-            for (int i = 0; i < BruteForceSettings.Restrictions.Count; i++)
+            int SinglesPerRestriction = Changes.Count / Restriction.Restrictions.Count;
+            for (int i = 0; i < Restriction.Restrictions.Count; i++) // get singlerestrictionlist
             {
-                SingleRestriction NewRestriction = BruteForceSettings.Restrictions[i];
-                NewRestriction.MaxSafe = Changes[(i * SinglesPerRestriction) + 0].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 0]);
-                NewRestriction.MinSafe = Changes[(i * SinglesPerRestriction) + 1].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 1]);
-                NewRestriction.MaxFalloff = Changes[(i * SinglesPerRestriction) + 2].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 2]);
-                NewRestriction.MinFalloff = Changes[(i * SinglesPerRestriction) + 3].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 3]);
-                //Debug.Log(Changes[(i * SinglesPerRestriction) + 4].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 4]));
-                NewRestriction.Weight = Changes[(i * SinglesPerRestriction) + 4].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + 4]);
+                SingleRestriction NewRestriction = Restriction.Restrictions[i];
+                for (int j = 0; j < 5; j++)
+                    NewRestriction.SetOutputValue(j, Changes[(i * SinglesPerRestriction) + j].GetCurrentValueAt((int)FinalStats[(i * SinglesPerRestriction) + j]));
                 NewList.Add(NewRestriction);
             }
 
-            BruteForceSettings.Restrictions = NewList;
+            Restriction.Restrictions = NewList;
             List<AllChanges.SingleChange> NewChanges = new List<AllChanges.SingleChange>();
             for (int i = 0; i < Changes.Count; i++)
             {
@@ -269,11 +236,10 @@ public class BruteForce : SerializedMonoBehaviour
                 float NewMax = Range > StopAdjustingPrecision ? Changes[i].GetCurrentValueAt((int)FinalStats[i]) + Range : Changes[i].GetCurrentValueAt((int)FinalStats[i]);
                 float NewMin = Range > StopAdjustingPrecision ? Changes[i].GetCurrentValueAt((int)FinalStats[i]) - Range : Changes[i].GetCurrentValueAt((int)FinalStats[i]);
 
-                //4 = (4 / 5) -> 0 && 4 - 0 * 5 = 4
-                int Restriction = Mathf.FloorToInt(i / 5);
-                int CountLeft = i - Restriction * 5;
+                int RestrictionValue = Mathf.FloorToInt(i / 5);
+                int CountLeft = i - RestrictionValue * 5;
 
-                AllChanges.OneRestrictionChange Rest = AllChangesList[(int)motionGet - 1].Restrictions[Restriction];
+                AllChanges.OneRestrictionChange Rest = allChanges.Restrictions[RestrictionValue];
                 if (CountLeft == 0)
                     NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.Max.MiddleSteps, Rest.Max.CurrentStep));
                 if (CountLeft == 1)
@@ -286,10 +252,13 @@ public class BruteForce : SerializedMonoBehaviour
                     NewChanges.Add(new AllChanges.SingleChange(NewMax, NewMin, Rest.Weight.MiddleSteps, Rest.Weight.CurrentStep));
             }
             //Debug.Log("NewChanges: " + NewChanges.Count);
-            AllChangesList[(int)motionGet - 1] = new AllChanges(NewChanges);
-            Debug.Log("BestIndex: " + RealIndex + "  BestValue: " + RealHighest);
-            Debug.Log("Frames: " + MaxFrames + " in: " + (Time.realtimeSinceStartup - StartTime).ToString("F3") + " Seconds");
+            allChanges = new AllChanges(NewChanges);
+            Value = RealHighest;
+
+            //Debug.Log("BestIndex: " + RealIndex + "  BestValue: " + RealHighest);
+            
         }
+        Debug.Log("Frames: " + MaxFrames + " in: " + (Time.realtimeSinceStartup - StartTime).ToString("F5") + " Seconds");
     }
 
     private void Update()
@@ -358,7 +327,12 @@ public class BruteForce : SerializedMonoBehaviour
 public struct AllChanges
 {
     public string Motion;
-    public List<OneRestrictionChange> Restrictions;
+    [ListDrawerSettings(Expanded = false, ShowIndexLabels = true)]public List<OneRestrictionChange> Restrictions;
+    public AllChanges(string Motion, List<OneRestrictionChange> Restrictions)
+    {
+        this.Motion = Motion;
+        this.Restrictions = Restrictions;
+    }
     public AllChanges(List<SingleChange> NewInfo)
     {
         Motion = "";

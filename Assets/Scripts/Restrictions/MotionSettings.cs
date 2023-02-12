@@ -12,28 +12,6 @@ namespace RestrictionSystem
         public float Iteration;
 
         [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Motion")] public List<MotionRestriction> MotionRestrictions;
-
-        /*
-        public void ResetUnneccicaryInfo()
-        {
-            for (int i = 0; i < MotionConditions.Count; i++)
-            {
-                MotionConditions[i].CurrentStage = new List<int>() {0,0 };
-                MotionConditions[i].WaitingForFalse = new List<bool>() { false, false };
-                for (int j = 0; j < MotionConditions[i].ConditionLists.Count; j++)
-                {
-                    for (int k = 0; k < MotionConditions[i].ConditionLists[j].SingleConditions.Count; k++)
-                    {
-                        MotionConditions[i].ConditionLists[j].SingleConditions[k].LastState = new List<bool>() { false, false };
-                        MotionConditions[i].ConditionLists[j].SingleConditions[k].StartTime = new List<float>() { 0f, 0f } ;
-                        MotionConditions[i].ConditionLists[j].SingleConditions[k].StartPos = new List<Vector3>() { Vector3.zero, Vector3.zero };
-                        MotionConditions[i].ConditionLists[j].SingleConditions[k].Value = new List<float>() { 0f, 0f };
-                    }
-                        
-                }
-            }
-        }
-        */
     }
     [System.Serializable]
     public class MotionRestriction
@@ -42,6 +20,11 @@ namespace RestrictionSystem
         {
             this.Motion = All.Motion;
             this.Restrictions = new List<SingleRestriction>(All.Restrictions);
+        }
+        public MotionRestriction(string Motion, List<SingleRestriction> Restrictions)
+        {
+            this.Motion = Motion;
+            this.Restrictions = new List<SingleRestriction>(Restrictions);
         }
         public string Motion;
 
@@ -55,9 +38,6 @@ namespace RestrictionSystem
         public bool Active;
         
         public Restriction restriction;
-
-        
-        
 
         [ShowIf("RequiresCheckType")] public CheckType checkType;
         private bool RequiresCheckType() { return CheckTypeRestrictions.Contains(restriction); }
@@ -84,13 +64,29 @@ namespace RestrictionSystem
         private bool RequiresAxisList() { return AxisListRestrictions.Contains(restriction); }
         public static List<Restriction> AxisListRestrictions = new List<Restriction>() { Restriction.HandHeadDistance, Restriction.VelocityThreshold, Restriction.HandFacing, Restriction.VelocityInDirection };
 
-
         public float Weight;
+        public float MaxFalloff;
         public float MaxSafe;
         public float MinSafe;
         public float MinFalloff;
-        public float MaxFalloff;
-
+        
+        
+        
+        
+        
+        public void SetOutputValue(int Index, float Value)
+        {
+            if (Index == 0)
+                MaxSafe = Value;
+            if (Index == 1)
+                MinSafe = Value;
+            if (Index == 2)
+                MaxFalloff = Value;
+            if (Index == 3)
+                MinFalloff = Value;
+            if (Index == 4)
+                Weight = Value;
+        }
 
         public bool ShouldDebug;
         [ReadOnly] public float Value;

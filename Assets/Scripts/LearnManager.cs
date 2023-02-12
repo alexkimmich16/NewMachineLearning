@@ -22,8 +22,8 @@ public class LearnManager : SerializedMonoBehaviour
     private void Awake()
     {
         instance = this;
-        NeatSupervisor()._networkInputCount = MatrixManager.instance.Width * MatrixManager.instance.Height * InfoCountInMatrixSingle();
-        NeatSupervisor()._networkOutputCount = UseAgentSingleOutput ? 1 : 4;
+        //NeatSupervisor()._networkInputCount = MatrixManager.instance.Width * MatrixManager.instance.Height * InfoCountInMatrixSingle();
+        //NeatSupervisor()._networkOutputCount = UseAgentSingleOutput ? 1 : 4;
     }
     //public CurrentLearn LearnType;
     [HideInInspector] public learningState state;
@@ -229,7 +229,8 @@ public class LearnManager : SerializedMonoBehaviour
     public bool ShouldPunishStreak(int Streak) { return Streak >= MaxStreakPunish && ShouldPunishStreakGuess == true; }
     private void Update()
     {
-        int Generation = (int)GetComponent<UnitySharpNEAT.NeatSupervisor>().CurrentGeneration;
+        //int Generation = (int)GetComponent<UnitySharpNEAT.NeatSupervisor>().CurrentGeneration;
+        /*
         if (Generation != LastGeneration)
         {
             LastGeneration = Generation;
@@ -240,6 +241,7 @@ public class LearnManager : SerializedMonoBehaviour
             if (OnNewGen != null)
                 OnNewGen();
         }
+        */
     }
     public void AgentWaiting()
     {

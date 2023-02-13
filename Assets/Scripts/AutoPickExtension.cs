@@ -15,8 +15,6 @@ namespace RestrictionSystem
 
         [FoldoutGroup("Stats")] public AllChanges AllRestrictionLocks; // each represents a value
         
-
-        
         public static List<int> GetValuesWithMax(int Value, List<int> Maxes)
         {
             long LeftCount = Value;
@@ -107,7 +105,6 @@ namespace RestrictionSystem
 
             
             TotalSeconds = EachTime.Aggregate((a, b) => a + b);
-
         }
 
         public int GetIndexFromValues()

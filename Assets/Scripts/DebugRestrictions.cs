@@ -32,6 +32,11 @@ namespace RestrictionSystem
         [FoldoutGroup("Testing")] public DebugType debugType;
         [FoldoutGroup("Testing"), ShowIf("debugType", DebugType.OneMotionSetting)] public CurrentLearn MotionTry;
 
+        public float MaxFalseGuesses;
+        public float TotalCorrectGuesses;
+        public float TotalGuesses;
+        [Range(0,1)]public float Threshold;
+
         //public bool ABS;
 
         public bool DebugVelocity;
@@ -50,6 +55,10 @@ namespace RestrictionSystem
 
         void Update()
         {
+            MaxFalseGuesses = (int)(TotalGuesses - Mathf.Ceil(TotalGuesses * Threshold));
+            //MaxFalseGuesses = TotalGuesses - (TotalCorrectGuesses + Mathf.Ceil((TotalGuesses * Threshold - TotalCorrectGuesses) / (1f - Threshold)));
+            //DisplayFrames = Mathf.Log((TotalGuesses * Threshold) / (1f - Threshold), 2);
+
             if (!Active)
                 return;
 

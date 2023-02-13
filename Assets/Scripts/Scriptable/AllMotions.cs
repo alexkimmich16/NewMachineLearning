@@ -4,11 +4,12 @@ using UnityEngine;
 using System;
 using UnityEditor;
 using RestrictionSystem;
+using Sirenix.OdinInspector;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/AllData", order = 1)]
 [System.Serializable]
 public class AllMotions : ScriptableObject
 {
-    public List<Motion> Motions;
+    [ListDrawerSettings(Expanded = false, ShowIndexLabels = true)] public List<Motion> Motions;
     //public Vector2 Punishment = new Vector2(-1, -1);
     //public Vector2 Reward = new Vector2(1,1);
 

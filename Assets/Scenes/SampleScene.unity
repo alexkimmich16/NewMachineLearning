@@ -1075,8 +1075,8 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   MotionNum: 2
-  MotionType: 2
-  Setting: 0
+  MotionType: 1
+  Setting: 1
   Typing: 0
   input: {fileID: 1167088495}
   sideText: {fileID: 1650534509}
@@ -3416,7 +3416,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FramesPerSecond: 60
   CurrentMotionRecord: []
-  motion: 1
+  motion: 2
   ShouldRecord: 1
   Values: 
 --- !u!4 &795205100
@@ -3931,10 +3931,6 @@ MonoBehaviour:
       Value: 0
   debugType: 3
   MotionTry: 2
-  MaxFalseGuesses: 0
-  TotalCorrectGuesses: 0
-  TotalGuesses: 10
-  Threshold: 0.5
   DebugVelocity: 0
   LineLength: 2
 --- !u!114 &944444318
@@ -4034,7 +4030,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  motionGet: 2
+  motionGet: 1
   PastFrameLookup: 2
   AllChangesList:
   - Motion: Fireball
@@ -4116,6 +4112,31 @@ MonoBehaviour:
         CurrentStep: 0
   - Motion: Flames
     Restrictions:
+    - Max:
+        GuessingMax: 50
+        GuessingMin: 0
+        MiddleSteps: 2
+        CurrentStep: 0
+      Min:
+        GuessingMax: 50
+        GuessingMin: 0
+        MiddleSteps: 2
+        CurrentStep: 0
+      MaxFalloff:
+        GuessingMax: 50
+        GuessingMin: 0
+        MiddleSteps: 2
+        CurrentStep: 0
+      MinFalloff:
+        GuessingMax: 50
+        GuessingMin: 0
+        MiddleSteps: 2
+        CurrentStep: 0
+      Weight:
+        GuessingMax: 1
+        GuessingMin: 0
+        MiddleSteps: 2
+        CurrentStep: 0
     - Max:
         GuessingMax: 50
         GuessingMin: 0
@@ -4377,17 +4398,17 @@ MonoBehaviour:
   MaxGroup: 1000000
   ShouldDebug: 0
   FramesToCaptureDebug: 10648
+  Test1: 0
+  Test2: 0
   TotalFrameCount: 65536
-  Values: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  Values: 
   FloatValues: 
-  Test1: []
-  Test2: []
   UseAllMotions: 1
   Input: 0
   Output: 
   MiddleStepCounts: 
   ReInput: 0
-  Sequences: 5
+  Sequences: 25
   Confidence: 0.9
   StopAdjustingPrecision: 0.001
 --- !u!114 &944444324
@@ -10100,7 +10121,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2129805707
 RectTransform:
   m_ObjectHideFlags: 0

@@ -3935,9 +3935,11 @@ MonoBehaviour:
   TotalCorrectGuesses: 0
   TotalGuesses: 10
   Threshold: 0.5
-  InputCounts: 0
+  InputCounts: 4
   Index: 0
   Output: 0
+  Output2: 0
+  MakeCloserToMiddleMulitplier: 0
   DebugVelocity: 0
   LineLength: 2
 --- !u!114 &944444318
@@ -4037,7 +4039,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  motionGet: 2
+  motionGet: 1
   PastFrameLookup: 2
   AllChangesList:
   - Motion: Fireball
@@ -4095,27 +4097,27 @@ MonoBehaviour:
     - Max:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
       Min:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
       MaxFalloff:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
       MinFalloff:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
   - Motion: Flames
     Restrictions:
@@ -4194,132 +4196,82 @@ MonoBehaviour:
         GuessingMin: 0
         MiddleSteps: 2
         CurrentStep: 0
-  - Motion: FlameBlock
+  - Motion: Fireball(Hold)
     Restrictions:
     - Max:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 2
+        GuessingMax: 500
+        GuessingMin: 500
+        MiddleSteps: 0
         CurrentStep: 0
       Min:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
       MaxFalloff:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 2
+        GuessingMax: 500
+        GuessingMin: 500
+        MiddleSteps: 0
         CurrentStep: 0
       MinFalloff:
         GuessingMax: 50
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
     - Max:
-        GuessingMax: 50
+        GuessingMax: 90
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
       Min:
-        GuessingMax: 50
+        GuessingMax: 0
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 0
         CurrentStep: 0
       MaxFalloff:
-        GuessingMax: 50
+        GuessingMax: 90
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
       MinFalloff:
-        GuessingMax: 50
+        GuessingMax: 0
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 0
         CurrentStep: 0
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
     - Max:
-        GuessingMax: 50
+        GuessingMax: 90
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
       Min:
-        GuessingMax: 50
+        GuessingMax: 0
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 0
         CurrentStep: 0
       MaxFalloff:
-        GuessingMax: 50
+        GuessingMax: 90
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
       MinFalloff:
-        GuessingMax: 50
+        GuessingMax: 0
         GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 0
         CurrentStep: 0
       Weight:
         GuessingMax: 1
         GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-    - Max:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-      Min:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-      MaxFalloff:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-      MinFalloff:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-      Weight:
-        GuessingMax: 1
-        GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-    - Max:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-      Min:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-      MaxFalloff:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-      MinFalloff:
-        GuessingMax: 50
-        GuessingMin: 0
-        MiddleSteps: 2
-        CurrentStep: 0
-      Weight:
-        GuessingMax: 1
-        GuessingMin: 0
-        MiddleSteps: 2
+        MiddleSteps: 3
         CurrentStep: 0
   BruteForceSettings:
     Motion: Flames
@@ -4376,25 +4328,26 @@ MonoBehaviour:
       ShouldDebug: 0
       Value: 57.747
   FrameInfo: []
-  MaxFrames: 65536
+  MaxFrames: 497664
   MaxGroup: 1000000
   ShouldDebug: 0
   FramesToCaptureDebug: 10648
-  TotalFrameCount: 65536
-  Values: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  TotalFrameCount: 497664
+  Values: 
   FloatValues: 
   UseAllMotions: 1
   Input: 0
   Output: 
   MiddleStepCounts: 
   ReInput: 0
-  Sequences: 6
-  Confidence: 0.9
-  PointMultiplier: 0.5
+  Sequences: 10
+  Confidence: 0.85
+  MakeCloserToMiddleMulitplier: 0
   StopAdjustingPrecision: 0.001
   Test1: []
   Test2: []
   Test3: 
+  Test4: []
   Weights: []
 --- !u!114 &944444324
 MonoBehaviour:
@@ -4931,6 +4884,7 @@ MonoBehaviour:
         y: 1
       ValueToLock: 0
       RestrictValue: 0
+  QualityRestrictionVariableLocks: []
   MaxOfIndividualRestrictions: 2
   MaxTotalRestrictions: 4
   MinTotalRestrictions: 1

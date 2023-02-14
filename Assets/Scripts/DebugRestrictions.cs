@@ -41,6 +41,9 @@ namespace RestrictionSystem
         [FoldoutGroup("Input")] public float InputCounts;
         [FoldoutGroup("Input")] public float Index;
         [FoldoutGroup("Input")] public float Output;
+        [FoldoutGroup("Input")] public float Output2;
+
+        [FoldoutGroup("Input"), Range(0,1)] public float MakeCloserToMiddleMulitplier;
 
         //public bool ABS;
 
@@ -61,7 +64,26 @@ namespace RestrictionSystem
         void Update()
         {
             //Output = 0.5f * (1f - Mathf.Abs(Index - (InputCounts - 1f) / InputCounts));
-            Output = 0.5f * (1f + 2f * (Index - 0.5f) * (InputCounts - 1f));
+            if (InputCounts % 2f == 0)
+            {
+                int EachSideTotal = (int)(InputCounts / 2);
+                float Spacing = 0.5f * 1 / (EachSideTotal + 1);
+                bool UpperSide = Index > EachSideTotal - 1;
+                Output = (UpperSide ? (Index + 2) : (Index + 1)) * Spacing;
+                
+            }
+            else
+            {
+                int EachSideTotal = (int)(InputCounts - 1) / 2;
+                float Spacing = 0.5f * 1/(EachSideTotal + 1);
+                Output = (Index +1 ) * Spacing;
+            }
+
+            float OrigionalLerpValue = Output; //.25
+            float LerpValueToMiddleRange = 0.5f - OrigionalLerpValue;//.25
+            float AdjustedLerpValue = OrigionalLerpValue + (MakeCloserToMiddleMulitplier * LerpValueToMiddleRange);
+            Output2 = AdjustedLerpValue;
+            //Output = 0.5f * (1f + 2f * (Index - 0.5f) * (InputCounts - 1f));
 
 
             MaxFalseGuesses = (int)(TotalGuesses - Mathf.Ceil(TotalGuesses * Threshold));

@@ -51,7 +51,7 @@ MonoBehaviour:
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
-      UseAxisList: 
+      UseAxisList: 000000000100000000000000
       Weight: 0
       MaxFalloff: 28.968493
       MaxSafe: 23.671728
@@ -68,7 +68,7 @@ MonoBehaviour:
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
-      UseAxisList: 
+      UseAxisList: 000000000100000002000000
       Weight: 0
       MaxFalloff: 72.88449
       MaxSafe: 1.4430879

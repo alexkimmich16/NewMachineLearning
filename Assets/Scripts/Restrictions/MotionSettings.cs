@@ -16,6 +16,8 @@ namespace RestrictionSystem
     [System.Serializable]
     public class MotionRestriction
     {
+        public string Motion;
+        [ListDrawerSettings(ListElementLabelName = "Label")] public List<SingleRestriction> Restrictions;
         public MotionRestriction(MotionRestriction All)
         {
             this.Motion = All.Motion;
@@ -26,10 +28,7 @@ namespace RestrictionSystem
             this.Motion = Motion;
             this.Restrictions = new List<SingleRestriction>(Restrictions);
         }
-        public string Motion;
-
-        [ListDrawerSettings(ListElementLabelName = "Label")]
-        public List<SingleRestriction> Restrictions;
+        
     }
     [Serializable]
     public class SingleRestriction

@@ -56,7 +56,9 @@ namespace RestrictionSystem
         };
 
         [FoldoutGroup("Stats"), ListDrawerSettings(Expanded = false, ShowIndexLabels = true)] public List<RestrictionVariableLock> RestrictionVariableLocks;
-        
+        [FoldoutGroup("Stats"), ListDrawerSettings(Expanded = false, ShowIndexLabels = true)] public List<RestrictionVariableLock> QualityRestrictionVariableLocks;
+
+
         [FoldoutGroup("Stats")] public int MaxOfIndividualRestrictions = 2;
         [FoldoutGroup("Stats")] public int MaxTotalRestrictions = 5;
         [FoldoutGroup("Stats")] public int MinTotalRestrictions = 2;
@@ -87,6 +89,9 @@ namespace RestrictionSystem
         [FoldoutGroup("Highest"), ReadOnly] public float Highest;
         [FoldoutGroup("Highest"), ReadOnly] public List<int> HighestValueCombination;
         [FoldoutGroup("Highest"), ReadOnly] public List<int> HighestTypeCombination;
+
+
+        ///run large scan, than accurate scan for returned index
 
 
         public int ETASeconds(float PercentDone) { return Mathf.RoundToInt(((100f / PercentDone) * (Time.timeSinceLevelLoad - StartTime)) - (Time.timeSinceLevelLoad - StartTime)); }
@@ -350,6 +355,7 @@ namespace RestrictionSystem
                         break;
                     }
                 }
+
                 BruteForce.instance.DoBruteForceTest(new MotionRestriction("Testing1", GetSingleRestrictions(RestrictionTypes, RestrictionValues)), GetCurrentChanges(GetSingleRestrictions(RestrictionTypes, RestrictionValues)), out float Value);
 
                 if(Value > Highest)
@@ -408,6 +414,8 @@ namespace RestrictionSystem
                 }
             }
             
+
+            ///run accurate check
         }
         List<int> ValuesOfMax()
         {

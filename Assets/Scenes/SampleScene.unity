@@ -3935,6 +3935,9 @@ MonoBehaviour:
   TotalCorrectGuesses: 0
   TotalGuesses: 10
   Threshold: 0.5
+  InputCounts: 0
+  Index: 0
+  Output: 0
   DebugVelocity: 0
   LineLength: 2
 --- !u!114 &944444318
@@ -4380,16 +4383,19 @@ MonoBehaviour:
   TotalFrameCount: 65536
   Values: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   FloatValues: 
-  Test1: []
-  Test2: []
   UseAllMotions: 1
   Input: 0
   Output: 
   MiddleStepCounts: 
   ReInput: 0
-  Sequences: 5
+  Sequences: 6
   Confidence: 0.9
+  PointMultiplier: 0.5
   StopAdjustingPrecision: 0.001
+  Test1: []
+  Test2: []
+  Test3: 
+  Weights: []
 --- !u!114 &944444324
 MonoBehaviour:
   m_ObjectHideFlags: 0

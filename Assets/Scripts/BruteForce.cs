@@ -33,6 +33,7 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("BruteForce")] public List<long> FloatValues;
     
     [FoldoutGroup("BruteForce")] public bool UseAllMotions;
+    
 
     [FoldoutGroup("Check")] public long Input;
     [FoldoutGroup("Check")] public List<long> Output = new List<long>();
@@ -51,27 +52,123 @@ public class BruteForce : SerializedMonoBehaviour
 
     [FoldoutGroup("Debug")] public List<float> Weights;
 
+    [FoldoutGroup("Curve")] private List<AnimationCurve> RealCurves;
+    [FoldoutGroup("Curve"), Range(0,1)] public float Alpha = 0.05f;
+
+    [FoldoutGroup("Curve"), Button(ButtonSizes.Small)]
+    public void ClearCurves() { RealCurves.Clear(); }
+
+    private void Start()
+    {
+        RealCurves = new List<AnimationCurve>();
+    }
+
+    [FoldoutGroup("Curve"), Button(ButtonSizes.Small)]
+    public void NextCurveState()
+    {
+        FrameInfo = GetRestrictionsForMotions(motionGet, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)motionGet - 1]);
 
 
+        List<SingleFrameRestrictionValues> MotionValues = GetRestrictionsForMotions(motionGet, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)motionGet - 1]);
+        List<AnimationCurve> Curves = new List<AnimationCurve>();
+        for (int k = 0; k < MotionValues[0].OutputRestrictions.Count; k++)
+            Curves.Add(new AnimationCurve());
 
+        for (int i = 0; i < FrameInfo.Count; i++)
+        {
+            for (int j = 0; j < MotionValues[0].OutputRestrictions.Count; j++)
+            {
+                Curves[j].AddKey(MotionValues[i].OutputRestrictions[j], 1f / MotionValues[0].OutputRestrictions.Count);
+
+                //Debug.Log("Legnth1: " + Curves[i].length);)
+                if (i > 5000f)
+                    Debug.Log("i: " + i + "  j: " + j);
+            }
+
+        }
+
+        //for (int i = 0; i < MotionValues[0].OutputRestrictions.Count; i++)
+            //Debug.Log("Legnth1: " + Curves[i].length);
+
+        Debug.Log("MotionValues: " + MotionValues.Count);
+
+        //List<AnimationCurve> NewCurves = BlankCurves(MotionValues[0].OutputRestrictions.Count);
+        for (int i = 0; i < MotionValues.Count - 2; i++)
+        {
+            //Debug.Log("i: " + i + "  count2: " + MotionValues.Count);
+            for (int j = 0; j < MotionValues[0].OutputRestrictions.Count; j++)
+            {
+                
+                float TotalCheckValue = 0f;
+                for (int k = 0; k < MotionValues[i].OutputRestrictions.Count; k++)
+                    TotalCheckValue += Curves[k].Evaluate(MotionValues[i].OutputRestrictions[k]);
+
+                //adjust each cruve
+
+                
+                AnimationCurve Curve = Curves[j];
+                if (i > 5000f)
+                    Debug.Log("i: " + i + "  j: " + j + " Curve.keys: " + Curve.keys.Length);
+                Keyframe key = Curve.keys[i];
+                
+
+                float LastCurveValue = Curves[j].Evaluate(MotionValues[i].OutputRestrictions[j]);
+                float ToAdjustAmount = 0f;
+                float DistanceTo1 = Mathf.Abs(1f - TotalCheckValue);
+                if (MotionValues[i].AtMotionState && TotalCheckValue < 1)  //if 0.8(below) = 1.x
+                {
+                    ToAdjustAmount = DistanceTo1;
+                }
+                else if(!MotionValues[i].AtMotionState && TotalCheckValue > 1) //if 1.2(above) = -1.x,
+                {
+                    ToAdjustAmount = -DistanceTo1;
+                }
+                 
+                key.value = LastCurveValue + (Alpha * (ToAdjustAmount));
+                Curves[j].MoveKey(i, key);
+            }
+        }
+        RealCurves = Curves;
+        Debug.Log("Strength: " + CheckCurveStrength(Curves));
+    }
+
+    public float CheckCurveStrength(List<AnimationCurve> ToCheck)
+    {
+        
+        float2 WrongRight = new float2(0f,0f);
+        List<SingleFrameRestrictionValues> MotionValues = GetRestrictionsForMotions(motionGet, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)motionGet - 1]);
+        for (int i = 0; i < MotionValues.Count; i++)
+        {
+            float TotalCheckValue = 0f;
+            for (int j = 0; j < ToCheck.Count; j++)
+                TotalCheckValue += ToCheck[j].Evaluate(MotionValues[i].OutputRestrictions[j]);
+            bool Correct = (TotalCheckValue > 0) == MotionValues[i].AtMotionState;
+            WrongRight = new float2(WrongRight.x + (!Correct ? 1f : 0f), WrongRight.y + (Correct ? 1f : 0f));
+        }
+        return (WrongRight.y / (WrongRight.x + WrongRight.y)) * 100f;
+    }
     public List<float2> GetRangeOfMinMaxValues(List<SingleFrameRestrictionValues> MotionValues)
     {
         List<float2> MinMax = new List<float2>();
         for (int i = 0; i < MotionValues[0].OutputRestrictions.Count; i++)
             MinMax.Add(new float2 (1000f, 0f));
 
-        
+        Debug.Log("MinMax: " + MinMax.Count + " MotionValues: " + MotionValues.Count + " OutputRestrictions: " + MotionValues[0].OutputRestrictions.Count + " ");
         for (int i = 0; i < MotionValues.Count; i++)
             if (MotionValues[i].AtMotionState)
             {
                 for (int j = 0; j < MinMax.Count; j++)
                 {
-                    if (MinMax[i].x < MotionValues[i].OutputRestrictions[j])
-                        MinMax[i] = new float2(MotionValues[i].OutputRestrictions[j], MinMax[i].y);
-                    if (MinMax[i].y > MotionValues[i].OutputRestrictions[j])
-                        MinMax[i] = new float2(MinMax[i].x, MotionValues[i].OutputRestrictions[j]);
+                    //Debug.Log("i: " + i + "  j: " + j);
+                    if (MinMax[j].x > MotionValues[i].OutputRestrictions[j])
+                        MinMax[j] = new float2(MotionValues[i].OutputRestrictions[j], MinMax[j].y);
+                    if (MinMax[j].y < MotionValues[i].OutputRestrictions[j])
+                        MinMax[j] = new float2(MinMax[j].x, MotionValues[i].OutputRestrictions[j]);
                 }
             }
+
+        for (int j = 0; j < MinMax.Count; j++)
+            Debug.Log("J: " + j + "  Max: " + MinMax[j].y + "  Min: " + MinMax[j].x);
         return MinMax;
     }
 
@@ -138,9 +235,8 @@ public class BruteForce : SerializedMonoBehaviour
             int SinglesPerRestriction = (NativeSingles.Length / 3) / RestrictionCount;//5
             //Debug.Log("SinglesPerRestriction: " + SinglesPerRestriction);
             NativeArray<SingleInfo> ConvertedSingles = new NativeArray<SingleInfo>(NativeSingles.Length / 3, Allocator.Temp);
+
             float4 Collect = float4.zero;
-
-
             int IndexCheck = 1000;
 
             //Test2[Index] = new float4(NativeSingles[0], NativeSingles[1], NativeSingles[2], NativeSingles[3]);
@@ -177,16 +273,16 @@ public class BruteForce : SerializedMonoBehaviour
             
 
             float TotalGuesses = (FlatRawValues.Length / RestrictionCount);
-            float LowestPercent = 0.8f;
-            float MaxWrongGuessesThreshold = (TotalGuesses - Mathf.Ceil(TotalGuesses * LowestPercent));
+            float LowestPercent = 10f;
+            float MaxWrongGuessesThreshold = (TotalGuesses - Mathf.Ceil(TotalGuesses * (LowestPercent  / 100f)));
 
-            float PercentBelowLastToStop = 5f;
-            float MaxWrongGuessesPrevious = (TotalGuesses - Mathf.Ceil(TotalGuesses * (PreviousBest - PercentBelowLastToStop)));
+            float PercentBelowLastToStop = 20f;
+            float MaxWrongGuessesPrevious = (TotalGuesses - Mathf.Ceil(TotalGuesses * ((PreviousBest - PercentBelowLastToStop) / 100f)));
 
             
 
 
-            Vector2 Corrects = Vector2.zero;
+            Vector2 Corrects = Vector2.zero; // x = false
             for (int i = 0; i < FlatRawValues.Length / RestrictionCount; i++) // all raw value input sets
             {
                 float TotalWeightValue = 0f;
@@ -212,8 +308,9 @@ public class BruteForce : SerializedMonoBehaviour
                     */
 
                     
-                    bool UsePredeterinedMin = false;
-                    if ((Corrects.y >= MaxWrongGuessesThreshold && UsePredeterinedMin) || Corrects.y >= MaxWrongGuessesPrevious)
+                    bool UsePresetMin = false;
+                    bool UsePastMin = false;
+                    if ((Corrects.x >= MaxWrongGuessesThreshold && UsePresetMin) || (Corrects.x >= MaxWrongGuessesPrevious && UsePastMin))
                     {
                         AllValues[Index] = 3.14f;
                         return;
@@ -242,16 +339,16 @@ public class BruteForce : SerializedMonoBehaviour
                 }
                 bool Guess = TotalWeightValue >= 1;
                 bool IsCorrect = Guess == States[i];
-                Corrects = new Vector2(Corrects.x + (IsCorrect ? 1f : 0f), Corrects.y + (!IsCorrect ? 1f : 0f));
+                Corrects = new Vector2(Corrects.x + (!IsCorrect ? 1f : 0f), Corrects.y + (IsCorrect ? 1f : 0f));
                 //if(Index < 10)
                 //Debug.Log("TotalWeightValue: " + TotalWeightValue);
             }
             //Test2[Index] = new float4(ConvertedSingles[ConvertedSingles.Length - 3].GetCurrentValue(), ConvertedSingles[ConvertedSingles.Length - 3].CurrentStep, ConvertedSingles[ConvertedSingles.Length - 3].Min, ConvertedSingles[ConvertedSingles.Length - 3].Max);
-            AllValues[Index] = (Corrects.x / (Corrects.x + Corrects.y)) * 100f;
+            AllValues[Index] = (Corrects.y / (Corrects.x + Corrects.y)) * 100f;
             ConvertedSingles.Dispose();
         }
     }
-    #region Stats
+     #region Stats
     NativeArray<bool> GetStatesStat()//constant
     {
         NativeArray<bool> StatesStat = new NativeArray<bool>(FrameInfo.Count, Allocator.TempJob);
@@ -313,6 +410,7 @@ public class BruteForce : SerializedMonoBehaviour
         if (FrameInfo.Count == 0)
             FrameInfo = GetRestrictionsForMotions(motionGet, Restriction); //correct
         AllChanges CurrentAllChanges = UseMaxMinAsRange ? new AllChanges(GetRangeOfMinMaxValues(FrameInfo)) : allChanges;
+        
         BestValue = 0;
         float StartTime = Time.realtimeSinceStartup;
 
@@ -432,9 +530,19 @@ public class BruteForce : SerializedMonoBehaviour
             Debug.Log("BestIndex: " + RealIndex + "  BestValue: " + LocalBest);
             
         }
+        AllChangesList[(int)motionGet - 1] = CurrentAllChanges;
         Debug.Log("Frames: " + MaxFrames + " in: " + (Time.realtimeSinceStartup - StartTime).ToString("F5") + " Seconds");
     }
-
+    /*
+    public List<SingleFrameRestrictionValues> WorkingValues(List<SingleFrameRestrictionValues> AllValues)
+    {
+        List<SingleFrameRestrictionValues> WorkingValues = new List<SingleFrameRestrictionValues>();
+        for (int i = 0; i < AllValues.Count; i++)
+            if (AllValues[i].AtMotionState)
+                WorkingValues.Add(AllValues[i]);
+        return WorkingValues;
+    }
+    */
     private void Update()
     {
         MiddleStepCounts = GetMiddleStats(AllChangesList[(int)motionGet - 1].GetSingles());

@@ -88,7 +88,6 @@ namespace RestrictionSystem
         #region Values
         public static float VelocityMagnitude(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
-            
             float Distance = Vector3.Distance(EliminateAxis(restriction.UseAxisList, frame1.HandPosType(restriction.UseLocalHandPos)), EliminateAxis(restriction.UseAxisList, frame2.HandPosType(restriction.UseLocalHandPos)));
             float Speed = Distance / (frame2.SpawnTime - frame1.SpawnTime);
             //restriction.Value = Speed;

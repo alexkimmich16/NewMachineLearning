@@ -172,6 +172,7 @@ public class BruteForce : SerializedMonoBehaviour
             */
 
             NativeArray<int2> Checks = new NativeArray<int2>(3, Allocator.Temp) { [0] = new int2(3, 1), [1] = new int2(1, 0), [2] = new int2(0, 2) };
+
             for (int i = 0; i < RestrictionCount; i++)//4 checks all restrictions
                 for (int j = 0; j < Checks.Length; j++)//3
                     if (ConvertedSingles[(i * SinglesPerRestriction) + Checks[j].x].GetCurrentValue() > ConvertedSingles[(i * SinglesPerRestriction) + Checks[j].y].GetCurrentValue())
@@ -259,7 +260,7 @@ public class BruteForce : SerializedMonoBehaviour
         }
     }
      #region Stats
-    NativeArray<bool> GetStatesStat()//constant
+    public NativeArray<bool> GetStatesStat()//constant
     {
         NativeArray<bool> StatesStat = new NativeArray<bool>(FrameInfo.Count, Allocator.TempJob);
         for (int i = 0; i < FrameInfo.Count; i++)
@@ -267,7 +268,7 @@ public class BruteForce : SerializedMonoBehaviour
         //Debug.Log("GetStatesStat: " + StatesStat.Length);
         return StatesStat;
     }
-    NativeArray<float> GetFlatRawStat()//constant
+    public NativeArray<float> GetFlatRawStat()//constant
     {
         NativeArray<float> FlatRawStat = new NativeArray<float>(FrameInfo.Count * FrameInfo[0].OutputRestrictions.Count, Allocator.TempJob);
         for (int i = 0; i < FrameInfo.Count; i++)
@@ -278,7 +279,7 @@ public class BruteForce : SerializedMonoBehaviour
         //Debug.Log("GetFlatRawStat: " + FlatRawStat.Length);
         return FlatRawStat;
     }
-    NativeArray<float> GetAllChangeStatsInput(AllChanges AllChanges)
+    public NativeArray<float> GetAllChangeStatsInput(AllChanges AllChanges)
     {
         List<AllChanges.SingleChange> Singles = AllChanges.GetSingles();
         NativeArray<float> AllChangeStatsInput = new NativeArray<float>(Singles.Count * 3, Allocator.TempJob);//all change sttats
@@ -296,18 +297,12 @@ public class BruteForce : SerializedMonoBehaviour
         //Debug.Log("AllChangeStatsInput: " + AllChangeStatsInput.Length);
         return AllChangeStatsInput;
     }
-    NativeArray<int> GetMiddleValueList(AllChanges AllChanges)
+    public NativeArray<int> GetMiddleValueList(AllChanges AllChanges)
     {
-        List<long> MiddleStepCountsLong = GetMiddleStats(AllChanges.GetSingles());
-        List<int> MiddleStepCounts = new List<int>();
-        for (int i = 0; i < MiddleStepCountsLong.Count; i++)
-            MiddleStepCounts.Add((int)MiddleStepCountsLong[i]);
+        List<long> MiddleStepCounts = GetMiddleStats(AllChanges.GetSingles());
         NativeArray<int> MiddleValueList = new NativeArray<int>(MiddleStepCounts.Count, Allocator.TempJob);
         for (int i = 0; i < MiddleStepCounts.Count; i++)
-            MiddleValueList[i] = MiddleStepCounts[i];
-        Test3 = MiddleStepCounts;
-        //Debug.Log("MIDDLE: " + Test3.Count);
-        //Debug.Log("GetMiddleValueList: " + MiddleValueList.Length);
+            MiddleValueList[i] = (int)MiddleStepCounts[i];
         return MiddleValueList;
     }
     #endregion
@@ -345,8 +340,9 @@ public class BruteForce : SerializedMonoBehaviour
                 {
                     NativeSingles = GetAllChangeStatsInput(CurrentAllChanges),
                     States = GetStatesStat(),
-                    StartAt = StartAt,
                     FlatRawValues = GetFlatRawStat(),
+                    StartAt = StartAt,
+                    
                     AllValues = new NativeArray<float>(RunCount, Allocator.TempJob),
                     //Test2 = new NativeArray<float4>(RunCount, Allocator.TempJob),
                     //Test4 = new NativeArray<float4>(RunCount, Allocator.TempJob),

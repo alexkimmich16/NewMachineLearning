@@ -15,11 +15,10 @@ public struct NativeCurve : IDisposable
 	private void InitializeValues (int count)
 	{
 		if (values.IsCreated)
-			values.Dispose ();
+			values.Dispose();
 
 		values = new NativeArray<float> (count, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 	}
-
 	public void Update (AnimationCurve curve, int resolution)
 	{
 		if (curve == null)
@@ -34,7 +33,6 @@ public struct NativeCurve : IDisposable
 		for (int i = 0; i < resolution; i++)
 			values[i] = curve.Evaluate ((float)i / (float)resolution);
 	}
-
 	public float Evaluate (float t)
 	{
 		var count = values.Length;

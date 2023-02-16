@@ -49,112 +49,14 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("Debug"), ListDrawerSettings(ShowIndexLabels = true)] public List<float4> Test2;
     [FoldoutGroup("Debug"), ListDrawerSettings(ShowIndexLabels = true)] public List<int> Test3;
     [FoldoutGroup("Debug"), ListDrawerSettings(ShowIndexLabels = true)] public List<float4> Test4;
-
     [FoldoutGroup("Debug")] public List<float> Weights;
 
-    [FoldoutGroup("Curve")] private List<AnimationCurve> RealCurves;
-    [FoldoutGroup("Curve"), ListDrawerSettings(ShowIndexLabels = true)] public List<PointHolder> CurrentFrames;
-    [FoldoutGroup("Curve"), Range(0,1)] public float Alpha = 0.05f;
+    
 
-    [FoldoutGroup("Curve"), Button(ButtonSizes.Small)]
-    public void ClearCurves() { RealCurves.Clear(); }
-
-    private void Start()
-    {
-        RealCurves = new List<AnimationCurve>();
-        CurrentFrames = new List<PointHolder>();
-    }
-
-    [System.Serializable]
-    public struct PointHolder
-    {
-        public List<Point> Points;
-        public PointHolder(List<Point> Points)
-        {
-            this.Points = Points;
-        }
-    }
-    [System.Serializable]
-    public struct Point
-    {
-        public float Input;
-        public float Output;
-        public Point(float Input, float Output)
-        {
-            this.Input = Input;
-            this.Output = Output;
-        }
-    }
-    [FoldoutGroup("Curve"), Button(ButtonSizes.Small)]
-    public void NextCurveState()
-    {
-        FrameInfo = GetRestrictionsForMotions(motionGet, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)motionGet - 1]);
-        if(CurrentFrames.Count == 0)
-        {
-            for (int i = 0; i < FrameInfo[0].OutputRestrictions.Count; i++)
-                CurrentFrames.Add(new PointHolder(new List<Point>()));
-
-            for (int i = 0; i < FrameInfo.Count; i++)
-                for (int j = 0; j < CurrentFrames.Count; j++)
-                    CurrentFrames[j].Points.Add(new Point(FrameInfo[i].OutputRestrictions[j], FrameInfo[i].AtMotionState ? 0f : 2f));
-            return;
-        }
-        ///TEST input aginst ENTIRE dataset!!
-        ///input not used
-        for (int i = 0; i < CurrentFrames[0].Points.Count; i++)
-        {
-            //Debug.Log("i: " + i + "  count2: " + MotionValues.Count);
-            for (int j = 0; j < CurrentFrames.Count; j++)
-            {
-                float TotalCheckValue = 0f;
-                for (int o = 0; o < FrameInfo.Count; o++)
-                {
-                    TotalCheckValue += CurrentFrames[o].Points[i].Output;
-                    for (int p = 0; p < FrameInfo[0].OutputRestrictions.Count; p++)
-                    {
-
-                    }
-                    
-                }
-                    
-
-                float LastCurveValue = CurrentFrames[j].Points[i].Output;
-                float ToAdjustAmount = 0f;
-                float DistanceTo1 = Mathf.Abs(1f - TotalCheckValue);
-                
-                if (FrameInfo[i].AtMotionState && TotalCheckValue < 1)  //if 0.8(below) = 1.x
-                {
-                    ToAdjustAmount = DistanceTo1;
-                    //Debug.Log("below");
-                }
-                else if(!FrameInfo[i].AtMotionState && TotalCheckValue > 1) //if 1.2(above) = -1.x,
-                {
-                    ToAdjustAmount = -DistanceTo1;
-                    //Debug.Log("above");
-                }
-                //Debug.Log("ToAdjustAmount: " + ToAdjustAmount);
-                float NewValue = LastCurveValue + (Alpha * (ToAdjustAmount));
-                CurrentFrames[j].Points[i] = new Point(CurrentFrames[j].Points[i].Input, NewValue);
-            }
-        }
-        //RealCurves = Curves;
-        Debug.Log("Strength: " + CheckCurveStrength(CurrentFrames));
-    }
-    public float CheckCurveStrength(List<PointHolder> Info)
-    {
-
-        float2 WrongRight = new float2(0f, 0f);
-        List<SingleFrameRestrictionValues> MotionValues = GetRestrictionsForMotions(motionGet, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)motionGet - 1]);
-        for (int i = 0; i < Info[0].Points.Count; i++)
-        {
-            float TotalCheckValue = 0f;
-            for (int j = 0; j < Info.Count; j++)
-                TotalCheckValue += Info[j].Points[i].Output;
-            bool Correct = (TotalCheckValue > 1) == MotionValues[i].AtMotionState;
-            WrongRight = new float2(WrongRight.x + (!Correct ? 1f : 0f), WrongRight.y + (Correct ? 1f : 0f));
-        }
-        return (WrongRight.y / (WrongRight.x + WrongRight.y)) * 100f;
-    }
+  
+        //Debug.Log("Strength: " + CheckCurveStrength(Curves));
+    
+    
     public List<float2> GetRangeOfMinMaxValues(List<SingleFrameRestrictionValues> MotionValues)
     {
         List<float2> MinMax = new List<float2>();
@@ -583,7 +485,7 @@ public class BruteForce : SerializedMonoBehaviour
                 Output[j] = (long)(Output[j] * (SinglesList[i].GetTotalSteps()));
         return Output;
     }
-    private List<long> GetOutputList(long Total, List<long> MiddleStepCounts)
+    public List<long> GetOutputList(long Total, List<long> MiddleStepCounts)
     {
         List<long> Output = new List<long>();
         long LeftCount = Total;

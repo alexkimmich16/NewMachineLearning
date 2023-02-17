@@ -9,13 +9,38 @@ public class SpreadSheet : SerializedMonoBehaviour
     private void Awake() { instance = this; }
     
     //public string OutputName;
+
     public string Location() { return Application.dataPath + "/SpreadSheets/AIStatHolder.csv"; }
     public string RestrictionLocation() { return Application.dataPath + "/SpreadSheets/RestrictionStats.csv"; }
+    public string MotionsLocation() { return Application.dataPath + "/SpreadSheets/MotionStats.csv"; }
     private bool HasWritten;
 
     public float WriteToSpreadsheetInterval = 60f;
 
-    public Dictionary<string, bool> IsActiveDictionary;
+    public void PrintMotionStats(List<SingleFrameRestrictionValues> Motions)
+    {
+        TextWriter tw = new StreamWriter(MotionsLocation(), false);
+        string HeaderWrite = "";
+        for (int i = 0; i < Motions[0].OutputRestrictions.Count; i++)
+            HeaderWrite = HeaderWrite + "I" + i.ToString() + ",";
+        HeaderWrite = HeaderWrite + "States";
+        tw.WriteLine(HeaderWrite);
+
+        for (int i = 0; i < Motions.Count ; i++)
+        {
+            string LineWrite = "";
+            for (int j = 0; j < Motions[i].OutputRestrictions.Count; j++)
+                LineWrite = LineWrite + Motions[i].OutputRestrictions[j] + ",";
+            LineWrite = LineWrite + Motions[i].AtMotionState;
+            tw.WriteLine(LineWrite);
+        }
+        tw.Close();
+    }
+
+
+
+    private Dictionary<string, bool> IsActiveDictionary;
+
     public void PrintStats()
     {
         TextWriter tw = new StreamWriter(Location(), true);
@@ -86,9 +111,9 @@ public class SpreadSheet : SerializedMonoBehaviour
     }
     void Start()
     {
-        StartCoroutine(CallPrintStats());
+        //StartCoroutine(CallPrintStats());
 
-        ProceduralTesting.OnBeforeRestart += BeforeRestart;
+        //ProceduralTesting.OnBeforeRestart += BeforeRestart;
     }
 
     public void BeforeRestart()

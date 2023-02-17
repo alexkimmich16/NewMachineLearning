@@ -63,7 +63,7 @@ public class BruteForce : SerializedMonoBehaviour
         for (int i = 0; i < MotionValues[0].OutputRestrictions.Count; i++)
             MinMax.Add(new float2 (1000f, 0f));
 
-        Debug.Log("MinMax: " + MinMax.Count + " MotionValues: " + MotionValues.Count + " OutputRestrictions: " + MotionValues[0].OutputRestrictions.Count + " ");
+        //Debug.Log("MinMax: " + MinMax.Count + " MotionValues: " + MotionValues.Count + " OutputRestrictions: " + MotionValues[0].OutputRestrictions.Count + " ");
         for (int i = 0; i < MotionValues.Count; i++)
             if (MotionValues[i].AtMotionState)
             {
@@ -77,8 +77,8 @@ public class BruteForce : SerializedMonoBehaviour
                 }
             }
 
-        for (int j = 0; j < MinMax.Count; j++)
-            Debug.Log("J: " + j + "  Max: " + MinMax[j].y + "  Min: " + MinMax[j].x);
+        //for (int j = 0; j < MinMax.Count; j++)
+            //Debug.Log("J: " + j + "  Max: " + MinMax[j].y + "  Min: " + MinMax[j].x);
         return MinMax;
     }
 

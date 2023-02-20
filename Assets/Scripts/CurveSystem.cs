@@ -100,7 +100,7 @@ public class CurveSystem : SerializedMonoBehaviour
                         {
                             Debug.Log("CorrectAmount: " + CorrectAmount + "  IncorrectAdjust: " + IncorrectAdjust + "  InTrue: " + CheckStats.Val.x + "  InFalse: " + CheckStats.Val.z);
                         }
-                        float NewValue = RealCurves[i].keys[j].value + AlphaLearnRate * (1f / CheckStats.Total());
+                        float NewValue = RealCurves[i].keys[j].value + AlphaLearnRate * (1f / CheckStats.Total()) * CorrectAmount;
                         ToChange[i].Add(NewValue);
 
                         //float y_predicted = theta0 + theta1 * x;

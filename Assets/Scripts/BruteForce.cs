@@ -51,12 +51,14 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("Debug"), ListDrawerSettings(ShowIndexLabels = true)] public List<float4> Test4;
     [FoldoutGroup("Debug")] public List<float> Weights;
 
-    
+    [FoldoutGroup("References")] public LearnManager LM;
 
-  
-        //Debug.Log("Strength: " + CheckCurveStrength(Curves));
-    
-    
+
+
+
+    //Debug.Log("Strength: " + CheckCurveStrength(Curves));
+
+
     public List<float2> GetRangeOfMinMaxValues(List<SingleFrameRestrictionValues> MotionValues)
     {
         List<float2> MinMax = new List<float2>();
@@ -492,22 +494,21 @@ public class BruteForce : SerializedMonoBehaviour
         }
         return Output;
     }
-    //105091227
     public List<SingleFrameRestrictionValues> GetRestrictionsForMotions(CurrentLearn FrameDataMotion, MotionRestriction RestrictionsMotion)
     {
         List<SingleFrameRestrictionValues> ReturnValue = new List<SingleFrameRestrictionValues>();
         List<int> ToCheck = UseAllMotions ? new List<int>() { 0, 1, 2, 3 } : new List<int>(){ 0, (int)FrameDataMotion };
         for (int i = 0; i < ToCheck.Count; i++)//motions
-            for (int j = 0; j < LearnManager.instance.MovementList[ToCheck[i]].Motions.Count; j++)//set
-                for (int k = PastFrameLookup; k < LearnManager.instance.MovementList[ToCheck[i]].Motions[j].Infos.Count; k++)//frame
+            for (int j = 0; j < LM.MovementList[ToCheck[i]].Motions.Count; j++)//set
+                for (int k = PastFrameLookup; k < LM.MovementList[ToCheck[i]].Motions[j].Infos.Count; k++)//frame
                 {
                     List<float> OutputRestrictions = new List<float>();
                     for (int l = 0; l < RestrictionsMotion.Restrictions.Count; l++)
                     {
-                        OutputRestrictions.Add(RestrictionManager.RestrictionDictionary[RestrictionsMotion.Restrictions[l].restriction].Invoke(RestrictionsMotion.Restrictions[l], LearnManager.instance.MovementList[ToCheck[i]].GetRestrictionInfoAtIndex(j, k - PastFrameLookup), LearnManager.instance.MovementList[ToCheck[i]].GetRestrictionInfoAtIndex(j, k)));
+                        OutputRestrictions.Add(RestrictionManager.RestrictionDictionary[RestrictionsMotion.Restrictions[l].restriction].Invoke(RestrictionsMotion.Restrictions[l], LM.MovementList[ToCheck[i]].GetRestrictionInfoAtIndex(j, k - PastFrameLookup), LM.MovementList[ToCheck[i]].GetRestrictionInfoAtIndex(j, k)));
                     }
                         
-                    ReturnValue.Add(new SingleFrameRestrictionValues(OutputRestrictions, ToCheck[i] == (int)FrameDataMotion && LearnManager.instance.MovementList[ToCheck[i]].Motions[j].AtFrameState(k)));
+                    ReturnValue.Add(new SingleFrameRestrictionValues(OutputRestrictions, ToCheck[i] == (int)FrameDataMotion && LM.MovementList[ToCheck[i]].Motions[j].AtFrameState(k)));
                 }
         return ReturnValue;
     }

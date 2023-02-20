@@ -4406,6 +4406,7 @@ MonoBehaviour:
   Test3: 
   Test4: []
   Weights: []
+  LM: {fileID: 1732929128}
 --- !u!114 &944444324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6216,19 +6217,24 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: NewValues
+      Entry: 6
+      Data: 
   CurrentIteration: 0
   RealCurves: []
-  NumberPerMotion: 7
-  CurveConfidence: 0.95
-  Resolution: 65
-  StartingRange: 0.3
-  Sequences: 1
+  NumberPerMotion: 50
+  AlphaLearnRate: 1
+  StartingRange: 0.5
+  EachSequence: 10
+  CallCount: 5
+  UseDistance: 0
+  CostFunction: 0
   Origional: []
   Adjusted: []
   AllValues: []
   Ratios: []
-  AllCurves: []
+  OutputStats: []
   BF: {fileID: 944444323}
   RM: {fileID: 944444318}
 --- !u!1 &960757780

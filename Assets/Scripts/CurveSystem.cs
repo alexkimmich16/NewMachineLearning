@@ -95,6 +95,7 @@ public class CurveSystem : SerializedMonoBehaviour
                     {
                         FrameStat CheckStats = new FrameStat(RealCurves, AllFrameInfo[i].Values[j]);
                         float CorrectAmount = CheckStats.CorrectPercent();
+                        float InCorrectAmount = CheckStats.InCorrectPercent();
                         float IncorrectAdjust = CheckStats.IncorrectHighAdjust();
                         if(c + s + i == 0)
                         {
@@ -172,6 +173,7 @@ public class CurveSystem : SerializedMonoBehaviour
             //float ValueAverage = Total / MotionValues.Count;
         }
         public float CorrectPercent() { return (Val.w + Val.y) / Total(); }
+        public float InCorrectPercent() { return (Val.x + Val.z) / Total(); }
         public float IncorrectHighAdjust() { return (Val.x - Val.z) / (Val.x + Val.z); }
 
 

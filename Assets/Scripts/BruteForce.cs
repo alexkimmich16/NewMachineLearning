@@ -67,20 +67,17 @@ public class BruteForce : SerializedMonoBehaviour
 
         //Debug.Log("MinMax: " + MinMax.Count + " MotionValues: " + MotionValues.Count + " OutputRestrictions: " + MotionValues[0].OutputRestrictions.Count + " ");
         for (int i = 0; i < MotionValues.Count; i++)
-            if (MotionValues[i].AtMotionState)
+            for (int j = 0; j < MinMax.Count; j++)
             {
-                for (int j = 0; j < MinMax.Count; j++)
-                {
-                    //Debug.Log("i: " + i + "  j: " + j);
-                    if (MinMax[j].x > MotionValues[i].OutputRestrictions[j])
-                        MinMax[j] = new float2(MotionValues[i].OutputRestrictions[j], MinMax[j].y);
-                    if (MinMax[j].y < MotionValues[i].OutputRestrictions[j])
-                        MinMax[j] = new float2(MinMax[j].x, MotionValues[i].OutputRestrictions[j]);
-                }
+                //Debug.Log("i: " + i + "  j: " + j);
+                if (MinMax[j].x > MotionValues[i].OutputRestrictions[j])
+                    MinMax[j] = new float2(MotionValues[i].OutputRestrictions[j], MinMax[j].y);
+                if (MinMax[j].y < MotionValues[i].OutputRestrictions[j])
+                    MinMax[j] = new float2(MinMax[j].x, MotionValues[i].OutputRestrictions[j]);
             }
 
         //for (int j = 0; j < MinMax.Count; j++)
-            //Debug.Log("J: " + j + "  Max: " + MinMax[j].y + "  Min: " + MinMax[j].x);
+        //Debug.Log("J: " + j + "  Max: " + MinMax[j].y + "  Min: " + MinMax[j].x);
         return MinMax;
     }
 
@@ -96,7 +93,7 @@ public class BruteForce : SerializedMonoBehaviour
             public float GetCurrentValue()
             {
                 float OrigionalLerpValue = LerpValue(); //.25
-                float LerpValueToMiddleRange = 0.5f - OrigionalLerpValue;//.25
+                float LerpValueToMiddleRange = 0.5f - OrigionalLerpValue; //.25
                 float AdjustedLerpValue = OrigionalLerpValue + (Multiplier * LerpValueToMiddleRange);
                 return Mathf.Lerp(Min, Max, LerpValue());
             }
@@ -147,9 +144,6 @@ public class BruteForce : SerializedMonoBehaviour
             int SinglesPerRestriction = (NativeSingles.Length / 3) / RestrictionCount;//5
             //Debug.Log("SinglesPerRestriction: " + SinglesPerRestriction);
             NativeArray<SingleInfo> ConvertedSingles = new NativeArray<SingleInfo>(NativeSingles.Length / 3, Allocator.Temp);
-
-            float4 Collect = float4.zero;
-            int IndexCheck = 1000;
 
             //Test2[Index] = new float4(NativeSingles[0], NativeSingles[1], NativeSingles[2], NativeSingles[3]);
             for (int i = 0; i < WeightedMiddleSteps.Length; i++)
@@ -262,7 +256,7 @@ public class BruteForce : SerializedMonoBehaviour
         }
     }
      #region Stats
-    public NativeArray<bool> GetStatesStat()//constant
+    public NativeArray<bool> GetStatesStat(List<SingleFrameRestrictionValues> FrameInfo)//constant
     {
         NativeArray<bool> StatesStat = new NativeArray<bool>(FrameInfo.Count, Allocator.TempJob);
         for (int i = 0; i < FrameInfo.Count; i++)
@@ -270,7 +264,7 @@ public class BruteForce : SerializedMonoBehaviour
         //Debug.Log("GetStatesStat: " + StatesStat.Length);
         return StatesStat;
     }
-    public NativeArray<float> GetFlatRawStat()//constant
+    public NativeArray<float> GetFlatRawStat(List<SingleFrameRestrictionValues> FrameInfo)//constant
     {
         NativeArray<float> FlatRawStat = new NativeArray<float>(FrameInfo.Count * FrameInfo[0].OutputRestrictions.Count, Allocator.TempJob);
         for (int i = 0; i < FrameInfo.Count; i++)
@@ -341,8 +335,8 @@ public class BruteForce : SerializedMonoBehaviour
                 SingleBruteForce BruteForceRun = new SingleBruteForce
                 {
                     NativeSingles = GetAllChangeStatsInput(CurrentAllChanges),
-                    States = GetStatesStat(),
-                    FlatRawValues = GetFlatRawStat(),
+                    States = GetStatesStat(FrameInfo),
+                    FlatRawValues = GetFlatRawStat(FrameInfo),
                     StartAt = StartAt,
                     
                     AllValues = new NativeArray<float>(RunCount, Allocator.TempJob),

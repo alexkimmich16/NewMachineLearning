@@ -6222,19 +6222,23 @@ MonoBehaviour:
       Entry: 6
       Data: 
   CurrentIteration: 0
+  ShowInfos: 0
   RealCurves: []
-  NumberPerMotion: 50
-  AlphaLearnRate: 1
+  Keyframes: 3
+  CurveConfidence: 0.951
+  AlphaLearnRate: 0.05
   StartingRange: 0.5
-  EachSequence: 10
-  CallCount: 5
-  UseDistance: 0
-  CostFunction: 0
-  Origional: []
-  Adjusted: []
+  EachSequence: 1
+  PossibleValuePicks: 4
+  Incorrect: 1
+  Height: 1
+  Amount: 0
+  SideWeight: 1
   AllValues: []
   Ratios: []
   OutputStats: []
+  LastPercentCorrect: 0
+  MotionStateBalencePercent: 0
   BF: {fileID: 944444323}
   RM: {fileID: 944444318}
 --- !u!1 &960757780
@@ -6277,7 +6281,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1023122170}
-  - component: {fileID: 1023122172}
   - component: {fileID: 1023122171}
   m_Layer: 0
   m_Name: Stats
@@ -6285,7 +6288,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1023122170
 Transform:
   m_ObjectHideFlags: 0
@@ -6323,38 +6326,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   WriteToSpreadsheetInterval: 10.01
---- !u!114 &1023122172
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023122167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0b611303c55e724ca255d2e67a14cd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  TotalLogCount: 0
-  Current: {x: 0, y: 0}
-  CurrentTotal: {x: 0, y: 0}
-  AbsoluteTotal: {x: 0, y: 0}
-  Past: []
-  Stats: []
-  PastFrameInfoKeepForTesting: []
-  SpellCalls: 
-  RefreshInterval: 60
-  DebugOnRefresh: 0
-  PastFrameInfoKeep: 100
 --- !u!1 &1053389643
 GameObject:
   m_ObjectHideFlags: 0

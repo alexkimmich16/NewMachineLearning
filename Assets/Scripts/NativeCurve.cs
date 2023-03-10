@@ -69,7 +69,7 @@ public struct NativeCurve : IDisposable
 			}
 		}
 
-		var it = t * (count - 1);
+		float it = t * (count - 1);
 
 		var lower = (int)it;
 		var upper = lower + 1;

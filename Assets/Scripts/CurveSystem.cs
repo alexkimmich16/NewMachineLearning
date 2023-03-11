@@ -65,7 +65,10 @@ public class CurveSystem : SerializedMonoBehaviour
     {
         OutputStats = new List<float4>();
         CurrentIteration = 0;
+
         ///TryInitializeFrameInfo
+        ///
+        
         FrameInfo = BF.GetRestrictionsForMotions(BF.motionGet, RM.RestrictionSettings.MotionRestrictions[(int)BF.motionGet - 1]);
         Ranges = BF.GetRangeOfMinMaxValues(FrameInfo); //to be removed eventually
         for (int i = 0; i < FrameInfo.Count; i++)
@@ -101,16 +104,9 @@ public class CurveSystem : SerializedMonoBehaviour
                 Keyframe key = new Keyframe(j / (float)(Keyframes - 1), StartingRange);
                 RealCurves[i].AddKey(key);
             }
-
-
         }
         SpreadSheet.instance.PrintMotionStats(FrameInfo);
     }
-    
-
-
-
-    
 
     #region Regression
     public struct FrameStat

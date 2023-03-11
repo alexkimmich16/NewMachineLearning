@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3930,6 +3930,7 @@ GameObject:
   - component: {fileID: 944444323}
   - component: {fileID: 944444325}
   - component: {fileID: 944444326}
+  - component: {fileID: 944444327}
   m_Layer: 0
   m_Name: Restictions
   m_TagString: Untagged
@@ -6296,6 +6297,43 @@ MonoBehaviour:
   OutputIndex: []
   BF: {fileID: 944444323}
   RM: {fileID: 944444318}
+--- !u!114 &944444327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944444316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4529bc73afbdd044282fbf637cd43093, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  info:
+    Intercept: -1.9073269
+    Coefficents:
+    - Degrees:
+      - 3.80905
+      - -0.61264056
+      - -0.003553099
+    - Degrees:
+      - 0.01875708
+      - -0.00000618684
+      - -0.000000306866
+    - Degrees:
+      - -0.38682693
+      - 0.009033845
+      - -0.0000648409
+  OutputValues: []
 --- !u!1 &960757780
 GameObject:
   m_ObjectHideFlags: 0

@@ -269,9 +269,7 @@ public class BruteForce : SerializedMonoBehaviour
         NativeArray<float> FlatRawStat = new NativeArray<float>(FrameInfo.Count * FrameInfo[0].OutputRestrictions.Count, Allocator.TempJob);
         for (int i = 0; i < FrameInfo.Count; i++)
             for (int j = 0; j < FrameInfo[0].OutputRestrictions.Count; j++)
-            {
                 FlatRawStat[(i * FrameInfo[0].OutputRestrictions.Count) + j] = FrameInfo[i].OutputRestrictions[j];
-            }
         //Debug.Log("GetFlatRawStat: " + FlatRawStat.Length);
         return FlatRawStat;
     }

@@ -145,7 +145,7 @@ namespace RestrictionSystem
         public AllChanges GetCurrentChanges(List<SingleRestriction> Restrictions) { return new AllChanges("Test1", Restrictions.Select(R => AllRestrictionLocks.Restrictions[(int)BruteForce.instance.motionGet]).ToList()); }
         public List<SingleRestriction> GetSingleRestrictions(List<int> RestrictionTypes, List<int> RestrictionValues) { return Enumerable.Range(0, RestrictionTypes.Count).Select(t => SingleRestrictionAtIndex((Restriction)RestrictionTypes[t], RestrictionValues[t])).ToList(); }
 
-        private List<int> GetEachRestrictionFrames() //ABSOLUTE WORKING
+        private List<int> GetEachRestrictionFrames()
         {
             List<int> Output = new List<int>();
             for (int i = 0; i < System.Enum.GetValues(typeof(Restriction)).Length; i++) // 5
@@ -185,8 +185,6 @@ namespace RestrictionSystem
             }
 
             return EachTotal.Aggregate((a, b) => a + b);
-
-
             //SeperatedRestrictionTypes.Aggregate((a, b) => a * EachRestrictionFrames[b])
         }
 

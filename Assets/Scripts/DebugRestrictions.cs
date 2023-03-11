@@ -120,7 +120,9 @@ namespace RestrictionSystem
             else if(debugType == DebugType.OneMotionSetting)
             {
                 //
-                handToChange.material = Materials[RestrictionManager.MotionWorks(frame1, frame2, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionTry - 1]) ? 1 : 0]; //set hand
+                
+                //handToChange.material = Materials[RestrictionManager.MotionWorks(frame1, frame2, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionTry - 1]) ? 1 : 0]; //set hand
+                handToChange.material = Materials[RegressionSystem.instance.ControllerGuess() ? 1 : 0]; //set hand
                 //Debug.Log("Motion: " + Motion.ToString());
             }
         }

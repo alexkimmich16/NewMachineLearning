@@ -45,6 +45,14 @@ namespace RestrictionSystem
 
         [FoldoutGroup("Input"), Range(0,1)] public float MakeCloserToMiddleMulitplier;
 
+
+
+        [FoldoutGroup("Input"), Range(0.5f,1f)] public float Threshold1;
+        [FoldoutGroup("Input"), Range(0.5f, 1f)] public float Threshold2;
+        [FoldoutGroup("Input"), Range(0.5f, 1f)] public float Threshold3;
+        [FoldoutGroup("Input"), Range(0.5f, 1f)] public float Threshold4;
+        [FoldoutGroup("Input"), Range(0.5f, 1f)] public float Threshold5;
+
         //public bool ABS;
 
         public bool DebugVelocity;
@@ -119,10 +127,24 @@ namespace RestrictionSystem
             }
             else if(debugType == DebugType.OneMotionSetting)
             {
-                //
-                
                 //handToChange.material = Materials[RestrictionManager.MotionWorks(frame1, frame2, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionTry - 1]) ? 1 : 0]; //set hand
-                handToChange.material = Materials[RegressionSystem.instance.ControllerGuess() ? 1 : 0]; //set hand
+                handToChange.material = Materials[RegressionSystem.instance.ControllerGuess(out float Guess) ? 1 : 0]; //set hand
+                /*
+                RegressionSystem.instance.ControllerGuess(out float Guess);
+                
+                if(Guess < 0.5f)
+                    handToChange.material = Materials[0];
+                if(Guess > Threshold1)
+                    handToChange.material = Materials[1];
+                if (Guess > Threshold2)
+                    handToChange.material = Materials[2];
+                if (Guess > Threshold3)
+                    handToChange.material = Materials[3];
+                if (Guess > Threshold4)
+                    handToChange.material = Materials[4];
+                if (Guess > Threshold5)
+                    handToChange.material = Materials[5];
+                */
                 //Debug.Log("Motion: " + Motion.ToString());
             }
         }

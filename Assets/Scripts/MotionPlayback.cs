@@ -68,8 +68,8 @@ public class MotionPlayback : MonoBehaviour
             
             if (Frame >= LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].Infos.Count)
                 Frame = 0;
-            if (Frame - BruteForce.instance.PastFrameLookup >= 0)
-                CurrentMotions = RestrictionManager.instance.AllWorkingMotions(LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame));
+            //if (Frame - BruteForce.instance.PastFrameLookup >= 0)
+                //CurrentMotions = RestrictionManager.instance.AllWorkingMotions(LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame));
             bool State = ME.Setting == EditSettings.Editing ? LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].AtFrameState(Frame) : GetMotionFromInput();
             handToChange.material = LM.FalseTrue[State ? 1 : 0];
 

@@ -56,17 +56,45 @@ namespace RestrictionSystem
             {Restriction.HandToHeadAngle, HandToHeadAngle},
         };
         public MotionSettings RestrictionSettings;
-
+        public Coefficents coefficents;
         public void TriggerFrameEvents(List<bool> Sides)
         {
             PastFrameRecorder PR = PastFrameRecorder.instance;
             for (int i = 0; i < 2; i++)
             {
-                List<CurrentLearn> WorkingMotions = AllWorkingMotions(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i));
-                if (Sides[i] == true)
-                    for (int j = 1; j < RestrictionSettings.MotionRestrictions.Count + 1; j++)
-                        ConditionManager.instance.PassValue(WorkingMotions.Contains((CurrentLearn)j), (CurrentLearn)j, (Side)i);
+                if (Sides[0] == false && Sides[0] == false)
+                    return;
+                for (int j = 1; j < coefficents.RegressionStats.Count + 1; j++)
+                {
+                    bool Works = MotionWorks(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i), (CurrentLearn)j);
+                    if (Sides[i] == true)
+                        ConditionManager.instance.PassValue(Works, (CurrentLearn)j, (Side)i);
+                }
             }
+        }
+
+        public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, CurrentLearn motionType)
+        {
+            SingleInfo Frame1 = PastFrameRecorder.instance.PastFrame(Side.right);
+            SingleInfo Frame2 = PastFrameRecorder.instance.GetControllerInfo(Side.right);
+
+            List<float> TestValues = new List<float>();
+            for (int i = 0; i < RestrictionSettings.MotionRestrictions[0].Restrictions.Count; i++)
+            {
+                TestValues.Add(RestrictionDictionary[RestrictionSettings.MotionRestrictions[0].Restrictions[i].restriction].Invoke(RestrictionSettings.MotionRestrictions[0].Restrictions[i], Frame1, Frame2));
+            }
+
+            float Total = 0f;
+            for (int j = 0; j < coefficents.RegressionStats[(int)motionType - 1].Coefficents.Count; j++)//each  variable
+                for (int k = 0; k < coefficents.RegressionStats[(int)motionType - 1].Coefficents[j].Degrees.Count; k++)//powers
+                    Total += Mathf.Pow(TestValues[j], k + 1) * coefficents.RegressionStats[(int)motionType - 1].Coefficents[j].Degrees[k];
+
+            Total += coefficents.RegressionStats[(int)motionType - 1].Intercept;
+            //insert formula
+            float GuessValue = 1f / (1f + Mathf.Exp(-Total));
+            bool Guess = GuessValue > 0.5f;
+            bool Correct = Guess;
+            return Correct;
         }
         public static bool MotionWorks(SingleInfo frame1, SingleInfo frame2, MotionRestriction restriction)
         {
@@ -83,13 +111,15 @@ namespace RestrictionSystem
             }
             return TotalWeightValue >= 1;
         }
-        public List<CurrentLearn> AllWorkingMotions(SingleInfo frame1, SingleInfo frame2) { return Enumerable.Range(0, RestrictionSettings.MotionRestrictions.Count).Where(t => MotionWorks(frame1, frame2, RestrictionSettings.MotionRestrictions[t])).Select(t => (CurrentLearn)(t + 1)).ToList(); }
         public static Vector3 EliminateAxis(List<Axis> AllAxis, Vector3 Value) { return new Vector3(AllAxis.Contains(Axis.X) ? Value.x : 0, AllAxis.Contains(Axis.Y) ? Value.y : 0, AllAxis.Contains(Axis.Z) ? Value.z : 0); }
         #region Values
         public static float VelocityMagnitude(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
             float Distance = Vector3.Distance(EliminateAxis(restriction.UseAxisList, frame1.HandPosType(restriction.UseLocalHandPos)), EliminateAxis(restriction.UseAxisList, frame2.HandPosType(restriction.UseLocalHandPos)));
             float Speed = Distance / (frame2.SpawnTime - frame1.SpawnTime);
+
+            if (Speed < 0.001f)
+                Speed = 0.001f;
             //restriction.Value = Speed;
             return Speed;
         }

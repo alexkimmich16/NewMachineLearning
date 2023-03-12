@@ -105,7 +105,7 @@ public class CurveSystem : SerializedMonoBehaviour
                 RealCurves[i].AddKey(key);
             }
         }
-        SpreadSheet.instance.PrintMotionStats(FrameInfo);
+        //SpreadSheet.instance.PrintMotionStats(FrameInfo);
     }
 
     #region Regression

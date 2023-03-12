@@ -3,19 +3,88 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using Sirenix.OdinInspector;
+using RestrictionSystem;
+using ExcelDataReader;
+using System.Data;
 public class SpreadSheet : SerializedMonoBehaviour
 {
     public static SpreadSheet instance;
     private void Awake() { instance = this; }
-    
+
+
+
+    //public static List<double> Lowest = new List<double>() { 0.001, 0.00001, 0.000000001};
+
     //public string OutputName;
 
+    public static string ReadExcelCell(int row, int column)
+    {
+        string cellValue = null;
+
+        FileStream stream = File.Open(Application.dataPath + "/SpreadSheets/Tester.xlsx", FileMode.Open, FileAccess.Read);
+
+        IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+        DataSet result = excelReader.AsDataSet();
+
+        DataTable table = result.Tables["Sheet1"];
+
+        // Read the value of the cell
+        if (row < table.Rows.Count && column < table.Columns.Count)
+        {
+            cellValue = table.Rows[row][column].ToString();
+        }
+
+        excelReader.Close();
+        stream.Close();
+
+        return cellValue;
+    }
+
+    public string DegreeLocation() { return Application.dataPath + "/SpreadSheets/"+ gameObject.GetComponent<RegressionSystem>().CurrentMotion.ToString() + ".csv"; }
     public string Location() { return Application.dataPath + "/SpreadSheets/AIStatHolder.csv"; }
     public string RestrictionLocation() { return Application.dataPath + "/SpreadSheets/RestrictionStats.csv"; }
     public string MotionsLocation() { return Application.dataPath + "/SpreadSheets/MotionStats.csv"; }
-    private bool HasWritten;
 
-    public float WriteToSpreadsheetInterval = 60f;
+    [Button(ButtonSizes.Small)]
+    public void PrintDegreeStats()
+    {
+        RegressionSystem RS = gameObject.GetComponent<RegressionSystem>();
+        Debug.Log(RS.CurrentMotion.ToString());
+        MotionRestriction settings = RS.UploadRestrictions;
+        List<SingleFrameRestrictionValues> Motions = GetComponent<BruteForce>().GetRestrictionsForMotions(RS.CurrentMotion, settings);
+        int Degrees = RS.EachTotalDegree;
+
+        string HeaderWrite = "";
+        for (int i = 0; i < Motions[0].OutputRestrictions.Count; i++)
+        {
+            for (int j = 0; j < Degrees; j++)
+            {
+                HeaderWrite = HeaderWrite + settings.Restrictions[i].Label + "^" + (j + 1).ToString() + ",";
+            }
+        }
+        HeaderWrite = HeaderWrite + "States";
+        TextWriter tw = new StreamWriter(DegreeLocation(), false);
+        tw.WriteLine(HeaderWrite);
+        //
+        ///states to 0/1
+        for (int i = 0; i < Motions.Count; i++)
+        {
+            string LineWrite = "";
+            for (int j = 0; j < Motions[0].OutputRestrictions.Count; j++)
+            {
+                for (int k = 0; k < Degrees; k++)
+                {
+                    float DegreeValue = Mathf.Pow(Motions[i].OutputRestrictions[j], k + 1);
+                    float Value = DegreeValue > 0.01f ? DegreeValue : 0.01f;
+                    LineWrite = LineWrite + Value + ",";
+                }
+            }
+            LineWrite = LineWrite + (Motions[i].AtMotionState ? 1 : 0);
+            tw.WriteLine(LineWrite);
+        }
+        tw.Close();
+    }
+
 
     public void PrintMotionStats(List<SingleFrameRestrictionValues> Motions)
     {
@@ -41,34 +110,7 @@ public class SpreadSheet : SerializedMonoBehaviour
 
     private Dictionary<string, bool> IsActiveDictionary;
 
-    public void PrintStats()
-    {
-        TextWriter tw = new StreamWriter(Location(), true);
-        if (HasWritten == false)
-        {
-            string LineWrite = "Motion, Set";
-            if (IsActiveDictionary["MotionFinishedCount"] == true) { LineWrite = LineWrite + ", MotionFinishedCount"; }
-            if (IsActiveDictionary["Guess"] == true) { LineWrite = LineWrite + ", Guess"; }
-            if (IsActiveDictionary["Truth"] == true) { LineWrite = LineWrite + ", Truth"; }
-            if (IsActiveDictionary["Timer"] == true) { LineWrite = LineWrite + ", Timer"; }
-            LineWrite = LineWrite + ", " + ProceduralTesting.instance.ComplexityCurrent + ", " + ProceduralTesting.instance.TrialDurationCurrent;
-            tw.WriteLine(LineWrite);
-            HasWritten = true;
-        }
-        
-        DataTracker DT = DataTracker.instance;
-        for (int i = 0; i < DT.Stats.Count; i++)
-        {
-            string CombinedString = DT.Stats[i].Motion + "," + DT.Stats[i].Set;
-            if (IsActiveDictionary["MotionFinishedCount"] == true) { CombinedString = CombinedString + ", " + DT.Stats[i].MotionPlayNum; }
-            if (IsActiveDictionary["Guess"] == true) { CombinedString = CombinedString + ", " + DT.Stats[i].Guess; }
-            if (IsActiveDictionary["Truth"] == true) { CombinedString = CombinedString + ", " + DT.Stats[i].Truth; }
-            if (IsActiveDictionary["Timer"] == true) { CombinedString = CombinedString + ", " + DT.Stats[i].Timer; }
-            tw.WriteLine(CombinedString);
-        }
-        DT.Stats.Clear();
-        tw.Close();
-    }
+   
     
     public void PrintRestrictionStats(CurrentLearn motion, List<SingleFrameRestrictionValues> info)
     {
@@ -100,27 +142,6 @@ public class SpreadSheet : SerializedMonoBehaviour
         TextWriter tw = new StreamWriter(Location(), true); 
         tw.WriteLine("");
         tw.Close();
-    }
-    IEnumerator CallPrintStats()
-    {
-        while (true)
-        {
-            PrintStats();
-            yield return new WaitForSeconds(WriteToSpreadsheetInterval);
-        }
-    }
-    void Start()
-    {
-        //StartCoroutine(CallPrintStats());
-
-        //ProceduralTesting.OnBeforeRestart += BeforeRestart;
-    }
-
-    public void BeforeRestart()
-    {
-        //PrintStats();
-        PrintSpace();
-        //seperate spreadsheet;
     }
 }
 

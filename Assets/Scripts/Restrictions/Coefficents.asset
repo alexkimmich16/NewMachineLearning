@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ed25a947ba0cad4787007629a3d8250, type: 3}
+  m_Name: Coefficents
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  RegressionStats:
+  - Intercept: 46.04156
+    Coefficents:
+    - Degrees:
+      - -18.706423
+      - 6.7035017
+      - -0.7214298
+    - Degrees:
+      - 23.59462
+      - -7.801169
+      - 0.7895762
+    - Degrees:
+      - -0.039743055
+      - -0.0003886346
+      - 0.0000020623904
+    - Degrees:
+      - -0.21033941
+      - 0.004229996
+      - -0.000031089232
+    - Degrees:
+      - -0.21424685
+      - 0.0013331472
+      - -0.0000025881457
+    - Degrees:
+      - -8.717406
+      - 25.262121
+      - -79.0199
+    - Degrees:
+      - 81.17499
+      - -232.785
+      - 162.75551
+    - Degrees:
+      - -1.1851612
+      - 0.013212509
+      - -0.00004348788
+    - Degrees:
+      - -0.44353992
+      - 0.007172571
+      - -0.000036925085
+  - Intercept: 0
+    Coefficents: []
+  - Intercept: 0
+    Coefficents: []

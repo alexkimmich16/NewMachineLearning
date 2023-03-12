@@ -7,12 +7,13 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Collections;
+using RestrictionSystem;
 public class BruteForce : SerializedMonoBehaviour
 {
     public static BruteForce instance;
     private void Awake() { instance = this; }
 
-    public CurrentLearn motionGet;
+    public RestrictionSystem.CurrentLearn motionGet;
     public int PastFrameLookup;
 
     [FoldoutGroup("BruteForce"), ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Motion")] public List<AllChanges> AllChangesList;
@@ -52,13 +53,6 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("Debug")] public List<float> Weights;
 
     [FoldoutGroup("References")] public LearnManager LM;
-
-
-
-
-    //Debug.Log("Strength: " + CheckCurveStrength(Curves));
-
-
     public List<float2> GetRangeOfMinMaxValues(List<SingleFrameRestrictionValues> MotionValues)
     {
         List<float2> MinMax = new List<float2>();
@@ -486,7 +480,7 @@ public class BruteForce : SerializedMonoBehaviour
         }
         return Output;
     }
-    public List<SingleFrameRestrictionValues> GetRestrictionsForMotions(CurrentLearn FrameDataMotion, MotionRestriction RestrictionsMotion)
+    public List<SingleFrameRestrictionValues> GetRestrictionsForMotions(RestrictionSystem.CurrentLearn FrameDataMotion, MotionRestriction RestrictionsMotion)
     {
         List<SingleFrameRestrictionValues> ReturnValue = new List<SingleFrameRestrictionValues>();
         List<int> ToCheck = UseAllMotions ? new List<int>() { 0, 1, 2, 3 } : new List<int>(){ 0, (int)FrameDataMotion };

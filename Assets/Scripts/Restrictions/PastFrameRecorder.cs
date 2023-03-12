@@ -63,13 +63,7 @@ namespace RestrictionSystem
 
         void Start()
         {
-            StartCoroutine(ManageLists(1 / 60));
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            StartCoroutine(ManageLists(1f / 60f));
         }
         IEnumerator ManageLists(float Interval)
         {
@@ -82,7 +76,6 @@ namespace RestrictionSystem
                 LeftInfo.Add(GetControllerInfo(Side.left));
                 if (LeftInfo.Count > MaxStoreInfo)
                     LeftInfo.RemoveAt(0);
-
                 
                 if(RightInfo.Count > FramesAgo)
                     RestrictionManager.instance.TriggerFrameEvents(UseSides);

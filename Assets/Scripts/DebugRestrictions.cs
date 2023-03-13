@@ -17,7 +17,7 @@ namespace RestrictionSystem
         private void Awake() { instance = this; }
 
         public bool Active;
-        [FoldoutGroup("References")] public SkinnedMeshRenderer handToChange;
+        [FoldoutGroup("References")] public List<SkinnedMeshRenderer> handToChange;
 
         [FoldoutGroup("Values"), ReadOnly] public float Velocity;
 
@@ -71,33 +71,6 @@ namespace RestrictionSystem
 
         void Update()
         {
-            //Output = 0.5f * (1f - Mathf.Abs(Index - (InputCounts - 1f) / InputCounts));
-            if (InputCounts % 2f == 0)
-            {
-                int EachSideTotal = (int)(InputCounts / 2);
-                float Spacing = 0.5f * 1 / (EachSideTotal + 1);
-                bool UpperSide = Index > EachSideTotal - 1;
-                Output = (UpperSide ? (Index + 2) : (Index + 1)) * Spacing;
-                
-            }
-            else
-            {
-                int EachSideTotal = (int)(InputCounts - 1) / 2;
-                float Spacing = 0.5f * 1/(EachSideTotal + 1);
-                Output = (Index +1 ) * Spacing;
-            }
-
-            float OrigionalLerpValue = Output; //.25
-            float LerpValueToMiddleRange = 0.5f - OrigionalLerpValue;//.25
-            float AdjustedLerpValue = OrigionalLerpValue + (MakeCloserToMiddleMulitplier * LerpValueToMiddleRange);
-            Output2 = AdjustedLerpValue;
-            //Output = 0.5f * (1f + 2f * (Index - 0.5f) * (InputCounts - 1f));
-
-
-            MaxFalseGuesses = (int)(TotalGuesses - Mathf.Ceil(TotalGuesses * Threshold));
-            //MaxFalseGuesses = TotalGuesses - (TotalCorrectGuesses + Mathf.Ceil((TotalGuesses * Threshold - TotalCorrectGuesses) / (1f - Threshold)));
-            //DisplayFrames = Mathf.Log((TotalGuesses * Threshold) / (1f - Threshold), 2);
-
             if (!Active)
                 return;
 
@@ -115,8 +88,9 @@ namespace RestrictionSystem
             //VelocityDirection = (frame2.HandPos - frame1.HandPos).normalized;
             //AngleDistance = Vector3.Angle((frame2.HandPos - frame1.HandPos).normalized, frame2.HandRot.normalized);
             //HandPosition = frame2.HandPos;
-
-
+            handToChange[0].material = Materials[RegressionSystem.instance.ControllerGuess(out float Guess1, Side.right) ? 1 : 0]; //set hand
+            handToChange[1].material = Materials[RegressionSystem.instance.ControllerGuess(out float Guess2, Side.left) ? 1 : 0]; //set hand
+            /*
             if (debugType == DebugType.ThisDebugTest)
                 handToChange.material = Materials[RestrictionManager.MotionWorks(frame1, frame2, Restrictions) ? 1 : 0]; //set hand
             else if(debugType == DebugType.MotionSettings)
@@ -128,8 +102,8 @@ namespace RestrictionSystem
             else if(debugType == DebugType.OneMotionSetting)
             {
                 //handToChange.material = Materials[RestrictionManager.MotionWorks(frame1, frame2, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionTry - 1]) ? 1 : 0]; //set hand
-                handToChange.material = Materials[RegressionSystem.instance.ControllerGuess(out float Guess) ? 1 : 0]; //set hand
-                /*
+                
+                
                 RegressionSystem.instance.ControllerGuess(out float Guess);
                 
                 if(Guess < 0.5f)
@@ -144,9 +118,10 @@ namespace RestrictionSystem
                     handToChange.material = Materials[4];
                 if (Guess > Threshold5)
                     handToChange.material = Materials[5];
-                */
-                //Debug.Log("Motion: " + Motion.ToString());
-            }
+                
+            //Debug.Log("Motion: " + Motion.ToString());
+        }
+            */
         }
         /*
         public float GetVelocity(SingleInfo frame1, SingleInfo frame2) { return Vector3.Distance(frame1.HandPos, frame2.HandPos) / (1f / 60f); }
@@ -155,5 +130,8 @@ namespace RestrictionSystem
         public Vector3 GetPosition(SingleInfo frame1, SingleInfo frame2) { return frame2.HandPos; }
         */
     }
+
+
+    ///test lkeft
 }
 

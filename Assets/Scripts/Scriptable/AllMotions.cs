@@ -37,17 +37,15 @@ public class Motion
     public List<Vector2> TrueRanges;
     [HideInInspector] public int TrueIndex;
     [HideInInspector] public int PlayCount;
-    
-    public void IntoRange(List<bool> Values)
+    public static List<Vector2> ConvertToRange(List<bool> Values)
     {
         List<Vector2> ranges = new List<Vector2>();
         bool Last = false;
         int Start = 0;
         for (int i = 0; i < Values.Count; i++)
         {
-            if (Values[i] != Last)
+            if (Values[i] != Last)//onchange
             {
-                //onchange
                 if (Last == false)
                 {
                     Start = i;
@@ -57,10 +55,19 @@ public class Motion
                     //range is start to i
                     ranges.Add(new Vector2(Start, i - 1));
                 }
+                
                 Last = Values[i];
             }
+            else if (Last == true && i == Values.Count - 1)
+            {
+                ranges.Add(new Vector2(Start, i - 1));
+            }
         }
-        TrueRanges = ranges;
+        return ranges;
+    }
+    public void IntoRange(List<bool> Values)
+    {
+        TrueRanges = ConvertToRange(Values);
     }
     public bool AtFrameState(int Frame)
     {

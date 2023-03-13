@@ -1099,6 +1099,7 @@ GameObject:
   - component: {fileID: 253952446}
   - component: {fileID: 253952445}
   - component: {fileID: 253952444}
+  - component: {fileID: 253952449}
   m_Layer: 5
   m_Name: MotionEditCanvas
   m_TagString: Untagged
@@ -1129,7 +1130,7 @@ MonoBehaviour:
     SerializationNodes: []
   MotionNum: 2
   MotionType: 2
-  Setting: 2
+  Setting: 0
   Typing: 0
   input: {fileID: 1167088495}
   sideText: {fileID: 1650534509}
@@ -1237,6 +1238,36 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &253952449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253952443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41badf6cec624ea409559c99794967df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  DegreesFromHead:
+    x: 175
+    y: 185
+  LM: {fileID: 1732929128}
+  BF: {fileID: 944444323}
+  List: 0000000000000000000000000000000000000000000000
+  Value: 0
+  Ranges: []
+  SetAllButton: 271
 --- !u!1 &258064887
 GameObject:
   m_ObjectHideFlags: 0
@@ -3469,7 +3500,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FramesPerSecond: 60
   CurrentMotionRecord: []
-  motion: 1
+  motion: 2
   ShouldRecord: 1
   Values: 
 --- !u!4 &795205100
@@ -3907,7 +3938,9 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   Active: 1
-  handToChange: {fileID: 5940410813187525387}
+  handToChange:
+  - {fileID: 5940410813187525387}
+  - {fileID: 2608482829048369067}
   Velocity: 0
   Materials:
   - {fileID: 2100000, guid: dbd4aed6d0cbd204abdc789ae6ce43d8, type: 2}
@@ -6294,7 +6327,7 @@ MonoBehaviour:
   OutputValues: []
   RestrictionValues: []
   RegressionStats: {fileID: 11400000, guid: de845bce815e9c2468379f92c4a39df3, type: 2}
-  CurrentMotion: 3
+  CurrentMotion: 2
   EachTotalDegree: 3
   UploadRestrictions:
     Motion: AllRelevantRestrictions

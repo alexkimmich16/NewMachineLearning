@@ -46,10 +46,10 @@ namespace RestrictionSystem
                 RegressionStats.RegressionStats[(int)CurrentMotion - 1].Coefficents.Add(AddList);
             }
         }
-        public bool ControllerGuess(out float Value)
+        public bool ControllerGuess(out float Value, Side side)
         {
-            SingleInfo Frame1 = PastFrameRecorder.instance.PastFrame(Side.right);
-            SingleInfo Frame2 = PastFrameRecorder.instance.GetControllerInfo(Side.right);
+            SingleInfo Frame1 = PastFrameRecorder.instance.PastFrame(side);
+            SingleInfo Frame2 = PastFrameRecorder.instance.GetControllerInfo(side);
 
             List<float> TestValues = new List<float>();
             for (int i = 0; i < UploadRestrictions.Restrictions.Count; i++)

@@ -1129,7 +1129,7 @@ MonoBehaviour:
     SerializationNodes: []
   MotionNum: 2
   MotionType: 2
-  Setting: 0
+  Setting: 2
   Typing: 0
   input: {fileID: 1167088495}
   sideText: {fileID: 1650534509}
@@ -4027,7 +4027,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   RestrictionSettings: {fileID: 11400000, guid: 76ee955c20c73154b977ecc314c5bbe4, type: 2}
-  coefficents: {fileID: 0}
+  coefficents: {fileID: 11400000, guid: de845bce815e9c2468379f92c4a39df3, type: 2}
 --- !u!4 &944444320
 Transform:
   m_ObjectHideFlags: 0

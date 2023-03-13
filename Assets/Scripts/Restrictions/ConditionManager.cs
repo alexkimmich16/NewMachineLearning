@@ -8,7 +8,7 @@ using System;
 
 namespace RestrictionSystem
 {
-    
+
 
     public enum Condition
     {
@@ -17,8 +17,8 @@ namespace RestrictionSystem
         Restriction = 2,
     }
     public delegate bool ConditionWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side);
-    public delegate void OnNewMotionState(Side side, bool NewState, int Index);
-    
+    public delegate void OnNewMotionState(Side side, bool NewState, int Index, int Level);
+
     public class ConditionManager : SerializedMonoBehaviour
     {
         public static Dictionary<Condition, ConditionWorksAndAdd> ConditionDictionary = new Dictionary<Condition, ConditionWorksAndAdd>(){
@@ -75,14 +75,14 @@ namespace RestrictionSystem
 
 
 
-    
+
     [Serializable]
     public class MotionConditionInfo
     {
         public string Motion;
         public List<int> CurrentStage = new List<int>() { 0, 0 };
         public bool ResetOnMax;
-        public List<bool> WaitingForFalse = new List<bool>() { false, false};
+        public List<bool> WaitingForFalse = new List<bool>() { false, false };
         [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Label")] public List<ConditionList> ConditionLists;
 
         public event OnNewMotionState OnNewState;
@@ -100,7 +100,7 @@ namespace RestrictionSystem
             {
                 for (int i = 0; i < CurrentStage[(int)side]; i++)
                 {
-                    OnNewState?.Invoke(Side.right, false, i);
+                    OnNewState?.Invoke(Side.right, false, i, 0);
                     for (int j = 0; j < ConditionLists[i].SingleConditions.Count; j++)//all conditions that have passed
                     {
                         SingleConditionInfo info = ConditionLists[i].SingleConditions[j];
@@ -111,9 +111,9 @@ namespace RestrictionSystem
                     }
                 }
             }
-            else if(WaitingForFalse[(int)side] == true)
+            else if (WaitingForFalse[(int)side] == true)
             {
-                OnNewState?.Invoke(Side.right, false, 0);
+                OnNewState?.Invoke(Side.right, false, 0, 0);
             }
             WaitingForFalse[(int)side] = false;
             //Debug.Log("CurrentStage: " + CurrentStage[(int)side]);
@@ -123,23 +123,23 @@ namespace RestrictionSystem
 
         public void PassValueToAll(bool State, Side side)
         {
-            if(State == false || WaitingForFalse[(int)side] == true)
+            if (State == false || WaitingForFalse[(int)side] == true)
             {
                 //if(WaitingForFalse[(int)side] == true)
 
-                
-                if(State == false)
+
+                if (State == false)
                 {
                     ResetAll(side);
                 }
-                    
+
                 //Debug.Log("trigger1");
                 return;
             }
 
 
             bool AllWorkingSoFar = true;
-            if(ConditionLists.Count != 0)
+            if (ConditionLists.Count != 0)
             {
                 for (int i = 0; i < ConditionLists[CurrentStage[(int)side]].SingleConditions.Count; i++)
                 {
@@ -157,11 +157,11 @@ namespace RestrictionSystem
                     //Debug.Log("once: " + Working);
                 }
             }
-            
+
 
             if (AllWorkingSoFar) //ready to move to next
             {
-                OnNewState?.Invoke(side, true, CurrentStage[(int)side]);
+                OnNewState?.Invoke(side, true, CurrentStage[(int)side], 0);
                 //Debug.Log(CurrentStage + " < " + (ConditionLists.Count - 1));
                 if (CurrentStage[(int)side] < ConditionLists.Count - 1)
                 {
@@ -169,7 +169,7 @@ namespace RestrictionSystem
                 }
                 else
                 {
-                    
+
                     if (ResetOnMax)// potentially problematic
                     {
                         ResetAll(side);
@@ -192,13 +192,12 @@ namespace RestrictionSystem
         [ShowIf("condition", Condition.Restriction)] public SingleRestriction restriction;
 
         ///reset on false?
-        [FoldoutGroup("Values")] public List<bool> LastState = new List<bool>() { false, false};
+        [FoldoutGroup("Values")] public List<bool> LastState = new List<bool>() { false, false };
         [FoldoutGroup("Values")] public List<float> StartTime = new List<float>() { 0f, 0f };
         [FoldoutGroup("Values")] public List<Vector3> StartPos = new List<Vector3>() { Vector3.zero, Vector3.zero };
         [FoldoutGroup("Values")] public List<float> Value = new List<float>() { 0, 0 };
         private bool HasAmount() { return condition == Condition.Distance || condition == Condition.Time; }
 
-        
+
     }
 }
-

@@ -62,21 +62,22 @@ namespace RestrictionSystem
                 for (int k = 0; k < RegressionStats.RegressionStats[(int)CurrentMotion - 1].Coefficents[j].Degrees.Count; k++)//powers
                     Total += Mathf.Pow(TestValues[j], k + 1) * RegressionStats.RegressionStats[(int)CurrentMotion - 1].Coefficents[j].Degrees[k];
             
-            Totals.Add(Total);
+            //Totals.Add(Total);
             Total += RegressionStats.RegressionStats[(int)CurrentMotion - 1].Intercept;
             //insert formula
             float GuessValue = 1f / (1f + Mathf.Exp(-Total));
-            OutputValues.Add(GuessValue);
+            //OutputValues.Add(GuessValue);
             Value = GuessValue;
             bool Guess = GuessValue > 0.5f;
             bool Correct = Guess;
             return Correct;
         }
-        /*
+        
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
-        public void ExportInfoToExcel()
+        public void TestRegression()
         {
             float2 Guesses = new float2(0f,0f);
+
             int MotionNum = (int)CurrentMotion - 1;
             List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(CurrentMotion, UploadRestrictions);
             RestrictionValues = FrameInfo;
@@ -100,20 +101,9 @@ namespace RestrictionSystem
             float CorrectPercent = Guesses.y / (Guesses.x + Guesses.y);
             Debug.Log(CorrectPercent + "% Correct");
         }
-        */
+        
     }
-    [System.Serializable]
-    public class RegressionInfo
-    {
-        public float Intercept;
-        public List<DegreeList> Coefficents;
-
-        [System.Serializable]
-        public class DegreeList
-        {
-            public List<float> Degrees;
-        }
-    }
+    
 
 
 

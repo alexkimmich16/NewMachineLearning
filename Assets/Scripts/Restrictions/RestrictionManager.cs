@@ -73,11 +73,8 @@ namespace RestrictionSystem
             }
         }
 
-        public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, CurrentLearn motionType)
+        public bool MotionWorks(SingleInfo Frame1, SingleInfo Frame2, CurrentLearn motionType)
         {
-            SingleInfo Frame1 = PastFrameRecorder.instance.PastFrame(Side.right);
-            SingleInfo Frame2 = PastFrameRecorder.instance.GetControllerInfo(Side.right);
-
             List<float> TestValues = new List<float>();
             for (int i = 0; i < RestrictionSettings.MotionRestrictions[0].Restrictions.Count; i++)
             {

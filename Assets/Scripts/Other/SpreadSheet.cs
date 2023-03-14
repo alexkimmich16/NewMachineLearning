@@ -6,16 +6,12 @@ using Sirenix.OdinInspector;
 using RestrictionSystem;
 using ExcelDataReader;
 using System.Data;
+using SwiftExcel;
+using OfficeOpenXml;
 public class SpreadSheet : SerializedMonoBehaviour
 {
     public static SpreadSheet instance;
     private void Awake() { instance = this; }
-
-
-
-    //public static List<double> Lowest = new List<double>() { 0.001, 0.00001, 0.000000001};
-
-    //public string OutputName;
 
     public static string ReadExcelCell(int row, int column)
     {
@@ -41,6 +37,7 @@ public class SpreadSheet : SerializedMonoBehaviour
     }
 
     public string DegreeLocation() { return Application.dataPath + "/SpreadSheets/"+ gameObject.GetComponent<RegressionSystem>().CurrentMotion.ToString() + ".csv"; }
+    public string DegreeLocation2() { return Application.dataPath + "/SpreadSheets/Tester.xlsx"; }
     public string Location() { return Application.dataPath + "/SpreadSheets/AIStatHolder.csv"; }
     public string RestrictionLocation() { return Application.dataPath + "/SpreadSheets/RestrictionStats.csv"; }
     public string MotionsLocation() { return Application.dataPath + "/SpreadSheets/MotionStats.csv"; }
@@ -49,7 +46,7 @@ public class SpreadSheet : SerializedMonoBehaviour
     public void PrintDegreeStats()
     {
         RegressionSystem RS = gameObject.GetComponent<RegressionSystem>();
-        Debug.Log(RS.CurrentMotion.ToString());
+        Debug.Log("Print: " + RS.CurrentMotion.ToString());
         MotionRestriction settings = RS.UploadRestrictions;
         List<SingleFrameRestrictionValues> Motions = GetComponent<BruteForce>().GetRestrictionsForMotions(RS.CurrentMotion, settings);
         int Degrees = RS.EachTotalDegree;
@@ -85,58 +82,39 @@ public class SpreadSheet : SerializedMonoBehaviour
         tw.Close();
     }
 
-
-    public void PrintMotionStats(List<SingleFrameRestrictionValues> Motions)
+    [Button(ButtonSizes.Small)]
+    public void PrintDegreeStats2()
     {
-        TextWriter tw = new StreamWriter(MotionsLocation(), false);
-        string HeaderWrite = "";
-        for (int i = 0; i < Motions[0].OutputRestrictions.Count; i++)
-            HeaderWrite = HeaderWrite + "I" + i.ToString() + ",";
-        HeaderWrite = HeaderWrite + "States";
-        tw.WriteLine(HeaderWrite);
+        RegressionSystem RS = gameObject.GetComponent<RegressionSystem>();
+        Debug.Log("Print: " + RS.CurrentMotion.ToString());
+        MotionRestriction settings = RS.UploadRestrictions;
+        List<SingleFrameRestrictionValues> Motions = GetComponent<BruteForce>().GetRestrictionsForMotions(RS.CurrentMotion, settings);
+        int Degrees = RS.EachTotalDegree;
+        //ExcelWorksheet worksheet = new ExcelWorksheet(DegreeLocation2());
 
-        for (int i = 0; i < Motions.Count ; i++)
+        using (var ew = new ExcelWriter(DegreeLocation2()))
         {
-            string LineWrite = "";
-            for (int j = 0; j < Motions[i].OutputRestrictions.Count; j++)
-                LineWrite = LineWrite + Motions[i].OutputRestrictions[j] + ",";
-            LineWrite = LineWrite + Motions[i].AtMotionState;
-            tw.WriteLine(LineWrite);
-        }
-        tw.Close();
-    }
-
-
-
-    private Dictionary<string, bool> IsActiveDictionary;
-
-   
-    
-    public void PrintRestrictionStats(CurrentLearn motion, List<SingleFrameRestrictionValues> info)
-    {
-        TextWriter tw = new StreamWriter(RestrictionLocation(), false);
-        string LineWrite = "";
-        for (int i = 0; i < info[0].OutputRestrictions.Count; i++) // write first lines
-        {
-            LineWrite = LineWrite + RestrictionSystem.RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)motion - 1].Restrictions[i].Label + ", ";
-        }
-        LineWrite = LineWrite + "Active";
-        tw.WriteLine(LineWrite);
-
-
-        for (int i = 0; i < info.Count; i++) // write stats
-        {
-            string NewLineWrite = "";
-            for (int j = 0; j < info[i].OutputRestrictions.Count; j++)
+            //set headers
+            /*
+            string HeaderWrite = "";
+            for (int i = 0; i < Motions[0].OutputRestrictions.Count; i++)
             {
-                LineWrite = LineWrite + info[i].OutputRestrictions[j] + ", ";
+                for (int j = 0; j < Degrees; j++)
+                {
+                    HeaderWrite = HeaderWrite + settings.Restrictions[i].Label + "^" + (j + 1).ToString() + ",";
+                }
             }
-            LineWrite = LineWrite + info[i].AtMotionState + ", ";
-            tw.WriteLine(LineWrite);
+            */
+            for (var row = 1; row <= 100; row++)
+            {
+                for (var col = 1; col <= 10; col++)
+                {
+                    ew.Write($"row:{row}-col:{col}", col, row);
+                }
+            }
         }
-        tw.Close();
     }
-    
+
     public void PrintSpace()
     {
         TextWriter tw = new StreamWriter(Location(), true); 

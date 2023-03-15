@@ -4,9 +4,7 @@ using UnityEngine;
 using System.IO;
 using Sirenix.OdinInspector;
 using RestrictionSystem;
-using ExcelDataReader;
 using System.Data;
-using SwiftExcel;
 using OfficeOpenXml;
 public class SpreadSheet : SerializedMonoBehaviour
 {
@@ -16,7 +14,7 @@ public class SpreadSheet : SerializedMonoBehaviour
     public static string ReadExcelCell(int row, int column)
     {
         string cellValue = null;
-
+        /*
         FileStream stream = File.Open(Application.dataPath + "/SpreadSheets/Tester.xlsx", FileMode.Open, FileAccess.Read);
 
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
@@ -32,7 +30,7 @@ public class SpreadSheet : SerializedMonoBehaviour
 
         excelReader.Close();
         stream.Close();
-
+        */
         return cellValue;
     }
 
@@ -92,28 +90,39 @@ public class SpreadSheet : SerializedMonoBehaviour
         int Degrees = RS.EachTotalDegree;
         //ExcelWorksheet worksheet = new ExcelWorksheet(DegreeLocation2());
 
-        using (var ew = new ExcelWriter(DegreeLocation2()))
+
+        FileInfo existingFile = new FileInfo(DegreeLocation2());
+        using (ExcelPackage package = new ExcelPackage(existingFile))
         {
-            //set headers
-            /*
-            string HeaderWrite = "";
-            for (int i = 0; i < Motions[0].OutputRestrictions.Count; i++)
-            {
-                for (int j = 0; j < Degrees; j++)
-                {
-                    HeaderWrite = HeaderWrite + settings.Restrictions[i].Label + "^" + (j + 1).ToString() + ",";
-                }
-            }
-            */
-            for (var row = 1; row <= 100; row++)
-            {
-                for (var col = 1; col <= 10; col++)
-                {
-                    ew.Write($"row:{row}-col:{col}", col, row);
-                }
-            }
+            //get the first worksheet in the workbook
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
         }
-    }
+
+
+            /*
+            using (var ew = new ExcelWriter(DegreeLocation2()))
+            {
+                //set headers
+
+                string HeaderWrite = "";
+                for (int i = 0; i < Motions[0].OutputRestrictions.Count; i++)
+                {
+                    for (int j = 0; j < Degrees; j++)
+                    {
+                        HeaderWrite = HeaderWrite + settings.Restrictions[i].Label + "^" + (j + 1).ToString() + ",";
+                    }
+                }
+
+                for (var row = 1; row <= 100; row++)
+                {
+                    for (var col = 1; col <= 10; col++)
+                    {
+                        ew.Write($"row:{row}-col:{col}", col, row);
+                    }
+                }
+            }
+        */
+        }
 
     public void PrintSpace()
     {

@@ -92,12 +92,13 @@ public class SpreadSheet : SerializedMonoBehaviour
 
 
         FileInfo existingFile = new FileInfo(DegreeLocation2());
+        
         using (ExcelPackage package = new ExcelPackage(existingFile))
         {
             //get the first worksheet in the workbook
             ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
         }
-
+        
 
             /*
             using (var ew = new ExcelWriter(DegreeLocation2()))

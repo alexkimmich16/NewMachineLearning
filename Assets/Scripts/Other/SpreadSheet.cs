@@ -13,33 +13,54 @@ public class SpreadSheet : SerializedMonoBehaviour
 
     public static string ReadExcelCell(int row, int column)
     {
-        string cellValue = null;
-        /*
-        FileStream stream = File.Open(Application.dataPath + "/SpreadSheets/Tester.xlsx", FileMode.Open, FileAccess.Read);
+        FileInfo existingFile = new FileInfo(DegreeLocation2());
+        ExcelPackage package = new ExcelPackage(existingFile);
+        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+        return worksheet.Cells[row + 1, column + 1].Value.ToString();
+    }
+    public static string DegreeLocation2() { return Application.dataPath + "/SpreadSheets/Tester.XLSX"; }
+    
+    [Button(ButtonSizes.Small)]
+    public void PrintDegreeStats2()
+    {
+        RegressionSystem RS = gameObject.GetComponent<RegressionSystem>();
+        Debug.Log("Print: " + RS.CurrentMotion.ToString());
+        MotionRestriction settings = RS.UploadRestrictions;
+        List<SingleFrameRestrictionValues> Motions = GetComponent<BruteForce>().GetRestrictionsForMotions(RS.CurrentMotion, settings);
+        int Degrees = RS.EachTotalDegree;
+        
+        FileInfo existingFile = new FileInfo(DegreeLocation2());
+        ExcelPackage package = new ExcelPackage(existingFile);
+        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-        IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-        DataSet result = excelReader.AsDataSet();
+        //headers
+        for (int i = 0; i < Motions[0].OutputRestrictions.Count; i++)
+            for (int j = 0; j < Degrees; j++)
+                worksheet.Cells[1, (i * Degrees) + j + 1].Value = settings.Restrictions[i].Label + "^" + (j + 1).ToString() + ",";
+        worksheet.Cells[1, (Degrees * Motions[0].OutputRestrictions.Count) + 1].Value = "States";
 
-        DataTable table = result.Tables["Sheet1"];
-
-        // Read the value of the cell
-        if (row < table.Rows.Count && column < table.Columns.Count)
-        {
-            cellValue = table.Rows[row][column].ToString();
-        }
-
-        excelReader.Close();
-        stream.Close();
-        */
-        return cellValue;
+        //Stats
+        for (int i = 0; i < Motions.Count; i++)
+            for (int j = 0; j < Motions[0].OutputRestrictions.Count; j++)
+                for (int k = 0; k < Degrees; k++)
+                {
+                    float DegreeValue = Mathf.Pow(Motions[i].OutputRestrictions[j], k + 1);
+                    float Value = DegreeValue > 0.01f ? DegreeValue : 0.01f;
+                    worksheet.Cells[i + 2, (j * Degrees) + k + 1].Value = Value;
+                }
+        package.Save();
     }
 
-    public string DegreeLocation() { return Application.dataPath + "/SpreadSheets/"+ gameObject.GetComponent<RegressionSystem>().CurrentMotion.ToString() + ".csv"; }
-    public string DegreeLocation2() { return Application.dataPath + "/SpreadSheets/Tester.xlsx"; }
-    public string Location() { return Application.dataPath + "/SpreadSheets/AIStatHolder.csv"; }
-    public string RestrictionLocation() { return Application.dataPath + "/SpreadSheets/RestrictionStats.csv"; }
-    public string MotionsLocation() { return Application.dataPath + "/SpreadSheets/MotionStats.csv"; }
+    /*
+    [Button(ButtonSizes.Small)]
+    public void GetPos()
+    {
+        Debug.Log(ReadExcelCell(0,0));
+    }
+    */
+}
 
+/*
     [Button(ButtonSizes.Small)]
     public void PrintDegreeStats()
     {
@@ -79,57 +100,4 @@ public class SpreadSheet : SerializedMonoBehaviour
         }
         tw.Close();
     }
-
-    [Button(ButtonSizes.Small)]
-    public void PrintDegreeStats2()
-    {
-        RegressionSystem RS = gameObject.GetComponent<RegressionSystem>();
-        Debug.Log("Print: " + RS.CurrentMotion.ToString());
-        MotionRestriction settings = RS.UploadRestrictions;
-        List<SingleFrameRestrictionValues> Motions = GetComponent<BruteForce>().GetRestrictionsForMotions(RS.CurrentMotion, settings);
-        int Degrees = RS.EachTotalDegree;
-        //ExcelWorksheet worksheet = new ExcelWorksheet(DegreeLocation2());
-
-
-        FileInfo existingFile = new FileInfo(DegreeLocation2());
-        
-        using (ExcelPackage package = new ExcelPackage(existingFile))
-        {
-            //get the first worksheet in the workbook
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
-        }
-        
-
-            /*
-            using (var ew = new ExcelWriter(DegreeLocation2()))
-            {
-                //set headers
-
-                string HeaderWrite = "";
-                for (int i = 0; i < Motions[0].OutputRestrictions.Count; i++)
-                {
-                    for (int j = 0; j < Degrees; j++)
-                    {
-                        HeaderWrite = HeaderWrite + settings.Restrictions[i].Label + "^" + (j + 1).ToString() + ",";
-                    }
-                }
-
-                for (var row = 1; row <= 100; row++)
-                {
-                    for (var col = 1; col <= 10; col++)
-                    {
-                        ew.Write($"row:{row}-col:{col}", col, row);
-                    }
-                }
-            }
-        */
-        }
-
-    public void PrintSpace()
-    {
-        TextWriter tw = new StreamWriter(Location(), true); 
-        tw.WriteLine("");
-        tw.Close();
-    }
-}
-
+    */

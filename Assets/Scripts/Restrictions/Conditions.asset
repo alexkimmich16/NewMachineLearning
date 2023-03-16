@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fefba3d2fbdee34f8bf55394b3906fa, type: 3}
+  m_Name: Conditions
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  MotionConditions:
+  - Motion: fireball
+    CurrentStage: 0000000000000000
+    ResetOnMax: 1
+    WaitingForFalse: 0000
+    ConditionLists:
+    - Label: ParticleTrigger
+      SingleConditions:
+      - Label: dist from start
+        condition: 1
+        Amount: 0.06
+        restriction:
+          Label: 
+          Active: 0
+          restriction: 0
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 
+          Weight: 0
+          MaxFalloff: 0
+          MaxSafe: 0
+          MinSafe: 0
+          MinFalloff: 0
+          ShouldDebug: 0
+          Value: 0
+        LastState: 0000
+        StartTime:
+        - 0
+        - 0
+        StartPos:
+        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0}
+        Value:
+        - 0
+        - 0
+    - Label: Shoot
+      SingleConditions:
+      - Label: dist from head
+        condition: 2
+        Amount: 0
+        restriction:
+          Label: dist from head
+          Active: 1
+          restriction: 3
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 000000000100000002000000
+          Weight: 0
+          MaxFalloff: 0
+          MaxSafe: 1000
+          MinSafe: 0.21
+          MinFalloff: 0
+          ShouldDebug: 0
+          Value: 0
+        LastState: 0000
+        StartTime:
+        - 0
+        - 0
+        StartPos:
+        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0}
+        Value:
+        - 0
+        - 0
+  - Motion: flames
+    CurrentStage: 0000000000000000
+    ResetOnMax: 0
+    WaitingForFalse: 0000
+    ConditionLists: []
+  - Motion: flames
+    CurrentStage: 0000000000000000
+    ResetOnMax: 0
+    WaitingForFalse: 0000
+    ConditionLists: []

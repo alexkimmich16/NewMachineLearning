@@ -1259,15 +1259,38 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  LM: {fileID: 1732929128}
+  BF: {fileID: 944444323}
+  AbleToCallWithButtons: 1
+  WithinFrames:
+    x: 0
+    y: 0
   DegreesFromHead:
     x: 175
     y: 185
-  LM: {fileID: 1732929128}
-  BF: {fileID: 944444323}
-  List: 0000000000000000000000000000000000000000000000
-  Value: 0
-  Ranges: []
-  SetAllButton: 271
+  LockAngleButton: 0
+  MinMaxVelocity:
+    x: 0
+    y: 0.31
+  LockVelocityButton: 32
+  VelocitySettings:
+    Label: VelSettings
+    Active: 0
+    restriction: 0
+    checkType: 0
+    OtherDirection: {x: 0, y: 0, z: 0}
+    UseLocalHandPos: 0
+    UseLocalHandRot: 0
+    Offset: {x: 0, y: 0, z: 0}
+    Direction: {x: 0, y: 0, z: 0}
+    UseAxisList: 000000000100000002000000
+    Weight: 0
+    MaxFalloff: 0
+    MaxSafe: 0
+    MinSafe: 0
+    MinFalloff: 0
+    ShouldDebug: 0
+    Value: 0
 --- !u!1 &258064887
 GameObject:
   m_ObjectHideFlags: 0
@@ -3500,7 +3523,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FramesPerSecond: 60
   CurrentMotionRecord: []
-  motion: 2
+  motion: 1
   ShouldRecord: 1
   Values: 
 --- !u!4 &795205100
@@ -3909,6 +3932,7 @@ GameObject:
   - component: {fileID: 944444326}
   - component: {fileID: 944444327}
   - component: {fileID: 944444328}
+  - component: {fileID: 944444329}
   m_Layer: 0
   m_Name: Restictions
   m_TagString: Untagged
@@ -3945,9 +3969,9 @@ MonoBehaviour:
   Materials:
   - {fileID: 2100000, guid: dbd4aed6d0cbd204abdc789ae6ce43d8, type: 2}
   - {fileID: 2100000, guid: 6383519db53c4274c8dc728274771cc0, type: 2}
-  - {fileID: 2100000, guid: 43d6239dccefab744af3dec4adfa760d, type: 2}
   - {fileID: 2100000, guid: 0cdc5c7a411506f4f93f54c90f784a06, type: 2}
-  - {fileID: 2100000, guid: e3b745115fdd49b48a859d15346cbe7d, type: 2}
+  - {fileID: 2100000, guid: 43d6239dccefab744af3dec4adfa760d, type: 2}
+  - {fileID: 2100000, guid: 949532d3b310e054190fb2eb2c69a0b3, type: 2}
   - {fileID: 2100000, guid: 8be2ead7e15bc1b429069dfa14e514eb, type: 2}
   Restrictions:
     Motion: Flames
@@ -4020,7 +4044,7 @@ MonoBehaviour:
       MinFalloff: 0
       ShouldDebug: 0
       Value: 0
-  debugType: 3
+  debugType: 4
   MotionTry: 1
   MaxFalseGuesses: 0
   TotalCorrectGuesses: 0
@@ -4487,89 +4511,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  RestrictionSettings: {fileID: 11400000, guid: 76ee955c20c73154b977ecc314c5bbe4, type: 2}
-  MotionConditions:
-  - Motion: fireball
-    CurrentStage: 0000000000000000
-    ResetOnMax: 1
-    WaitingForFalse: 0000
-    ConditionLists:
-    - Label: ParticleTrigger
-      SingleConditions:
-      - Label: dist from start
-        condition: 1
-        Amount: 0.06
-        restriction:
-          Label: 
-          Active: 0
-          restriction: 0
-          checkType: 0
-          OtherDirection: {x: 0, y: 0, z: 0}
-          UseLocalHandPos: 0
-          UseLocalHandRot: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          UseAxisList: 
-          Weight: 0
-          MaxFalloff: 0
-          MaxSafe: 0
-          MinSafe: 0
-          MinFalloff: 0
-          ShouldDebug: 0
-          Value: 0
-        LastState: 0000
-        StartTime:
-        - 0
-        - 0
-        StartPos:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        Value:
-        - 0
-        - 0
-    - Label: Shoot
-      SingleConditions:
-      - Label: dist from head
-        condition: 2
-        Amount: 0
-        restriction:
-          Label: dist from head
-          Active: 1
-          restriction: 3
-          checkType: 0
-          OtherDirection: {x: 0, y: 0, z: 0}
-          UseLocalHandPos: 0
-          UseLocalHandRot: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          UseAxisList: 000000000100000002000000
-          Weight: 0
-          MaxFalloff: 0
-          MaxSafe: 1000
-          MinSafe: 0.21
-          MinFalloff: 0
-          ShouldDebug: 0
-          Value: 0
-        LastState: 0000
-        StartTime:
-        - 0
-        - 0
-        StartPos:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        Value:
-        - 0
-        - 0
-  - Motion: flames
-    CurrentStage: 0000000000000000
-    ResetOnMax: 0
-    WaitingForFalse: 0000
-    ConditionLists: []
-  - Motion: flames
-    CurrentStage: 0000000000000000
-    ResetOnMax: 0
-    WaitingForFalse: 0000
-    ConditionLists: []
+  conditions: {fileID: 11400000, guid: 327db299f0c71db44b1cea52043662e5, type: 2}
 --- !u!114 &944444325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6327,7 +6269,7 @@ MonoBehaviour:
   OutputValues: []
   RestrictionValues: []
   RegressionStats: {fileID: 11400000, guid: de845bce815e9c2468379f92c4a39df3, type: 2}
-  CurrentMotion: 2
+  CurrentMotion: 3
   EachTotalDegree: 3
   UploadRestrictions:
     Motion: AllRelevantRestrictions
@@ -6375,7 +6317,7 @@ MonoBehaviour:
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
-      UseAxisList: 000000000100000000000000
+      UseAxisList: 000000000100000002000000
       Weight: 0
       MaxFalloff: 28.968493
       MaxSafe: 23.671728
@@ -6451,15 +6393,15 @@ MonoBehaviour:
       MinFalloff: 0
       ShouldDebug: 0
       Value: 0
-    - Label: HandForwardHead
+    - Label: PalmFaceHead
       Active: 0
       restriction: 2
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
+      UseLocalHandPos: 1
+      UseLocalHandRot: 1
       Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 1}
+      Direction: {x: -1, y: 0, z: 0}
       UseAxisList: 000000000100000002000000
       Weight: 0
       MaxFalloff: 0
@@ -6473,8 +6415,8 @@ MonoBehaviour:
       restriction: 2
       checkType: 2
       OtherDirection: {x: 0, y: 0, z: 1}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
+      UseLocalHandPos: 1
+      UseLocalHandRot: 1
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 000000000100000002000000
@@ -6509,6 +6451,29 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+--- !u!114 &944444329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944444316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d73aad118b80f74d8fde954698cd0f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  TestWithLag: 0
+  TargetFPS: 45
 --- !u!1 &960757780
 GameObject:
   m_ObjectHideFlags: 0
@@ -9453,7 +9418,8 @@ MonoBehaviour:
   Motion: 0
   PlaybackSpeed: 60
   type: 3
-  DisplayLocal: 1
+  LocalHandPos: 0
+  LocalHandRot: 0
   Frame: 0
   NextTime: 0
   Timer: 0

@@ -17,7 +17,8 @@ public class MotionPlayback : MonoBehaviour
     private int LastMotion;
     public float PlaybackSpeed = 1f;
     public PlayType type;
-    public bool DisplayLocal;
+    public bool LocalHandPos;
+    public bool LocalHandRot;
 
     [Header("Info")]
     public int Frame;
@@ -97,8 +98,8 @@ public class MotionPlayback : MonoBehaviour
     }
     public void MoveController(Transform trans, SingleInfo info)
     {
-        trans.localPosition = info.HandPosType(DisplayLocal);
-        trans.localEulerAngles = info.HandRotType(DisplayLocal);
+        trans.localPosition = info.HandPosType(LocalHandPos);
+        trans.localEulerAngles = info.HandRotType(LocalHandRot);
     }
     public void MoveHead(SingleInfo info)
     {

@@ -68,7 +68,7 @@ MonoBehaviour:
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
-      UseAxisList: 000000000100000000000000
+      UseAxisList: 000000000100000002000000
       Weight: 0
       MaxFalloff: 28.968493
       MaxSafe: 23.671728
@@ -81,8 +81,8 @@ MonoBehaviour:
       restriction: 1
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
+      UseLocalHandPos: 1
+      UseLocalHandRot: 1
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 000000000100000002000000
@@ -144,7 +144,7 @@ MonoBehaviour:
       MinFalloff: 0
       ShouldDebug: 0
       Value: 0
-    - Label: HandForwardHead
+    - Label: PalmFaceHead
       Active: 0
       restriction: 2
       checkType: 0
@@ -152,7 +152,7 @@ MonoBehaviour:
       UseLocalHandPos: 0
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 1}
+      Direction: {x: -1, y: 0, z: 0}
       UseAxisList: 000000000100000002000000
       Weight: 0
       MaxFalloff: 0
@@ -166,8 +166,8 @@ MonoBehaviour:
       restriction: 2
       checkType: 2
       OtherDirection: {x: 0, y: 0, z: 1}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
+      UseLocalHandPos: 1
+      UseLocalHandRot: 1
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 000000000100000002000000

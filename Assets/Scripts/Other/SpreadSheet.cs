@@ -4,7 +4,6 @@ using UnityEngine;
 using System.IO;
 using Sirenix.OdinInspector;
 using RestrictionSystem;
-using System.Data;
 using OfficeOpenXml;
 public class SpreadSheet : SerializedMonoBehaviour
 {
@@ -21,12 +20,13 @@ public class SpreadSheet : SerializedMonoBehaviour
     public static string DegreeLocation2() { return Application.dataPath + "/SpreadSheets/Tester.XLSX"; }
     
     [Button(ButtonSizes.Small)]
-    public void PrintDegreeStats2()
+    public void PrintDegreeStats()
     {
         RegressionSystem RS = gameObject.GetComponent<RegressionSystem>();
-        Debug.Log("Print: " + RS.CurrentMotion.ToString());
+        
         MotionRestriction settings = RS.UploadRestrictions;
         List<SingleFrameRestrictionValues> Motions = GetComponent<BruteForce>().GetRestrictionsForMotions(RS.CurrentMotion, settings);
+        Debug.Log("Print: " + RS.CurrentMotion.ToString());// + "  First: " + Motions[0].OutputRestrictions[0]
         int Degrees = RS.EachTotalDegree;
         
         FileInfo existingFile = new FileInfo(DegreeLocation2());
@@ -41,13 +41,21 @@ public class SpreadSheet : SerializedMonoBehaviour
 
         //Stats
         for (int i = 0; i < Motions.Count; i++)
+        {
             for (int j = 0; j < Motions[0].OutputRestrictions.Count; j++)
+            {
                 for (int k = 0; k < Degrees; k++)
                 {
                     float DegreeValue = Mathf.Pow(Motions[i].OutputRestrictions[j], k + 1);
                     float Value = DegreeValue > 0.01f ? DegreeValue : 0.01f;
                     worksheet.Cells[i + 2, (j * Degrees) + k + 1].Value = Value;
                 }
+            }
+            worksheet.Cells[i + 2, (Motions[0].OutputRestrictions.Count * Degrees) + 1].Value = Motions[i].AtMotionState ? 1 : 0;
+        }
+            
+                
+
         package.Save();
     }
 
@@ -100,4 +108,4 @@ public class SpreadSheet : SerializedMonoBehaviour
         }
         tw.Close();
     }
-    */
+*/

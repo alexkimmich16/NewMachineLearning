@@ -88,8 +88,8 @@ namespace RestrictionSystem
     [System.Serializable]
     public class SingleInfo
     {
-        public Vector3 HandPosType(bool IsLocal) { return IsLocal ? UncenteredHandPos : HandPos; }
-        public Vector3 HandRotType(bool IsLocal) { return IsLocal ? UncenteredHandRot : HandRot; }
+        public Vector3 HandPosType(bool IsLocal) { return IsLocal ? HandPos : UncenteredHandPos; }
+        public Vector3 HandRotType(bool IsLocal) { return IsLocal ? HandRot: UncenteredHandRot; }
         
         public Vector3 HeadPos, HeadRot, HandPos, HandRot, UncenteredHandPos, UncenteredHandRot;
         public float SpawnTime;

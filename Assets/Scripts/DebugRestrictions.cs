@@ -9,7 +9,8 @@ namespace RestrictionSystem
         None = 0,
         ThisDebugTest = 1,
         MotionSettings = 2,
-        OneMotionSetting = 3,
+        OneMotion = 3,
+        All = 4,
     }
     public class DebugRestrictions : SerializedMonoBehaviour
     {
@@ -30,7 +31,7 @@ namespace RestrictionSystem
         [FoldoutGroup("Testing")] public MotionRestriction Restrictions;
         //[FoldoutGroup("Testing")] public bool DebugHand;
         [FoldoutGroup("Testing")] public DebugType debugType;
-        [FoldoutGroup("Testing"), ShowIf("debugType", DebugType.OneMotionSetting)] public CurrentLearn MotionTry;
+        [FoldoutGroup("Testing"), ShowIf("debugType", DebugType.OneMotion)] public CurrentLearn MotionTry;
 
         [FoldoutGroup("Guesses")]public float MaxFalseGuesses;
         [FoldoutGroup("Guesses")] public float TotalCorrectGuesses;
@@ -88,8 +89,37 @@ namespace RestrictionSystem
             //VelocityDirection = (frame2.HandPos - frame1.HandPos).normalized;
             //AngleDistance = Vector3.Angle((frame2.HandPos - frame1.HandPos).normalized, frame2.HandRot.normalized);
             //HandPosition = frame2.HandPos;
-            handToChange[0].material = Materials[RegressionSystem.instance.ControllerGuess(out float Guess1, Side.right) ? 1 : 0]; //set hand
-            handToChange[1].material = Materials[RegressionSystem.instance.ControllerGuess(out float Guess2, Side.left) ? 1 : 0]; //set hand
+
+            
+            if(debugType == DebugType.OneMotion)
+            {
+                handToChange[0].material = Materials[RestrictionManager.instance.MotionWorks(PR.PastFrame(Side.right), PastFrameRecorder.instance.GetControllerInfo(Side.right), MotionTry) ? 1 : 0]; //set hand
+                handToChange[1].material = Materials[RestrictionManager.instance.MotionWorks(PR.PastFrame(Side.left), PastFrameRecorder.instance.GetControllerInfo(Side.left), MotionTry) ? 1 : 0]; //set hand
+            }
+            if (debugType == DebugType.All)
+            {
+                handToChange[0].material = Materials[GetMatTestNum(Side.right)]; //set hand
+                handToChange[1].material = Materials[GetMatTestNum(Side.left)]; //set hand
+            }
+            
+
+            int GetMatTestNum(Side side)
+            {
+                List<int> Working = new List<int>();
+                for (int j = 1; j < RestrictionManager.instance.coefficents.RegressionStats.Count + 1; j++)
+                {
+                    bool Works = RestrictionManager.instance.MotionWorks(PR.PastFrame(side), PastFrameRecorder.instance.GetControllerInfo(side), (CurrentLearn)j);
+                    if (Works)
+                        Working.Add(j);
+                }
+                if (Working.Count == 0)
+                    return 0;
+                else if (Working.Count == 1)
+                    return Working[0];
+                else
+                    return RestrictionManager.instance.coefficents.RegressionStats.Count + 1;
+
+            }
             /*
             if (debugType == DebugType.ThisDebugTest)
                 handToChange.material = Materials[RestrictionManager.MotionWorks(frame1, frame2, Restrictions) ? 1 : 0]; //set hand

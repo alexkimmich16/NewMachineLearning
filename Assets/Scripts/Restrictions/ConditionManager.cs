@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using System;
-
-//using Unity.Mathematics;
-
 namespace RestrictionSystem
 {
-
-
     public enum Condition
     {
         Time = 0,
         Distance = 1,
         Restriction = 2,
+        ConsistantDirection = 3,
     }
     public delegate bool ConditionWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side);
     public delegate void OnNewMotionState(Side side, bool NewState, int Index, int Level);
@@ -25,12 +21,13 @@ namespace RestrictionSystem
             {Condition.Time, TimeWorksAndAdd},
             {Condition.Distance, DistanceWorksAndAdd},
             {Condition.Restriction, RestrictionWorksAndAdd},
+            {Condition.Restriction, RestrictionWorksAndAdd},
         };
 
         public static ConditionManager instance;
         private void Awake() { instance = this; }
-        public MotionSettings RestrictionSettings;
-        [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Motion")] public List<MotionConditionInfo> MotionConditions;
+        //public MotionSettings RestrictionSettings;
+        public Conditions conditions;
 
         public static bool TimeWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side)
         {
@@ -69,20 +66,26 @@ namespace RestrictionSystem
         public void PassValue(bool State, CurrentLearn Motion, Side side)
         {
             //Debug.Log("Pass: " + State);
-            MotionConditions[(int)Motion - 1].PassValueToAll(State, side);
+            conditions.MotionConditions[(int)Motion - 1].PassValueToAll(State, side);
+        }
+
+        private void Start()
+        {
+            conditions.ResetConditions();
         }
     }
 
-
+    
 
 
     [Serializable]
     public class MotionConditionInfo
     {
         public string Motion;
-        public List<int> CurrentStage = new List<int>() { 0, 0 };
+
+        [FoldoutGroup("Runtime")] public List<int> CurrentStage = new List<int>() { 0, 0 };
         public bool ResetOnMax;
-        public List<bool> WaitingForFalse = new List<bool>() { false, false };
+        [FoldoutGroup("Runtime")] public List<bool> WaitingForFalse = new List<bool>() { false, false };
         [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Label")] public List<ConditionList> ConditionLists;
 
         public event OnNewMotionState OnNewState;

@@ -21,7 +21,7 @@ namespace RestrictionSystem
             {Condition.Time, TimeWorksAndAdd},
             {Condition.Distance, DistanceWorksAndAdd},
             {Condition.Restriction, RestrictionWorksAndAdd},
-            {Condition.Restriction, RestrictionWorksAndAdd},
+            {Condition.ConsistantDirection, StraightWorksAndAdd},
         };
 
         public static ConditionManager instance;
@@ -51,12 +51,31 @@ namespace RestrictionSystem
             }
             return false;
         }
+        
         public static bool DistanceWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side)
         {
             if (Condition.LastState[(int)side] == false && NewState == true)
                 Condition.StartPos[(int)side] = CurrentFrame.HandPos;
             else if (NewState == true && Condition.LastState[(int)side] == true)
             {
+                Condition.Value[(int)side] = Vector3.Distance(Condition.StartPos[(int)side], CurrentFrame.HandPos);
+                return Condition.Value[(int)side] > Condition.Amount;
+                //Debug.Log("ongoing: " + (Vector3.Distance(Condition.StartPos, CurrentFrame.HandPos) > Condition.Amount));
+            }
+            return false;
+        }
+
+        public static bool StraightWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side)
+        {
+            if (Condition.LastState[(int)side] == false && NewState == true)
+                Condition.StartPos[(int)side] = CurrentFrame.HandPos;
+            else if (NewState == true && Condition.LastState[(int)side] == true)
+            {
+                //end rotation is similar to start rotation
+                //end position is parrelel to start rotation's forward
+                ///two seperate??
+
+
                 Condition.Value[(int)side] = Vector3.Distance(Condition.StartPos[(int)side], CurrentFrame.HandPos);
                 return Condition.Value[(int)side] > Condition.Amount;
                 //Debug.Log("ongoing: " + (Vector3.Distance(Condition.StartPos, CurrentFrame.HandPos) > Condition.Amount));

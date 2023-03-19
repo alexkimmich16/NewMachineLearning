@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.XR;
 namespace RestrictionSystem
 {
     public class PastFrameRecorder : SerializedMonoBehaviour
     {
         public static PastFrameRecorder instance;
         private void Awake() { instance = this; }
-        [FoldoutGroup("NeatDisplay"), ReadOnly] public List<SingleInfo> RightInfo;
-        [FoldoutGroup("NeatDisplay"), ReadOnly] public List<SingleInfo> LeftInfo;
+        public List<SingleInfo> RightInfo;
+        public List<SingleInfo> LeftInfo;
 
         public int MaxStoreInfo = 10;
         public int FramesAgo = 10;
@@ -22,6 +23,7 @@ namespace RestrictionSystem
         public Transform Cam;
 
         public List<bool> UseSides;
+
         public SingleInfo GetControllerInfo(Side side)
         {
             ResetStats();
@@ -60,28 +62,27 @@ namespace RestrictionSystem
                 }
             }
         }
-
-        void Start()
+        private void Update()
         {
-            StartCoroutine(ManageLists(1f / 60f));
+            ManageLists();
         }
-        IEnumerator ManageLists(float Interval)
+        public void ManageLists()
         {
-            while (true)
-            {
-                RightInfo.Add(GetControllerInfo(Side.right));
-                if (RightInfo.Count > MaxStoreInfo)
-                    RightInfo.RemoveAt(0);
+            //InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.isTracked, out bool HeadsetActive);
+            InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.isTracked, out bool RightHandActive);
+            InputDevices.GetDeviceAtXRNode(XRNode.LeftHand).TryGetFeatureValue(CommonUsages.isTracked, out bool LeftHandActive);
+            UseSides = new List<bool>() { RightHandActive, LeftHandActive };
 
-                LeftInfo.Add(GetControllerInfo(Side.left));
-                if (LeftInfo.Count > MaxStoreInfo)
-                    LeftInfo.RemoveAt(0);
-                
-                if(RightInfo.Count > FramesAgo)
-                    RestrictionManager.instance.TriggerFrameEvents(UseSides);
+            RightInfo.Add(GetControllerInfo(Side.right));
+            if (RightInfo.Count > MaxStoreInfo)
+                RightInfo.RemoveAt(0);
 
-                yield return new WaitForSeconds(Interval);
-            }
+            LeftInfo.Add(GetControllerInfo(Side.left));
+            if (LeftInfo.Count > MaxStoreInfo)
+                LeftInfo.RemoveAt(0);
+
+            if (RightInfo.Count > FramesAgo)
+                RestrictionManager.instance.TriggerFrameEvents(UseSides);
         }
         public SingleInfo PastFrame(Side side) { return (side == Side.right) ? RightInfo[RightInfo.Count - FramesAgo] : LeftInfo[LeftInfo.Count - FramesAgo]; }
     }

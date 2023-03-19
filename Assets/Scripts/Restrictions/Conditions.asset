@@ -23,15 +23,15 @@ MonoBehaviour:
     SerializationNodes: []
   MotionConditions:
   - Motion: fireball
-    CurrentStage: 0000000000000000
-    ResetOnMax: 1
-    WaitingForFalse: 0000
+    conditionType: 0
+    CastLevel: 1
     ConditionLists:
-    - Label: ParticleTrigger
+    - StateToActivate: FireWarmup
       SingleConditions:
-      - Label: dist from start
+      - Label: 
         condition: 1
         Amount: 0.06
+        WaitSide: 0
         restriction:
           Label: 
           Active: 0
@@ -43,28 +43,25 @@ MonoBehaviour:
           Offset: {x: 0, y: 0, z: 0}
           Direction: {x: 0, y: 0, z: 0}
           UseAxisList: 
-          Weight: 0
-          MaxFalloff: 0
-          MaxSafe: 0
-          MinSafe: 0
-          MinFalloff: 0
           ShouldDebug: 0
           Value: 0
-        LastState: 0000
+        Range: {x: 0, y: 0}
+        LastState: 0101
         StartTime:
         - 0
         - 0
         StartPos:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
+        - {x: -0.8701509, y: -0.20662951, z: 0.1022892}
+        - {x: -1.1907688, y: 0.3698933, z: 3.110177}
         Value:
         - 0
-        - 0
-    - Label: Shoot
+        - 4.029705
+    - StateToActivate: ShootFireball
       SingleConditions:
-      - Label: dist from head
+      - Label: 
         condition: 2
         Amount: 0
+        WaitSide: 0
         restriction:
           Label: dist from head
           Active: 1
@@ -76,13 +73,46 @@ MonoBehaviour:
           Offset: {x: 0, y: 0, z: 0}
           Direction: {x: 0, y: 0, z: 0}
           UseAxisList: 000000000100000002000000
-          Weight: 0
-          MaxFalloff: 0
-          MaxSafe: 1000
-          MinSafe: 0.21
-          MinFalloff: 0
+          ShouldDebug: 0
+          Value: 0.4684659
+        Range: {x: 0.5, y: 0}
+        LastState: 0101
+        StartTime:
+        - 0
+        - 0
+        StartPos:
+        - {x: 0, y: 0, z: 0}
+        - {x: 0, y: 0, z: 0}
+        Value:
+        - 6.262331
+        - 1.3456191
+    ProhibitList: []
+    CurrentStage: 0000000001000000
+    WaitingForFalse: 0000
+  - Motion: flames
+    conditionType: 1
+    CastLevel: 1
+    ConditionLists:
+    - StateToActivate: 
+      SingleConditions:
+      - Label: 
+        condition: 4
+        Amount: 0
+        WaitSide: 0
+        restriction:
+          Label: 
+          Active: 0
+          restriction: 0
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 
           ShouldDebug: 0
           Value: 0
+        Range: {x: 0, y: 0}
         LastState: 0000
         StartTime:
         - 0
@@ -93,13 +123,41 @@ MonoBehaviour:
         Value:
         - 0
         - 0
-  - Motion: flames
+    ProhibitList:
+    - Label: Wait For Multiple False Frames
+      condition: 4
+      Amount: 4
+      WaitSide: 1
+      restriction:
+        Label: 
+        Active: 0
+        restriction: 0
+        checkType: 0
+        OtherDirection: {x: 0, y: 0, z: 0}
+        UseLocalHandPos: 0
+        UseLocalHandRot: 0
+        Offset: {x: 0, y: 0, z: 0}
+        Direction: {x: 0, y: 0, z: 0}
+        UseAxisList: 
+        ShouldDebug: 0
+        Value: 0
+      Range: {x: 0, y: 0}
+      LastState: 0000
+      StartTime:
+      - 0
+      - 0
+      StartPos:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      Value:
+      - 0
+      - 0
     CurrentStage: 0000000000000000
-    ResetOnMax: 0
     WaitingForFalse: 0000
+  - Motion: Block
+    conditionType: 1
+    CastLevel: 0
     ConditionLists: []
-  - Motion: flames
+    ProhibitList: []
     CurrentStage: 0000000000000000
-    ResetOnMax: 0
     WaitingForFalse: 0000
-    ConditionLists: []

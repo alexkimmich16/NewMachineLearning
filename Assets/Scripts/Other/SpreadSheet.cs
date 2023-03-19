@@ -5,6 +5,7 @@ using System.IO;
 using Sirenix.OdinInspector;
 using RestrictionSystem;
 using OfficeOpenXml;
+using System.Diagnostics;
 public class SpreadSheet : SerializedMonoBehaviour
 {
     public static SpreadSheet instance;
@@ -18,7 +19,13 @@ public class SpreadSheet : SerializedMonoBehaviour
         return worksheet.Cells[row + 1, column + 1].Value.ToString();
     }
     public static string DegreeLocation2() { return Application.dataPath + "/SpreadSheets/Tester.XLSX"; }
-    
+
+    [Button(ButtonSizes.Small)]
+    public void OpenExcel()
+    {
+        Process.Start(DegreeLocation2());
+    }
+
     [Button(ButtonSizes.Small)]
     public void PrintDegreeStats()
     {
@@ -26,7 +33,7 @@ public class SpreadSheet : SerializedMonoBehaviour
         
         MotionRestriction settings = RS.UploadRestrictions;
         List<SingleFrameRestrictionValues> Motions = GetComponent<BruteForce>().GetRestrictionsForMotions(RS.CurrentMotion, settings);
-        Debug.Log("Print: " + RS.CurrentMotion.ToString());// + "  First: " + Motions[0].OutputRestrictions[0]
+        UnityEngine.Debug.Log("Print: " + RS.CurrentMotion.ToString());// + "  First: " + Motions[0].OutputRestrictions[0]
         int Degrees = RS.EachTotalDegree;
         
         FileInfo existingFile = new FileInfo(DegreeLocation2());
@@ -57,6 +64,8 @@ public class SpreadSheet : SerializedMonoBehaviour
                 
 
         package.Save();
+
+        OpenExcel();
     }
 
     /*

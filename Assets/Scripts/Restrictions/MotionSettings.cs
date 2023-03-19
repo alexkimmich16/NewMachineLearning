@@ -65,42 +65,8 @@ namespace RestrictionSystem
         private bool RequiresAxisList() { return AxisListRestrictions.Contains(restriction); }
         public static List<Restriction> AxisListRestrictions = new List<Restriction>() { Restriction.HandHeadDistance, Restriction.VelocityThreshold, Restriction.HandFacing, Restriction.VelocityInDirection };
 
-        [ShowIf("ShowOld")] public float Weight;
-        [ShowIf("ShowOld")] public float MaxFalloff;
-        [ShowIf("ShowOld")] public float MaxSafe;
-        [ShowIf("ShowOld")] public float MinSafe;
-        [ShowIf("ShowOld")] public float MinFalloff;
-        public void SetOutputValue(int Index, float Value)
-        {
-            if (Index == 0)
-                MaxSafe = Value;
-            if (Index == 1)
-                MinSafe = Value;
-            if (Index == 2)
-                MaxFalloff = Value;
-            if (Index == 3)
-                MinFalloff = Value;
-            if (Index == 4)
-                Weight = Value;
-        }
-
         [ShowIf("ShowOld")] public bool ShouldDebug;
         [ReadOnly, ShowIf("ShowOld")] public float Value;
-        public float GetValue(float Input)
-        {
-            Value = Input;
-            if (Input < MaxSafe && Input > MinSafe)
-                return 1f;
-            else if (Input < MinFalloff || Input > MaxFalloff)
-                return 0f;
-            else
-            {
-                bool IsLowSide = Input > MinFalloff && Input < MinSafe;
-                float DistanceValue = IsLowSide ? 1f - Remap(Input, new Vector2(MinFalloff, MinSafe)) : Remap(Input, new Vector2(MaxSafe, MaxFalloff));
-                return DistanceValue;
-            }
-            float Remap(float Input, Vector2 MaxMin) { return (Input - MaxMin.x) / (MaxMin.y - MaxMin.x); }
-        }
         public string Title { get { return Label; } }
     }
 }

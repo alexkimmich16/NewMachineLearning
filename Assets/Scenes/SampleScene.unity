@@ -1272,7 +1272,7 @@ MonoBehaviour:
   MinMaxVelocity:
     x: 0
     y: 0.31
-  LockVelocityButton: 32
+  LockVelocityButton: 0
   VelocitySettings:
     Label: VelSettings
     Active: 0
@@ -1284,11 +1284,6 @@ MonoBehaviour:
     Offset: {x: 0, y: 0, z: 0}
     Direction: {x: 0, y: 0, z: 0}
     UseAxisList: 000000000100000002000000
-    Weight: 0
-    MaxFalloff: 0
-    MaxSafe: 0
-    MinSafe: 0
-    MinFalloff: 0
     ShouldDebug: 0
     Value: 0
 --- !u!1 &258064887
@@ -3986,11 +3981,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 01000000
-      Weight: 0
-      MaxFalloff: 500
-      MaxSafe: 500
-      MinSafe: 9.641811
-      MinFalloff: -0.13090637
       ShouldDebug: 0
       Value: 0.030020434
     - Label: VerticalSpeed
@@ -4003,11 +3993,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 0000000002000000
-      Weight: 0
-      MaxFalloff: 500
-      MaxSafe: 500
-      MinSafe: 19.793509
-      MinFalloff: 5.730709
       ShouldDebug: 0
       Value: 0.030020434
     - Label: HandEdgeFaceGround
@@ -4020,11 +4005,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: -1, z: 0}
       UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 47.826508
-      MaxSafe: 46.971046
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 1
       Value: 57.747
     - Label: NearForwardDirection
@@ -4037,11 +4017,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 0000000002000000
-      Weight: 0
-      MaxFalloff: 75.07904
-      MaxSafe: 65.195114
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
   debugType: 4
@@ -4138,7 +4113,7 @@ MonoBehaviour:
   - {fileID: 1867183570734329135}
   - {fileID: 1867183570487954631}
   Cam: {fileID: 1867183570494687147}
-  UseSides: 0000
+  UseSides: 0101
 --- !u!114 &944444323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4407,11 +4382,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 01000000
-      Weight: 0
-      MaxFalloff: 500
-      MaxSafe: 500
-      MinSafe: 15.448305
-      MinFalloff: 13.07209
       ShouldDebug: 0
       Value: 0.030020434
     - Label: VerticalSpeed
@@ -4424,11 +4394,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 0000000002000000
-      Weight: 0
-      MaxFalloff: 31.790813
-      MaxSafe: 31.790813
-      MinSafe: 31.790813
-      MinFalloff: 5.012211
       ShouldDebug: 0
       Value: 0.030020434
     - Label: HandEdgeFaceGround
@@ -4441,11 +4406,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: -1, z: 0}
       UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 53.506886
-      MaxSafe: 0.00020823149
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 57.747
     - Label: 
@@ -4458,11 +4418,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 
-      Weight: 0
-      MaxFalloff: 0
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
   FrameInfo: []
@@ -6269,7 +6224,7 @@ MonoBehaviour:
   OutputValues: []
   RestrictionValues: []
   RegressionStats: {fileID: 11400000, guid: de845bce815e9c2468379f92c4a39df3, type: 2}
-  CurrentMotion: 3
+  CurrentMotion: 2
   EachTotalDegree: 3
   UploadRestrictions:
     Motion: AllRelevantRestrictions
@@ -6284,11 +6239,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 500
-      MaxSafe: 500
-      MinSafe: 2.0114162
-      MinFalloff: -56.81556
       ShouldDebug: 0
       Value: 0
     - Label: Horspeed
@@ -6301,11 +6251,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 0000000002000000
-      Weight: 0
-      MaxFalloff: 500
-      MaxSafe: 500
-      MinSafe: 2.0114162
-      MinFalloff: -56.81556
       ShouldDebug: 0
       Value: 0
     - Label: VelForwardHand
@@ -6318,11 +6263,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 28.968493
-      MaxSafe: 23.671728
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
     - Label: VelForwardHead
@@ -6335,11 +6275,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 72.88449
-      MaxSafe: 1.4430879
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
     - Label: HandHeadAngle
@@ -6352,11 +6287,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 
-      Weight: 0
-      MaxFalloff: 0
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
     - Label: VertHandDist
@@ -6369,11 +6299,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 01000000
-      Weight: 0
-      MaxFalloff: 0
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
     - Label: HorHandDist
@@ -6386,11 +6311,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 0000000002000000
-      Weight: 0
-      MaxFalloff: 0
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
     - Label: PalmFaceHead
@@ -6403,11 +6323,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: -1, y: 0, z: 0}
       UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 0
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
     - Label: HandForward
@@ -6420,16 +6335,11 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 0
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
   ColumnAndRow:
     x: 10
-    y: 32
+    y: 31
 --- !u!114 &944444328
 MonoBehaviour:
   m_ObjectHideFlags: 0

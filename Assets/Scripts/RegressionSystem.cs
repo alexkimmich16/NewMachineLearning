@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
+
 //using MathNet.Numerics.LinearAlgebra;
 
 namespace RestrictionSystem
@@ -24,7 +25,7 @@ namespace RestrictionSystem
         [FoldoutGroup("CoefficentStats")] public int2 ColumnAndRow;
 
 
-
+        
         //AG11
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void GetCoefficentsFromExcel()

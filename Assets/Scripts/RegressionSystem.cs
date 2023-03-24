@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
-
+using System.Linq;
 //using MathNet.Numerics.LinearAlgebra;
 
 namespace RestrictionSystem
@@ -18,16 +18,28 @@ namespace RestrictionSystem
         [FoldoutGroup("Test")] public List<float> OutputValues = new List<float>();
         [FoldoutGroup("Test")] public List<SingleFrameRestrictionValues> RestrictionValues;
 
+
+        [FoldoutGroup("EngineTest")] public float[][] TestValues;
+        [FoldoutGroup("EngineTest")] public int CorrectOnTrue;
+        [FoldoutGroup("EngineTest")] public int CorrectOnFalse;
+        [FoldoutGroup("EngineTest")] public int InCorrectOnTrue;
+        [FoldoutGroup("EngineTest")] public int InCorrectOnFalse;
+
         [FoldoutGroup("CoefficentStats"), ListDrawerSettings(ShowIndexLabels = true)] public Coefficents RegressionStats;
-        [FoldoutGroup("CoefficentStats")] public CurrentLearn CurrentMotion;
+        
         [FoldoutGroup("CoefficentStats")] public int EachTotalDegree;
         [FoldoutGroup("CoefficentStats")] public MotionRestriction UploadRestrictions;
-        [FoldoutGroup("CoefficentStats")] public int2 ColumnAndRow;
+        [FoldoutGroup("CoefficentStats")] public float LearnRate;
+        [FoldoutGroup("CoefficentStats")] public int Iterations;
+        [FoldoutGroup("CoefficentStats")] public float[] Coefficents;
 
 
-        
+        [FoldoutGroup("Excel")] public int2 ColumnAndRow;
+        [FoldoutGroup("Excel")] public CurrentLearn CurrentMotion;
+
         //AG11
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
+        
         public void GetCoefficentsFromExcel()
         {
             Debug.Log(float.Parse(SpreadSheet.ReadExcelCell(ColumnAndRow.x, ColumnAndRow.y)));
@@ -46,34 +58,7 @@ namespace RestrictionSystem
                 }
                 RegressionStats.RegressionStats[(int)CurrentMotion - 1].Coefficents.Add(AddList);
             }
-        }
-        public bool ControllerGuess(out float Value, Side side)
-        {
-            SingleInfo Frame1 = PastFrameRecorder.instance.PastFrame(side);
-            SingleInfo Frame2 = PastFrameRecorder.instance.GetControllerInfo(side);
-
-            List<float> TestValues = new List<float>();
-            for (int i = 0; i < UploadRestrictions.Restrictions.Count; i++)
-            {
-                TestValues.Add(RestrictionManager.RestrictionDictionary[UploadRestrictions.Restrictions[i].restriction].Invoke(UploadRestrictions.Restrictions[i], Frame1, Frame2));
-            }
-
-            float Total = 0f;
-            for (int j = 0; j < RegressionStats.RegressionStats[(int)CurrentMotion - 1].Coefficents.Count; j++)//each  variable
-                for (int k = 0; k < RegressionStats.RegressionStats[(int)CurrentMotion - 1].Coefficents[j].Degrees.Count; k++)//powers
-                    Total += Mathf.Pow(TestValues[j], k + 1) * RegressionStats.RegressionStats[(int)CurrentMotion - 1].Coefficents[j].Degrees[k];
-            
-            //Totals.Add(Total);
-            Total += RegressionStats.RegressionStats[(int)CurrentMotion - 1].Intercept;
-            //insert formula
-            float GuessValue = 1f / (1f + Mathf.Exp(-Total));
-            //OutputValues.Add(GuessValue);
-            Value = GuessValue;
-            bool Guess = GuessValue > 0.5f;
-            bool Correct = Guess;
-            return Correct;
-        }
-        
+        }        
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void TestRegression()
         {
@@ -102,13 +87,177 @@ namespace RestrictionSystem
             float CorrectPercent = Guesses.y / (Guesses.x + Guesses.y);
             Debug.Log(CorrectPercent + "% Correct");
         }
-        
+
+        [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
+        public void DoRegression()
+        {
+            List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(CurrentMotion, UploadRestrictions);
+
+            if (Coefficents.Length == 0)
+                Coefficents = new float[FrameInfo[0].OutputRestrictions.Count + 1];
+            
+            float[][] Inputs = new float[FrameInfo.Count][];
+            for (int i = 0; i < Inputs.Length; i++)
+            {
+                Inputs[i] = new float[FrameInfo[0].OutputRestrictions.Count * EachTotalDegree];
+                for (int j = 0; j < FrameInfo[0].OutputRestrictions.Count; j++)
+                    for (int k = 0; k < EachTotalDegree; k++)
+                        Inputs[i][(j * EachTotalDegree) + k] = Mathf.Pow(FrameInfo[i].OutputRestrictions[j], k + 1);
+
+            }
+            TestValues = Inputs;
+            float[] targets = FrameInfo.Select(x => x.AtMotionState ? 1f : 0f).ToArray();
+            //Debug.Log("Inputs  " + Inputs[0].Count);
+            //Debug.Log("Inputs1  " + Inputs[0][0]);
+            //Debug.Log("Outputs  " + Outputs.Count);
+            //cost function
+
+
+            float[] coefficients;
+            Train(Inputs, targets, LearnRate, Iterations);
+            Coefficents = coefficients;
+            TestPercent();
+            float TestPercent()
+            {
+                float2 Guesses = new float2(0f, 0f);
+                CorrectOnTrue = 0;
+                CorrectOnFalse = 0;
+                InCorrectOnTrue = 0;
+                InCorrectOnFalse = 0;
+
+                for (int i = 0; i < Inputs.Length; i++)
+                {
+                    float FinalValue = 0f;
+                    for (int j = 0; j < FrameInfo[0].OutputRestrictions.Count; j++)
+                        for (int k = 0; k < EachTotalDegree; k++)
+                            FinalValue += Mathf.Pow(FrameInfo[i].OutputRestrictions[j], k + 1) * coefficients[j];
+
+                    bool Guess = FinalValue > 0.5f;
+                    bool Truth = FrameInfo[i].AtMotionState;
+                    bool IsCorrect = Guess == Truth;
+                    Guesses = new float2(Guesses.x + (!IsCorrect ? 1f : 0f), Guesses.y + (IsCorrect ? 1f : 0f));
+
+                    CorrectOnTrue += (IsCorrect && Truth) ? 1 : 0;
+                    CorrectOnFalse += (IsCorrect && !Truth) ? 1 : 0;
+                    InCorrectOnTrue += (!IsCorrect && Truth) ? 1 : 0;
+                    InCorrectOnFalse += (!IsCorrect && !Truth) ? 1 : 0;
+
+                }
+                float CorrectPercent = (Guesses.y / (Guesses.x + Guesses.y)) * 100f;
+                Debug.Log(CorrectPercent + "% Correct");
+                return CorrectPercent;
+            }
+
+            void Train(float[][] inputs, float[] targets, float learningRate, int numIterations)
+            {
+                int numInputs = inputs[0].Length;
+                coefficients = new float[numInputs + 1];
+
+                for (int i = 0; i < numIterations; i++)
+                {
+                    float cost = 0;
+                    float[] gradient = new float[numInputs + 1];
+
+                    for (int j = 0; j < inputs.Length; j++)
+                    {
+                        float[] inputWithBias = AddBias(inputs[j]);
+                        float prediction = Predict(inputWithBias);
+                        float error = targets[j] - prediction;
+                        cost += error * error;
+
+                        for (int k = 0; k < inputWithBias.Length; k++)
+                        {
+                            gradient[k] += error * inputWithBias[k];
+                        }
+                    }
+
+                    cost /= inputs.Length;
+
+                    for (int j = 0; j < gradient.Length; j++)
+                    {
+                        gradient[j] /= inputs.Length;
+                        coefficients[j] += learningRate * gradient[j];
+                    }
+                }
+            }
+
+            float Predict(float[] input)
+            {
+                float z = 0;
+
+                for (int i = 0; i < input.Length; i++)
+                {
+                    z += input[i] * coefficients[i];
+                }
+
+                return Sigmoid(z);
+            }
+
+            float Sigmoid(float z) { return 1 / (1 + Mathf.Exp(-z)); }
+
+            float[] AddBias(float[] input)
+            {
+                float[] inputWithBias = new float[input.Length + 1];
+                inputWithBias[0] = 1;
+
+                for (int i = 0; i < input.Length; i++)
+                {
+                    inputWithBias[i + 1] = input[i];
+                }
+
+                return inputWithBias;
+            }
+
+            /*
+
+            float[] CostFunction(List<List<float>> inputs, List<float> targets, float[] coefficients)
+            {
+                float[] predictions = new float[inputs.Count];
+                float error = 0;
+                float cost = 0;
+                float[] gradient = new float[coefficients.Length];
+
+                for (int i = 0; i < inputs.Count; i++)
+                {
+                    float z = coefficients[0];
+                    for (int j = 0; j < inputs[i].Count; j++)
+                    {
+                        z += coefficients[j + 1] * inputs[i][j];
+                    }
+                }
+            }
+
+            void CostFunction(List<List<float>> inputs, List<float> targets, float[] coefficients, out float cost, out float[] gradient)
+            {
+                int m = targets.Count;
+                float[] predictions = new float[m];
+                for (int i = 0; i < m; i++)
+                {
+                    float z = coefficients[0];
+                    for (int j = 0; j < numInputs; j++)
+                    {
+                        z += inputs[i][j] * coefficients[j + 1];
+                    }
+                    predictions[i] = Sigmoid(z);
+                }
+                float[] error = new float[m];
+                for (int i = 0; i < m; i++)
+                {
+                    error[i] = targets[i] - predictions[i];
+                }
+                cost = -targets.Zip(predictions, (t, p) => t * Mathf.Log(p) + (1f - t) * Mathf.Log(1
+
+            }
+            */
+        }
+        float Sigmoid(float z) { return 1f / (1f + Mathf.Exp(-z)); }
+
     }
+}
     
 
+    
 
-
-}
 /*
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void GetCoefficents()

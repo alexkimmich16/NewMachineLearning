@@ -6219,12 +6219,27 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: TestValues
+      Entry: 7
+      Data: 0|System.Single[][], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   Totals: []
   OutputValues: []
   RestrictionValues: []
+  CorrectOnTrue: 0
+  CorrectOnFalse: 0
+  InCorrectOnTrue: 0
+  InCorrectOnFalse: 0
   RegressionStats: {fileID: 11400000, guid: de845bce815e9c2468379f92c4a39df3, type: 2}
-  CurrentMotion: 2
   EachTotalDegree: 3
   UploadRestrictions:
     Motion: AllRelevantRestrictions
@@ -6337,9 +6352,13 @@ MonoBehaviour:
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0
+  LearnRate: 2.52
+  Iterations: 4
+  Coefficents: []
   ColumnAndRow:
     x: 10
     y: 31
+  CurrentMotion: 2
 --- !u!114 &944444328
 MonoBehaviour:
   m_ObjectHideFlags: 0

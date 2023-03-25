@@ -4,7 +4,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using System.Linq;
-//using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace RestrictionSystem
 {
@@ -25,6 +25,8 @@ namespace RestrictionSystem
         [FoldoutGroup("EngineTest")] public int InCorrectOnTrue;
         [FoldoutGroup("EngineTest")] public int InCorrectOnFalse;
 
+        
+
         [FoldoutGroup("CoefficentStats"), ListDrawerSettings(ShowIndexLabels = true)] public Coefficents RegressionStats;
         
         [FoldoutGroup("CoefficentStats")] public int EachTotalDegree;
@@ -33,9 +35,19 @@ namespace RestrictionSystem
         [FoldoutGroup("CoefficentStats")] public int Iterations;
         [FoldoutGroup("CoefficentStats")] public float[] Coefficents;
 
+        [FoldoutGroup("CoefficentStats")] public double[][] ConverageMatrix;
+        [FoldoutGroup("CoefficentStats")] public double[][] InverseDisplay;
+        [FoldoutGroup("CoefficentStats")] public double[][] InputValuesDisplay;
+
+        [FoldoutGroup("CoefficentStats")] public double[][] FirstDisplay;
+        [FoldoutGroup("CoefficentStats")] public double[][] SecondDisplay;
+        [FoldoutGroup("CoefficentStats")] public double[][] ThirdDisplay;
+
 
         [FoldoutGroup("Excel")] public int2 ColumnAndRow;
         [FoldoutGroup("Excel")] public CurrentLearn CurrentMotion;
+
+
 
         //AG11
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
@@ -87,6 +99,71 @@ namespace RestrictionSystem
             float CorrectPercent = Guesses.y / (Guesses.x + Guesses.y);
             Debug.Log(CorrectPercent + "% Correct");
         }
+        [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
+        public void PreformRegression()
+        {
+            // Define the input matrices
+            List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(CurrentMotion, UploadRestrictions);
+
+            double[][] InputValues = new double[FrameInfo.Count][];
+            for (int i = 0; i < FrameInfo.Count; i++)
+                InputValues[i] = new double[FrameInfo[0].OutputRestrictions.Count * EachTotalDegree];
+
+            for (int i = 0; i < FrameInfo.Count; i++)
+                for (int j = 0; j < FrameInfo[i].OutputRestrictions.Count; j++)
+                    for (int k = 0; k < EachTotalDegree; k++)
+                        InputValues[i][(j * EachTotalDegree) + k] = Mathf.Pow(FrameInfo[i].OutputRestrictions[j], k + 1);
+                        
+            InputValuesDisplay = InputValues;
+
+            double[] Output = new double[FrameInfo.Count];
+            for (int i = 0; i < Output.Length; i++)
+                Output[i] = FrameInfo[i].AtMotionState ? 0 : 1;
+
+            Matrix<double> X = Matrix<double>.Build.DenseOfColumnArrays(InputValues);
+            Vector<double> Y = Vector<double>.Build.DenseOfArray(Output);
+
+            Matrix<double> First = X.Transpose();
+
+            //inverse
+            Matrix<double> Inverse = Y.ToColumnMatrix().Inverse();
+            InverseDisplay = Inverse.AsColumnArrays();
+            Matrix<double> Second = Matrix<double>.Build.DenseOfDiagonalArray(Inverse.ToArray());
+            SecondDisplay = Second.AsColumnArrays();
+            ///1 Matrix<double> Second = Matrix<double>.Build.DenseOfDiagonalVector(Inverse);
+            //2Matrix<double> Second = Matrix<double>.Build.DenseIdentity(CoefficentCount) * Y.ToRowMatrix();
+            //Second.SetDiagonal(Y.PointwiseMultiply(1 - Y).ToArray());
+
+            //Vector<double> Second = Inverse.SetDiagonal(Y.PointwiseMultiply(1 - Y).ToArray());
+
+            //[1] = TRANSPOSE(DEsign(A2:AA7000)
+            //[2] = DIAGONAL(AE2:AE7000*(1-AE2:AE7000))
+            //=MINVERSE(MMULT([1],MMULT([2],DEsign(A2:AA7000))))
+
+
+            //=MINVERSE(MMULT(TRANSPOSE(DEsign(A2:AA7000)),
+            //MMULT(
+            //DIAGONAL(AE2:AE7000*(1-AE2:AE7000)),
+            //DEsign(A2:AA7000))))
+
+            Matrix<double> LowerMMult = X.Multiply(Second);
+            Matrix<double> HigherMMult = LowerMMult.Multiply(First);
+            Matrix<double> inverse = HigherMMult.Inverse();
+
+            int CoefficentCount = (FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1;
+            Debug.Log("0,0 is: " + inverse[0, 0]);
+            ConverageMatrix = inverse.AsColumnArrays();
+
+            /*
+            Matrix<double> transposeA = X.Transpose();
+            Matrix<double> diagonalAE = Matrix<double>.Build.DenseIdentity(CoefficentCount) * Y.ToRowMatrix();
+            diagonalAE.SetDiagonal(Y.PointwiseMultiply(1 - Y).ToArray());
+
+            Matrix<double> product = transposeA * diagonalAE * X;
+            Matrix<double> inverse = product.Inverse();
+            */
+        }
+
 
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void DoRegression()
@@ -107,10 +184,6 @@ namespace RestrictionSystem
             }
             TestValues = Inputs;
             float[] targets = FrameInfo.Select(x => x.AtMotionState ? 1f : 0f).ToArray();
-            //Debug.Log("Inputs  " + Inputs[0].Count);
-            //Debug.Log("Inputs1  " + Inputs[0][0]);
-            //Debug.Log("Outputs  " + Outputs.Count);
-            //cost function
 
 
             float[] coefficients;
@@ -207,57 +280,9 @@ namespace RestrictionSystem
 
                 return inputWithBias;
             }
-
-            /*
-
-            float[] CostFunction(List<List<float>> inputs, List<float> targets, float[] coefficients)
-            {
-                float[] predictions = new float[inputs.Count];
-                float error = 0;
-                float cost = 0;
-                float[] gradient = new float[coefficients.Length];
-
-                for (int i = 0; i < inputs.Count; i++)
-                {
-                    float z = coefficients[0];
-                    for (int j = 0; j < inputs[i].Count; j++)
-                    {
-                        z += coefficients[j + 1] * inputs[i][j];
-                    }
-                }
-            }
-
-            void CostFunction(List<List<float>> inputs, List<float> targets, float[] coefficients, out float cost, out float[] gradient)
-            {
-                int m = targets.Count;
-                float[] predictions = new float[m];
-                for (int i = 0; i < m; i++)
-                {
-                    float z = coefficients[0];
-                    for (int j = 0; j < numInputs; j++)
-                    {
-                        z += inputs[i][j] * coefficients[j + 1];
-                    }
-                    predictions[i] = Sigmoid(z);
-                }
-                float[] error = new float[m];
-                for (int i = 0; i < m; i++)
-                {
-                    error[i] = targets[i] - predictions[i];
-                }
-                cost = -targets.Zip(predictions, (t, p) => t * Mathf.Log(p) + (1f - t) * Mathf.Log(1
-
-            }
-            */
         }
-        float Sigmoid(float z) { return 1f / (1f + Mathf.Exp(-z)); }
-
     }
 }
-    
-
-    
-
 /*
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void GetCoefficents()

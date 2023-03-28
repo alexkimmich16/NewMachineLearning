@@ -139,9 +139,7 @@ namespace RestrictionSystem
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void PreformRegression()
         {
-
             List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(CurrentMotion, UploadRestrictions);
-            
             FrameInfo.RemoveRange(7000, FrameInfo.Count - 7000);
             //Debug.Log(FrameInfo.Count);
 
@@ -233,7 +231,8 @@ namespace RestrictionSystem
                 //Debug.Log("For Lower:: " + "Columns: " + LowerMMult.ColumnCount + "  Rows: " + LowerMMult.RowCount);
 
 
-                DenseMatrix HigherMMult = (DenseMatrix)X.Transpose().Multiply(LowerMMult);
+                DenseMatrix XTransposed = (DenseMatrix)X.Transpose();
+                DenseMatrix HigherMMult = (DenseMatrix)XTransposed.Multiply(LowerMMult);
                 //Debug.Log("For Higher:: " + "Columns: " + HigherMMult.ColumnCount + "  Rows: " + HigherMMult.RowCount);
                 DenseMatrix Final = (DenseMatrix)HigherMMult.Inverse();
 

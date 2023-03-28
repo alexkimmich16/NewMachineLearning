@@ -44,9 +44,8 @@ namespace RestrictionSystem
         [FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[][] FinalCovarianceMatrix;
         [FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] Predictions;
 
-        [FoldoutGroup("IterationMatrix")] public double[] LowerIteration;
-        [FoldoutGroup("IterationMatrix")] public double[] HigherIteration;
-        [FoldoutGroup("IterationMatrix")] public double[] FinalIterationMatrix;
+        [FoldoutGroup("IterationMatrix"), ShowIf("ShouldDebug")] public double[] LowerIteration;
+        [FoldoutGroup("IterationMatrix"), ShowIf("ShouldDebug")] public double[] FinalIterationMatrix;
 
         public static bool ShouldDebug = false;
         //[FoldoutGroup("Excel")] public int2 ColumnAndRow;
@@ -86,21 +85,26 @@ namespace RestrictionSystem
                 Output[i] = FrameInfo[i].AtMotionState ? 1d : 0d;
 
             Coefficents = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
-            bool Converged = false;
             int Iterations = 0;
-            while (!Converged)
+            float CorrectPercent = 0f;
+            while (Iterations < 20)
             {
                 double[] Predictions = GetPredictions(InputValues, Coefficents);
                 double[][] CovarianceMatrix = GetCovarianceMatrix(InputValues, Predictions, Iterations >= 2);
                 double[] IterationMatrix = GetIterationMatrix(InputValues, CovarianceMatrix, Output, Predictions);
+                
+                //if (Predictions.Contains(double.NaN) || CovarianceMatrix.SelectMany(x => x).Any(x => x == double.NaN) || IterationMatrix.Contains(double.NaN))//check for null
+                    //break;
+                if (CorrectPercent > TestRegressionStats(GetCoefficents(Coefficents, IterationMatrix))) //check for decrease
+                    break;
+
                 Coefficents = GetCoefficents(Coefficents, IterationMatrix);
+                CorrectPercent = TestRegressionStats(Coefficents);
+                Debug.Log(CorrectPercent + "% Correct");
                 Iterations += 1;
             }
             Debug.Log("Iterations: " + Iterations);
-            TestRegressionStats(Coefficents);
-
-
-
+            //Debug.Log((CorrectPercent * 100) + "% Correct" + "  Where False= " + ((FalseTrue.x / (FalseTrue.x + FalseTrue.y)) * 100f) + "%");
 
             double[] GetPredictions(double[][] Values, double[] Coefficents)
             {
@@ -124,6 +128,7 @@ namespace RestrictionSystem
                 //=MINVERSE(MMULT(TRANSPOSE(DEsign(A2:AA7000) * AG2:AG7000*(1-AG2:AG7000)),DEsign($A$2:$AA$7000)))
                 //=MINVERSE(MMULT([1],DEsign($A$2:$AA$7000)))
                 //[1] = TRANSPOSE(DEsign(A2:AA7000) * AG2:AG7000*(1-AG2:AG7000))
+
                 DenseMatrix X = DenseMatrix.OfRowArrays(Input);
                 DenseVector Y = DenseVector.OfArray(Predictions);
 
@@ -161,7 +166,6 @@ namespace RestrictionSystem
                     FinalCovarianceMatrix = To2DArray(Final);
                 }
                     
-
                 return To2DArray(Final);
             }
             double[] GetIterationMatrix(double[][] Input, double[][] CovarianceMatrix, double[] Outputs, double[] Predictions)
@@ -195,25 +199,6 @@ namespace RestrictionSystem
                     NewCoefficents[i] = PastCoefficents[i] + (IterationMatrix[i] * LearnRate);
                 return NewCoefficents;
             }
-            
-            
-
-            /*
-            int CoefficentCount = (FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1;
-            Debug.Log("0,0 is: " + inverse[0, 0]);
-            //ConverageMatrix = inverse.AsColumnArrays();
-            FirstSingleFinal = inverse.Row(0).AsArray();
-            */
-            //[1] = TRANSPOSE(DEsign(A2:AA7000)
-            //[2] = DIAGONAL(AE2:AE7000*(1-AE2:AE7000))
-            //=MINVERSE(MMULT([1],MMULT([2],DEsign(A2:AA7000))))
-
-
-            //=MINVERSE(MMULT(TRANSPOSE(DEsign(A2:AA7000)),
-            //MMULT(
-            //DIAGONAL(AE2:AE7000*(1-AE2:AE7000)),
-            //DEsign(A2:AA7000))))
-
 
             double[][] To2DArray(Matrix<double> Input)
             {
@@ -222,9 +207,7 @@ namespace RestrictionSystem
                 {
                     double[] column = new double[Input.RowCount];
                     for (int i = 0; i < Input.RowCount; i++)
-                    {
                         column[i] = Input[i, j];
-                    }
                     columns[j] = column;
                 }
                 return columns;
@@ -282,7 +265,7 @@ namespace RestrictionSystem
             float CorrectPercent = Guesses.y / (Guesses.x + Guesses.y);
             Debug.Log(CorrectPercent + "% Correct");
         }
-        public void TestRegressionStats(double[] Coefficents)
+        public float TestRegressionStats(double[] Coefficents)
         {
             float2 Guesses = new float2(0f, 0f);
             float2 FalseTrue = new float2(0f, 0f);
@@ -305,8 +288,7 @@ namespace RestrictionSystem
                 FalseTrue = new float2(FalseTrue.x + (!Truth ? 1f : 0f), FalseTrue.y + (Truth ? 1f : 0f));
                 Guesses = new float2(Guesses.x + (!Correct ? 1f : 0f), Guesses.y + (Correct ? 1f : 0f));
             }
-            float CorrectPercent = Guesses.y / (Guesses.x + Guesses.y);
-            Debug.Log((CorrectPercent * 100) + "% Correct" + "  Where False= " + ((FalseTrue.x / (FalseTrue.x + FalseTrue.y)) * 100f) + "%");
+            return Guesses.y / (Guesses.x + Guesses.y) * 100f;
         }
     }
 }

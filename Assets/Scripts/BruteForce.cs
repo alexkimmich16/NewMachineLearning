@@ -491,7 +491,10 @@ public class BruteForce : SerializedMonoBehaviour
                     List<float> OutputRestrictions = new List<float>();
                     for (int l = 0; l < RestrictionsMotion.Restrictions.Count; l++)
                     {
-                        OutputRestrictions.Add(RestrictionManager.RestrictionDictionary[RestrictionsMotion.Restrictions[l].restriction].Invoke(RestrictionsMotion.Restrictions[l], LM.MovementList[ToCheck[i]].GetRestrictionInfoAtIndex(j, k - PastFrameLookup), LM.MovementList[ToCheck[i]].GetRestrictionInfoAtIndex(j, k)));
+                        float Value = RestrictionManager.RestrictionDictionary[RestrictionsMotion.Restrictions[l].restriction].Invoke(RestrictionsMotion.Restrictions[l], LM.MovementList[ToCheck[i]].GetRestrictionInfoAtIndex(j, k - PastFrameLookup), LM.MovementList[ToCheck[i]].GetRestrictionInfoAtIndex(j, k));
+                        //if (Value < RegressionSystem.instance.SmallestInput)
+                            //Value = RegressionSystem.instance.SmallestInput;
+                        OutputRestrictions.Add(Value);
                     }
                         
                     ReturnValue.Add(new SingleFrameRestrictionValues(OutputRestrictions, ToCheck[i] == (int)FrameDataMotion && LM.MovementList[ToCheck[i]].Motions[j].AtFrameState(k)));

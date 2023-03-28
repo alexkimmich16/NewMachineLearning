@@ -4113,7 +4113,7 @@ MonoBehaviour:
   - {fileID: 1867183570734329135}
   - {fileID: 1867183570487954631}
   Cam: {fileID: 1867183570494687147}
-  UseSides: 0101
+  UseSides: d1
 --- !u!114 &944444323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6232,6 +6232,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: FinalCovarianceMatrix
+      Entry: 6
+      Data: 
   Totals: []
   OutputValues: []
   RestrictionValues: []
@@ -6352,12 +6355,19 @@ MonoBehaviour:
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0
-  LearnRate: 2.52
-  Iterations: 4
+  LearnRate: 1
+  Iterations: 1
   Coefficents: []
-  ColumnAndRow:
-    x: 10
-    y: 31
+  MatrixCheck: []
+  FirstLowMult: []
+  FirstHighMult: []
+  PreDiagonal: []
+  FirstSingleDiagonal: []
+  FirstSingleFinal: []
+  Predictions: []
+  LowerIteration: []
+  HigherIteration: []
+  FinalIterationMatrix: []
   CurrentMotion: 2
 --- !u!114 &944444328
 MonoBehaviour:
@@ -8396,7 +8406,7 @@ MonoBehaviour:
   - 3.478819
   - 3.561104
   DisallowMotions: 0
-  UnallowedMotions: 00000000
+  UnallowedMotions: 
   UseAgentSingleOutput: 0
   SpawnGap: 0.38
   ShouldDebug: 0
@@ -10887,7 +10897,7 @@ MonoBehaviour:
   speed: 500
   groundLayer:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 4294901815
   Additionalheight: -0.2
   direction: {x: 0, y: 0, z: 0}
   directionAdd: {x: 0, y: 0, z: 0}

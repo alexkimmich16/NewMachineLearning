@@ -20,13 +20,13 @@ public class SpreadSheet : SerializedMonoBehaviour
     }
     public static string DegreeLocation2() { return Application.dataPath + "/SpreadSheets/Tester.XLSX"; }
 
-    [Button(ButtonSizes.Small)]
+    //[Button(ButtonSizes.Small)]
     public void OpenExcel()
     {
         Process.Start(DegreeLocation2());
     }
 
-    [Button(ButtonSizes.Small)]
+    //[Button(ButtonSizes.Small)]
     public void PrintDegreeStats()
     {
         RegressionSystem RS = gameObject.GetComponent<RegressionSystem>();

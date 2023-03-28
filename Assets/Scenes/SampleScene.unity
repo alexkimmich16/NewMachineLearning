@@ -6232,6 +6232,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: Inputs
+      Entry: 6
+      Data: 
     - Name: FinalCovarianceMatrix
       Entry: 6
       Data: 
@@ -6356,13 +6359,10 @@ MonoBehaviour:
       ShouldDebug: 0
       Value: 0
   LearnRate: 1
-  Iterations: 1
+  SmallestInput: 0.01
   Coefficents: []
-  MatrixCheck: []
   FirstLowMult: []
   FirstHighMult: []
-  PreDiagonal: []
-  FirstSingleDiagonal: []
   FirstSingleFinal: []
   Predictions: []
   LowerIteration: []

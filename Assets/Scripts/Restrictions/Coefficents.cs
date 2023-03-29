@@ -11,13 +11,13 @@ namespace RestrictionSystem
     }
 
     [System.Serializable]
-    public class RegressionInfo
+    public struct RegressionInfo
     {
         public float Intercept;
         public List<DegreeList> Coefficents;
 
         [System.Serializable]
-        public class DegreeList
+        public struct DegreeList
         {
             public List<float> Degrees;
         }

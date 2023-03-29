@@ -118,3 +118,54 @@ public class SpreadSheet : SerializedMonoBehaviour
         tw.Close();
     }
 */
+/*
+        [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
+        public void GetCoefficents()
+        {
+            List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(BruteForce.instance.motionGet, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)BruteForce.instance.motionGet - 1]);
+
+            // Initialize a matrix
+            Matrix<double> X = Matrix<double>.Build.Dense(FrameInfo.Count, FrameInfo[0].OutputRestrictions.Count, 0);
+            Vector<double> Y = Vector<double>.Build.Dense(FrameInfo.Count);
+            for (int i = 0; i < FrameInfo.Count; i++)
+            {
+                Y[i] = FrameInfo[i].AtMotionState ? 1 : 0;
+                for (int j = 0; j < FrameInfo[0].OutputRestrictions.Count; j++)
+                {
+                    X[i, j] = FrameInfo[i].OutputRestrictions[j];
+                }
+            }
+
+
+            // Perform multiple linear regression
+            Matrix<double> XTX = X.Transpose() * X;
+            Matrix<double> XTXInverse = XTX.Inverse();
+            Matrix<double> XTY = X.Transpose() * Y;
+            Vector<double> coefficients = XTXInverse * XTY;
+
+            // Convert the coefficients vector to a matrix
+            Matrix<double> coefficientsMatrix = coefficients.ToColumnMatrix();
+            Debug.Log("Coefficients: " + coefficientsMatrix);
+        }
+        */
+/*
+public void GetCoefficentsFromExcel()
+{
+    Debug.Log(float.Parse(SpreadSheet.ReadExcelCell(ColumnAndRow.x, ColumnAndRow.y)));
+    RegressionStats.RegressionStats[(int)CurrentMotion - 1].Intercept = float.Parse(SpreadSheet.ReadExcelCell(ColumnAndRow.x, ColumnAndRow.y));
+    RegressionStats.RegressionStats[(int)CurrentMotion - 1].Coefficents.Clear();
+    int AddCount = 1;
+    for (int i = 0; i < UploadRestrictions.Restrictions.Count; i++)
+    {
+        RegressionInfo.DegreeList AddList = new RegressionInfo.DegreeList();
+        AddList.Degrees = new List<float>();
+        for (int j = 0; j < EachTotalDegree; j++)
+        {
+            string GotString = SpreadSheet.ReadExcelCell(ColumnAndRow.x + AddCount, ColumnAndRow.y);
+            AddList.Degrees.Add(float.Parse(GotString));
+            AddCount += 1;
+        }
+        RegressionStats.RegressionStats[(int)CurrentMotion - 1].Coefficents.Add(AddList);
+    }
+}     
+*/

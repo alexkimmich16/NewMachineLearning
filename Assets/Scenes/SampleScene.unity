@@ -1130,7 +1130,7 @@ MonoBehaviour:
     SerializationNodes: []
   MotionNum: 2
   MotionType: 2
-  Setting: 0
+  Setting: 2
   Typing: 0
   input: {fileID: 1167088495}
   sideText: {fileID: 1650534509}
@@ -6366,7 +6366,6 @@ MonoBehaviour:
   FirstSingleFinal: []
   Predictions: []
   LowerIteration: []
-  HigherIteration: []
   FinalIterationMatrix: []
   CurrentMotion: 2
 --- !u!114 &944444328

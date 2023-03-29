@@ -27,8 +27,6 @@ namespace RestrictionSystem
         [FoldoutGroup("EngineTest")] public int InCorrectOnTrue;
         [FoldoutGroup("EngineTest")] public int InCorrectOnFalse;
 
-        
-
         [FoldoutGroup("CoefficentStats"), ListDrawerSettings(ShowIndexLabels = true)] public Coefficents RegressionStats;
         
         [FoldoutGroup("CoefficentStats")] public int EachTotalDegree;
@@ -48,63 +46,80 @@ namespace RestrictionSystem
         [FoldoutGroup("IterationMatrix"), ShowIf("ShouldDebug")] public double[] FinalIterationMatrix;
 
         public static bool ShouldDebug = false;
-        //[FoldoutGroup("Excel")] public int2 ColumnAndRow;
         public CurrentLearn CurrentMotion;
-
-
-
-        
-
         
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void PreformRegression()
         {
-            List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(CurrentMotion, UploadRestrictions);
-            //Debug.Log(FrameInfo.Count);
-
-            double[][] InputValues = new double[FrameInfo.Count][];
-            for (int i = 0; i < FrameInfo.Count; i++)
+            for (int motion = 1; motion < Enum.GetValues(typeof(CurrentLearn)).Length; motion++)
             {
-                InputValues[i] = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
-                for (int j = 0; j < FrameInfo[i].OutputRestrictions.Count; j++)
+                List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions((CurrentLearn)motion, UploadRestrictions);
+
+                double[][] InputValues = new double[FrameInfo.Count][];
+                for (int i = 0; i < FrameInfo.Count; i++)
                 {
-                    InputValues[i][0] = 1d;
-                    for (int k = 0; k < EachTotalDegree; k++)
+                    InputValues[i] = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
+                    for (int j = 0; j < FrameInfo[i].OutputRestrictions.Count; j++)
                     {
-                        double Value = Math.Pow(FrameInfo[i].OutputRestrictions[j], k + 1);
-                        if(Value < SmallestInput)
-                            Value = SmallestInput;
-                        InputValues[i][((j * EachTotalDegree) + 1) + k] = Value;
+                        InputValues[i][0] = 1d;
+                        for (int k = 0; k < EachTotalDegree; k++)
+                        {
+                            double Value = Math.Pow(FrameInfo[i].OutputRestrictions[j], k + 1);
+                            if (Value < SmallestInput)
+                                Value = SmallestInput;
+                            InputValues[i][((j * EachTotalDegree) + 1) + k] = Value;
+                        }
+
                     }
-                        
                 }
-            }
-            Inputs = InputValues;
-            double[] Output = new double[FrameInfo.Count];
-            for (int i = 0; i < Output.Length; i++)
-                Output[i] = FrameInfo[i].AtMotionState ? 1d : 0d;
+                //Inputs = InputValues;
+                //FrameInfo.Select(x => x.AtMotionState ? 1d : 0d).ToArray();
+                double[] Output = new double[FrameInfo.Count];
+                for (int i = 0; i < Output.Length; i++)
+                    Output[i] = FrameInfo[i].AtMotionState ? 1d : 0d;
 
-            Coefficents = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
-            int Iterations = 0;
-            float CorrectPercent = 0f;
-            while (Iterations < 20)
-            {
-                double[] Predictions = GetPredictions(InputValues, Coefficents);
-                double[][] CovarianceMatrix = GetCovarianceMatrix(InputValues, Predictions, Iterations >= 2);
-                double[] IterationMatrix = GetIterationMatrix(InputValues, CovarianceMatrix, Output, Predictions);
+                double[] Coefficents = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
                 
-                //if (Predictions.Contains(double.NaN) || CovarianceMatrix.SelectMany(x => x).Any(x => x == double.NaN) || IterationMatrix.Contains(double.NaN))//check for null
-                    //break;
-                if (CorrectPercent > TestRegressionStats(GetCoefficents(Coefficents, IterationMatrix))) //check for decrease
-                    break;
+                int Iterations = 0;
+                float CorrectPercent = 0f;
+                while (Iterations < 20)
+                {
+                    double[] Predictions = GetPredictions(InputValues, Coefficents);
+                    double[][] CovarianceMatrix = GetCovarianceMatrix(InputValues, Predictions, Iterations >= 2);
+                    double[] IterationMatrix = GetIterationMatrix(InputValues, CovarianceMatrix, Output, Predictions);
 
-                Coefficents = GetCoefficents(Coefficents, IterationMatrix);
-                CorrectPercent = TestRegressionStats(Coefficents);
-                Debug.Log(CorrectPercent + "% Correct");
-                Iterations += 1;
+                    if (CorrectPercent > GetTestRegressionStats(GetCoefficents(Coefficents, IterationMatrix), (CurrentLearn)motion)) //check for decrease
+                        break;
+
+                    Coefficents = GetCoefficents(Coefficents, IterationMatrix);
+                    CorrectPercent = GetTestRegressionStats(Coefficents, (CurrentLearn)motion);
+                    //Debug.Log(CorrectPercent + "% Correct");
+                    Iterations += 1;
+                }
+                Debug.Log(((CurrentLearn)motion).ToString() + " is " +  + CorrectPercent + "% Correct");
+
+                RegressionInfo newInfo = new RegressionInfo();
+                newInfo.Intercept = (float)Coefficents[0];
+                newInfo.Coefficents = new List<RegressionInfo.DegreeList>();
+                for (int i = 0; i < FrameInfo[0].OutputRestrictions.Count; i++)
+                {
+                    RegressionInfo.DegreeList newDegree = new RegressionInfo.DegreeList();
+                    newDegree.Degrees = new List<float>();
+                    for (int j = 0; j < EachTotalDegree; j++)
+                    {
+                        newDegree.Degrees.Add((float)Coefficents[(i * EachTotalDegree) + j + 1]);
+                    }
+                    newInfo.Coefficents.Add(newDegree);
+                }
+                RestrictionManager.instance.coefficents.RegressionStats[motion - 1] = newInfo;
+
+                //Coefficents = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
+
+                //Debug.Log("Iterations: " + Iterations);
+                //Debug.Log((CorrectPercent * 100) + "% Correct" + "  Where False= " + ((FalseTrue.x / (FalseTrue.x + FalseTrue.y)) * 100f) + "%");
             }
-            Debug.Log("Iterations: " + Iterations);
-            //Debug.Log((CorrectPercent * 100) + "% Correct" + "  Where False= " + ((FalseTrue.x / (FalseTrue.x + FalseTrue.y)) * 100f) + "%");
+
+
 
             double[] GetPredictions(double[][] Values, double[] Coefficents)
             {
@@ -213,65 +228,12 @@ namespace RestrictionSystem
                 return columns;
             }
         }
-        //AG11
-        //[FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
-        /*
-        public void GetCoefficentsFromExcel()
-        {
-            Debug.Log(float.Parse(SpreadSheet.ReadExcelCell(ColumnAndRow.x, ColumnAndRow.y)));
-            RegressionStats.RegressionStats[(int)CurrentMotion - 1].Intercept = float.Parse(SpreadSheet.ReadExcelCell(ColumnAndRow.x, ColumnAndRow.y));
-            RegressionStats.RegressionStats[(int)CurrentMotion - 1].Coefficents.Clear();
-            int AddCount = 1;
-            for (int i = 0; i < UploadRestrictions.Restrictions.Count; i++)
-            {
-                RegressionInfo.DegreeList AddList = new RegressionInfo.DegreeList();
-                AddList.Degrees = new List<float>();
-                for (int j = 0; j < EachTotalDegree; j++)
-                {
-                    string GotString = SpreadSheet.ReadExcelCell(ColumnAndRow.x + AddCount, ColumnAndRow.y);
-                    AddList.Degrees.Add(float.Parse(GotString));
-                    AddCount += 1;
-                }
-                RegressionStats.RegressionStats[(int)CurrentMotion - 1].Coefficents.Add(AddList);
-            }
-        }     
-        */
-        //[FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
-
-        public void TestRegression()
-        {
-            float2 Guesses = new float2(0f, 0f);
-
-            int MotionNum = (int)CurrentMotion - 1;
-            List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(CurrentMotion, UploadRestrictions);
-            RestrictionValues = FrameInfo;
-            for (int i = 0; i < FrameInfo.Count; i++)
-            {
-                float Total = 0f;
-                for (int j = 0; j < RegressionStats.RegressionStats[MotionNum].Coefficents.Count; j++)//each  variable
-                    for (int k = 0; k < RegressionStats.RegressionStats[MotionNum].Coefficents[j].Degrees.Count; k++)//powers
-                        Total += Mathf.Pow(FrameInfo[i].OutputRestrictions[j], k + 1) * RegressionStats.RegressionStats[MotionNum].Coefficents[j].Degrees[k];
-
-                Totals.Add(Total);
-                Total += RegressionStats.RegressionStats[MotionNum].Intercept;
-                //insert formula
-                float GuessValue = 1f / (1f + Mathf.Exp(-Total));
-                OutputValues.Add(GuessValue);
-                bool Guess = GuessValue > 0.5f;
-                bool Truth = FrameInfo[i].AtMotionState;
-                bool Correct = Guess == Truth;
-                Guesses = new float2(Guesses.x + (!Correct ? 1f : 0f), Guesses.y + (Correct ? 1f : 0f));
-            }
-            float CorrectPercent = Guesses.y / (Guesses.x + Guesses.y);
-            Debug.Log(CorrectPercent + "% Correct");
-        }
-        public float TestRegressionStats(double[] Coefficents)
+        public float GetTestRegressionStats(double[] Coefficents, CurrentLearn motion)
         {
             float2 Guesses = new float2(0f, 0f);
             float2 FalseTrue = new float2(0f, 0f);
 
-            int MotionNum = (int)CurrentMotion - 1;
-            List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(CurrentMotion, UploadRestrictions);
+            List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(motion, UploadRestrictions);
             RestrictionValues = FrameInfo;
             for (int i = 0; i < FrameInfo.Count; i++)
             {
@@ -292,33 +254,3 @@ namespace RestrictionSystem
         }
     }
 }
-/*
-        [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
-        public void GetCoefficents()
-        {
-            List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(BruteForce.instance.motionGet, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)BruteForce.instance.motionGet - 1]);
-
-            // Initialize a matrix
-            Matrix<double> X = Matrix<double>.Build.Dense(FrameInfo.Count, FrameInfo[0].OutputRestrictions.Count, 0);
-            Vector<double> Y = Vector<double>.Build.Dense(FrameInfo.Count);
-            for (int i = 0; i < FrameInfo.Count; i++)
-            {
-                Y[i] = FrameInfo[i].AtMotionState ? 1 : 0;
-                for (int j = 0; j < FrameInfo[0].OutputRestrictions.Count; j++)
-                {
-                    X[i, j] = FrameInfo[i].OutputRestrictions[j];
-                }
-            }
-
-
-            // Perform multiple linear regression
-            Matrix<double> XTX = X.Transpose() * X;
-            Matrix<double> XTXInverse = XTX.Inverse();
-            Matrix<double> XTY = X.Transpose() * Y;
-            Vector<double> coefficients = XTXInverse * XTY;
-
-            // Convert the coefficients vector to a matrix
-            Matrix<double> coefficientsMatrix = coefficients.ToColumnMatrix();
-            Debug.Log("Coefficients: " + coefficientsMatrix);
-        }
-        */

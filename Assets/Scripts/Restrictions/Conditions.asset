@@ -46,16 +46,16 @@ MonoBehaviour:
           ShouldDebug: 0
           Value: 0
         Range: {x: 0, y: 0}
-        LastState: 0101
+        LastState: 0000
         StartTime:
         - 0
         - 0
         StartPos:
-        - {x: -0.8701509, y: -0.20662951, z: 0.1022892}
-        - {x: -1.1907688, y: 0.3698933, z: 3.110177}
+        - {x: 0.15914583, y: -0.20580888, z: 0.49081135}
+        - {x: 0, y: 0, z: 0}
         Value:
         - 0
-        - 4.029705
+        - 0
     - StateToActivate: ShootFireball
       SingleConditions:
       - Label: 
@@ -76,7 +76,7 @@ MonoBehaviour:
           ShouldDebug: 0
           Value: 0.4684659
         Range: {x: 0.5, y: 0}
-        LastState: 0101
+        LastState: 0100
         StartTime:
         - 0
         - 0
@@ -84,10 +84,10 @@ MonoBehaviour:
         - {x: 0, y: 0, z: 0}
         - {x: 0, y: 0, z: 0}
         Value:
-        - 6.262331
-        - 1.3456191
+        - 0.48890096
+        - 0
     ProhibitList: []
-    CurrentStage: 0000000001000000
+    CurrentStage: 0000000000000000
     WaitingForFalse: 0000
   - Motion: flames
     conditionType: 1

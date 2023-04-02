@@ -25,7 +25,7 @@ MonoBehaviour:
   MotionRestrictions:
   - Motion: AllRelevantRestrictions
     Restrictions:
-    - Label: Allspeed
+    - Label: VerticleSpeed
       Active: 1
       restriction: 0
       checkType: 0
@@ -34,12 +34,7 @@ MonoBehaviour:
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 500
-      MaxSafe: 500
-      MinSafe: 2.0114162
-      MinFalloff: -56.81556
+      UseAxisList: 01000000
       ShouldDebug: 0
       Value: 0
     - Label: Horspeed
@@ -52,45 +47,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 0000000002000000
-      Weight: 0
-      MaxFalloff: 500
-      MaxSafe: 500
-      MinSafe: 2.0114162
-      MinFalloff: -56.81556
-      ShouldDebug: 0
-      Value: 0
-    - Label: VelForwardHand
-      Active: 1
-      restriction: 1
-      checkType: 1
-      OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 1}
-      UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 28.968493
-      MaxSafe: 23.671728
-      MinSafe: 0
-      MinFalloff: 0
-      ShouldDebug: 0
-      Value: 0
-    - Label: VelForwardHead
-      Active: 1
-      restriction: 1
-      checkType: 0
-      OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 1
-      UseLocalHandRot: 1
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 1}
-      UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 72.88449
-      MaxSafe: 1.4430879
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
     - Label: HandHeadAngle
@@ -103,11 +59,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 
-      Weight: 0
-      MaxFalloff: 0
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
     - Label: VertHandDist
@@ -120,11 +71,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 01000000
-      Weight: 0
-      MaxFalloff: 0
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
     - Label: HorHandDist
@@ -137,11 +83,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 0000000002000000
-      Weight: 0
-      MaxFalloff: 0
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
     - Label: PalmFaceHead
@@ -149,16 +90,11 @@ MonoBehaviour:
       restriction: 2
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
+      UseLocalHandPos: 1
+      UseLocalHandRot: 1
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: -1, y: 0, z: 0}
       UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 0
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0
     - Label: HandForward
@@ -171,10 +107,5 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 000000000100000002000000
-      Weight: 0
-      MaxFalloff: 0
-      MaxSafe: 0
-      MinSafe: 0
-      MinFalloff: 0
       ShouldDebug: 0
       Value: 0

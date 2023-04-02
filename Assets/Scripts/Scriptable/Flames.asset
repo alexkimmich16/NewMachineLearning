@@ -309,7 +309,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 346.6234, y: 213.1507, z: 32.931427}
       SpawnTime: 99.93334
     TrueRanges:
-    - {x: 22, y: 28}
+    - {x: 0, y: 35}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -636,7 +636,8 @@ MonoBehaviour:
       UncenteredHandRot: {x: 353.98596, y: 197.59686, z: 65.2296}
       SpawnTime: 154.16667
     TrueRanges:
-    - {x: 35, y: 38}
+    - {x: 11, y: 19}
+    - {x: 28, y: 41}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -844,7 +845,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 350.107, y: 196.39856, z: 59.049793}
       SpawnTime: 155.73334
     TrueRanges:
-    - {x: 15, y: 19}
+    - {x: 8, y: 24}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1066,7 +1067,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 349.0815, y: 199.96567, z: 65.21276}
       SpawnTime: 156.91667
     TrueRanges:
-    - {x: 18, y: 22}
+    - {x: 10, y: 28}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1274,7 +1275,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 351.83826, y: 201.7415, z: 65.67294}
       SpawnTime: 158.11667
     TrueRanges:
-    - {x: 17, y: 20}
+    - {x: 11, y: 25}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1468,7 +1469,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 346.5895, y: 195.3285, z: 70.98725}
       SpawnTime: 159.28334
     TrueRanges:
-    - {x: 15, y: 18}
+    - {x: 10, y: 24}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1655,7 +1656,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 343.22913, y: 202.74602, z: 67.557655}
       SpawnTime: 160.46667
     TrueRanges:
-    - {x: 14, y: 17}
+    - {x: 8, y: 24}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1814,7 +1815,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 338.42575, y: 193.09267, z: 68.30057}
       SpawnTime: 161.61667
     TrueRanges:
-    - {x: 11, y: 14}
+    - {x: 5, y: 20}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -2001,7 +2002,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 342.6071, y: 176.78355, z: 65.17622}
       SpawnTime: 162.75002
     TrueRanges:
-    - {x: 16, y: 20}
+    - {x: 9, y: 24}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -2160,7 +2161,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 345.08347, y: 169.15553, z: 69.657394}
       SpawnTime: 164.21667
     TrueRanges:
-    - {x: 14, y: 16}
+    - {x: 8, y: 20}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -2312,7 +2313,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 343.998, y: 162.30138, z: 68.409035}
       SpawnTime: 165.36667
     TrueRanges:
-    - {x: 12, y: 15}
+    - {x: 8, y: 19}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -2450,7 +2451,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 343.59708, y: 171.1911, z: 68.218124}
       SpawnTime: 166.41667
     TrueRanges:
-    - {x: 9, y: 11}
+    - {x: 5, y: 16}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -2602,7 +2603,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 347.14737, y: 163.87737, z: 74.16052}
       SpawnTime: 167.6
     TrueRanges:
-    - {x: 12, y: 15}
+    - {x: 8, y: 19}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -2740,7 +2741,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 352.09818, y: 178.92734, z: 69.38498}
       SpawnTime: 168.63335
     TrueRanges:
-    - {x: 11, y: 13}
+    - {x: 7, y: 17}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -2983,7 +2984,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 345.055, y: 170.85216, z: 70.703476}
       SpawnTime: 169.90001
     TrueRanges:
-    - {x: 24, y: 26}
+    - {x: 20, y: 32}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -3275,7 +3276,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 346.9735, y: 163.26135, z: 74.379875}
       SpawnTime: 173.6
     TrueRanges:
-    - {x: 32, y: 34}
+    - {x: 28, y: 38}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -3581,7 +3582,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 343.09875, y: 166.01202, z: 62.12052}
       SpawnTime: 176.78334
     TrueRanges:
-    - {x: 33, y: 36}
+    - {x: 28, y: 39}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -3775,7 +3776,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 341.8162, y: 190.16258, z: 68.35183}
       SpawnTime: 177.86667
     TrueRanges:
-    - {x: 16, y: 19}
+    - {x: 11, y: 25}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -3962,7 +3963,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 345.8561, y: 176.0881, z: 69.90601}
       SpawnTime: 178.93335
     TrueRanges:
-    - {x: 15, y: 18}
+    - {x: 11, y: 24}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -4121,7 +4122,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 340.9438, y: 168.69281, z: 66.508545}
       SpawnTime: 179.96667
     TrueRanges:
-    - {x: 12, y: 14}
+    - {x: 7, y: 18}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -4329,7 +4330,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 344.57892, y: 143.12393, z: 60.010105}
       SpawnTime: 181.53334
     TrueRanges:
-    - {x: 18, y: 22}
+    - {x: 13, y: 27}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -4523,7 +4524,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 340.65854, y: 141.30725, z: 61.277103}
       SpawnTime: 182.81668
     TrueRanges:
-    - {x: 17, y: 21}
+    - {x: 10, y: 25}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -4696,7 +4697,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 342.17618, y: 152.71559, z: 68.61693}
       SpawnTime: 183.98334
     TrueRanges:
-    - {x: 16, y: 20}
+    - {x: 10, y: 22}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -4869,7 +4870,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 354.16034, y: 158.75684, z: 75.184296}
       SpawnTime: 185.18335
     TrueRanges:
-    - {x: 18, y: 20}
+    - {x: 13, y: 22}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -5028,7 +5029,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 342.03418, y: 158.14131, z: 64.559906}
       SpawnTime: 186.3
     TrueRanges:
-    - {x: 10, y: 15}
+    - {x: 4, y: 20}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -5229,7 +5230,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 346.1875, y: 178.28493, z: 40.067135}
       SpawnTime: 187.51668
     TrueRanges:
-    - {x: 19, y: 22}
+    - {x: 14, y: 26}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -5395,7 +5396,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 334.34915, y: 162.47011, z: 44.45457}
       SpawnTime: 188.76668
     TrueRanges:
-    - {x: 14, y: 16}
+    - {x: 9, y: 20}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -5554,7 +5555,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 335.99918, y: 165.8101, z: 47.114693}
       SpawnTime: 189.81668
     TrueRanges:
-    - {x: 13, y: 15}
+    - {x: 8, y: 20}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -5692,7 +5693,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 340.78848, y: 173.60378, z: 61.754276}
       SpawnTime: 191.61668
     TrueRanges:
-    - {x: 8, y: 11}
+    - {x: 4, y: 16}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -5858,7 +5859,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 347.3745, y: 170.68822, z: 73.96609}
       SpawnTime: 192.75002
     TrueRanges:
-    - {x: 15, y: 17}
+    - {x: 11, y: 21}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -6031,7 +6032,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 350.57343, y: 192.2546, z: 70.136345}
       SpawnTime: 194.03334
     TrueRanges:
-    - {x: 16, y: 19}
+    - {x: 10, y: 22}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -6204,7 +6205,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 352.711, y: 191.61055, z: 67.10923}
       SpawnTime: 195.26668
     TrueRanges:
-    - {x: 15, y: 17}
+    - {x: 10, y: 22}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -6384,7 +6385,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 348.62766, y: 183.20961, z: 71.331406}
       SpawnTime: 196.36668
     TrueRanges:
-    - {x: 15, y: 19}
+    - {x: 11, y: 23}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -6543,7 +6544,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 339.0836, y: 185.7328, z: 70.50958}
       SpawnTime: 197.51668
     TrueRanges:
-    - {x: 13, y: 16}
+    - {x: 9, y: 20}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -6709,7 +6710,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 350.07318, y: 168.17334, z: 63.881702}
       SpawnTime: 198.71667
     TrueRanges:
-    - {x: 13, y: 15}
+    - {x: 8, y: 19}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -6889,7 +6890,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 340.0074, y: 172.3074, z: 72.71353}
       SpawnTime: 199.88335
     TrueRanges:
-    - {x: 15, y: 18}
+    - {x: 10, y: 22}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -7048,7 +7049,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 345.67682, y: 180.15608, z: 74.051094}
       SpawnTime: 200.98334
     TrueRanges:
-    - {x: 13, y: 16}
+    - {x: 8, y: 20}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -7681,7 +7682,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 353.44794, y: 194.39253, z: 69.195114}
       SpawnTime: 215.25002
     TrueRanges:
-    - {x: 15, y: 18}
+    - {x: 9, y: 23}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -11186,7 +11187,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 332.8168, y: 171.79124, z: 77.36604}
       SpawnTime: 278.06668
     TrueRanges:
-    - {x: 18, y: 21}
+    - {x: 12, y: 26}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -11366,7 +11367,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 330.0503, y: 172.13536, z: 78.44412}
       SpawnTime: 279.2
     TrueRanges:
-    - {x: 15, y: 18}
+    - {x: 9, y: 22}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -11581,7 +11582,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 334.02206, y: 166.23454, z: 76.078804}
       SpawnTime: 280.35
     TrueRanges:
-    - {x: 19, y: 22}
+    - {x: 14, y: 26}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -11747,7 +11748,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 337.9521, y: 171.71909, z: 79.3719}
       SpawnTime: 281.36667
     TrueRanges:
-    - {x: 14, y: 16}
+    - {x: 9, y: 20}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -12645,7 +12646,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 351.82626, y: 201.99095, z: 68.64039}
       SpawnTime: 24.000002
     TrueRanges:
-    - {x: 31, y: 41}
+    - {x: 18, y: 51}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -15126,7 +15127,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 344.998, y: 180.02727, z: 47.79676}
       SpawnTime: 71.55
     TrueRanges:
-    - {x: 21, y: 25}
+    - {x: 15, y: 31}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -21436,238 +21437,6 @@ MonoBehaviour:
       UncenteredHandPos: {x: 0.036598682, y: 0.34534192, z: 0.03325653}
       UncenteredHandRot: {x: 26.26482, y: 273.063, z: 162.97412}
       SpawnTime: 63.950005
-    TrueRanges: []
-    TrueIndex: 0
-    PlayCount: 0
-  - Infos:
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 19.397509, y: 0.0000005091484, z: 359.29138}
-      HandPos: {x: 0.5074079, y: -0.56359076, z: -0.23029423}
-      HandRot: {x: 14.128814, y: 13.999018, z: 21.719822}
-      UncenteredHandPos: {x: 0.45712185, y: -0.56359076, z: -0.31865025}
-      UncenteredHandRot: {x: 14.128814, y: 24.466963, z: 21.719822}
-      SpawnTime: 149.91667
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 19.11934, y: 0.00000043769035, z: 359.56448}
-      HandPos: {x: 0.566751, y: -0.51967525, z: -0.15377808}
-      HandRot: {x: 14.446082, y: 7.0523763, z: 27.102491}
-      UncenteredHandPos: {x: 0.5284946, y: -0.51967525, z: -0.2560234}
-      UncenteredHandRot: {x: 14.446084, y: 17.718988, z: 27.102493}
-      SpawnTime: 149.93333
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 19.0969, y: -0.000001272306, z: 0.053566385}
-      HandPos: {x: 0.6092577, y: -0.46938133, z: -0.05221653}
-      HandRot: {x: 10.858467, y: 1.1326176, z: 33.98711}
-      UncenteredHandPos: {x: 0.5880065, y: -0.46938133, z: -0.16783905}
-      UncenteredHandRot: {x: 10.858466, y: 12.164727, z: 33.987106}
-      SpawnTime: 149.95001
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 19.081894, y: -0.000000458765, z: 0.17783721}
-      HandPos: {x: 0.62591696, y: -0.44403958, z: 0.0027313232}
-      HandRot: {x: 9.153232, y: 357.35678, z: 37.06673}
-      UncenteredHandPos: {x: 0.61459255, y: -0.44403958, z: -0.11855602}
-      UncenteredHandRot: {x: 9.153232, y: 8.525111, z: 37.066734}
-      SpawnTime: 149.96667
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 19.22647, y: -0.0000005377555, z: 0.048540246}
-      HandPos: {x: 0.62396693, y: -0.38875723, z: 0.13668728}
-      HandRot: {x: 3.7665517, y: 346.789, z: 44.240475}
-      UncenteredHandPos: {x: 0.6386881, y: -0.38875723, z: 0.009781837}
-      UncenteredHandRot: {x: 3.7665515, y: 358.2677, z: 44.240475}
-      SpawnTime: 149.98334
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 19.392374, y: 0.00000045786547, z: 359.83356}
-      HandPos: {x: 0.6016698, y: -0.35891175, z: 0.20109653}
-      HandRot: {x: 1.6264685, y: 339.75647, z: 47.163734}
-      UncenteredHandPos: {x: 0.6299093, y: -0.35891175, z: 0.07523918}
-      UncenteredHandRot: {x: 1.6264687, y: 351.42633, z: 47.16373}
-      SpawnTime: 150.00002
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 19.846512, y: -0.00000036874707, z: 359.2838}
-      HandPos: {x: 0.54212093, y: -0.30282378, z: 0.3338747}
-      HandRot: {x: 359.3708, y: 323.8269, z: 53.704716}
-      UncenteredHandPos: {x: 0.5993099, y: -0.30282378, z: 0.21493053}
-      UncenteredHandRot: {x: 359.3708, y: 335.72513, z: 53.704716}
-      SpawnTime: 150.01668
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 20.112059, y: -0.00000041198842, z: 359.04593}
-      HandPos: {x: 0.49013925, y: -0.2744596, z: 0.3930645}
-      HandRot: {x: 358.3503, y: 315.34174, z: 56.999146}
-      UncenteredHandPos: {x: 0.56034875, y: -0.2744596, z: 0.28415775}
-      UncenteredHandRot: {x: 358.3503, y: 327.17947, z: 56.999146}
-      SpawnTime: 150.03334
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 20.524292, y: -0.00000014244394, z: 359.0141}
-      HandPos: {x: 0.36328316, y: -0.22310328, z: 0.49861717}
-      HandRot: {x: 356.3238, y: 297.44684, z: 63.053684}
-      UncenteredHandPos: {x: 0.45555854, y: -0.22310328, z: 0.41600513}
-      UncenteredHandRot: {x: 356.3238, y: 308.96887, z: 63.053684}
-      SpawnTime: 150.05
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 20.49011, y: -0.0000002634625, z: 359.65387}
-      HandPos: {x: 0.28032136, y: -0.20284176, z: 0.52945805}
-      HandRot: {x: 354.60858, y: 288.06064, z: 64.9219}
-      UncenteredHandPos: {x: 0.37908554, y: -0.20284176, z: 0.46389675}
-      UncenteredHandRot: {x: 354.60855, y: 299.41656, z: 64.9219}
-      SpawnTime: 150.06668
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 20.228579, y: 0.000000042651347, z: 1.1557666}
-      HandPos: {x: 0.10506678, y: -0.16753316, z: 0.5628443}
-      HandRot: {x: 352.67688, y: 267.70038, z: 69.91713}
-      UncenteredHandPos: {x: 0.21204543, y: -0.16753316, z: 0.5318546}
-      UncenteredHandRot: {x: 352.67688, y: 278.8633, z: 69.91714}
-      SpawnTime: 150.08334
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 19.71007, y: 0.00000014170442, z: 2.3547785}
-      HandPos: {x: 0.051347256, y: -0.14398265, z: 0.5923176}
-      HandRot: {x: 353.06223, y: 259.281, z: 72.77292}
-      UncenteredHandPos: {x: 0.16328692, y: -0.14398265, z: 0.57167625}
-      UncenteredHandRot: {x: 353.06223, y: 270.26733, z: 72.77293}
-      SpawnTime: 150.1
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 18.5999, y: -0.00000045041224, z: 4.3671985}
-      HandPos: {x: -0.11244297, y: -0.13509822, z: 0.5529051}
-      HandRot: {x: 354.13995, y: 239.94394, z: 76.90368}
-      UncenteredHandPos: {x: -0.010153532, y: -0.13509822, z: 0.56413174}
-      UncenteredHandRot: {x: 354.13995, y: 250.40814, z: 76.90368}
-      SpawnTime: 150.11667
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 18.054747, y: 0.0000006173681, z: 5.0041194}
-      HandPos: {x: -0.180619, y: -0.153023, z: 0.42408848}
-      HandRot: {x: 348.02762, y: 231.15752, z: 73.1249}
-      UncenteredHandPos: {x: -0.101080656, y: -0.153023, z: 0.44972992}
-      UncenteredHandRot: {x: 348.02762, y: 241.55942, z: 73.12491}
-      SpawnTime: 150.13335
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 17.696707, y: 0.0000003360682, z: 5.149379}
-      HandPos: {x: -0.26216364, y: -0.16684628, z: 0.31762218}
-      HandRot: {x: 345.95822, y: 215.94618, z: 70.82497}
-      UncenteredHandPos: {x: -0.20064688, y: -0.16684628, z: 0.3596592}
-      UncenteredHandRot: {x: 345.95822, y: 226.32593, z: 70.82497}
-      SpawnTime: 150.15001
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 17.862684, y: 0.00000028031715, z: 4.6656036}
-      HandPos: {x: -0.2973485, y: -0.17348409, z: 0.27412987}
-      HandRot: {x: 346.05386, y: 208.78032, z: 70.24265}
-      UncenteredHandPos: {x: -0.24279523, y: -0.17348409, z: 0.32344055}
-      UncenteredHandRot: {x: 346.05386, y: 219.21266, z: 70.24265}
-      SpawnTime: 150.16667
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 18.059322, y: -0.00000011225165, z: 2.766575}
-      HandPos: {x: -0.33231282, y: -0.19067526, z: 0.19212914}
-      HandRot: {x: 348.2057, y: 198.19456, z: 69.51437}
-      UncenteredHandPos: {x: -0.2928052, y: -0.19067526, z: 0.24821472}
-      UncenteredHandRot: {x: 348.2057, y: 208.44827, z: 69.51437}
-      SpawnTime: 150.18333
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 18.16473, y: 0.00000047735676, z: 1.6327}
-      HandPos: {x: -0.33060193, y: -0.20175004, z: 0.15519905}
-      HandRot: {x: 347.93076, y: 195.30797, z: 69.12309}
-      UncenteredHandPos: {x: -0.29833794, y: -0.20175004, z: 0.21066284}
-      UncenteredHandRot: {x: 347.93076, y: 205.38728, z: 69.12309}
-      SpawnTime: 150.20001
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 18.494486, y: -0.0000015051367, z: 0.17507027}
-      HandPos: {x: -0.3357581, y: -0.21697068, z: 0.09534454}
-      HandRot: {x: 344.98917, y: 189.3632, z: 65.103355}
-      UncenteredHandPos: {x: -0.31474435, y: -0.21697068, z: 0.1508646}
-      UncenteredHandRot: {x: 344.98917, y: 199.11986, z: 65.10335}
-      SpawnTime: 150.21667
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 18.65078, y: 0.00000065470124, z: 359.81213}
-      HandPos: {x: -0.33197427, y: -0.22282386, z: 0.0765028}
-      HandRot: {x: 343.81842, y: 186.98466, z: 63.571632}
-      UncenteredHandPos: {x: -0.3145213, y: -0.22282386, z: 0.1309042}
-      UncenteredHandRot: {x: 343.81842, y: 196.60472, z: 63.571625}
-      SpawnTime: 150.23334
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 18.958002, y: -0.0000011213735, z: 359.7342}
-      HandPos: {x: -0.32368195, y: -0.23333573, z: 0.045194626}
-      HandRot: {x: 342.46967, y: 182.24767, z: 62.776188}
-      UncenteredHandPos: {x: -0.31248057, y: -0.23333573, z: 0.09575176}
-      UncenteredHandRot: {x: 342.46967, y: 191.33546, z: 62.77618}
-      SpawnTime: 150.25002
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 18.799088, y: -0.0000010850806, z: 359.84567}
-      HandPos: {x: -0.31609476, y: -0.2370131, z: 0.03461647}
-      HandRot: {x: 342.08243, y: 180.98557, z: 62.863777}
-      UncenteredHandPos: {x: -0.30717206, y: -0.2370131, z: 0.08221626}
-      UncenteredHandRot: {x: 342.08243, y: 189.72017, z: 62.86377}
-      SpawnTime: 150.26668
-    TrueRanges: []
-    TrueIndex: 0
-    PlayCount: 0
-  - Infos:
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 10.799477, y: 0, z: 4.63649}
-      HandPos: {x: 0.025718212, y: -0.0769794, z: 0.7133446}
-      HandRot: {x: 1.7096417, y: 262.7205, z: 78.25161}
-      UncenteredHandPos: {x: 0.034933567, y: -0.0769794, z: 0.7129526}
-      UncenteredHandRot: {x: 1.7096417, y: 263.46085, z: 78.25161}
-      SpawnTime: 152.86667
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 9.59401, y: -0.00000005411777, z: 5.987434}
-      HandPos: {x: -0.19521642, y: -0.11157346, z: 0.48182487}
-      HandRot: {x: 351.7104, y: 241.99799, z: 65.290634}
-      UncenteredHandPos: {x: -0.19404554, y: -0.11157346, z: 0.4822979}
-      UncenteredHandRot: {x: 351.7104, y: 242.13715, z: 65.290634}
-      SpawnTime: 152.88335
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 8.560515, y: -0.0000087958115, z: 5.4243884}
-      HandPos: {x: -0.29494023, y: -0.14096713, z: 0.3540182}
-      HandRot: {x: 349.21158, y: 224.10121, z: 60.69714}
-      UncenteredHandPos: {x: -0.29697788, y: -0.14096713, z: 0.35231113}
-      UncenteredHandRot: {x: 349.21158, y: 223.77065, z: 60.69714}
-      SpawnTime: 152.90001
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 8.276801, y: 0.0000017524811, z: 4.835367}
-      HandPos: {x: -0.3337072, y: -0.15689921, z: 0.2965622}
-      HandRot: {x: 349.0405, y: 214.62793, z: 58.748672}
-      UncenteredHandPos: {x: -0.33628798, y: -0.15689921, z: 0.2936325}
-      UncenteredHandRot: {x: 349.0405, y: 214.12686, z: 58.748672}
-      SpawnTime: 152.91667
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 8.328043, y: 0.000003127913, z: 2.9585423}
-      HandPos: {x: -0.36218834, y: -0.18469572, z: 0.18055439}
-      HandRot: {x: 353.08868, y: 200.35103, z: 52.477623}
-      UncenteredHandPos: {x: -0.36412418, y: -0.18469572, z: 0.17661762}
-      UncenteredHandRot: {x: 353.08868, y: 199.72997, z: 52.477623}
-      SpawnTime: 152.93333
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 8.594416, y: -0.000006476022, z: 1.8877292}
-      HandPos: {x: -0.35967934, y: -0.19948554, z: 0.13128471}
-      HandRot: {x: 353.68372, y: 193.70221, z: 51.8657}
-      UncenteredHandPos: {x: -0.36108685, y: -0.19948554, z: 0.12736225}
-      UncenteredHandRot: {x: 353.68372, y: 193.07866, z: 51.8657}
-      SpawnTime: 152.95001
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 9.004323, y: 0.0000060948814, z: 0.46773985}
-      HandPos: {x: -0.35654092, y: -0.21905088, z: 0.053102493}
-      HandRot: {x: 348.70706, y: 183.4897, z: 51.02145}
-      UncenteredHandPos: {x: -0.3571155, y: -0.21905088, z: 0.049090385}
-      UncenteredHandRot: {x: 348.70706, y: 182.84543, z: 51.02145}
-      SpawnTime: 152.96667
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 9.173076, y: 0.000011060413, z: 0.09145189}
-      HandPos: {x: -0.3444023, y: -0.22793484, z: 0.017655373}
-      HandRot: {x: 345.59103, y: 180.14622, z: 49.52635}
-      UncenteredHandPos: {x: -0.34457314, y: -0.22793484, z: 0.01392746}
-      UncenteredHandRot: {x: 345.59103, y: 179.52617, z: 49.526344}
-      SpawnTime: 152.98334
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 9.17943, y: 0.000018198361, z: 359.96655}
-      HandPos: {x: -0.31529236, y: -0.23766708, z: -0.023225784}
-      HandRot: {x: 343.42245, y: 173.93552, z: 48.11843}
-      UncenteredHandPos: {x: -0.31488168, y: -0.23766708, z: -0.028253555}
-      UncenteredHandRot: {x: 343.42245, y: 173.02135, z: 48.118427}
-      SpawnTime: 153.00002
-    - HeadPos: {x: 0, y: 0, z: 0}
-      HeadRot: {x: 8.984728, y: 0.0000022960082, z: 0.30207488}
-      HandPos: {x: -0.30482566, y: -0.24233794, z: -0.03948307}
-      HandRot: {x: 342.47412, y: 170.23805, z: 48.30075}
-      UncenteredHandPos: {x: -0.30399823, y: -0.24233794, z: -0.045416832}
-      UncenteredHandRot: {x: 342.47412, y: 169.12128, z: 48.30075}
-      SpawnTime: 153.01668
     TrueRanges: []
     TrueIndex: 0
     PlayCount: 0

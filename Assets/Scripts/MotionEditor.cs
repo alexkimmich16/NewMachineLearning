@@ -91,8 +91,10 @@ public class MotionEditor : SerializedMonoBehaviour
 
     public void TestCurrentButton()
     {
-        float Value = RestrictionSystem.RegressionSystem.instance.GetTestRegressionStats(RestrictionSystem.RestrictionManager.instance.coefficents.RegressionStats[(int)CurrentTestMotion].GetCoefficents(), CurrentTestMotion);
-        TestValue.text = "'" + CurrentTestMotion.ToString() + "' Correct: " + Value.ToString("f5");
+        if (MotionType == CurrentLearn.Nothing)
+            return;
+        float Value = RestrictionSystem.RegressionSystem.instance.GetTestRegressionStats(RestrictionSystem.RestrictionManager.instance.coefficents.RegressionStats[(int)MotionType - 1].GetCoefficents(), (RestrictionSystem.CurrentLearn)(int)MotionType);
+        TestValue.text = "'" + MotionType.ToString() + "' Correct: " + Value.ToString("f5");
     }
 
     public void ChangeToNextTest()
@@ -167,11 +169,11 @@ public class MotionEditor : SerializedMonoBehaviour
         {
             for (int i = 0; i < CurrentMotionTests.Length; i++)
             {
-                RestrictionSystem.RestrictionManager RM = RestrictionSystem.RestrictionManager.instance;
+                RestrictionSystem.SingleRestriction Restriction = RestrictionSystem.RestrictionManager.instance.RestrictionSettings.MotionRestrictions[0].Restrictions[i];
                 RestrictionSystem.Side side = (RestrictionSystem.Side)(DisplayingRightStats.isOn ? 0 : 1);
-                float Value = RestrictionSystem.RestrictionManager.RestrictionDictionary[RM.RestrictionSettings.MotionRestrictions[0].Restrictions[i].restriction].Invoke(RM.RestrictionSettings.MotionRestrictions[0].Restrictions[i], RestrictionSystem.PastFrameRecorder.instance.PastFrame(side), RestrictionSystem.PastFrameRecorder.instance.GetControllerInfo(side));
+                float Value = RestrictionSystem.RestrictionManager.RestrictionDictionary[Restriction.restriction].Invoke(Restriction, RestrictionSystem.PastFrameRecorder.instance.PastFrame(side), RestrictionSystem.PastFrameRecorder.instance.GetControllerInfo(side));
 
-                CurrentMotionTests[i].text = RM.RestrictionSettings.MotionRestrictions[0].Restrictions[i].Label + ": " + Value.ToString("f4");
+                CurrentMotionTests[i].text = Restriction.Label + ": " + Value.ToString("f4");
                 CurrentMotionTests[i].color = Graph.instance.Colors[i];
                 //
                 //RM.RestrictionSettings.MotionRestrictions[0].

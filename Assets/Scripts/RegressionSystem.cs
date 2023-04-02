@@ -45,13 +45,16 @@ namespace RestrictionSystem
         public static bool ShouldDebug = false;
         public CurrentLearn CurrentMotion;
 
+        public delegate void DoPreformRegression();
+        public static event DoPreformRegression OnPreformRegression;
+
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void PreformRegressionAll()
         {
             for (int motion = 1; motion < Enum.GetValues(typeof(CurrentLearn)).Length; motion++)
                 PreformRegression((CurrentLearn)motion);
         }
-
+        public void PreformRegressionCurrent() { PreformRegression((CurrentLearn)MotionEditor.instance.MotionType); }
         public void PreformRegression(CurrentLearn Motion)
         {
             List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(Motion, UploadRestrictions);
@@ -118,7 +121,7 @@ namespace RestrictionSystem
 
             //Debug.Log("Iterations: " + Iterations);
             //Debug.Log((CorrectPercent * 100) + "% Correct" + "  Where False= " + ((FalseTrue.x / (FalseTrue.x + FalseTrue.y)) * 100f) + "%");
-
+            OnPreformRegression?.Invoke();
 
             double[] GetPredictions(double[][] Values, double[] Coefficents)
             {

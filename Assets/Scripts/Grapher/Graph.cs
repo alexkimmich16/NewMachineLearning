@@ -16,7 +16,7 @@ public class Graph : MonoBehaviour
 
     public float2 GraphMinMax;
 
-    public Image Display;
+    public static Image Display() { return instance.transform.GetChild(1).GetComponent<Image>(); }
     private Sprite mySprite;
 
     private Texture2D TextureMap;
@@ -24,8 +24,6 @@ public class Graph : MonoBehaviour
     public Color[] Colors;
     public TextMeshProUGUI[] TextDisplay;
     public Image[] ColorDisplay;
-
-    public float Spacing;
 
     void Start()
     {
@@ -41,15 +39,13 @@ public class Graph : MonoBehaviour
         UpdateGraph();
 
         MotionEditor.OnChangeMotion += UpdateGraph;
+        RegressionSystem.OnPreformRegression += UpdateGraph;
     }
 
     public void UpdateGraph()
     {
         TextureMap = new Texture2D(width, height);
         TextureMap.filterMode = FilterMode.Point;
-        for (int i = 0; i < width; i++)
-            for (int j = 0; j < height; j++)
-                TextureMap.SetPixel(i, j, Color.white);
 
         List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions((RestrictionSystem.CurrentLearn)((int)MotionEditor.instance.MotionType), RegressionSystem.instance.UploadRestrictions);
         List<List<int>> Overrides = new List<List<int>>();
@@ -58,7 +54,7 @@ public class Graph : MonoBehaviour
         {
             TextureMap.Apply();
             mySprite = Sprite.Create(TextureMap, new Rect(0.0f, 0.0f, TextureMap.width, TextureMap.height), new Vector2(0.5f, 0.5f), 1000.0f);
-            Display.sprite = mySprite;
+            Display().sprite = mySprite;
             return;
         }
 
@@ -111,7 +107,7 @@ public class Graph : MonoBehaviour
         TextureMap.Apply();
 
         mySprite = Sprite.Create(TextureMap, new Rect(0.0f, 0.0f, TextureMap.width, TextureMap.height), new Vector2(0.5f, 0.5f), 1000.0f);
-        Display.sprite = mySprite;
+        Display().sprite = mySprite;
 
         
 

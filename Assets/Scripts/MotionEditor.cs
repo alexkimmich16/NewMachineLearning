@@ -39,11 +39,21 @@ public class MotionEditor : SerializedMonoBehaviour
     public TextMeshProUGUI PercentDone;
     public TextMeshProUGUI ETA;
 
+    public TextMeshProUGUI TestValue;
+
+    public TextMeshProUGUI MotionTestDisplay;
+
+    public Toggle TestAllMotions;
+
+    
 
     public Slider DoneSlider;
 
     public MotionPlayback display;
-    
+
+    public Toggle DisplayingRightStats;
+    public TextMeshProUGUI[] CurrentMotionTests;
+
     public void RecieveSliderInfo(float PercentDone, int ETAInSeconds)
     {
         this.PercentDone.text = PercentDone.ToString("f8") ;
@@ -78,6 +88,23 @@ public class MotionEditor : SerializedMonoBehaviour
     //[ShowIf("Setting", EditSettings.DisplayingMotion)] 
     public RestrictionSystem.CurrentLearn CurrentTestMotion;
 
+
+    public void TestCurrentButton()
+    {
+        float Value = RestrictionSystem.RegressionSystem.instance.GetTestRegressionStats(RestrictionSystem.RestrictionManager.instance.coefficents.RegressionStats[(int)CurrentTestMotion].GetCoefficents(), CurrentTestMotion);
+        TestValue.text = "'" + CurrentTestMotion.ToString() + "' Correct: " + Value.ToString("f5");
+    }
+
+    public void ChangeToNextTest()
+    {
+        CurrentTestMotion += 1;
+        if ((int)CurrentTestMotion > Enum.GetValues(typeof(CurrentLearn)).Length - 1)
+            CurrentTestMotion = (RestrictionSystem.CurrentLearn)1;
+        else if ((int)CurrentTestMotion < 0)
+            CurrentTestMotion = (RestrictionSystem.CurrentLearn)1;
+
+        OnChangeMotion?.Invoke();
+    }
     private void Start()
     {
         input.ActivateInputField();
@@ -99,7 +126,6 @@ public class MotionEditor : SerializedMonoBehaviour
     }
     public void ChangeMotionType(int Change)
     {
-        
         MotionType += Change;
         if ((int)MotionType > Enum.GetValues(typeof(CurrentLearn)).Length - 1)
             MotionType = 0;
@@ -110,8 +136,7 @@ public class MotionEditor : SerializedMonoBehaviour
             MotionNum = LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1;
 
         display.Frame = 0;
-        if(OnChangeMotion != null)
-            OnChangeMotion();
+        OnChangeMotion?.Invoke();
     }
     void Update()
     {
@@ -138,10 +163,28 @@ public class MotionEditor : SerializedMonoBehaviour
             LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Add(Vector2.zero);
 
 
+        if (RestrictionSystem.PastFrameRecorder.IsReady())
+        {
+            for (int i = 0; i < CurrentMotionTests.Length; i++)
+            {
+                RestrictionSystem.RestrictionManager RM = RestrictionSystem.RestrictionManager.instance;
+                RestrictionSystem.Side side = (RestrictionSystem.Side)(DisplayingRightStats.isOn ? 0 : 1);
+                float Value = RestrictionSystem.RestrictionManager.RestrictionDictionary[RM.RestrictionSettings.MotionRestrictions[0].Restrictions[i].restriction].Invoke(RM.RestrictionSettings.MotionRestrictions[0].Restrictions[i], RestrictionSystem.PastFrameRecorder.instance.PastFrame(side), RestrictionSystem.PastFrameRecorder.instance.GetControllerInfo(side));
+
+                CurrentMotionTests[i].text = RM.RestrictionSettings.MotionRestrictions[0].Restrictions[i].Label + ": " + Value.ToString("f4");
+                CurrentMotionTests[i].color = Graph.instance.Colors[i];
+                //
+                //RM.RestrictionSettings.MotionRestrictions[0].
+            }
+        }
+        
+
+
         input.ActivateInputField();
         sideText.text = "#" + MotionNum;
         FrameNum.text = "Frame: " + display.Frame;
         MotionTypeText.text = "Motion: " + MotionType.ToString();
+        MotionTestDisplay.text = "Test: " + CurrentTestMotion.ToString();
         SettingText.text = "Settings: " + Setting.ToString();
         display.PlaybackSpeed += SpeedChangeAdd();
         PlaybackSpeed.text = "Speed: " + display.PlaybackSpeed.ToString("F2");

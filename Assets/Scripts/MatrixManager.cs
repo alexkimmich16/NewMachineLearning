@@ -27,8 +27,6 @@ public class MatrixManager : SerializedMonoBehaviour
     public bool DisplayActive;
     [ShowIf("DisplayActive")]public float DisplaySizeMultiplier = 1;
 
-    //[BoxGroup("ReadOnly table")]
-    //[TableMatrix(IsReadOnly = true)]
     [HideInInspector] public Vector2[,] GridStats;
 
 
@@ -39,8 +37,6 @@ public class MatrixManager : SerializedMonoBehaviour
     private Texture2D TextureMap;
     public Image Display;
     private Sprite mySprite;
-
-    
 
     private Vector3 DefultHSV = new Vector3(0f, 0f, 0.5f);
 
@@ -83,10 +79,6 @@ public class MatrixManager : SerializedMonoBehaviour
         }
 
         StartCoroutine(UpdateGraphic());
-
-        //ResetMatrix();
-
-        //LastMatrixStats = 
     }
     public void ResetMatrix()
     {

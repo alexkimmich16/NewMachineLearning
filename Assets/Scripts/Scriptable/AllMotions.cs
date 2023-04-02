@@ -65,7 +65,7 @@ public class Motion
         }
         return ranges;
     }
-    public void IntoRange(List<bool> Values)
+    public void SetRanges(List<bool> Values)
     {
         TrueRanges = ConvertToRange(Values);
     }

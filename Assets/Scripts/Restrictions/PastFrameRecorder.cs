@@ -66,6 +66,7 @@ namespace RestrictionSystem
         {
             ManageLists();
         }
+        public static bool IsReady() { return instance.RightInfo.Count >= instance.MaxStoreInfo - 1; }
         public void ManageLists()
         {
             //InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.isTracked, out bool HeadsetActive);

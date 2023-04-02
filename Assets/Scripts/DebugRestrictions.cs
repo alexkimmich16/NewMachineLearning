@@ -30,8 +30,7 @@ namespace RestrictionSystem
 
         [FoldoutGroup("Testing")] public MotionRestriction Restrictions;
         //[FoldoutGroup("Testing")] public bool DebugHand;
-        [FoldoutGroup("Testing")] public DebugType debugType;
-        [FoldoutGroup("Testing"), ShowIf("debugType", DebugType.OneMotion)] public CurrentLearn MotionTry;
+        [FoldoutGroup("Testing")] public bool TestAll;
 
         [FoldoutGroup("Guesses")]public float MaxFalseGuesses;
         [FoldoutGroup("Guesses")] public float TotalCorrectGuesses;
@@ -75,7 +74,7 @@ namespace RestrictionSystem
                 return;
 
             PastFrameRecorder PR = PastFrameRecorder.instance;
-            if (PR.RightInfo.Count < PR.MaxStoreInfo - 1)
+            if (!PastFrameRecorder.IsReady())
                 return;
             
             SingleInfo frame1 = PR.PastFrame(Side.right);
@@ -90,12 +89,12 @@ namespace RestrictionSystem
             //HandPosition = frame2.HandPos;
 
             
-            if(debugType == DebugType.OneMotion)
+            if(!MotionEditor.instance.TestAllMotions.isOn)
             {
-                handToChange[0].material = Materials[RestrictionManager.instance.MotionWorks(PR.PastFrame(Side.right), PastFrameRecorder.instance.GetControllerInfo(Side.right), MotionTry) ? 1 : 0]; //set hand
-                handToChange[1].material = Materials[RestrictionManager.instance.MotionWorks(PR.PastFrame(Side.left), PastFrameRecorder.instance.GetControllerInfo(Side.left), MotionTry) ? 1 : 0]; //set hand
+                handToChange[0].material = Materials[RestrictionManager.instance.MotionWorks(PR.PastFrame(Side.right), PastFrameRecorder.instance.GetControllerInfo(Side.right), MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
+                handToChange[1].material = Materials[RestrictionManager.instance.MotionWorks(PR.PastFrame(Side.left), PastFrameRecorder.instance.GetControllerInfo(Side.left), MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
             }
-            if (debugType == DebugType.All)
+            else
             {
                 handToChange[0].material = Materials[GetMatTestNum(Side.right)]; //set hand
                 handToChange[1].material = Materials[GetMatTestNum(Side.left)]; //set hand

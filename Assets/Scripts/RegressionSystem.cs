@@ -15,9 +15,6 @@ namespace RestrictionSystem
         public static RegressionSystem instance;
         private void Awake() { instance = this; }
         
-
-        [FoldoutGroup("Test")] public List<float> Totals = new List<float>();
-        [FoldoutGroup("Test")] public List<float> OutputValues = new List<float>();
         [FoldoutGroup("Test")] public List<SingleFrameRestrictionValues> RestrictionValues;
 
 
@@ -47,78 +44,80 @@ namespace RestrictionSystem
 
         public static bool ShouldDebug = false;
         public CurrentLearn CurrentMotion;
-        
+
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
-        public void PreformRegression()
+        public void PreformRegressionAll()
         {
             for (int motion = 1; motion < Enum.GetValues(typeof(CurrentLearn)).Length; motion++)
+                PreformRegression((CurrentLearn)motion);
+        }
+
+        public void PreformRegression(CurrentLearn Motion)
+        {
+            List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(Motion, UploadRestrictions);
+
+            double[][] InputValues = new double[FrameInfo.Count][];
+            for (int i = 0; i < FrameInfo.Count; i++)
             {
-                List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions((CurrentLearn)motion, UploadRestrictions);
-
-                double[][] InputValues = new double[FrameInfo.Count][];
-                for (int i = 0; i < FrameInfo.Count; i++)
+                InputValues[i] = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
+                for (int j = 0; j < FrameInfo[i].OutputRestrictions.Count; j++)
                 {
-                    InputValues[i] = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
-                    for (int j = 0; j < FrameInfo[i].OutputRestrictions.Count; j++)
+                    InputValues[i][0] = 1d;
+                    for (int k = 0; k < EachTotalDegree; k++)
                     {
-                        InputValues[i][0] = 1d;
-                        for (int k = 0; k < EachTotalDegree; k++)
-                        {
-                            double Value = Math.Pow(FrameInfo[i].OutputRestrictions[j], k + 1);
-                            if (Value < SmallestInput)
-                                Value = SmallestInput;
-                            InputValues[i][((j * EachTotalDegree) + 1) + k] = Value;
-                        }
-
+                        double Value = Math.Pow(FrameInfo[i].OutputRestrictions[j], k + 1);
+                        //if (Value < SmallestInput)
+                            //Value = SmallestInput;
+                        InputValues[i][((j * EachTotalDegree) + 1) + k] = Value;
                     }
+
                 }
-                //Inputs = InputValues;
-                //FrameInfo.Select(x => x.AtMotionState ? 1d : 0d).ToArray();
-                double[] Output = new double[FrameInfo.Count];
-                for (int i = 0; i < Output.Length; i++)
-                    Output[i] = FrameInfo[i].AtMotionState ? 1d : 0d;
-
-                double[] Coefficents = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
-                
-                int Iterations = 0;
-                float CorrectPercent = 0f;
-                while (Iterations < 20)
-                {
-                    double[] Predictions = GetPredictions(InputValues, Coefficents);
-                    double[][] CovarianceMatrix = GetCovarianceMatrix(InputValues, Predictions, Iterations >= 2);
-                    double[] IterationMatrix = GetIterationMatrix(InputValues, CovarianceMatrix, Output, Predictions);
-
-                    if (CorrectPercent > GetTestRegressionStats(GetCoefficents(Coefficents, IterationMatrix), (CurrentLearn)motion)) //check for decrease
-                        break;
-
-                    Coefficents = GetCoefficents(Coefficents, IterationMatrix);
-                    CorrectPercent = GetTestRegressionStats(Coefficents, (CurrentLearn)motion);
-                    //Debug.Log(CorrectPercent + "% Correct");
-                    Iterations += 1;
-                }
-                Debug.Log(((CurrentLearn)motion).ToString() + " is " +  + CorrectPercent + "% Correct");
-
-                RegressionInfo newInfo = new RegressionInfo();
-                newInfo.Intercept = (float)Coefficents[0];
-                newInfo.Coefficents = new List<RegressionInfo.DegreeList>();
-                for (int i = 0; i < FrameInfo[0].OutputRestrictions.Count; i++)
-                {
-                    RegressionInfo.DegreeList newDegree = new RegressionInfo.DegreeList();
-                    newDegree.Degrees = new List<float>();
-                    for (int j = 0; j < EachTotalDegree; j++)
-                    {
-                        newDegree.Degrees.Add((float)Coefficents[(i * EachTotalDegree) + j + 1]);
-                    }
-                    newInfo.Coefficents.Add(newDegree);
-                }
-                RestrictionManager.instance.coefficents.RegressionStats[motion - 1] = newInfo;
-
-                //Coefficents = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
-
-                //Debug.Log("Iterations: " + Iterations);
-                //Debug.Log((CorrectPercent * 100) + "% Correct" + "  Where False= " + ((FalseTrue.x / (FalseTrue.x + FalseTrue.y)) * 100f) + "%");
             }
+            //Inputs = InputValues;
+            //FrameInfo.Select(x => x.AtMotionState ? 1d : 0d).ToArray();
+            double[] Output = new double[FrameInfo.Count];
+            for (int i = 0; i < Output.Length; i++)
+                Output[i] = FrameInfo[i].AtMotionState ? 1d : 0d;
 
+            double[] Coefficents = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
+
+            int Iterations = 0;
+            float CorrectPercent = 0f;
+            while (Iterations < 20)
+            {
+                double[] Predictions = GetPredictions(InputValues, Coefficents);
+                double[][] CovarianceMatrix = GetCovarianceMatrix(InputValues, Predictions, Iterations >= 2);
+                double[] IterationMatrix = GetIterationMatrix(InputValues, CovarianceMatrix, Output, Predictions);
+
+                if (CorrectPercent > GetTestRegressionStats(GetCoefficents(Coefficents, IterationMatrix), Motion)) //check for decrease
+                    break;
+
+                Coefficents = GetCoefficents(Coefficents, IterationMatrix);
+                CorrectPercent = GetTestRegressionStats(Coefficents, Motion);
+                //Debug.Log(CorrectPercent + "% Correct");
+                Iterations += 1;
+            }
+            Debug.Log((Motion).ToString() + " is " + +CorrectPercent + "% Correct");
+
+            RegressionInfo newInfo = new RegressionInfo();
+            newInfo.Intercept = (float)Coefficents[0];
+            newInfo.Coefficents = new List<RegressionInfo.DegreeList>();
+            for (int i = 0; i < FrameInfo[0].OutputRestrictions.Count; i++)
+            {
+                RegressionInfo.DegreeList newDegree = new RegressionInfo.DegreeList();
+                newDegree.Degrees = new List<float>();
+                for (int j = 0; j < EachTotalDegree; j++)
+                {
+                    newDegree.Degrees.Add((float)Coefficents[(i * EachTotalDegree) + j + 1]);
+                }
+                newInfo.Coefficents.Add(newDegree);
+            }
+            RestrictionManager.instance.coefficents.RegressionStats[(int)Motion - 1] = newInfo;
+
+            //Coefficents = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
+
+            //Debug.Log("Iterations: " + Iterations);
+            //Debug.Log((CorrectPercent * 100) + "% Correct" + "  Where False= " + ((FalseTrue.x / (FalseTrue.x + FalseTrue.y)) * 100f) + "%");
 
 
             double[] GetPredictions(double[][] Values, double[] Coefficents)
@@ -229,6 +228,30 @@ namespace RestrictionSystem
             }
         }
         public float GetTestRegressionStats(double[] Coefficents, CurrentLearn motion)
+        {
+            float2 Guesses = new float2(0f, 0f);
+            float2 FalseTrue = new float2(0f, 0f);
+
+            List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions(motion, UploadRestrictions);
+            RestrictionValues = FrameInfo;
+            for (int i = 0; i < FrameInfo.Count; i++)
+            {
+                double Total = Coefficents[0];
+                for (int j = 0; j < FrameInfo[0].OutputRestrictions.Count; j++)//each  variable
+                    for (int k = 0; k < EachTotalDegree; k++)//powers
+                        Total += Mathf.Pow(FrameInfo[i].OutputRestrictions[j], k + 1) * Coefficents[(j * EachTotalDegree) + k + 1];
+
+                //insert formula
+                double GuessValue = 1f / (1f + Math.Exp(-Total));
+                bool Guess = GuessValue > 0.5f;
+                bool Truth = FrameInfo[i].AtMotionState;
+                bool Correct = Guess == Truth;
+                FalseTrue = new float2(FalseTrue.x + (!Truth ? 1f : 0f), FalseTrue.y + (Truth ? 1f : 0f));
+                Guesses = new float2(Guesses.x + (!Correct ? 1f : 0f), Guesses.y + (Correct ? 1f : 0f));
+            }
+            return Guesses.y / (Guesses.x + Guesses.y) * 100f;
+        }
+        public float GetTestRegressionStats(float[] Coefficents, CurrentLearn motion)
         {
             float2 Guesses = new float2(0f, 0f);
             float2 FalseTrue = new float2(0f, 0f);

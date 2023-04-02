@@ -101,9 +101,6 @@ namespace RestrictionSystem
         {
             float Distance = Vector3.Distance(EliminateAxis(restriction.UseAxisList, frame1.HandPosType(restriction.UseLocalHandPos)), EliminateAxis(restriction.UseAxisList, frame2.HandPosType(restriction.UseLocalHandPos)));
             float Speed = Distance / (frame2.SpawnTime - frame1.SpawnTime);
-
-            if (Speed < 0.001f)
-                Speed = 0.001f;
             //restriction.Value = Speed;
             return Speed;
         }

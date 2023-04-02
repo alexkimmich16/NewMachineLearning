@@ -4,6 +4,14 @@ using UnityEngine;
 using Unity.Mathematics;
 using Sirenix.OdinInspector;
 using RestrictionSystem;
+using System.Linq;
+
+
+public struct LockStorage
+{
+    public string Name;
+    public Vector2 Lock;
+}
 namespace RestrictionSystem
 {
     public class MotionAssign : SerializedMonoBehaviour
@@ -13,64 +21,66 @@ namespace RestrictionSystem
 
         public bool AbleToCallWithButtons;
         public int2 WithinFrames;
+        public bool ShouldLockAll;
+        
+        [FoldoutGroup("Lock")] public SingleRestriction RestrictionToLock;
+        [FoldoutGroup("Lock")] public LockStorage CurrentLock;
+        [FoldoutGroup("Lock")] public List<LockStorage> LockStorages;
+
         [FoldoutGroup("LockAngle")] public float2 DegreesFromHead;
-        [FoldoutGroup("LockAngle")] public KeyCode LockAngleButton;
+        [FoldoutGroup("LockAngle")] public KeyCode LockButton;
 
-        [FoldoutGroup("LockVelocity")] public float2 MinMaxVelocity;
-        [FoldoutGroup("LockVelocity")] public KeyCode LockVelocityButton;
-        [FoldoutGroup("LockVelocity")] public SingleRestriction VelocitySettings;
 
-        //public RestrictionManager RM;
 
-        [FoldoutGroup("LockAngle"), Button(ButtonSizes.Small)]
-        public void AngleLock()
+        [FoldoutGroup("AllTrueMotions")] public List<List<Vector2>> TrueMotions;
+        [FoldoutGroup("AllTrueMotions")] public CurrentLearn TrueMotionEdit;
+        [FoldoutGroup("AllTrueMotions"), Button(ButtonSizes.Small)]
+        public void GetTrueMotions()
+        {
+            List<bool> MotionStates = new List<bool>();
+            for (int i = 0; i < LM.MovementList[(int)TrueMotionEdit].Motions.Count; i++)
+                MotionStates.Add(Enumerable.Range(0, LM.MovementList[(int)TrueMotionEdit].Motions[i].Infos.Count).Any(x => LM.MovementList[(int)TrueMotionEdit].Motions[i].AtFrameState(x)));
+            List<Vector2> Range = Motion.ConvertToRange(MotionStates);
+            TrueMotions[(int)TrueMotionEdit - 1] = Range;
+        }
+        
+        [FoldoutGroup("Lock"), Button(ButtonSizes.Small)]
+        public void PreformLock()
         {
             int CurrentMotionEdit = GetComponent<MotionEditor>().MotionNum;
             int CurrentSpellEdit = (int)GetComponent<MotionEditor>().MotionType;
+
             List<bool> Frames = new List<bool>();
-            for (int i = 0; i < LM.MovementList[CurrentSpellEdit].Motions[CurrentMotionEdit].Infos.Count; i++)//frame
+
+            List<int> ToPreformOn = ShouldLockAll ? Enumerable.Range(0, LM.MovementList[CurrentSpellEdit].Motions.Count).Where(x => InsideValues(x)).ToList() : new List<int> { CurrentMotionEdit };
+
+            bool IsVelocityRelated = RestrictionToLock.restriction == Restriction.VelocityInDirection || RestrictionToLock.restriction == Restriction.VelocityThreshold;
+            for (int m = 0; m < ToPreformOn.Count; m++)
             {
-                float Angle = RestrictionManager.RestrictionDictionary[Restriction.HandToHeadAngle].Invoke(null, null, LM.MovementList[CurrentSpellEdit].GetRestrictionInfoAtIndex(CurrentMotionEdit, i));
-                bool Works = Angle > DegreesFromHead.x && Angle < DegreesFromHead.y;
-                Frames.Add(Works);
+                for (int i = IsVelocityRelated ? 1 : 0; i < LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count; i++)//frame
+                {
+                    SingleInfo FirstFrame = IsVelocityRelated ? LM.MovementList[CurrentSpellEdit].GetRestrictionInfoAtIndex(ToPreformOn[m], i - 1) : null;
+                    SingleInfo SecondFrame = LM.MovementList[CurrentSpellEdit].GetRestrictionInfoAtIndex(ToPreformOn[m], i);
+                    float OutputValue = RestrictionManager.RestrictionDictionary[RestrictionToLock.restriction].Invoke(RestrictionToLock, FirstFrame, SecondFrame);
+                    bool Works = OutputValue > CurrentLock.Lock.x && OutputValue < CurrentLock.Lock.y;
+                    Frames.Add(Works);
+                }
+
+                LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].SetRanges(Frames);
             }
 
-            //List = Frames;
-            //Ranges = Motion.ConvertToRange(Frames);
-            LM.MovementList[CurrentSpellEdit].Motions[CurrentMotionEdit].IntoRange(Frames);
-            ///convert to ints
+            bool InsideValues(int Try) { return TrueMotions[GetComponent<MotionEditor>().MotionNum].Any(Val => Try >= Val.x && Try <= Val.y); }
         }
 
-
-        [FoldoutGroup("LockVelocity"), Button(ButtonSizes.Small)]
-        public void VelocityLock()
-        {
-            int CurrentMotionEdit = GetComponent<MotionEditor>().MotionNum;
-            int CurrentSpellEdit = (int)GetComponent<MotionEditor>().MotionType;
-            List<bool> Frames = new List<bool>();
-            for (int i = 1; i < LM.MovementList[CurrentSpellEdit].Motions[CurrentMotionEdit].Infos.Count; i++)//frame
-            {
-                float Velocity = RestrictionManager.RestrictionDictionary[Restriction.VelocityThreshold].Invoke(VelocitySettings, LM.MovementList[CurrentSpellEdit].GetRestrictionInfoAtIndex(CurrentMotionEdit, i - 1), LM.MovementList[CurrentSpellEdit].GetRestrictionInfoAtIndex(CurrentMotionEdit, i));
-                bool Works = Velocity > MinMaxVelocity.x && Velocity < MinMaxVelocity.y && i >= WithinFrames.x && i <= WithinFrames.y;
-                Frames.Add(Works);
-            }
-
-            //List = Frames;
-            //Ranges = Motion.ConvertToRange(Frames);
-            LM.MovementList[CurrentSpellEdit].Motions[CurrentMotionEdit].IntoRange(Frames);
-            ///convert to ints
-        }
         // Update is called once per frame
         void Update()
         {
             //degree assign
             if (!AbleToCallWithButtons)
                 return;
-            if (Input.GetKeyDown(LockAngleButton))
-                AngleLock();
+            if (Input.GetKeyDown(LockButton))
+                PreformLock();
 
-            if (Input.GetKeyDown(LockVelocityButton))
-                VelocityLock();
 
             PastFrameRecorder PR = PastFrameRecorder.instance;
             if (PR.RightInfo.Count < PR.MaxStoreInfo - 1)

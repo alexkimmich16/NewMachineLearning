@@ -67,7 +67,7 @@ public class MatrixManager : SerializedMonoBehaviour
         if (currentDisplay == MatrixDisplay.MotionPlayback)
         {
             MotionPlayback.OnNewFrame += OnNewFrame;
-            MotionEditor.OnChangeMotion += ResetMatrix;
+            //MotionEditor.OnChangeMotion += ResetMatrix;
         }
         else if (currentDisplay == MatrixDisplay.ControllerTesting)
         {

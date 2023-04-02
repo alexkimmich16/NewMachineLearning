@@ -200,15 +200,13 @@ public class MotionEditor : SerializedMonoBehaviour
             {
                 MotionNum += 1;
                 display.Motion = MotionNum;
-                if(OnChangeMotion != null)
-                    OnChangeMotion();
+                OnChangeMotion?.Invoke();
             }
             if (Input.GetKeyDown(KeyCode.DownArrow) && MotionNum > 0)
             {
                 MotionNum -= 1;
                 display.Motion = MotionNum;
-                if (OnChangeMotion != null)
-                    OnChangeMotion();
+                OnChangeMotion?.Invoke();
             }
         }
         

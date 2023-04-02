@@ -12477,7 +12477,7 @@ MonoBehaviour:
     RotZ: 0
     CreationTime: 0
   DisplayLastMatrixStats: []
-  Display: {fileID: 2129805708}
+  Display: {fileID: 0}
   ResetFrames: 1
   FramesWaited: 0
 --- !u!4 &1341764516

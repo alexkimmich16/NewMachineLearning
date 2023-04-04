@@ -69,10 +69,10 @@ namespace RestrictionSystem
         public static bool IsReady() { return instance.RightInfo.Count >= instance.MaxStoreInfo - 1; }
         public void ManageLists()
         {
-            //InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.isTracked, out bool HeadsetActive);
+            InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.isTracked, out bool HeadsetActive);
             InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.isTracked, out bool RightHandActive);
             InputDevices.GetDeviceAtXRNode(XRNode.LeftHand).TryGetFeatureValue(CommonUsages.isTracked, out bool LeftHandActive);
-            UseSides = new List<bool>() { RightHandActive, LeftHandActive };
+            UseSides = new List<bool>() { RightHandActive && HeadsetActive, LeftHandActive && HeadsetActive };
 
             RightInfo.Add(GetControllerInfo(Side.right));
             if (RightInfo.Count > MaxStoreInfo)

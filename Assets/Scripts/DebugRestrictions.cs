@@ -65,7 +65,7 @@ namespace RestrictionSystem
         }
         public void MotionDone(Side side, bool NewState, int Index, int Level)
         {
-            Debug.Log("NewState: " + NewState + "  Index: " + Index);
+            //Debug.Log("NewState: " + NewState + "  Index: " + Index);
         }
 
         void Update()
@@ -104,7 +104,7 @@ namespace RestrictionSystem
             int GetMatTestNum(Side side)
             {
                 List<int> Working = new List<int>();
-                for (int j = 1; j < RestrictionManager.instance.coefficents.RegressionStats.Count + 1; j++)
+                for (int j = 1; j < RestrictionManager.instance.RestrictionSettings.Coefficents.Count + 1; j++)
                 {
                     bool Works = RestrictionManager.instance.MotionWorks(PR.PastFrame(side), PastFrameRecorder.instance.GetControllerInfo(side), (CurrentLearn)j);
                     if (Works)
@@ -115,7 +115,7 @@ namespace RestrictionSystem
                 else if (Working.Count == 1)
                     return Working[0];
                 else
-                    return RestrictionManager.instance.coefficents.RegressionStats.Count + 1;
+                    return RestrictionManager.instance.RestrictionSettings.Coefficents.Count + 1;
 
             }
             /*

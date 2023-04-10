@@ -56,7 +56,8 @@ namespace RestrictionSystem
             {Restriction.HandToHeadAngle, HandToHeadAngle},
         };
         public MotionSettings RestrictionSettings;
-        public Coefficents coefficents;
+        //[Range(0f,1f)]public float CutoffValue = 0.5f;
+        //public Coefficents coefficents;
         
         public void TriggerFrameEvents(List<bool> Sides)
         {
@@ -65,7 +66,7 @@ namespace RestrictionSystem
             {
                 if (Sides[0] == false && Sides[1] == false)
                     return;
-                for (int j = 1; j < coefficents.RegressionStats.Count + 1; j++)
+                for (int j = 1; j < RestrictionSettings.Coefficents.Count + 1; j++)
                 {
                     //Debug.Log("test");
                     bool Works = MotionWorks(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i), (CurrentLearn)j);
@@ -78,20 +79,19 @@ namespace RestrictionSystem
         public bool MotionWorks(SingleInfo Frame1, SingleInfo Frame2, CurrentLearn motionType)
         {
             List<float> TestValues = new List<float>();
-            for (int i = 0; i < RestrictionSettings.MotionRestrictions[0].Restrictions.Count; i++)
+            for (int i = 0; i < RestrictionSettings.MotionRestrictions[(int)motionType - 1].Restrictions.Count; i++)
             {
-                TestValues.Add(RestrictionDictionary[RestrictionSettings.MotionRestrictions[0].Restrictions[i].restriction].Invoke(RestrictionSettings.MotionRestrictions[0].Restrictions[i], Frame1, Frame2));
+                TestValues.Add(RestrictionDictionary[RestrictionSettings.MotionRestrictions[(int)motionType - 1].Restrictions[i].restriction].Invoke(RestrictionSettings.MotionRestrictions[(int)motionType - 1].Restrictions[i], Frame1, Frame2));
             }
 
-            float Total = 0f;
-            for (int j = 0; j < coefficents.RegressionStats[(int)motionType - 1].Coefficents.Count; j++)//each  variable
-                for (int k = 0; k < coefficents.RegressionStats[(int)motionType - 1].Coefficents[j].Degrees.Count; k++)//powers
-                    Total += Mathf.Pow(TestValues[j], k + 1) * coefficents.RegressionStats[(int)motionType - 1].Coefficents[j].Degrees[k];
+            float Total = RestrictionSettings.Coefficents[(int)motionType - 1].Intercept;
+            for (int j = 0; j < RestrictionSettings.Coefficents[(int)motionType - 1].Coefficents.Count; j++)//each  variable
+                for (int k = 0; k < RestrictionSettings.Coefficents[(int)motionType - 1].Coefficents[j].Degrees.Count; k++)//powers
+                    Total += Mathf.Pow(TestValues[j], k + 1) * RestrictionSettings.Coefficents[(int)motionType - 1].Coefficents[j].Degrees[k];
 
-            Total += coefficents.RegressionStats[(int)motionType - 1].Intercept;
             //insert formula
             float GuessValue = 1f / (1f + Mathf.Exp(-Total));
-            bool Guess = GuessValue > 0.5f;
+            bool Guess = GuessValue > RestrictionSettings.CutoffValues[(int)motionType - 1];
             bool Correct = Guess;
             return Correct;
         }

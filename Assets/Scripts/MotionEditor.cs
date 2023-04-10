@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.Linq;
 using Sirenix.OdinInspector;
 public enum EditSide
 {
@@ -42,6 +43,7 @@ public class MotionEditor : SerializedMonoBehaviour
     public TextMeshProUGUI TestValue;
 
     public TextMeshProUGUI MotionTestDisplay;
+    public TextMeshProUGUI CurrentMotionNum;
 
     public Toggle TestAllMotions;
 
@@ -52,6 +54,7 @@ public class MotionEditor : SerializedMonoBehaviour
     public MotionPlayback display;
 
     public Toggle DisplayingRightStats;
+    public Toggle DisplayingVR;
     public TextMeshProUGUI[] CurrentMotionTests;
 
     public void RecieveSliderInfo(float PercentDone, int ETAInSeconds)
@@ -93,8 +96,9 @@ public class MotionEditor : SerializedMonoBehaviour
     {
         if (MotionType == CurrentLearn.Nothing)
             return;
-        float Value = RestrictionSystem.RegressionSystem.instance.GetTestRegressionStats(RestrictionSystem.RestrictionManager.instance.coefficents.RegressionStats[(int)MotionType - 1].GetCoefficents(), (RestrictionSystem.CurrentLearn)(int)MotionType);
-        TestValue.text = "'" + MotionType.ToString() + "' Correct: " + Value.ToString("f5");
+        double[] Coefficents = RestrictionSystem.RestrictionManager.instance.RestrictionSettings.Coefficents[(int)MotionType - 1].GetCoefficents().Select(f => (double)f).ToArray();
+        float Value = RestrictionSystem.RegressionSystem.instance.GetTestRegressionStats(Coefficents, (RestrictionSystem.CurrentLearn)((int)MotionType));
+        TestValue.text = "'" + MotionType.ToString() + "' Correct: " + Value.ToString("f4");
     }
 
     public void ChangeToNextTest()
@@ -140,6 +144,19 @@ public class MotionEditor : SerializedMonoBehaviour
         display.Frame = 0;
         OnChangeMotion?.Invoke();
     }
+
+    public void ChangeMotionNum(int Change)
+    {
+        if (Change == 1 && (MotionNum < LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1) == false)
+            return;
+        if (Change == -1 && (MotionNum > 0) == false)
+            return;
+
+        MotionNum += Change;
+        display.Motion = MotionNum;
+        OnChangeMotion?.Invoke();
+    }
+
     void Update()
     {
         if (Input.GetKey(KeyCode.LeftAlt))
@@ -165,19 +182,47 @@ public class MotionEditor : SerializedMonoBehaviour
             LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Add(Vector2.zero);
 
 
-        if (RestrictionSystem.PastFrameRecorder.IsReady())
+        if (RestrictionSystem.PastFrameRecorder.IsReady() && (DisplayingVR.isOn == false && display.Frame == 0) == false)
         {
-            for (int i = 0; i < CurrentMotionTests.Length; i++)
+            if (MotionType != CurrentLearn.Nothing)
             {
-                RestrictionSystem.SingleRestriction Restriction = RestrictionSystem.RestrictionManager.instance.RestrictionSettings.MotionRestrictions[0].Restrictions[i];
-                RestrictionSystem.Side side = (RestrictionSystem.Side)(DisplayingRightStats.isOn ? 0 : 1);
-                float Value = RestrictionSystem.RestrictionManager.RestrictionDictionary[Restriction.restriction].Invoke(Restriction, RestrictionSystem.PastFrameRecorder.instance.PastFrame(side), RestrictionSystem.PastFrameRecorder.instance.GetControllerInfo(side));
+                for (int i = 0; i < CurrentMotionTests.Length; i++)
+                {
+                    RestrictionSystem.Side side = (RestrictionSystem.Side)(DisplayingRightStats.isOn ? 0 : 1);
+                    RestrictionSystem.SingleInfo Frame1 = DisplayingVR.isOn ? RestrictionSystem.PastFrameRecorder.instance.PastFrame(side) : LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].Infos[display.Frame - 1];
+                    RestrictionSystem.SingleInfo Frame2 = DisplayingVR.isOn ? RestrictionSystem.PastFrameRecorder.instance.GetControllerInfo(side) : LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].Infos[display.Frame];
 
-                CurrentMotionTests[i].text = Restriction.Label + ": " + Value.ToString("f4");
-                CurrentMotionTests[i].color = Graph.instance.Colors[i];
-                //
-                //RM.RestrictionSettings.MotionRestrictions[0].
+                    bool Inside = i < RestrictionSystem.RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionType - 1].Restrictions.Count;
+                    if (Inside)
+                    {
+                        RestrictionSystem.SingleRestriction Restriction = RestrictionSystem.RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionType - 1].Restrictions[i];
+
+
+
+                        float Value = RestrictionSystem.RestrictionManager.RestrictionDictionary[Restriction.restriction].Invoke(Restriction, Frame1, Frame2);
+
+                        CurrentMotionTests[i].text = Restriction.Label + ": " + Value.ToString("f4");
+                        CurrentMotionTests[i].color = Graph.instance.Colors[i];
+                    }
+                    else
+                    {
+                        CurrentMotionTests[i].text = "";
+                    }
+                    
+                    //
+                    //RM.RestrictionSettings.MotionRestrictions[0].
+                }
+                
             }
+            else
+            {
+                for (int i = 0; i < CurrentMotionTests.Length; i++)
+                {
+                    CurrentMotionTests[i].text = "";
+                    CurrentMotionTests[i].color = Graph.instance.Colors[i];
+                }
+            }
+            
         }
         
 
@@ -191,25 +236,20 @@ public class MotionEditor : SerializedMonoBehaviour
         display.PlaybackSpeed += SpeedChangeAdd();
         PlaybackSpeed.text = "Speed: " + display.PlaybackSpeed.ToString("F2");
         Max.text = "Max: " + LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].Infos.Count;
+        CurrentMotionNum.text = "MotionNum: " + MotionNum + "/" + (LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1);
         if(LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Count == 1)
             CurrentValue.text = "X: " + LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].x + "\n" + "Y: " + LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].y;
         else
             CurrentValue.text = "X: " + "\n" + "Y: ";
+
+
         if(Input.GetKey(KeyCode.LeftAlt) == false)
         {
             //Debug.Log("check");
-            if (Input.GetKeyDown(KeyCode.UpArrow) && MotionNum < LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1)
-            {
-                MotionNum += 1;
-                display.Motion = MotionNum;
-                OnChangeMotion?.Invoke();
-            }
-            if (Input.GetKeyDown(KeyCode.DownArrow) && MotionNum > 0)
-            {
-                MotionNum -= 1;
-                display.Motion = MotionNum;
-                OnChangeMotion?.Invoke();
-            }
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+                ChangeMotionNum(1);
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+                ChangeMotionNum(-1);
         }
         
 

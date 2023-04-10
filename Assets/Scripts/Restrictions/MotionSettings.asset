@@ -21,9 +21,133 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Iteration: 2
+  Coefficents:
+  - Intercept: -7.1224265
+    Coefficents:
+    - Degrees:
+      - 1.9951117
+      - -1.2931104
+      - 0.114471294
+    - Degrees:
+      - 3.0182571
+      - -0.38458425
+      - -0.012062728
+    - Degrees:
+      - 10.2367735
+      - 22.355711
+      - -98.31928
+    - Degrees:
+      - -8.79725
+      - 28.631155
+      - -29.547714
+  - Intercept: -42.909466
+    Coefficents:
+    - Degrees:
+      - 0.7264032
+      - -0.05695125
+      - -0.029747602
+    - Degrees:
+      - 4.5198603
+      - -0.61747926
+      - 0.026801854
+    - Degrees:
+      - 0.4151706
+      - -0.0021572968
+      - 0.0000035061255
+    - Degrees:
+      - -20.121181
+      - 40.929237
+      - -28.00843
+    - Degrees:
+      - 39.003834
+      - -18.043882
+      - -0.9276819
+    - Degrees:
+      - -0.025903951
+      - 0.00015383206
+      - -0.000002276696
+    - Degrees:
+      - -0.12634316
+      - 0.0010225198
+      - -0.00000059911645
+  - Intercept: 42.7617
+    Coefficents:
+    - Degrees:
+      - -8.329694
+      - 2.771673
+      - -0.22053957
+    - Degrees:
+      - -20.692848
+      - 6.413774
+      - -0.47158808
+    - Degrees:
+      - -1.7844422
+      - 0.016650217
+      - -0.000045488985
+    - Degrees:
+      - -3.979638
+      - -167.07574
+      - 245.10783
+    - Degrees:
+      - 65.381676
+      - -204.64966
+      - 137.0812
+    - Degrees:
+      - 0.28380123
+      - -0.0068802214
+      - 0.000029571202
   MotionRestrictions:
-  - Motion: AllRelevantRestrictions
+  - Motion: Fireball
+    Restrictions:
+    - Label: VerticleSpeed
+      Active: 1
+      restriction: 0
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 01000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: Horspeed
+      Active: 1
+      restriction: 0
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 0000000002000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: VertHandDist
+      Active: 0
+      restriction: 3
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 01000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: HorHandDist
+      Active: 0
+      restriction: 3
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 0000000002000000
+      ShouldDebug: 0
+      Value: 0
+  - Motion: Flames
     Restrictions:
     - Label: VerticleSpeed
       Active: 1
@@ -109,3 +233,81 @@ MonoBehaviour:
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0
+  - Motion: Block
+    Restrictions:
+    - Label: VerticleSpeed
+      Active: 1
+      restriction: 0
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 01000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: Horspeed
+      Active: 1
+      restriction: 0
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 0000000002000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: HandHeadAngle
+      Active: 0
+      restriction: 4
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 
+      ShouldDebug: 0
+      Value: 0
+    - Label: VertHandDist
+      Active: 0
+      restriction: 3
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 01000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: HorHandDist
+      Active: 0
+      restriction: 3
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 0000000002000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: PalmFaceHead
+      Active: 0
+      restriction: 2
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 1
+      UseLocalHandRot: 1
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: -1, y: 0, z: 0}
+      UseAxisList: 000000000100000002000000
+      ShouldDebug: 0
+      Value: 0
+  CutoffValues:
+  - 0.5
+  - 0.5
+  - 0.5

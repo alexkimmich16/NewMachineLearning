@@ -5,13 +5,36 @@ using Sirenix.OdinInspector;
 using System;
 namespace RestrictionSystem
 {
-    
     [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/MotionSettings", order = 2)]
     public class MotionSettings : SerializedScriptableObject
     {
-        public float Iteration;
-
+        [ListDrawerSettings(ShowIndexLabels = true)] public List<RegressionInfo> Coefficents;
         [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Motion")] public List<MotionRestriction> MotionRestrictions;
+        [ListDrawerSettings(ShowIndexLabels = true), Range(0f,1f)] public List<float> CutoffValues;
+    }
+
+    [System.Serializable]
+    public struct RegressionInfo
+    {
+        public float Intercept;
+        public List<DegreeList> Coefficents;
+
+        [System.Serializable]
+        public struct DegreeList
+        {
+            public List<float> Degrees;
+        }
+
+        public float[] GetCoefficents()
+        {
+            float[] ReturnValue = new float[(Coefficents.Count * Coefficents[0].Degrees.Count) + 1];
+            ReturnValue[0] = Intercept;
+            for (int i = 0; i < Coefficents.Count; i++)
+                for (int j = 0; j < Coefficents[i].Degrees.Count; j++)
+                    ReturnValue[(i * Coefficents[i].Degrees.Count) + j + 1] = Coefficents[i].Degrees[j];
+
+            return ReturnValue;
+        }
     }
     [System.Serializable]
     public class MotionRestriction

@@ -27,6 +27,7 @@ public class SpreadSheet : SerializedMonoBehaviour
     }
 
     //[Button(ButtonSizes.Small)]
+    /*
     public void PrintDegreeStats()
     {
         RegressionSystem RS = gameObject.GetComponent<RegressionSystem>();
@@ -67,7 +68,7 @@ public class SpreadSheet : SerializedMonoBehaviour
 
         OpenExcel();
     }
-
+    */
     /*
     [Button(ButtonSizes.Small)]
     public void GetPos()

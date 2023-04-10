@@ -10,28 +10,38 @@ namespace RestrictionSystem
 {
     public class MotionAssign : SerializedMonoBehaviour
     {
+        public static MotionAssign instance;
+        private void Awake() { instance = this; }
         [System.Serializable]
-        public class RestrictionStorage
+        public struct MotionContainer
         {
-            public SingleRestriction Restriction;
-            public Vector2 Lock;
-        }
-        public struct LockStorage
-        {
-            public string Name;
-            public Vector2 Lock;
+            [ListDrawerSettings(Expanded = false, ShowIndexLabels = true)] public List<RestrictionStorage> Restrictions;
+            [System.Serializable]
+            public struct RestrictionStorage
+            {
+                public string Motion;
+                public List<LockedRestriction> Restrictions;
+                [System.Serializable]
+                public struct LockedRestriction
+                {
+                    //[GUIColor("Orange")] 
+                    public SingleRestriction Restriction;
+                    public Vector2 Lock;
+                }
+            }
         }
 
         [FoldoutGroup("References")] public LearnManager LM;
         [FoldoutGroup("References")] public BruteForce BF;
 
         public bool AbleToCallWithButtons;
-        
         public bool ShouldLockAll;
+
+
+
         [FoldoutGroup("Lock")] public bool RestrictFrameLength = false;
         [FoldoutGroup("Lock"), ShowIf("RestrictFrameLength")] public int2 WithinFrames;
-        [FoldoutGroup("Lock")] public List<RestrictionStorage> Restrictions;
-        [FoldoutGroup("Storage")] public List<LockStorage> LockStorages;
+        [FoldoutGroup("Lock")] public MotionContainer Restrictions;
 
         [FoldoutGroup("Lock")] public KeyCode LockButton;
 
@@ -54,20 +64,20 @@ namespace RestrictionSystem
         {
             int CurrentMotionEdit = GetComponent<MotionEditor>().MotionNum;
             int CurrentSpellEdit = (int)GetComponent<MotionEditor>().MotionType;
-            List<int> ToPreformOn = ShouldLockAll ? Enumerable.Range(0, LM.MovementList[CurrentSpellEdit].Motions.Count).Where(x => InsideValues(x)).ToList() : new List<int> { CurrentMotionEdit };
+            List<int> ToPreformOn = ShouldLockAll ? Enumerable.Range(0, LM.MovementList[CurrentSpellEdit].Motions.Count).Where(x => InsideTrueMotions(x, CurrentSpellEdit - 1)).ToList() : new List<int> { CurrentMotionEdit };
             
             Debug.Log(ToPreformOn.Count);
             for (int m = 0; m < ToPreformOn.Count; m++)//ALL TO PREFORM ON
             {
                 List<bool> WorkingFrames = Enumerable.Repeat(true, LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count).ToList();//ALL RESTRICTIONS
-                for (int n = 0; n < Restrictions.Count; n++)
+                for (int n = 0; n < Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions.Count; n++)
                 {
-                    bool IsVelocityRelated = Restrictions[n].Restriction.restriction == Restriction.VelocityInDirection || Restrictions[n].Restriction.restriction == Restriction.VelocityThreshold;
+                    bool IsVelocityRelated = Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction == Restriction.VelocityInDirection || Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction == Restriction.VelocityThreshold;
                     for (int i = IsVelocityRelated ? 1 : 0; i < LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count; i++)//ALL FRAMES
                     {
                         AllMotions allMotions = LM.MovementList[CurrentSpellEdit];
-                        float OutputValue = RestrictionManager.RestrictionDictionary[Restrictions[n].Restriction.restriction].Invoke(Restrictions[n].Restriction, IsVelocityRelated ? allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i - 1) : null, allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i));
-                        if((OutputValue >= Restrictions[n].Lock.x && OutputValue <= Restrictions[n].Lock.y && InsideFrameLength(i)) == false)
+                        float OutputValue = RestrictionManager.RestrictionDictionary[Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction].Invoke(Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction, IsVelocityRelated ? allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i - 1) : null, allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i));
+                        if((OutputValue >= Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Lock.x && OutputValue <= Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Lock.y && InsideFrameLength(i)) == false)
                             WorkingFrames[i] = false;
                     }
 
@@ -79,9 +89,14 @@ namespace RestrictionSystem
                 LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].SetRanges(WorkingFrames);
             }
 
-            bool InsideValues(int Try) { return TrueMotions[(int)GetComponent<MotionEditor>().MotionType - 1].Any(Val => Try >= Val.x && Try <= Val.y); }
+            
         }
-
+        public bool InsideTrueMotions(int Try, int MotionIndex)
+        {
+            if (MotionIndex < 0 || MotionIndex > TrueMotions.Count)
+                return false;
+            return TrueMotions[MotionIndex].Any(Val => Try >= Val.x && Try <= Val.y);
+        }
         // Update is called once per frame
         void Update()
         {

@@ -43,8 +43,8 @@ public class CurveSystem : SerializedMonoBehaviour
         public EachCurveInfo(List<List<SingleFrameRestrictionValues>> Values) { this.Values = Values; }
     }
 
-    [FoldoutGroup("Curve"), Button(ButtonSizes.Small)]
-    public void ClearCurves() { Start(); }
+    //[FoldoutGroup("Curve"), Button(ButtonSizes.Small)]
+    //public void ClearCurves() { Start(); }
 
     //[FoldoutGroup("Curve"), Button(ButtonSizes.Small)]
     public void RunCurve() { BruteForceCurveState(); }
@@ -58,9 +58,9 @@ public class CurveSystem : SerializedMonoBehaviour
     [FoldoutGroup("Debug")] public float LastPercentCorrect;
     [FoldoutGroup("Debug")] public List<float> OutputIndex;
 
-    [FoldoutGroup("References")] public BruteForce BF;
+    [FoldoutGroup("References")] public RestrictionStatManager RSM;
     [FoldoutGroup("References")] public RestrictionManager RM;
-
+    /*
     private void Start()
     {
         OutputStats = new List<float4>();
@@ -69,7 +69,7 @@ public class CurveSystem : SerializedMonoBehaviour
         ///TryInitializeFrameInfo
         ///
         
-        FrameInfo = BF.GetRestrictionsForMotions(BF.motionGet, RM.RestrictionSettings.MotionRestrictions[(int)BF.motionGet - 1]);
+        FrameInfo = RSM.GetRestrictionsForMotions(BF.motionGet, RM.RestrictionSettings.MotionRestrictions[(int)BF.motionGet - 1]);
         Ranges = BF.GetRangeOfMinMaxValues(FrameInfo); //to be removed eventually
         for (int i = 0; i < FrameInfo.Count; i++)
             for (int j = 0; j < FrameInfo[0].OutputRestrictions.Count; j++)
@@ -107,7 +107,7 @@ public class CurveSystem : SerializedMonoBehaviour
         }
         //SpreadSheet.instance.PrintMotionStats(FrameInfo);
     }
-
+    */
     #region Regression
     public struct FrameStat
     {

@@ -36,6 +36,7 @@ namespace RestrictionSystem
 
         public bool AbleToCallWithButtons;
         public bool ShouldLockAll;
+        public bool ShouldStitch;
 
 
 
@@ -83,19 +84,22 @@ namespace RestrictionSystem
 
                 }
 
-
+                List<Vector2> WorkingRanges = Motion.ConvertToRange(WorkingFrames);
+                if (ShouldStitch)
+                {
+                    Vector2 StitchedVector = new Vector2(WorkingRanges[0].x, WorkingRanges[WorkingRanges.Count - 1].y);
+                    WorkingRanges = new List<Vector2>() { StitchedVector };
+                }
                     
                 //Debug.Log("Index: " + ToPreformOn[m] + "  Frames: " + ToPreformOn);
-                LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].SetRanges(WorkingFrames);
+                LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].SetRanges(WorkingRanges);
             }
-
-            
         }
         public bool InsideTrueMotions(int Try, int MotionIndex)
         {
             if (MotionIndex < 0 || MotionIndex > TrueMotions.Count)
                 return false;
-            return TrueMotions[MotionIndex].Any(Val => Try >= Val.x && Try <= Val.y);
+            return TrueMotions[MotionIndex].Any(Vector => Try >= Vector.x && Try <= Vector.y);
         }
         // Update is called once per frame
         void Update()
@@ -113,6 +117,8 @@ namespace RestrictionSystem
             //270 on right, 90 on left
             //Value = RestrictionManager.RestrictionDictionary[Restriction.HandToHeadAngle].Invoke(null, PR.PastFrame(Side.right), PastFrameRecorder.instance.GetControllerInfo(Side.right));
         }
+
+        
     }
 }
 

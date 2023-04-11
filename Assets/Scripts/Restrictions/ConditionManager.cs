@@ -280,10 +280,13 @@ namespace RestrictionSystem
         [ShowIf("condition", Condition.Restriction)] public SingleRestriction restriction;
         [ShowIf("condition", Condition.Restriction)] public Vector2 Range;
         ///reset on false?
-        [FoldoutGroup("Values")] public List<bool> LastState = new List<bool>() { false, false };
-        [FoldoutGroup("Values")] public List<float> StartTime = new List<float>() { 0f, 0f };
-        [FoldoutGroup("Values")] public List<Vector3> StartPos = new List<Vector3>() { Vector3.zero, Vector3.zero };
-        [FoldoutGroup("Values")] public List<float> Value = new List<float>() { 0, 0 };
+        ///
+        private static bool ShowValues = true;
+
+        [FoldoutGroup("Values"), ShowIf("ShowValues")] public List<bool> LastState = new List<bool>() { false, false };
+        [FoldoutGroup("Values"), ShowIf("ShowValues")] public List<float> StartTime = new List<float>() { 0f, 0f };
+        [FoldoutGroup("Values"), ShowIf("ShowValues")] public List<Vector3> StartPos = new List<Vector3>() { Vector3.zero, Vector3.zero };
+        [FoldoutGroup("Values"), ShowIf("ShowValues")] public List<float> Value = new List<float>() { 0, 0 };
         private bool HasAmount() { return condition == Condition.Distance || condition == Condition.Time || condition == Condition.ConsecutiveFrames ; }
 
 

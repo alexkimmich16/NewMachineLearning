@@ -8,7 +8,6 @@ namespace RestrictionSystem
     public class Conditions : SerializedScriptableObject
     {
         [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Motion")] public List<MotionConditionInfo> MotionConditions;
-
         public void ResetConditions()
         {
             for (int i = 0; i < MotionConditions.Count; i++)

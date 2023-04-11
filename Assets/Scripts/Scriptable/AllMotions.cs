@@ -69,6 +69,10 @@ public class Motion
     {
         TrueRanges = ConvertToRange(Values);
     }
+    public void SetRanges(List<Vector2> Ranges)
+    {
+        TrueRanges = Ranges;
+    }
     public bool AtFrameState(int Frame)
     {
         for (int i = 0; i < TrueRanges.Count; i++)

@@ -30,7 +30,7 @@ MonoBehaviour:
       SingleConditions:
       - Label: 
         condition: 1
-        Amount: 0.06
+        Amount: 0.15
         WaitSide: 0
         restriction:
           Label: 
@@ -76,7 +76,7 @@ MonoBehaviour:
           ShouldDebug: 0
           Value: 0.4684659
         Range: {x: 0.5, y: 0}
-        LastState: 0100
+        LastState: 0000
         StartTime:
         - 0
         - 0

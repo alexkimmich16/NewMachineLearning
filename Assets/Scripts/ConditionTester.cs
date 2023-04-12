@@ -31,7 +31,7 @@ public class ConditionTester : SerializedMonoBehaviour
     {
         MotionConditionInfo Condition = ConditionManager.instance.conditions.MotionConditions[(int)Motion() - 1];
         List<SingleInfo> singleInfos = GetStartEnds(Motion());
-        for (int i = 0; i < singleInfos.Count; i += 2)//for each start and end(for loop +=2 each time)
+        for (int i = 0; i + 1 < singleInfos.Count; i += 2)//for each start and end(for loop +=2 each time)
         {
             SingleInfo Start = singleInfos[i];
             SingleInfo End = singleInfos[i + 1];

@@ -158,7 +158,6 @@ public class CurveSystem : SerializedMonoBehaviour
                         Val.y + ((Correct && !IsHigh) ? 1f : 0f),
                         Val.z + ((!Correct && !IsHigh) ? 1f : 0f));
 
-
                 for (int j = 0; j < Curves.Count; j++)
                 {
                     if (!Correct)

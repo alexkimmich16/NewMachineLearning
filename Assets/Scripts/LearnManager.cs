@@ -269,13 +269,6 @@ public class LearnManager : SerializedMonoBehaviour
 
         //OnNewMotion(CurrentMotion, CurrentSet);
     }
-
-    
-
-    
-    
-    
-    
 }
 
 /*

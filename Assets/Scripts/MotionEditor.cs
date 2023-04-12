@@ -96,8 +96,10 @@ public class MotionEditor : SerializedMonoBehaviour
     {
         if (MotionType == CurrentLearn.Nothing)
             return;
+        List<SingleFrameRestrictionValues> FrameInfo = RestrictionSystem.RestrictionStatManager.instance.GetRestrictionsForMotions((RestrictionSystem.CurrentLearn)MotionType, RestrictionSystem.RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionType - 1]);
         double[] Coefficents = RestrictionSystem.RestrictionManager.instance.RestrictionSettings.Coefficents[(int)MotionType - 1].GetCoefficents().Select(f => (double)f).ToArray();
-        float Value = RestrictionSystem.RegressionSystem.instance.GetTestRegressionStats(Coefficents, (RestrictionSystem.CurrentLearn)((int)MotionType));
+
+        float Value = new LogisticRegression(RestrictionSystem.RegressionSystem.GetInputValues(FrameInfo), RestrictionSystem.RegressionSystem.GetOutputValues(FrameInfo), RestrictionSystem.RegressionSystem.instance.EachTotalDegree, Coefficents).CorrectPercent();
         TestValue.text = "'" + MotionType.ToString() + "' Correct: " + Value.ToString("f4");
     }
 

@@ -72,24 +72,19 @@ namespace RestrictionSystem
                     return;
                 for (int j = 1; j < RestrictionSettings.Coefficents.Count + 1; j++)
                 {
-                    if(j == 1)
+                    //Debug.Log("test");
+
+                    Side side = (Side)i;
+                    CurrentLearn motion = (CurrentLearn)j;
+                    //RestrictionManager.instance.MotionWorks(PR.PastFrame(side), PastFrameRecorder.instance.GetControllerInfo(side), (CurrentLearn)j)
+
+                    bool Works = MotionWorks(PR.PastFrame(side), PR.GetControllerInfo(side), motion);
+
+                    if (Sides[i] == true)
                     {
-                        //Debug.Log("test");
-                        
-                        Side side = (Side)i;
-                        CurrentLearn motion = (CurrentLearn)j;
-                        //RestrictionManager.instance.MotionWorks(PR.PastFrame(side), PastFrameRecorder.instance.GetControllerInfo(side), (CurrentLearn)j)
-
-                        bool Works = MotionWorks(PR.PastFrame(side), PR.GetControllerInfo(side), motion);
-
-                        if (Sides[i] == true)
-                        {
-                            //Debug.Log("I: " + side.ToString() + "  Works: " + Works + " j: " + motion.ToString());
-                            ConditionManager.instance.PassValue(Works, motion, side);
-                        }
+                        //Debug.Log("I: " + side.ToString() + "  Works: " + Works + " j: " + motion.ToString());
+                        ConditionManager.instance.PassValue(Works, motion, side);
                     }
-                    
-                        
                 }
             }
         }

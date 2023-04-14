@@ -24,13 +24,17 @@ MonoBehaviour:
   MotionConditions:
   - Motion: fireball
     conditionType: 0
+    ResetOnMax: 1
     CastLevel: 1
     ConditionLists:
     - StateToActivate: FireWarmup
+      RegressionBased: 0
+      Coefficents:
+      - 0.2
+      CutoffValue: 0
       SingleConditions:
-      - Label: 
+      - Label: distance
         condition: 1
-        Amount: 0.15
         WaitSide: 0
         restriction:
           Label: 
@@ -45,22 +49,20 @@ MonoBehaviour:
           UseAxisList: 
           ShouldDebug: 0
           Value: 0
-        Range: {x: 0, y: 0}
-        LastState: 0000
-        StartTime:
-        - 0
-        - 0
-        StartPos:
-        - {x: 0.15914583, y: -0.20580888, z: 0.49081135}
-        - {x: 0, y: 0, z: 0}
-        Value:
-        - 0
-        - 0
     - StateToActivate: ShootFireball
+      RegressionBased: 1
+      Coefficents:
+      - -5.070752626532226
+      - 50.288225164601045
+      - -87.27125355434805
+      - 53.6272443045024
+      - -54.267070636939934
+      - 179.10454209340514
+      - -181.1753727749183
+      CutoffValue: 0.2
       SingleConditions:
-      - Label: 
-        condition: 2
-        Amount: 0
+      - Label: dist
+        condition: 1
         WaitSide: 0
         restriction:
           Label: dist from head
@@ -75,29 +77,34 @@ MonoBehaviour:
           UseAxisList: 000000000100000002000000
           ShouldDebug: 0
           Value: 0.4684659
-        Range: {x: 0.5, y: 0}
-        LastState: 0000
-        StartTime:
-        - 0
-        - 0
-        StartPos:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        Value:
-        - 0.48890096
-        - 0
-    ProhibitList: []
-    CurrentStage: 0000000000000000
-    WaitingForFalse: 0000
+      - Label: head dist
+        condition: 2
+        WaitSide: 0
+        restriction:
+          Label: HeadDist
+          Active: 0
+          restriction: 3
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 000000000100000002000000
+          ShouldDebug: 0
+          Value: 0
   - Motion: flames
     conditionType: 1
+    ResetOnMax: 0
     CastLevel: 1
     ConditionLists:
     - StateToActivate: 
+      RegressionBased: 0
+      Coefficents: []
+      CutoffValue: 0
       SingleConditions:
       - Label: 
         condition: 4
-        Amount: 0
         WaitSide: 0
         restriction:
           Label: 
@@ -112,52 +119,8 @@ MonoBehaviour:
           UseAxisList: 
           ShouldDebug: 0
           Value: 0
-        Range: {x: 0, y: 0}
-        LastState: 0000
-        StartTime:
-        - 0
-        - 0
-        StartPos:
-        - {x: 0, y: 0, z: 0}
-        - {x: 0, y: 0, z: 0}
-        Value:
-        - 0
-        - 0
-    ProhibitList:
-    - Label: Wait For Multiple False Frames
-      condition: 4
-      Amount: 4
-      WaitSide: 1
-      restriction:
-        Label: 
-        Active: 0
-        restriction: 0
-        checkType: 0
-        OtherDirection: {x: 0, y: 0, z: 0}
-        UseLocalHandPos: 0
-        UseLocalHandRot: 0
-        Offset: {x: 0, y: 0, z: 0}
-        Direction: {x: 0, y: 0, z: 0}
-        UseAxisList: 
-        ShouldDebug: 0
-        Value: 0
-      Range: {x: 0, y: 0}
-      LastState: 0000
-      StartTime:
-      - 0
-      - 0
-      StartPos:
-      - {x: 0, y: 0, z: 0}
-      - {x: 0, y: 0, z: 0}
-      Value:
-      - 0
-      - 0
-    CurrentStage: 0000000000000000
-    WaitingForFalse: 0000
   - Motion: Block
     conditionType: 1
+    ResetOnMax: 0
     CastLevel: 0
     ConditionLists: []
-    ProhibitList: []
-    CurrentStage: 0000000000000000
-    WaitingForFalse: 0000

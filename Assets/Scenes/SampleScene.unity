@@ -2060,7 +2060,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   MotionNum: 2
-  MotionType: 2
+  MotionType: 1
   Setting: 0
   Typing: 0
   input: {fileID: 1167088495}
@@ -2297,10 +2297,11 @@ MonoBehaviour:
   AbleToCallWithButtons: 0
   ShouldLockAll: 1
   ShouldStitch: 1
+  FramesAgo: 1
   RestrictFrameLength: 0
   WithinFrames:
-    x: 10
-    y: 1000
+    x: 0
+    y: 3
   Restrictions:
     Restrictions:
     - Motion: fireball
@@ -2318,7 +2319,7 @@ MonoBehaviour:
           UseAxisList: 000000000100000002000000
           ShouldDebug: 0
           Value: 0
-        Lock: {x: 2, y: 1000}
+        Lock: {x: 1.66, y: 1000}
     - Motion: flame
       Restrictions:
       - Restriction:
@@ -7754,7 +7755,7 @@ MonoBehaviour:
   RightInfo: []
   LeftInfo: []
   MaxStoreInfo: 10
-  FramesAgo: 1
+  FramesAgo: 2
   TestMain:
   - {fileID: 8326458934115850842}
   - {fileID: 8326458933306811055}
@@ -7768,7 +7769,8 @@ MonoBehaviour:
   - {fileID: 1867183570734329135}
   - {fileID: 1867183570487954631}
   Cam: {fileID: 1867183570494687147}
-  UseSides: d1
+  UseSides: d101
+  OverrideSides: 1
 --- !u!114 &944444324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7928,11 +7930,31 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
-  SpawnPrefab: {fileID: 0}
-  SpawnedObject: {fileID: 0}
+    SerializationNodes:
+    - Name: TestInputs
+      Entry: 7
+      Data: 0|System.Double[][], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  SpawnPrefab:
+  - {fileID: 2237597088440075187, guid: 822cab8ee035a7749ae55d32b050694a, type: 3}
+  - {fileID: 2237597088440075187, guid: 373da14df8fcac94cb7fa8beac642ec0, type: 3}
   KillTime: 2
-  TestInfo: []
+  FramesPastFinal: 4
+  Degrees: 3
+  EarlyAllow: 4
+  LateAllow: 4
+  Progressive: 0
+  EachProgressiveAdd: 2
+  SequenceTry: 1
+  TestOutputs: []
 --- !u!1 &947798665
 GameObject:
   m_ObjectHideFlags: 0
@@ -10120,7 +10142,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &1261014422
 GameObject:
   m_ObjectHideFlags: 0
@@ -18951,7 +18973,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &2015606909
 GameObject:
   m_ObjectHideFlags: 0

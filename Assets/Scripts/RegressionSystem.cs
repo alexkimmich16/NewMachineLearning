@@ -48,10 +48,12 @@ namespace RestrictionSystem
 
         public delegate void DoPreformRegression();
         public static event DoPreformRegression OnPreformRegression;
+
         public void OriginRecalculate()
         {
             //change true/false motions
             MotionAssign.instance.PreformLock();
+            ConditionTester.instance.CalculateCoefficents();
             //recalculate
             PreformRegression((CurrentLearn)MotionEditor.instance.MotionType);
         }
@@ -68,14 +70,11 @@ namespace RestrictionSystem
         {
             List<SingleFrameRestrictionValues> FrameInfo = RestrictionStatManager.instance.GetRestrictionsForMotions(Motion, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)Motion - 1]);
 
-            
-
-            
-
             LogisticRegression Regression = new LogisticRegression(GetInputValues(FrameInfo), GetOutputValues(FrameInfo), EachTotalDegree);
+
             double[] Coefficents = Regression.Coefficents;
             int Iterations = Regression.Iterations;
-            float CorrectPercent = Regression.CorrectPercent() * 100f;
+            float CorrectPercent = Regression.CorrectPercent();
 
 
             Debug.Log((Motion).ToString() + " is " + CorrectPercent + "% Correct at iterations: " + Iterations);
@@ -100,61 +99,18 @@ namespace RestrictionSystem
         public static double[][] GetInputValues(List<SingleFrameRestrictionValues> FrameInfo)//[framenum][values]
         {
             double[][] InputValues = new double[FrameInfo.Count][];//[framenum][values]
-            int EachTotalDegree = RegressionSystem.instance.EachTotalDegree;
             for (int i = 0; i < FrameInfo.Count; i++)
-            {
-                InputValues[i] = new double[(FrameInfo[0].OutputRestrictions.Count * EachTotalDegree) + 1];
-                for (int j = 0; j < FrameInfo[i].OutputRestrictions.Count; j++)
-                {
-                    InputValues[i][0] = 1d;
-                    for (int k = 0; k < EachTotalDegree; k++)
-                    {
-                        double Value = Math.Pow(FrameInfo[i].OutputRestrictions[j], k + 1);
-                        //if (Value < SmallestInput)
-                        //Value = SmallestInput;
-                        InputValues[i][(j * EachTotalDegree) + 1 + k] = Value;
-                    }
-
-                }
-            }
+                InputValues[i] = FrameInfo[i].OutputRestrictions.Select(x => (double)x).ToArray();
             return InputValues;
         }
         public static double[] GetOutputValues(List<SingleFrameRestrictionValues> FrameInfo)
         {
             double[] Output = new double[FrameInfo.Count];
             for (int i = 0; i < Output.Length; i++)
+            {
                 Output[i] = FrameInfo[i].AtMotionState ? 1d : 0d;
+            }
             return Output;
         }
-        
-        public float GetTestRegressionStats(double[] Coefficents, CurrentLearn motion)
-        {
-            float2 Guesses = new float2(0f, 0f);
-            float2 FalseTrue = new float2(0f, 0f);
-
-            List<SingleFrameRestrictionValues> FrameInfo = RestrictionStatManager.instance.GetRestrictionsForMotions(motion, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)motion - 1]);
-            RestrictionValues = FrameInfo;
-            for (int i = 0; i < FrameInfo.Count; i++)
-            {
-                double Total = Coefficents[0];
-                for (int j = 0; j < FrameInfo[0].OutputRestrictions.Count; j++)//each  variable
-                    for (int k = 0; k < EachTotalDegree; k++)//powers
-                        Total += Mathf.Pow(FrameInfo[i].OutputRestrictions[j], k + 1) * Coefficents[(j * EachTotalDegree) + k + 1];
-
-                //insert formula
-                double GuessValue = 1f / (1f + Math.Exp(-Total));
-                bool Guess = GuessValue > RestrictionManager.instance.RestrictionSettings.CutoffValues[(int)motion - 1];
-                bool Truth = FrameInfo[i].AtMotionState;
-                bool Correct = Guess == Truth;
-                FalseTrue = new float2(FalseTrue.x + (!Truth ? 1f : 0f), FalseTrue.y + (Truth ? 1f : 0f));
-                Guesses = new float2(Guesses.x + (!Correct ? 1f : 0f), Guesses.y + (Correct ? 1f : 0f));
-            }
-            //Debug.Log(RestrictionManager.instance.RestrictionSettings.Coefficents[1].Coefficents[0].Degrees[0]);
-            return Guesses.y / (Guesses.x + Guesses.y) * 100f;
-        }
-        
     }
-
-
-    
 }

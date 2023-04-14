@@ -4,6 +4,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using System;
 using System.Linq;
+using Unity.Mathematics;
 namespace RestrictionSystem
 {
     public enum Restriction
@@ -58,31 +59,71 @@ namespace RestrictionSystem
         public MotionSettings RestrictionSettings;
         //[Range(0f,1f)]public float CutoffValue = 0.5f;
         //public Coefficents coefficents;
+
+
         
         public void TriggerFrameEvents(List<bool> Sides)
         {
             PastFrameRecorder PR = PastFrameRecorder.instance;
+            
             for (int i = 0; i < 2; i++)
             {
                 if (Sides[0] == false && Sides[1] == false)
                     return;
                 for (int j = 1; j < RestrictionSettings.Coefficents.Count + 1; j++)
                 {
-                    //Debug.Log("test");
-                    bool Works = MotionWorks(PR.PastFrame((Side)i), PastFrameRecorder.instance.GetControllerInfo((Side)i), (CurrentLearn)j);
-                    if (Sides[i] == true)
-                        ConditionManager.instance.PassValue(Works, (CurrentLearn)j, (Side)i);
+                    if(j == 1)
+                    {
+                        //Debug.Log("test");
+                        
+                        Side side = (Side)i;
+                        CurrentLearn motion = (CurrentLearn)j;
+                        //RestrictionManager.instance.MotionWorks(PR.PastFrame(side), PastFrameRecorder.instance.GetControllerInfo(side), (CurrentLearn)j)
+
+                        bool Works = MotionWorks(PR.PastFrame(side), PR.GetControllerInfo(side), motion);
+
+                        if (Sides[i] == true)
+                        {
+                            //Debug.Log("I: " + side.ToString() + "  Works: " + Works + " j: " + motion.ToString());
+                            ConditionManager.instance.PassValue(Works, motion, side);
+                        }
+                    }
+                    
+                        
                 }
             }
         }
+        public bool TestCondition(SingleSequenceState SequenceCondition, SingleInfo Start, SingleInfo End)//onyl call if motion works
+        {
+            int Degrees = (SequenceCondition.Coefficents.Length - 1) / SequenceCondition.SingleConditions.Count;
+            double[] RawInputs = new double[SequenceCondition.SingleConditions.Count];
+            for (int i = 0; i < SequenceCondition.SingleConditions.Count; i++)
+            {
+                RawInputs[i] = ConditionManager.ConditionDictionary[SequenceCondition.SingleConditions[i].condition].Invoke(SequenceCondition.SingleConditions[i].restriction, Start, End);
+            }
+            if (SequenceCondition.RegressionBased)
+            {
+                double Total = SequenceCondition.Coefficents[0];
+                for (int j = 0; j < RawInputs.Length; j++)//each  variable
+                    for (int k = 0; k < Degrees; k++)
+                        Total += math.pow(RawInputs[j], k + 1) * SequenceCondition.Coefficents[(j * Degrees) + k + 1];
+                return 1f / (1f + Math.Exp(-Total)) > SequenceCondition.CutoffValue;
+            }
+            else
+            {
+                return Enumerable.Range(0, RawInputs.Length).All(x => RawInputs[x] > SequenceCondition.Coefficents[x]);
+            }
 
+        }
         public bool MotionWorks(SingleInfo Frame1, SingleInfo Frame2, CurrentLearn motionType)
         {
             List<float> TestValues = new List<float>();
-            for (int i = 0; i < RestrictionSettings.MotionRestrictions[(int)motionType - 1].Restrictions.Count; i++)
+            MotionRestriction restriction = RestrictionSettings.MotionRestrictions[(int)motionType - 1];
+            for (int i = 0; i < restriction.Restrictions.Count; i++)
             {
-                TestValues.Add(RestrictionDictionary[RestrictionSettings.MotionRestrictions[(int)motionType - 1].Restrictions[i].restriction].Invoke(RestrictionSettings.MotionRestrictions[(int)motionType - 1].Restrictions[i], Frame1, Frame2));
+                TestValues.Add(RestrictionDictionary[restriction.Restrictions[i].restriction].Invoke(restriction.Restrictions[i], Frame1, Frame2));
             }
+            //bool Works = new LogisticRegression().Works(RestrictionSettings.Coefficents[(int)motionType - 1].GetDoubleCoefficents(), TestValues.Select(f => (double)f).ToArray());
 
             float Total = RestrictionSettings.Coefficents[(int)motionType - 1].Intercept;
             for (int j = 0; j < RestrictionSettings.Coefficents[(int)motionType - 1].Coefficents.Count; j++)//each  variable
@@ -91,8 +132,9 @@ namespace RestrictionSystem
 
             //insert formula
             float GuessValue = 1f / (1f + Mathf.Exp(-Total));
-            bool Guess = GuessValue > RestrictionSettings.CutoffValues[(int)motionType - 1];
+            bool Guess = GuessValue > 0.5f;
             bool Correct = Guess;
+            //Debug.Log("IsCorrect: " + Correct);
             return Correct;
         }
         public static Vector3 EliminateAxis(List<Axis> AllAxis, Vector3 Value) { return new Vector3(AllAxis.Contains(Axis.X) ? Value.x : 0, AllAxis.Contains(Axis.Y) ? Value.y : 0, AllAxis.Contains(Axis.Z) ? Value.z : 0); }

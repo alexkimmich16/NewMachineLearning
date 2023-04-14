@@ -10,7 +10,6 @@ namespace RestrictionSystem
         Time = 0,
         Distance = 1,
         Restriction = 2,
-        ConsistantDirection = 3,
         ConsecutiveFrames = 4,
     }
     public delegate bool ConditionWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side);
@@ -18,117 +17,119 @@ namespace RestrictionSystem
 
     public class ConditionManager : SerializedMonoBehaviour
     {
-        /// <summary>
-        /// acts to allow both probiting of true/false, as well as option for spell sequences
-        /// </summary>
-        
         public static ConditionManager instance;
         private void Awake() { instance = this; }
         public Conditions conditions;
 
-        public static Dictionary<Condition, ConditionWorksAndAdd> ConditionDictionary = new Dictionary<Condition, ConditionWorksAndAdd>(){
-            {Condition.Time, TimeWorksAndAdd},
-            {Condition.Distance, DistanceWorksAndAdd},
-            {Condition.Restriction, RestrictionWorksAndAdd},
-            {Condition.ConsistantDirection, StraightWorksAndAdd},
-            {Condition.ConsecutiveFrames, ConsecutiveWorksAndAdd},
-        };
-        public static bool TimeWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side)
-        {
-            if (Condition.LastState[(int)side] == false && NewState == true)
-                Condition.StartTime[(int)side] = Time.realtimeSinceStartup;
-            else if (NewState == true && Condition.LastState[(int)side] == true)
-            {
-                Condition.Value[(int)side] = Time.realtimeSinceStartup - Condition.StartTime[(int)side];
-                return Condition.Value[(int)side] > Condition.Amount;
-            }
-            return false;
-        }
-        public static bool RestrictionWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side)
-        {
-            if (NewState == true && Condition.LastState[(int)side] == true)
-            {
-                RestrictionTest RestrictionType = RestrictionManager.RestrictionDictionary[Condition.restriction.restriction];
-                float RawRestrictionValue = RestrictionType.Invoke(Condition.restriction, CurrentFrame, PastFrame);
-                Condition.Value[(int)side] = RawRestrictionValue;
-                return RawRestrictionValue > Condition.Range.x && RawRestrictionValue < Condition.Range.y;
-            }
-            return false;
-        }
-        public static bool DistanceWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side)
-        {
-            if (Condition.LastState[(int)side] == false && NewState == true)
-                Condition.StartPos[(int)side] = CurrentFrame.HandPos;
-            else if (NewState == true && Condition.LastState[(int)side] == true)
-            {
-                Condition.Value[(int)side] = Vector3.Distance(Condition.StartPos[(int)side], CurrentFrame.HandPos);
-                return Condition.Value[(int)side] > Condition.Amount;
-                //Debug.Log("ongoing: " + (Vector3.Distance(Condition.StartPos, CurrentFrame.HandPos) > Condition.Amount));
-            }
-            return false;
-        }
-        public static bool StraightWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side)
-        {
-            if (Condition.LastState[(int)side] == false && NewState == true)
-                Condition.StartPos[(int)side] = CurrentFrame.HandPos;
-            else if (NewState == true && Condition.LastState[(int)side] == true)
-            {
-                //end rotation is similar to start rotation
-                //end position is parrelel to start rotation's forward
-                ///two seperate??
+        //[TableMatrix(DrawElementMethod = "DrawElement")]
+        //[TableMatrix(HorizontalTitle = "Condition Stats")]
+        private ConditionProgress[,] ConditionStats = new ConditionProgress[2, 0];
 
-
-                Condition.Value[(int)side] = Vector3.Distance(Condition.StartPos[(int)side], CurrentFrame.HandPos);
-                return Condition.Value[(int)side] > Condition.Amount;
-                //Debug.Log("ongoing: " + (Vector3.Distance(Condition.StartPos, CurrentFrame.HandPos) > Condition.Amount));
-            }
-            return false;
-        }
-        public static bool ConsecutiveWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side)///may require time instead of frames in future
+        [System.Serializable]
+        public class ConditionProgress//represents all sequences within motion
         {
-            if (Condition.LastState[(int)side] == Condition.WaitSide)
-                Condition.StartTime[(int)side] = 1f;
+            public bool Active() { return StartInfo != null; }
+            public int SequenceState;
+            public SingleInfo StartInfo;
 
-            if (Condition.StartTime[(int)side] == 0f)
-                return true;
-
-            if (Condition.LastState[(int)side] == Condition.WaitSide)
+            public void Reset()
             {
-                Condition.Value[(int)side] = 0f;
-                return true;
+                SequenceState = 0;
+                StartInfo = null;
             }
-            else
-            {
-                Condition.Value[(int)side] += 1f;
-            }
-                
-
-            if (Condition.Value[(int)side] >= Condition.Amount)
-            {
-                Condition.Value[(int)side] = 0f;
-                Condition.StartTime[(int)side] = 0f;
-                return true;
-            }
-            return false;
-        }
-        public void PassValue(bool State, CurrentLearn Motion, Side side)
-        {
-            //Debug.Log("Pass: " + State);
-            conditions.MotionConditions[(int)Motion - 1].PassValueToAll(State, side);
         }
 
         private void Start()
         {
-            conditions.ResetConditions();
+            ConditionStats = new ConditionProgress[2, conditions.MotionConditions.Count];
+            for (int i = 0; i < 2; i++)
+                for (int j = 0; j < conditions.MotionConditions.Count; j++)
+                    ConditionStats[i, j] = new ConditionProgress();
+        }
+
+        public static Dictionary<Condition, RestrictionTest> ConditionDictionary = new Dictionary<Condition, RestrictionTest>(){
+            {Condition.Time, Time},
+            {Condition.Distance, Distance},
+            {Condition.Restriction, RestrictionWorksAndAdd},
+            {Condition.ConsecutiveFrames, ConsecutiveWorksAndAdd},
+        };
+        public static float Time(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return frame2.SpawnTime - frame1.SpawnTime; }
+
+        public static float Distance(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return Vector3.Distance(frame1.HandPos, frame2.HandPos); }
+        public static float RestrictionWorksAndAdd(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return RestrictionManager.RestrictionDictionary[restriction.restriction].Invoke(restriction, frame2, frame1); }
+        public static float ConsecutiveWorksAndAdd(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return 1f; }
+        public void PassValue(bool State, CurrentLearn Motion, Side side)
+        {
+            ConditionProgress Holder = ConditionStats[(int)side, (int)Motion - 1];
+            MotionConditionInfo Condition = conditions.MotionConditions[(int)Motion - 1];
+            if (State != Holder.Active())
+            {
+                if(Condition.conditionType == ConditionType.Prohibit)
+                {
+                    Condition.DoEvent(side, State, 0, Condition.CastLevel);
+                    Holder.StartInfo = State ? PastFrameRecorder.instance.GetControllerInfo(side) : null;
+                }
+
+                if (Condition.conditionType == ConditionType.Sequence)
+                {
+                    if (State == true)
+                    {
+                        //Debug.Log("Create");
+                        Holder.StartInfo = PastFrameRecorder.instance.GetControllerInfo(side);
+                    }
+                    else
+                    {
+                        SequenceReset();
+                    }
+                    
+                }
+            }
+
+
+            //if(Motion == CurrentLearn.Fireball)
+                //Debug.Log("Motion: " + Motion + " State: " + Holder.Active() + "  State: " + State);
+            if (Holder.Active() && Condition.conditionType == ConditionType.Sequence)
+            {
+                //Debug.Log("IsCounting: " + Motion);
+                bool Works = RestrictionManager.instance.TestCondition(Condition.ConditionLists[Holder.SequenceState], Holder.StartInfo, PastFrameRecorder.instance.GetControllerInfo(side));
+                if (Works)
+                {
+                    Condition.DoEvent(side, true, Holder.SequenceState, Condition.CastLevel);
+                    Holder.SequenceState += 1;
+                    //Debug.Log("next, now is: " + Holder.SequenceState);
+                    if (Holder.SequenceState > Condition.ConditionLists.Count - 1)
+                    {
+                        SequenceReset();
+                    }
+                }
+            }
+
+            ConditionStats[(int)side, (int)Motion - 1] = Holder;
+            void SequenceReset()
+            {
+               // Debug.Log("Reset");
+                Holder.Reset();
+                for (int i = 0; i < Condition.ConditionLists.Count; i++)
+                {
+                    Condition.DoEvent(side, false, i, Condition.CastLevel);
+                }
+            }
+
         }
     }
-
-
-
     public enum ConditionType
     {
         Sequence = 0,
         Prohibit = 1,
+    }
+    [Serializable]
+    public class SingleSequenceState
+    {
+        public string StateToActivate;
+        public bool RegressionBased;
+        public double[] Coefficents;
+        public float CutoffValue;
+        [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Label")] public List<SingleConditionInfo> SingleConditions;
     }
     [Serializable]
     public class MotionConditionInfo
@@ -136,54 +137,14 @@ namespace RestrictionSystem
         public string Motion;
         public ConditionType conditionType;
         public static bool ShowRuntime = false;
+        public bool ResetOnMax;
         public int CastLevel;
         
 
-        [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "StateToActivate"), ShowIf("conditionType", ConditionType.Sequence)] public List<ConditionList> ConditionLists;
-        [ListDrawerSettings(ShowIndexLabels = true), ShowIf("conditionType", ConditionType.Prohibit)] public List<SingleConditionInfo> ProhibitList;
+        [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "StateToActivate"), ShowIf("conditionType", ConditionType.Sequence)] public List<SingleSequenceState> ConditionLists;
         public event OnNewMotionState OnNewState;
-
-        [FoldoutGroup("Runtime"), ShowIf("ShowRuntime")] public List<int> CurrentStage = new List<int>() { 0, 0 };
-        [FoldoutGroup("Runtime"), ShowIf("ShowRuntime")] public List<bool> WaitingForFalse = new List<bool>() { false, false };
-        
-        [Serializable]
-        public class ConditionList
-        {
-            public string StateToActivate;
-            [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Label")] public List<SingleConditionInfo> SingleConditions;
-        }
-
-        public void ResetAll(Side side)
-        {
-            //Debug.Log("")
-            if (ConditionLists.Count != 0)
-            {
-                for (int i = 0; i < CurrentStage[(int)side]; i++)
-                {
-                    OnNewState?.Invoke(side, false, i, CastLevel);
-                    for (int j = 0; j < ConditionLists[i].SingleConditions.Count; j++)//all conditions that have passed
-                    {
-                        SingleConditionInfo info = ConditionLists[i].SingleConditions[j];
-                        //if (info.LastState[(int)side] == true)
-
-                        info.Value[(int)side] = 0f;
-                        info.LastState[(int)side] = false;
-                    }
-                }
-            }
-            else if (WaitingForFalse[(int)side] == true)
-            {
-                OnNewState?.Invoke(side, false, 0, CastLevel);
-            }
-            WaitingForFalse[(int)side] = false;
-            //Debug.Log("CurrentStage: " + CurrentStage[(int)side]);
-
-            CurrentStage[(int)side] = 0;
-        }
-
-
-
-
+        public void DoEvent(Side side, bool Newstate, int Index, int Level) { OnNewState?.Invoke(side, Newstate, Index, Level); }
+        /*
         public void PassValueToAll(bool State, Side side)
         {
             if ((State == false || WaitingForFalse[(int)side] == true) && conditionType == ConditionType.Sequence)
@@ -263,6 +224,7 @@ namespace RestrictionSystem
             
             
         }
+        */
     }
     [Serializable]
     public class SingleConditionInfo
@@ -275,20 +237,16 @@ namespace RestrictionSystem
         public string Label;
         //public bool Active;
         public Condition condition;
-        [ShowIf("HasAmount")] public float Amount;
+        //public double[] Coefficents;
         [ShowIf("condition", Condition.ConsecutiveFrames)] public bool WaitSide;
         [ShowIf("condition", Condition.Restriction)] public SingleRestriction restriction;
-        [ShowIf("condition", Condition.Restriction)] public Vector2 Range;
         ///reset on false?
         ///
-        private static bool ShowValues = true;
+        //private static bool ShowValues = true;
 
-        [FoldoutGroup("Values"), ShowIf("ShowValues")] public List<bool> LastState = new List<bool>() { false, false };
-        [FoldoutGroup("Values"), ShowIf("ShowValues")] public List<float> StartTime = new List<float>() { 0f, 0f };
-        [FoldoutGroup("Values"), ShowIf("ShowValues")] public List<Vector3> StartPos = new List<Vector3>() { Vector3.zero, Vector3.zero };
-        [FoldoutGroup("Values"), ShowIf("ShowValues")] public List<float> Value = new List<float>() { 0, 0 };
-        private bool HasAmount() { return condition == Condition.Distance || condition == Condition.Time || condition == Condition.ConsecutiveFrames ; }
-
-
+        //[FoldoutGroup("Values"), ShowIf("ShowValues")] public List<bool> LastState = new List<bool>() { false, false };
+        //[FoldoutGroup("Values"), ShowIf("ShowValues")] public List<float> StartTime = new List<float>() { 0f, 0f };
+        //[FoldoutGroup("Values"), ShowIf("ShowValues")] public List<Vector3> StartPos = new List<Vector3>() { Vector3.zero, Vector3.zero };
+        //[FoldoutGroup("Values"), ShowIf("ShowValues")] public List<float> Value = new List<float>() { 0, 0 };
     }
 }

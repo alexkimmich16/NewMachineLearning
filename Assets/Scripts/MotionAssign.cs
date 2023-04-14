@@ -38,6 +38,8 @@ namespace RestrictionSystem
         public bool ShouldLockAll;
         public bool ShouldStitch;
 
+        public int FramesAgo;
+
 
 
         [FoldoutGroup("Lock")] public bool RestrictFrameLength = false;
@@ -71,13 +73,14 @@ namespace RestrictionSystem
             for (int m = 0; m < ToPreformOn.Count; m++)//ALL TO PREFORM ON
             {
                 List<bool> WorkingFrames = Enumerable.Repeat(true, LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count).ToList();//ALL RESTRICTIONS
+                WorkingFrames[0] = false;
                 for (int n = 0; n < Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions.Count; n++)
                 {
                     bool IsVelocityRelated = Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction == Restriction.VelocityInDirection || Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction == Restriction.VelocityThreshold;
-                    for (int i = IsVelocityRelated ? 1 : 0; i < LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count; i++)//ALL FRAMES
+                    for (int i = IsVelocityRelated ? FramesAgo : 0; i < LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count; i++)//ALL FRAMES
                     {
                         AllMotions allMotions = LM.MovementList[CurrentSpellEdit];
-                        float OutputValue = RestrictionManager.RestrictionDictionary[Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction].Invoke(Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction, IsVelocityRelated ? allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i - 1) : null, allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i));
+                        float OutputValue = RestrictionManager.RestrictionDictionary[Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction].Invoke(Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction, IsVelocityRelated ? allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i - FramesAgo) : null, allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i));
                         if((OutputValue >= Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Lock.x && OutputValue <= Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Lock.y && InsideFrameLength(i)) == false)
                             WorkingFrames[i] = false;
                     }

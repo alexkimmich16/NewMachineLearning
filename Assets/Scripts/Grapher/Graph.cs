@@ -104,7 +104,6 @@ public class Graph : MonoBehaviour
                 float XInput = Mathf.Lerp(MinMax.x, MinMax.y, (float)x / width);
                 float Value = Solve(XInput, Degrees.Degrees.ToArray());
 
-
                 float Inverse = Mathf.InverseLerp(GraphMinMax.x, GraphMinMax.y, Value);
                 int GridY = Mathf.RoundToInt(Inverse * height);
                 GridY = Mathf.Clamp(GridY, 0, height);
@@ -115,18 +114,13 @@ public class Graph : MonoBehaviour
                     TextureMap.SetPixel(x, GridY, Colors[m]);
                     Overrides[x].Add(GridY);
                 }
-
             }
-
         }
-            
-
         TextureMap.Apply();
 
         mySprite = Sprite.Create(TextureMap, new Rect(0.0f, 0.0f, TextureMap.width, TextureMap.height), new Vector2(0.5f, 0.5f), 1000.0f);
         Display().sprite = mySprite;
 
-        
 
         float Solve(float Input, float[] Degrees)
         {

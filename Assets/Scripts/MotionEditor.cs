@@ -190,7 +190,7 @@ public class MotionEditor : SerializedMonoBehaviour
             {
                 for (int i = 0; i < CurrentMotionTests.Length; i++)
                 {
-                    RestrictionSystem.Side side = (RestrictionSystem.Side)(DisplayingRightStats.isOn ? 0 : 1);
+                    RestrictionSystem.Side side = DisplayingRightStats.isOn ? RestrictionSystem.Side.right : RestrictionSystem.Side.left;
                     RestrictionSystem.SingleInfo Frame1 = DisplayingVR.isOn ? RestrictionSystem.PastFrameRecorder.instance.PastFrame(side) : LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].Infos[display.Frame - 1];
                     RestrictionSystem.SingleInfo Frame2 = DisplayingVR.isOn ? RestrictionSystem.PastFrameRecorder.instance.GetControllerInfo(side) : LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].Infos[display.Frame];
 

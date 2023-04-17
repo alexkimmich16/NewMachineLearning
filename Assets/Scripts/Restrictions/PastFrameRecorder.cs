@@ -26,6 +26,7 @@ namespace RestrictionSystem
 
         public bool OverrideSides;
 
+        public float XAdd;
         public SingleInfo GetControllerInfo(Side side)
         {
             ResetStats();
@@ -42,6 +43,9 @@ namespace RestrictionSystem
             {
                 TestMain[(int)side].localScale = new Vector3(-1, 1, 1);
                 Vector3 Rot = TestCam[(int)side].eulerAngles;
+
+                YDifference = YDifference+ XAdd;
+
                 TestCam[(int)side].eulerAngles = new Vector3(Rot.x, -Rot.y, -Rot.z);
             }
             Vector3 UncenteredHandPos = TestHand[(int)side].position;

@@ -1985,7 +1985,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &252501361
 GameObject:
   m_ObjectHideFlags: 0
@@ -3263,14 +3263,14 @@ MonoBehaviour:
     y: 50
   Colors:
   - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 0.12212658, b: 1, a: 1}
+  - {r: 0, g: 0.9297383, b: 1, a: 1}
   - {r: 0, g: 1, b: 0.13512659, a: 1}
   - {r: 1, g: 0.9794383, b: 0, a: 1}
+  - {r: 1, g: 0.5913999, b: 0, a: 1}
   - {r: 0.80379343, g: 0, b: 1, a: 1}
-  - {r: 0, g: 0.9045601, b: 1, a: 1}
-  - {r: 1, g: 0.49185836, b: 0, a: 1}
   - {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 1}
   - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0.9045601, b: 1, a: 1}
   TextDisplay:
   - {fileID: 1467204378}
   - {fileID: 1229143432}
@@ -3291,6 +3291,12 @@ MonoBehaviour:
   - {fileID: 1122186658}
   - {fileID: 2051499655}
   - {fileID: 22020803}
+  ActiveColor: {r: 0, g: 0, b: 0, a: 1}
+  PreviousGridColumns: 
+  MaxMins: []
+  CurrentValues: []
+  lerp: []
+  AllowCurrentDisplay: 1
 --- !u!1 &323994031
 GameObject:
   m_ObjectHideFlags: 0
@@ -7771,6 +7777,7 @@ MonoBehaviour:
   Cam: {fileID: 1867183570494687147}
   UseSides: d101
   OverrideSides: 1
+  XAdd: 90
 --- !u!114 &944444324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20639,7 +20646,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1867183571767291757}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e39d63902bfe6fa4889d7579c02b7f4e, type: 3}
   m_Name: 
@@ -20662,7 +20669,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1867183571767291757}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03a5df2202a8b96488c744be3bd0c33e, type: 3}
   m_Name: 

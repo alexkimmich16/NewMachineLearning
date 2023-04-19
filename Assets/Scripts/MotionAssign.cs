@@ -51,10 +51,10 @@ namespace RestrictionSystem
         public bool InsideFrameLength(int Frame) { return RestrictFrameLength ? Frame >= WithinFrames.x && Frame <= WithinFrames.y : true; }
 
         [FoldoutGroup("AllTrueMotions")] public List<List<Vector2>> TrueMotions;
-        [FoldoutGroup("AllTrueMotions")] public CurrentLearn TrueMotionEdit;
         [FoldoutGroup("AllTrueMotions"), Button(ButtonSizes.Small)]
         public void GetTrueMotions()
         {
+            CurrentLearn TrueMotionEdit = (CurrentLearn)MotionEditor.instance.MotionType;
             List<bool> MotionStates = new List<bool>();
             for (int i = 0; i < LM.MovementList[(int)TrueMotionEdit].Motions.Count; i++)
                 MotionStates.Add(Enumerable.Range(0, LM.MovementList[(int)TrueMotionEdit].Motions[i].Infos.Count).Any(x => LM.MovementList[(int)TrueMotionEdit].Motions[i].AtFrameState(x)));
@@ -80,6 +80,7 @@ namespace RestrictionSystem
                     for (int i = IsVelocityRelated ? FramesAgo : 0; i < LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count; i++)//ALL FRAMES
                     {
                         AllMotions allMotions = LM.MovementList[CurrentSpellEdit];
+
                         float OutputValue = RestrictionManager.RestrictionDictionary[Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction].Invoke(Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction, IsVelocityRelated ? allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i - FramesAgo) : null, allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i));
                         if((OutputValue >= Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Lock.x && OutputValue <= Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Lock.y && InsideFrameLength(i)) == false)
                             WorkingFrames[i] = false;

@@ -22,43 +22,63 @@ public class Graph : MonoBehaviour
     private Texture2D TextureMap;
 
     public Color[] Colors;
-    public TextMeshProUGUI[] TextDisplay;
-    public Image[] ColorDisplay;
-
-    public Color ActiveColor;
-    public List<List<int>> GridHeights;
-    public List<int> PreviousGridColumns;
+    //public TextMeshProUGUI[] TextDisplay;
+    //public Image[] ColorDisplay;
     public List<float2> MaxMins;
-    public List<float> CurrentValues;
-    public List<float> lerp;
+    public List<List<int>> GridHeights;
+    [System.Serializable]
+    public class ColorChange
+    {
+        public Color ActiveColor;
+
+        public Side side;
+        
+        public List<int> PreviousGridColumns;
+        
+        public List<float> CurrentValues;
+        public List<float> lerp;
+    }
+
+    public ColorChange[] ColorChanges;
+    
 
     public bool AllowCurrentDisplay;
+
+    public bool[] ActiveSides;
 
     private void Update()
     {
         if (AllowCurrentDisplay && PastFrameRecorder.IsReady())
-            UpdateCurrentDisplay();
-
-        //Debug.Log("a" + Mathf.Lerp(25.87f, 0.14f, 170.57f));
+            for (int i = 0; i < ActiveSides.Length; i++)
+                if(ActiveSides[i] == true)
+                    UpdateCurrentDisplay(ColorChanges[i]);
     }
     void Start()
     {
         TextureMap = new Texture2D(width, height);
         TextureMap.filterMode = FilterMode.Point;
-        
+        /*
         for (int i = 0; i < RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionEditor.instance.MotionType - 1].Restrictions.Count; i++)
         {
             TextDisplay[i].text = RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionEditor.instance.MotionType - 1].Restrictions[i].Label;
             ColorDisplay[i].color = Colors[i];
         }
-
+        */
         UpdateGraph();
-
         MotionEditor.OnChangeMotion += UpdateGraph;
         RegressionSystem.OnPreformRegression += UpdateGraph;
     }
     public void UpdateGraph()
     {
+        for (int i = 0; i < ColorChanges.Length; i++)
+        {
+            ColorChanges[i].PreviousGridColumns.Clear();
+            ColorChanges[i].CurrentValues.Clear();
+            ColorChanges[i].lerp.Clear();
+        }
+
+
+
         TextureMap = new Texture2D(width, height);
         TextureMap.filterMode = FilterMode.Point;
 
@@ -96,9 +116,6 @@ public class Graph : MonoBehaviour
 
             float AbsoluteMax = YOfDir.Max();
 
-            //CAPS
-            //left/right = 0/MinMax.y
-            //up/down = AbsoluteMax/0
             for (int x = 0; x < width; x++)
             {
                 float XInput = Mathf.Lerp(MinMax.x, MinMax.y, (float)x / width);
@@ -121,6 +138,7 @@ public class Graph : MonoBehaviour
         mySprite = Sprite.Create(TextureMap, new Rect(0.0f, 0.0f, TextureMap.width, TextureMap.height), new Vector2(0.5f, 0.5f), 1000.0f);
         Display().sprite = mySprite;
 
+        
 
         float Solve(float Input, float[] Degrees)
         {
@@ -137,41 +155,37 @@ public class Graph : MonoBehaviour
                 (-Der[1] + Mathf.Sqrt(Mathf.Pow(Der[1], 2) - 4f * Der[0] * Der[2])) / (2f * Der[2]) };
         }
     }
-    public void UpdateCurrentDisplay()
+    public void UpdateCurrentDisplay(ColorChange ColorSide)
     {
-        Side side = MotionEditor.instance.DisplayingRightStats.isOn ? Side.right : Side.left;
-        SingleInfo Frame1 = PastFrameRecorder.instance.PastFrame(side) ;
+        Side side = ColorSide.side;
+        SingleInfo Frame1 = PastFrameRecorder.instance.PastFrame(side);
         SingleInfo Frame2 = PastFrameRecorder.instance.GetControllerInfo(side);
-        if (PreviousGridColumns.Count != 0)
-        {
-            for (int i = 0; i < PreviousGridColumns.Count; i++)
-            {
-                TextureMap.SetPixel(PreviousGridColumns[i], GridHeights[i][PreviousGridColumns[i]], Colors[i]);
-            }
-        }
-        PreviousGridColumns = new List<int>();
-        CurrentValues = new List<float>();
-        lerp = new List<float>();
+
+        if (ColorSide.PreviousGridColumns.Count != 0)
+            for (int i = 0; i < ColorSide.PreviousGridColumns.Count; i++)
+                TextureMap.SetPixel(ColorSide.PreviousGridColumns[i], GridHeights[i][ColorSide.PreviousGridColumns[i]], Colors[i]);
+
+        ColorSide.PreviousGridColumns = new List<int>();
+        ColorSide.CurrentValues = new List<float>();
+        ColorSide.lerp = new List<float>();
+
+        if (MotionEditor.instance.MotionType == CurrentLearn.Nothing)
+            return;
 
         MotionRestriction restriction = RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionEditor.instance.MotionType - 1];
         for (int i = 0; i < restriction.Restrictions.Count; i++)
         {
             float Value = RestrictionManager.RestrictionDictionary[restriction.Restrictions[i].restriction].Invoke(restriction.Restrictions[i], Frame1, Frame2);
-            CurrentValues.Add(Value);
+            ColorSide.CurrentValues.Add(Value);
             float LerpValue = (Value - MaxMins[i].x) / (MaxMins[i].y - MaxMins[i].x);
             //Mathf.Lerp(0f, 1f, Mathf.InverseLerp(MaxMins[i].x, MaxMins[i].y, Value));
-            lerp.Add(LerpValue);
+            ColorSide.lerp.Add(LerpValue);
             int CurrentColumn = Mathf.RoundToInt(LerpValue * width);
-            
-            //Debug.Log("CurrentColumn: " + CurrentColumn);
 
             CurrentColumn = Mathf.Clamp(CurrentColumn, 0, width - 1);
-            TextureMap.SetPixel(CurrentColumn, GridHeights[i][CurrentColumn], ActiveColor);
-            PreviousGridColumns.Add(CurrentColumn);
-
-            
+            TextureMap.SetPixel(CurrentColumn, GridHeights[i][CurrentColumn], ColorSide.ActiveColor);
+            ColorSide.PreviousGridColumns.Add(CurrentColumn);
         }
-
         TextureMap.Apply();
         mySprite = Sprite.Create(TextureMap, new Rect(0.0f, 0.0f, TextureMap.width, TextureMap.height), new Vector2(0.5f, 0.5f), 1000.0f);
         Display().sprite = mySprite;

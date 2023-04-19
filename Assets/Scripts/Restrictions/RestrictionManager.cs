@@ -176,13 +176,16 @@ namespace RestrictionSystem
         }
         public static float HandToHeadAngle(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {
-            Vector3 targetDir = new Vector3(frame2.HandPos.x, 0, frame2.HandPos.z).normalized;
-            Quaternion quat = Quaternion.Euler(new Vector3(frame2.HeadPos.x, 0, frame2.HeadPos.z));
+            List<Axis> YGone = new List<Axis>() { Axis.X, Axis.Z };
+            Vector3 targetDir = EliminateAxis(YGone, frame2.HandPos).normalized;
+            //Bug.Log(targetDir);
+
+            Quaternion quat = Quaternion.Euler(EliminateAxis(YGone, frame2.HeadPos));//inside always 0
             Vector3 forwardDir = (quat * Vector3.forward).normalized;
+
             float Angle = frame2.HeadRot.y + Vector3.SignedAngle(targetDir, forwardDir, Vector3.up) + 180f;
-            //Offset
-            if (Angle > 360 || Angle < -360)
-                Angle += Angle > 360 ? -360 : 360;
+            if (Angle > 360f || Angle < -360f)
+                Angle += Angle > 360f ? -360f : 360f;
             //restriction.Value = Angle;
             return Angle;
             

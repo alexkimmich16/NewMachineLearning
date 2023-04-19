@@ -9,8 +9,8 @@ namespace RestrictionSystem
     {
         public static PastFrameRecorder instance;
         private void Awake() { instance = this; }
-        public List<SingleInfo> RightInfo;
-        public List<SingleInfo> LeftInfo;
+        [ListDrawerSettings(ShowIndexLabels = true, Expanded = true)] public List<SingleInfo> RightInfo;
+        [ListDrawerSettings(ShowIndexLabels = true, Expanded = true)] public List<SingleInfo> LeftInfo;
 
         public int MaxStoreInfo = 10;
         public int FramesAgo = 10;
@@ -26,7 +26,10 @@ namespace RestrictionSystem
 
         public bool OverrideSides;
 
-        public float XAdd;
+        public bool DrawDebug;
+
+        //public bool[] InvertHand;
+        //118.012 to 
         public SingleInfo GetControllerInfo(Side side)
         {
             ResetStats();
@@ -35,22 +38,43 @@ namespace RestrictionSystem
             TestHand[(int)side].position = TestHand[(int)side].position - CamPos;
 
             float YDifference = -Cam.localRotation.eulerAngles.y;
-            //float CenterChange = Cam.localRotation.eulerAngles.y;
-
-            
-            //invert main to y distance
             if (side == Side.left)
             {
-                TestMain[(int)side].localScale = new Vector3(-1, 1, 1);
-                Vector3 Rot = TestCam[(int)side].eulerAngles;
+                // Calculate the offset between the HMD and the left controller
+                Vector3 offset = TestHand[(int)side].position - TestCam[(int)side].position;
 
-                YDifference = YDifference+ XAdd;
+                // Mirror the offset along the X axis
+                offset = new Vector3(-offset.x, offset.y, offset.z);
 
-                TestCam[(int)side].eulerAngles = new Vector3(Rot.x, -Rot.y, -Rot.z);
+                // Apply the mirrored offset to the left controller's position
+                TestHand[(int)side].position = TestCam[(int)side].position + offset;
+
+                // Mirror the left controller's rotation along the Y and Z axes
+                Quaternion mirroredRotation = new Quaternion(TestHand[(int)side].rotation.x, -TestHand[(int)side].rotation.y, -TestHand[(int)side].rotation.z, TestHand[(int)side].rotation.w);
+
+                // Apply the mirrored rotation to the left controller
+                TestHand[(int)side].rotation = mirroredRotation;
+                YDifference = -YDifference; // * -1f
             }
+            
+            //Debug.Log("side: " + side + "  YDifference: " + YDifference);
             Vector3 UncenteredHandPos = TestHand[(int)side].position;
             Vector3 UncenteredHandRot = TestHand[(int)side].rotation.eulerAngles;
-            TestMain[(int)side].rotation = Quaternion.Euler(0, YDifference, 0);
+
+            TestMain[(int)side].rotation = Quaternion.Euler(0f, YDifference, 0f);
+
+            if (side == Side.left)
+            {
+                TestCam[(int)side].eulerAngles = new Vector3(TestCam[(int)side].eulerAngles.x, 0f, TestCam[(int)side].eulerAngles.z);
+            }
+
+            if (DrawDebug)
+            {
+                Debug.DrawRay(TestHand[(int)side].position, Quaternion.Euler(TestHand[(int)side].rotation.eulerAngles) * Vector3.forward, Color.blue);
+                Debug.DrawRay(TestHand[(int)side].position, Quaternion.Euler(TestHand[(int)side].rotation.eulerAngles) * Vector3.right, Color.green);
+                Debug.DrawRay(TestHand[(int)side].position, Quaternion.Euler(TestHand[(int)side].rotation.eulerAngles) * Vector3.up, Color.red);
+            }
+            
             //TestCam[(int)side].localRotation = Cam.localRotation;
             return new SingleInfo(TestHand[(int)side].position, TestHand[(int)side].rotation.eulerAngles, TestCam[(int)side].position, TestCam[(int)side].rotation.eulerAngles, UncenteredHandPos, UncenteredHandRot);
 
@@ -58,7 +82,8 @@ namespace RestrictionSystem
             {
                 TestMain[(int)side].position = Vector3.zero;
                 TestMain[(int)side].rotation = Quaternion.identity;
-                TestMain[(int)side].localScale = new Vector3(1, 1, 1);
+                TestMain[(int)side].localScale = new Vector3(1f, 1f, 1f);
+
                 SetEqual(Cam, TestCam[(int)side]);
                 SetEqual(PlayerHands[(int)side].transform, TestHand[(int)side]);
                 void SetEqual(Transform Info, Transform Set)

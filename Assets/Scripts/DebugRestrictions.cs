@@ -53,6 +53,7 @@ namespace RestrictionSystem
         [FoldoutGroup("Input"), Range(0.5f, 1f)] public float Threshold4;
         [FoldoutGroup("Input"), Range(0.5f, 1f)] public float Threshold5;
 
+        
         //public bool ABS;
 
         public bool DebugVelocity;
@@ -79,7 +80,10 @@ namespace RestrictionSystem
             
             SingleInfo frame1 = PR.PastFrame(Side.right);
             SingleInfo frame2 = PastFrameRecorder.instance.GetControllerInfo(Side.right);
+
             
+
+
             if (DebugVelocity)
                 Debug.DrawLine(frame2.HandPos, frame2.HandPos + ((frame2.HandPos - frame1.HandPos).normalized * LineLength), Color.blue);
 

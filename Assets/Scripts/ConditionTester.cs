@@ -4,6 +4,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using RestrictionSystem;
 using System.Linq;
+using System;
 public class ConditionTester : SerializedMonoBehaviour
 {
     //INVOLVES WHEN TO CAST
@@ -35,6 +36,8 @@ public class ConditionTester : SerializedMonoBehaviour
     [Button(ButtonSizes.Small)]
     public void CalculateCoefficents()
     {
+        if (ConditionManager.instance.conditions.MotionConditions[(int)Motion() - 1].conditionType == ConditionType.Prohibit)
+            return;
         MotionConditionInfo Condition = ConditionManager.instance.conditions.MotionConditions[(int)Motion() - 1];
         SingleSequenceState SequenceCondition = Condition.ConditionLists[SequenceTry];
         List<List<double>> Inputs = new List<List<double>>();
@@ -108,31 +111,51 @@ public class ConditionTester : SerializedMonoBehaviour
     }
     private void Start()
     {
-        ConditionManager.instance.conditions.MotionConditions[(int)MotionEditor.instance.MotionType - 1].OnNewState += TestEvent;
+        ConditionManager.instance.conditions.MotionConditions[(int)CurrentLearn.Fireball - 1].OnNewState += FireballTest;
+        ConditionManager.instance.conditions.MotionConditions[(int)CurrentLearn.Flames - 1].OnNewState += FlameTest;
+        ConditionManager.instance.conditions.MotionConditions[(int)CurrentLearn.FlameBlock - 1].OnNewState += FireBlockTest;
     }
-    public void TestEvent(Side side, bool NewState, int Index, int Level)
+    public void FireballTest(Side side, bool NewState, int Index, int Level)
     {
-        if(NewState == true)
-            Debug.Log("EventCalled: " + side.ToString() + "  " + Index);
-
-        if (MotionEditor.instance.TestAllMotions.isOn == false)
+        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == CurrentLearn.Fireball)
         {
+            //if (NewState == true)
+                //Debug.Log("EventCalled: " + side.ToString() + "  " + Index);
             if (NewState == true)
             {
                 GameObject SpawnedObject = Instantiate(SpawnPrefab[Index], PastFrameRecorder.instance.PlayerHands[(int)side].transform.position, PastFrameRecorder.instance.PlayerHands[(int)side].transform.rotation);
                 Destroy(SpawnedObject, KillTime);
-
             }
-            if (Index == 0)
+        }
+    }
+    public void FlameTest(Side side, bool NewState, int Index, int Level)
+    {
+        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == CurrentLearn.Flames)
+        {
+            //if (NewState == true)
+            //Debug.Log("EventCalled: " + side.ToString() + "  " + Index);
+            /*
+            if (NewState == true)
             {
-                //front fire
+                GameObject SpawnedObject = Instantiate(SpawnPrefab[Index], PastFrameRecorder.instance.PlayerHands[(int)side].transform.position, PastFrameRecorder.instance.PlayerHands[(int)side].transform.rotation);
+                Destroy(SpawnedObject, KillTime);
             }
-            else if (Index == 1)
+            */
+        }
+    }
+    public void FireBlockTest(Side side, bool NewState, int Index, int Level)
+    {
+        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == CurrentLearn.FlameBlock)
+        {
+            //if (NewState == true)
+            //Debug.Log("EventCalled: " + side.ToString() + "  " + Index);
+            /*
+            if (NewState == true)
             {
-                
+                GameObject SpawnedObject = Instantiate(SpawnPrefab[Index], PastFrameRecorder.instance.PlayerHands[(int)side].transform.position, PastFrameRecorder.instance.PlayerHands[(int)side].transform.rotation);
+                Destroy(SpawnedObject, KillTime);
             }
-            
-            
+            */
         }
     }
 }

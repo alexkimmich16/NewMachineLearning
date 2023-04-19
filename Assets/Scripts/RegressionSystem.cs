@@ -48,10 +48,22 @@ namespace RestrictionSystem
 
         public delegate void DoPreformRegression();
         public static event DoPreformRegression OnPreformRegression;
+        [FoldoutGroup("GetInfoFunctions"), Button(ButtonSizes.Small)]
+        public void GetTotalFrames()
+        {
+            int2 TrueFalseCount = 0;
+            foreach (Motion motion in LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions)
+                for (int i = 0; i < motion.Infos.Count; i++)
+                    TrueFalseCount = new int2(TrueFalseCount.x + (motion.AtFrameState(i) ? 1 : 0), TrueFalseCount.y + (!motion.AtFrameState(i) ? 1 : 0));
+            Debug.Log("TotalFrames: " + (TrueFalseCount.x + TrueFalseCount.y));
+        }
+        [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]public void TestCurrent() { MotionEditor.instance.TestCurrentButton(); }
 
+        [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void OriginRecalculate()
         {
             //change true/false motions
+            MotionAssign.instance.GetTrueMotions();
             MotionAssign.instance.PreformLock();
             ConditionTester.instance.CalculateCoefficents();
             //recalculate

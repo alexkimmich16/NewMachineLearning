@@ -32,12 +32,12 @@ namespace RestrictionSystem
         [FoldoutGroup("CoefficentStats")] public float SmallestInput = 0.001f;
         [FoldoutGroup("CoefficentStats")] public double[] Coefficents;
 
-        [FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[][] Inputs;
-        [FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] FirstLowMult;
-        [FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] FirstHighMult;
-        [FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] FirstSingleFinal;
-        [FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[][] FinalCovarianceMatrix;
-        [FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] Predictions;
+        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[][] Inputs;
+        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] FirstLowMult;
+        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] FirstHighMult;
+        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] FirstSingleFinal;
+        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[][] FinalCovarianceMatrix;
+        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] Predictions;
 
         [FoldoutGroup("IterationMatrix"), ShowIf("ShouldDebug")] public double[] LowerIteration;
         [FoldoutGroup("IterationMatrix"), ShowIf("ShouldDebug")] public double[] FinalIterationMatrix;
@@ -48,6 +48,7 @@ namespace RestrictionSystem
 
         public delegate void DoPreformRegression();
         public static event DoPreformRegression OnPreformRegression;
+
         [FoldoutGroup("GetInfoFunctions"), Button(ButtonSizes.Small)]
         public void GetTotalFrames()
         {
@@ -87,7 +88,7 @@ namespace RestrictionSystem
             double[] Coefficents = Regression.Coefficents;
             int Iterations = Regression.Iterations;
             float CorrectPercent = Regression.CorrectPercent();
-
+            //myStruct = default(MyStruct);
 
             Debug.Log((Motion).ToString() + " is " + CorrectPercent + "% Correct at iterations: " + Iterations);
 

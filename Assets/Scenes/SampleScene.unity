@@ -8556,12 +8556,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: Inputs
-      Entry: 6
-      Data: 
-    - Name: FinalCovarianceMatrix
-      Entry: 6
-      Data: 
   RestrictionValues: []
   CorrectOnTrue: 0
   CorrectOnFalse: 0
@@ -8571,10 +8565,6 @@ MonoBehaviour:
   LearnRate: 1
   SmallestInput: 0.01
   Coefficents: []
-  FirstLowMult: []
-  FirstHighMult: []
-  FirstSingleFinal: []
-  Predictions: []
   LowerIteration: []
   FinalIterationMatrix: []
   RestrictionStorage:

@@ -18,7 +18,7 @@ namespace RestrictionSystem
     {
         public static ConditionManager instance;
         private void Awake() { instance = this; }
-        public Conditions conditions;
+        public MotionSettings conditions;
 
         private ConditionProgress[,] ConditionStats = new ConditionProgress[2, 0];
 

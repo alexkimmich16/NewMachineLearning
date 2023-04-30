@@ -82,40 +82,36 @@ MonoBehaviour:
       - 0.06721488
       - -0.0015918927
       - 0.0000060239468
-  - Intercept: -17.806261
+  - Intercept: -26.71133
     Coefficents:
     - Degrees:
-      - 27.687294
-      - -12.72699
-      - 0.58306676
+      - 4.6991873
+      - -2.7781825
+      - 0.16096652
     - Degrees:
-      - -42.241554
-      - 15.912148
-      - -1.2472224
+      - -6.8026824
+      - 0.7619672
+      - -0.014955502
     - Degrees:
-      - -0.025207626
-      - 0.0011279965
-      - -0.000002027269
+      - 0.6442057
+      - -0.0042921747
+      - 0.000008314879
     - Degrees:
-      - 47.25787
-      - -185.79457
-      - 181.35323
+      - -7.0066385
+      - 177.05981
+      - -678.3554
     - Degrees:
-      - 1.4998965
-      - -0.01891615
-      - 0.00006806206
+      - 0.04121457
+      - 0.00022885951
+      - -0.0000011682149
     - Degrees:
-      - 0.5829105
-      - -0.0063820193
-      - 0.000022398093
+      - 0.0032956747
+      - 0.0032298055
+      - -0.000030882744
     - Degrees:
-      - 0.6461551
-      - -0.002786637
-      - -0.0000070438346
-    - Degrees:
-      - -2.019487
-      - 0.014469113
-      - -0.000029346971
+      - 0.2920992
+      - -0.012843759
+      - 0.000073899966
   MotionRestrictions:
   - Motion: Fireball
     Restrictions:
@@ -388,3 +384,102 @@ MonoBehaviour:
     MostTime: 0.81
     Spread: 100
     CutoffValue: 0.5
+  MotionConditions:
+  - Motion: fireball
+    conditionType: 0
+    ResetOnMax: 1
+    CastLevel: 1
+    ConditionLists:
+    - StateToActivate: FireWarmup
+      RegressionBased: 0
+      Coefficents:
+      - 0.2
+      CutoffValue: 0
+      SingleConditions:
+      - Label: distance
+        condition: 1
+        restriction:
+          Label: 
+          Active: 0
+          restriction: 0
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 
+          ShouldDebug: 0
+          Value: 0
+    - StateToActivate: ShootFireball
+      RegressionBased: 1
+      Coefficents:
+      - -5.070752626532226
+      - 50.288225164601045
+      - -87.27125355434805
+      - 53.6272443045024
+      - -54.267070636939934
+      - 179.10454209340514
+      - -181.1753727749183
+      CutoffValue: 0.2
+      SingleConditions:
+      - Label: dist
+        condition: 1
+        restriction:
+          Label: dist from head
+          Active: 1
+          restriction: 3
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 000000000100000002000000
+          ShouldDebug: 0
+          Value: 0.4684659
+      - Label: head dist
+        condition: 2
+        restriction:
+          Label: HeadDist
+          Active: 0
+          restriction: 3
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 000000000100000002000000
+          ShouldDebug: 0
+          Value: 0
+  - Motion: flames
+    conditionType: 1
+    ResetOnMax: 0
+    CastLevel: 1
+    ConditionLists:
+    - StateToActivate: 
+      RegressionBased: 0
+      Coefficents: []
+      CutoffValue: 0
+      SingleConditions:
+      - Label: 
+        condition: 4
+        restriction:
+          Label: 
+          Active: 0
+          restriction: 0
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 
+          ShouldDebug: 0
+          Value: 0
+  - Motion: Block
+    conditionType: 1
+    ResetOnMax: 0
+    CastLevel: 0
+    ConditionLists: []

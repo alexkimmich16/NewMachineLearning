@@ -92,7 +92,6 @@ public class MotionEditor : SerializedMonoBehaviour
     public static event ChangeMotion OnChangeMotion;
 
     //[ShowIf("Setting", EditSettings.DisplayingMotion)] 
-    public CurrentLearn CurrentTestMotion;
 
     public bool SafetyCheck;
 
@@ -246,7 +245,7 @@ public class MotionEditor : SerializedMonoBehaviour
         sideText.text = "#" + MotionNum;
         FrameNum.text = "Frame: " + display.Frame;
         MotionTypeText.text = "Motion: " + MotionType.ToString();
-        MotionTestDisplay.text = "Test: " + CurrentTestMotion.ToString();
+        //MotionTestDisplay.text = "Test: " + MotionType.ToString();
         SettingText.text = "Settings: " + Setting.ToString();
         display.PlaybackSpeed += SpeedChangeAdd();
         PlaybackSpeed.text = "Speed: " + display.PlaybackSpeed.ToString("F2");

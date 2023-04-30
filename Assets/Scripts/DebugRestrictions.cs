@@ -91,21 +91,22 @@ namespace RestrictionSystem
             //handToChange[i].material = Materials[FrameLogic.instance.Calculate((Side)i, MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
             //handToChange[i].material = Materials[RestrictionManager.instance.MotionWorks(PR.PastFrame((Side)i), PR.GetControllerInfo((Side)i), MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
             for (int i = 0; i < Enum.GetValues(typeof(Side)).Length; i++)
-                if (!MotionEditor.instance.TestAllMotions.isOn)
-                    handToChange[i].material = Materials[FrameLogic.instance.Calculate((Side)i, MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
+                if (MotionEditor.instance.MotionType == CurrentLearn.Nothing)
+                    handToChange[i].material = Materials[0];
+                else if (!MotionEditor.instance.TestAllMotions.isOn)
+                    handToChange[i].material = Materials[FrameLogic.instance.Calculate((Side)i, MotionEditor.instance.MotionType) ? 1 : 0]; //set hand
                 else
                     handToChange[i].material = Materials[GetMatTestNum((Side)i)];
+
 
 
             int GetMatTestNum(Side side)
             {
                 List<int> Working = new List<int>();
                 for (int j = 1; j < RestrictionManager.instance.RestrictionSettings.Coefficents.Count + 1; j++)
-                {
-                    bool Works = RestrictionManager.instance.MotionWorks(PR.PastFrame(side), PastFrameRecorder.instance.GetControllerInfo(side), (CurrentLearn)j);
-                    if (Works)
+                    if (FrameLogic.instance.Calculate(side, (CurrentLearn)j))
                         Working.Add(j);
-                }
+
                 if (Working.Count == 0)
                     return 0;
                 else if (Working.Count == 1)
@@ -114,6 +115,7 @@ namespace RestrictionSystem
                     return RestrictionManager.instance.RestrictionSettings.Coefficents.Count + 1;
 
             }
+            //bool Works = RestrictionManager.instance.MotionWorks(PR.PastFrame(side), PastFrameRecorder.instance.GetControllerInfo(side), (CurrentLearn)j);
             /*
             if (debugType == DebugType.ThisDebugTest)
                 handToChange.material = Materials[RestrictionManager.MotionWorks(frame1, frame2, Restrictions) ? 1 : 0]; //set hand

@@ -72,6 +72,7 @@ namespace RestrictionSystem
         public bool Calculate(Side side, CurrentLearn Motion)
         {
             //*sequence matters*
+
             FrameLogicInfo logic = MotionSettings.LogicInfo[(int)Motion - 1];
             if (logic.FrameLogicEnabled)
                 return GetMotionInfo(side, Motion).GetRecent();

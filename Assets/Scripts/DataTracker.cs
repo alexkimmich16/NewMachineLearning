@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using RestrictionSystem;
 public class DataTracker : SerializedMonoBehaviour
 {
     public static DataTracker instance;

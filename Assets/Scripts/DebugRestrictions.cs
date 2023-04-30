@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using System;
 namespace RestrictionSystem
 {
     public enum DebugType
@@ -81,29 +82,20 @@ namespace RestrictionSystem
             SingleInfo frame1 = PR.PastFrame(Side.right);
             SingleInfo frame2 = PastFrameRecorder.instance.GetControllerInfo(Side.right);
 
-            
-
-
             if (DebugVelocity)
                 Debug.DrawLine(frame2.HandPos, frame2.HandPos + ((frame2.HandPos - frame1.HandPos).normalized * LineLength), Color.blue);
 
             Velocity = Vector3.Distance(frame1.HandPos, frame2.HandPos) / (1f / 60f);
-            //VelocityDirection = (frame2.HandPos - frame1.HandPos).normalized;
-            //AngleDistance = Vector3.Angle((frame2.HandPos - frame1.HandPos).normalized, frame2.HandRot.normalized);
-            //HandPosition = frame2.HandPos;
 
-            
-            if(!MotionEditor.instance.TestAllMotions.isOn)
-            {
-                handToChange[0].material = Materials[RestrictionManager.instance.MotionWorks(PR.PastFrame(Side.right), PR.GetControllerInfo(Side.right), MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
-                handToChange[1].material = Materials[RestrictionManager.instance.MotionWorks(PR.PastFrame(Side.left), PR.GetControllerInfo(Side.left), MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
-            }
-            else
-            {
-                handToChange[0].material = Materials[GetMatTestNum(Side.right)]; //set hand
-                handToChange[1].material = Materials[GetMatTestNum(Side.left)]; //set hand
-            }
-            
+
+            //handToChange[i].material = Materials[FrameLogic.instance.Calculate((Side)i, MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
+            //handToChange[i].material = Materials[RestrictionManager.instance.MotionWorks(PR.PastFrame((Side)i), PR.GetControllerInfo((Side)i), MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
+            for (int i = 0; i < Enum.GetValues(typeof(Side)).Length; i++)
+                if (!MotionEditor.instance.TestAllMotions.isOn)
+                    handToChange[i].material = Materials[FrameLogic.instance.Calculate((Side)i, MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
+                else
+                    handToChange[i].material = Materials[GetMatTestNum((Side)i)];
+
 
             int GetMatTestNum(Side side)
             {

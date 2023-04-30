@@ -10,10 +10,18 @@ namespace RestrictionSystem
     {
         [ListDrawerSettings(ShowIndexLabels = true)] public List<RegressionInfo> Coefficents;
         [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Motion")] public List<MotionRestriction> MotionRestrictions;
-        [ListDrawerSettings(ShowIndexLabels = true), Range(0f,1f)] public List<float> CutoffValues;
+        [ListDrawerSettings(ShowIndexLabels = true)] public List<FrameLogicInfo> LogicInfo;
     }
 
-    
+    [System.Serializable]
+    public class FrameLogicInfo
+    {
+        public bool FrameLogicEnabled = true;
+        public float MostTime = 0.5f;
+        [Range(0, 100f)] public float Spread = 0f;
+        [Range(0f, 1f)] public float CutoffValue = 0.5f;
+    }
+
     [System.Serializable]
     public class MotionRestriction
     {

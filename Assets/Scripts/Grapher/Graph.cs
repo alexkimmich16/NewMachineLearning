@@ -40,17 +40,16 @@ public class Graph : MonoBehaviour
     }
 
     public ColorChange[] ColorChanges;
-    
 
-    public bool AllowCurrentDisplay;
+    public Toggle ShowHandPoints;
 
-    public bool[] ActiveSides;
+    public bool[] ActiveGraphHands;
 
     private void Update()
     {
-        if (AllowCurrentDisplay && PastFrameRecorder.IsReady())
-            for (int i = 0; i < ActiveSides.Length; i++)
-                if(ActiveSides[i] == true)
+        if (ShowHandPoints.isOn && PastFrameRecorder.IsReady())
+            for (int i = 0; i < ActiveGraphHands.Length; i++)
+                if(ActiveGraphHands[i] == true)
                     UpdateCurrentDisplay(ColorChanges[i]);
     }
     void Start()

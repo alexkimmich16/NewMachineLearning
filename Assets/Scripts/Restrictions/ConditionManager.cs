@@ -10,7 +10,6 @@ namespace RestrictionSystem
         Time = 0,
         Distance = 1,
         Restriction = 2,
-        ConsecutiveFrames = 4,
     }
     public delegate bool ConditionWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side);
     public delegate void OnNewMotionState(Side side, bool NewState, int Index, int Level);
@@ -21,8 +20,6 @@ namespace RestrictionSystem
         private void Awake() { instance = this; }
         public Conditions conditions;
 
-        //[TableMatrix(DrawElementMethod = "DrawElement")]
-        //[TableMatrix(HorizontalTitle = "Condition Stats")]
         private ConditionProgress[,] ConditionStats = new ConditionProgress[2, 0];
 
         [System.Serializable]
@@ -50,14 +47,11 @@ namespace RestrictionSystem
         public static Dictionary<Condition, RestrictionTest> ConditionDictionary = new Dictionary<Condition, RestrictionTest>(){
             {Condition.Time, Time},
             {Condition.Distance, Distance},
-            {Condition.Restriction, RestrictionWorksAndAdd},
-            {Condition.ConsecutiveFrames, ConsecutiveWorksAndAdd},
+            {Condition.Restriction, Restriction},
         };
         public static float Time(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return frame2.SpawnTime - frame1.SpawnTime; }
-
         public static float Distance(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return Vector3.Distance(frame1.HandPos, frame2.HandPos); }
-        public static float RestrictionWorksAndAdd(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return RestrictionManager.RestrictionDictionary[restriction.restriction].Invoke(restriction, frame2, frame1); }
-        public static float ConsecutiveWorksAndAdd(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return 1f; }
+        public static float Restriction(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return RestrictionManager.RestrictionDictionary[restriction.restriction].Invoke(restriction, frame2, frame1); }
         public void PassValue(bool State, CurrentLearn Motion, Side side)
         {
             ConditionProgress Holder = ConditionStats[(int)side, (int)Motion - 1];
@@ -144,87 +138,6 @@ namespace RestrictionSystem
         [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "StateToActivate"), ShowIf("conditionType", ConditionType.Sequence)] public List<SingleSequenceState> ConditionLists;
         public event OnNewMotionState OnNewState;
         public void DoEvent(Side side, bool Newstate, int Index, int Level) { OnNewState?.Invoke(side, Newstate, Index, Level); }
-        /*
-        public void PassValueToAll(bool State, Side side)
-        {
-            if ((State == false || WaitingForFalse[(int)side] == true) && conditionType == ConditionType.Sequence)
-            {
-                if (State == false)
-                {
-                    ResetAll(side);
-                }
-
-                //Debug.Log("trigger1");
-                return;
-            }
-            if(conditionType == ConditionType.Prohibit)
-            {
-                //if wait conditions are met, wait for them
-                //if(Motion == "flames")
-                    //Debug.Log("prohibit: " + Motion + "  State: " + State);
-                bool AllWorkingSoFar = true;
-                if (ProhibitList.Count != 0)
-                    for (int i = 0; i < ProhibitList.Count; i++)
-                    {
-                        SingleConditionInfo info = ProhibitList[i];
-                        ConditionWorksAndAdd WorkingConditionAndUpdate = ConditionManager.ConditionDictionary[info.condition];
-
-                        bool Working = WorkingConditionAndUpdate.Invoke(info, PastFrameRecorder.instance.GetControllerInfo(side), PastFrameRecorder.instance.PastFrame(side), State, side); ///velocity error here
-
-                        if (Working == false)
-                            AllWorkingSoFar = false;
-
-                        info.LastState[(int)side] = State;
-                        //Debug.Log("once: " + Working);
-                    }
-
-                if (WaitingForFalse[(int)side] != State && AllWorkingSoFar)
-                {
-                    OnNewState?.Invoke(side, State, 0, CastLevel);
-                    WaitingForFalse[(int)side] = State;
-                }
-            }
-            else if(conditionType == ConditionType.Sequence)
-            {
-                bool AllWorkingSoFar = true;
-                if (ConditionLists.Count != 0)
-                {
-                    for (int i = 0; i < ConditionLists[CurrentStage[(int)side]].SingleConditions.Count; i++)
-                    {
-                        SingleConditionInfo info = ConditionLists[CurrentStage[(int)side]].SingleConditions[i];
-                        ConditionWorksAndAdd WorkingConditionAndUpdate = ConditionManager.ConditionDictionary[info.condition];
-
-                        //SingleInfo CurrentFrame = MotionEditor.instance.display.GetFrameInfo(false);
-                        //SingleInfo PastFrame = MotionEditor.instance.display.GetFrameInfo(true);
-
-                        bool Working = WorkingConditionAndUpdate.Invoke(info, PastFrameRecorder.instance.GetControllerInfo(side), PastFrameRecorder.instance.PastFrame(side), State, side); ///velocity error here
-                        //bool Working = WorkingConditionAndUpdate.Invoke(info, MotionEditor.instance.display.GetFrameInfo(false), MotionEditor.instance.display.GetFrameInfo(true), State, side); ///velocity error here
-                        if (Working == false)
-                            AllWorkingSoFar = false;
-                        info.LastState[(int)side] = State;
-                        //Debug.Log("once: " + Working);
-                    }
-                }
-
-
-                if (AllWorkingSoFar) //ready to move to next
-                {
-                    OnNewState?.Invoke(side, true, CurrentStage[(int)side], CastLevel);
-                    //Debug.Log(CurrentStage + " < " + (ConditionLists.Count - 1));
-                    if (CurrentStage[(int)side] < ConditionLists.Count - 1)
-                    {
-                        CurrentStage[(int)side] += 1;
-                    }
-                    else
-                    {
-                        ResetAll(side);
-                    }
-                }
-            }
-            
-            
-        }
-        */
     }
     [Serializable]
     public class SingleConditionInfo
@@ -238,7 +151,7 @@ namespace RestrictionSystem
         //public bool Active;
         public Condition condition;
         //public double[] Coefficents;
-        [ShowIf("condition", Condition.ConsecutiveFrames)] public bool WaitSide;
+        //[ShowIf("condition", Condition.ConsecutiveFrames)] public bool WaitSide;
         [ShowIf("condition", Condition.Restriction)] public SingleRestriction restriction;
         ///reset on false?
         ///

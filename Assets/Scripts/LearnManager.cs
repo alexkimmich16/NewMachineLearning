@@ -5,14 +5,6 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using RestrictionSystem;
-public enum CurrentLearn
-{
-    Nothing = 0,
-    Fireball = 1,
-    Flames = 2,
-    FlameBlock = 3,
-}
-
 
 public class LearnManager : SerializedMonoBehaviour
 {

@@ -31,8 +31,6 @@ public class ConditionTester : SerializedMonoBehaviour
     ///involves 2 things:
     ///getting correct coefficents
     /// testing
-
-    ///TESTS EVERY COMBINATION WITHIN MOTION
     [Button(ButtonSizes.Small)]
     public void CalculateCoefficents()
     {
@@ -56,14 +54,6 @@ public class ConditionTester : SerializedMonoBehaviour
                 {
                     for (int k = j + EachProgressiveAdd; k < End + FramesPastFinal + 1; k += ToAdd(k, End, End + FramesPastFinal + 1))
                     {
-                        //Debug.Log("CallTimes for inbetween frames: " + (End - Start));
-                        if(i == 0)
-                        {
-                            //Debug.Log("")
-                            //Debug.Log("J: " + j + "  K: " + k + " WORKS: " + ((j <= Start + EarlyAllow && j >= Start) && (k >= End && k <= End + LateAllow)));
-                        }
-                            
-                        //Debug.Log("K: " + k + "  END: " + End);
                         SingleInfo StartInfo = motion.Infos[j];
                         SingleInfo EndInfo = motion.Infos[k];
                         List<double> InsertList = new List<double>();
@@ -83,7 +73,6 @@ public class ConditionTester : SerializedMonoBehaviour
         }
         int ToAdd(int Current, int Threshold1, int Threshold2)
         {
-            
             if (Current < Threshold1)
             {
                 //Debug.Log("PT1");

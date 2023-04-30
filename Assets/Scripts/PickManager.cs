@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using RestrictionSystem;
 public class PickManager : SerializedMonoBehaviour
 {
     public static PickManager instance;

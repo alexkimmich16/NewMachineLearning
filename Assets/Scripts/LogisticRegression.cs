@@ -9,6 +9,7 @@ using System.Linq;
 using RestrictionSystem;
 public struct LogisticRegression
 {
+    public static bool DebugEach = true;
     public int Iterations;
 
     public float4 Guesses;
@@ -130,7 +131,8 @@ public struct LogisticRegression
             double[][] CovarianceMatrix = GetCovarianceMatrix(AdjustedInput, Predictions, Iterations >= 2);
             double[] IterationMatrix = GetIterationMatrix(AdjustedInput, CovarianceMatrix, Output, Predictions);
             Coefficents = GetCoefficents(Coefficents, IterationMatrix);
-            
+            if(DebugEach)
+                Debug.Log("  CorrectPercent: " + this.CorrectPercent() * 100f);
             //Debug.Log("Interation: " + Iterations + "  CorrectPercent: " + this.CorrectPercent() * 100f + "   WrongPercent: " + InCorrectPercent() * 100f + "   OnFalsePercent: " + OnFalsePercent() * 100f + "   OnTruePercent: " + OnTruePercent() * 100f);
             //Debug.Log("Interation: " + Iterations + "  CorrectPercent: " + this.CorrectPercent() + "   WrongPercent: " + InCorrectPercent() + "   OnFalsePercent: " + OnFalsePercent() + "   OnTruePercent: " + OnTruePercent());
 

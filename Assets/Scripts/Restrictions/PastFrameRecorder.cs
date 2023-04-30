@@ -115,7 +115,7 @@ namespace RestrictionSystem
                 LeftInfo.RemoveAt(0);
 
             if (RightInfo.Count > FramesAgo)
-                RestrictionManager.instance.TriggerFrameEvents(UseSides);
+                RestrictionManager.instance.TriggerFrameEvents();
         }
         public SingleInfo PastFrame(Side side) { return (side == Side.right) ? RightInfo[RightInfo.Count - FramesAgo] : LeftInfo[LeftInfo.Count - FramesAgo]; }
     }

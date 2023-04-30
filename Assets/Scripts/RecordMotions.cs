@@ -17,7 +17,7 @@ public class RecordMotions : MonoBehaviour
 
     public Toggle CanRecordToggle;
 
-
+    public KeyCode RecordKey;
     private void Start()
     {
         //FrameInterval = 1 / FramesPerSecond;
@@ -26,17 +26,17 @@ public class RecordMotions : MonoBehaviour
             //OnToggleChanged(CanRecordToggle);
         //});
     }
-
+    public bool HitRecordButton() { return LearnManager.instance.Right.GripPressed() || Input.GetKey(RecordKey); }
     private void Update()
     {
         if (CanRecordToggle.isOn == false)
             return;
         
-        if (RecordingMotion == false && LearnManager.instance.Right.GripPressed() == true)
+        if (RecordingMotion == false && HitRecordButton() == true)
         {
             RecordingMotion = true;
         }
-        else if (RecordingMotion == true && LearnManager.instance.Right.GripPressed() == false)
+        else if (RecordingMotion == true && HitRecordButton() == false)
         {
             RecordingMotion = false;
 

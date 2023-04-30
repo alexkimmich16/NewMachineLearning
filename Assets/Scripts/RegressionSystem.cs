@@ -17,13 +17,6 @@ namespace RestrictionSystem
         
         [FoldoutGroup("Test")] public List<SingleFrameRestrictionValues> RestrictionValues;
 
-
-        [FoldoutGroup("EngineTest")] public float[][] TestValues;
-        [FoldoutGroup("EngineTest")] public int CorrectOnTrue;
-        [FoldoutGroup("EngineTest")] public int CorrectOnFalse;
-        [FoldoutGroup("EngineTest")] public int InCorrectOnTrue;
-        [FoldoutGroup("EngineTest")] public int InCorrectOnFalse;
-
         //[FoldoutGroup("CoefficentStats"), ListDrawerSettings(ShowIndexLabels = true)] public Coefficents RegressionStats;
         
         [FoldoutGroup("CoefficentStats")] public int EachTotalDegree;
@@ -32,19 +25,13 @@ namespace RestrictionSystem
         [FoldoutGroup("CoefficentStats")] public float SmallestInput = 0.001f;
         [FoldoutGroup("CoefficentStats")] public double[] Coefficents;
 
-        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[][] Inputs;
-        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] FirstLowMult;
-        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] FirstHighMult;
-        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] FirstSingleFinal;
-        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[][] FinalCovarianceMatrix;
-        //[FoldoutGroup("CovarianceMatrix"), ShowIf("ShouldDebug")] public double[] Predictions;
-
         [FoldoutGroup("IterationMatrix"), ShowIf("ShouldDebug")] public double[] LowerIteration;
         [FoldoutGroup("IterationMatrix"), ShowIf("ShouldDebug")] public double[] FinalIterationMatrix;
 
         [FoldoutGroup("SaveRestrictions")] public MotionRestriction RestrictionStorage;
 
         public static bool ShouldDebug = false;
+
 
         public delegate void DoPreformRegression();
         public static event DoPreformRegression OnPreformRegression;
@@ -68,7 +55,7 @@ namespace RestrictionSystem
             MotionAssign.instance.PreformLock();
             ConditionTester.instance.CalculateCoefficents();
             //recalculate
-            PreformRegression((CurrentLearn)MotionEditor.instance.MotionType);
+            PreformRegression(MotionEditor.instance.MotionType);
         }
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void PreformRegressionAll()

@@ -10,18 +10,25 @@ namespace RestrictionSystem
         private void Awake() { instance = this; }
 
         [FoldoutGroup("Info")] public int PastFrameLookup;
-        [FoldoutGroup("Info")] public bool UseAllMotions;
-        [FoldoutGroup("Info"), ShowIf("UseAllMotions")] public bool UseOnlyTrueMotions;
+        [FoldoutGroup("Info")] public bool UseSpecialMotions;
+        [FoldoutGroup("Info")] public bool UseFalseMotions;
+        [FoldoutGroup("Info"), ShowIf("UseSpecialMotions")] public bool UseOnlyTrueMotions;
 
         public LearnManager LM;
-
+        public List<int> GetToCheckList(CurrentLearn Motion)
+        {
+            List<int> ReturnList = UseSpecialMotions ? new List<int>() { 0, 1, 2, 3 } : new List<int>() { 0, (int)Motion };
+            if (!UseFalseMotions)
+                ReturnList.RemoveAt(0);
+            return ReturnList;
+        }
         public List<SingleFrameRestrictionValues> GetRestrictionsForMotions(CurrentLearn FrameDataMotion, MotionRestriction RestrictionsMotion)
         {
             List<SingleFrameRestrictionValues> ReturnValue = new List<SingleFrameRestrictionValues>();
-            List<int> ToCheck = UseAllMotions ? new List<int>() { 0, 1, 2, 3 } : new List<int>() { 0, (int)FrameDataMotion };
+            List<int> ToCheck = GetToCheckList(FrameDataMotion);
             for (int i = 0; i < ToCheck.Count; i++)//motions
                 for (int j = 0; j < LM.MovementList[ToCheck[i]].Motions.Count; j++)//set
-                    if((UseAllMotions && UseOnlyTrueMotions && !MotionAssign.instance.InsideTrueMotions(j, ToCheck[i] - 1)) == false)
+                    if((UseSpecialMotions && UseOnlyTrueMotions && !MotionAssign.instance.InsideTrueMotions(j, ToCheck[i] - 1)) == false)
                         for (int k = PastFrameLookup; k < LM.MovementList[ToCheck[i]].Motions[j].Infos.Count; k++)//frame
                         {
                             List<float> OutputRestrictions = new List<float>();

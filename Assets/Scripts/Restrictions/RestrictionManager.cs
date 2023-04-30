@@ -57,34 +57,24 @@ namespace RestrictionSystem
             {Restriction.HandToHeadAngle, HandToHeadAngle},
         };
         public MotionSettings RestrictionSettings;
-        //[Range(0f,1f)]public float CutoffValue = 0.5f;
-        //public Coefficents coefficents;
-
-
         
-        public void TriggerFrameEvents(List<bool> Sides)
+        public void TriggerFrameEvents()
         {
             PastFrameRecorder PR = PastFrameRecorder.instance;
             
             for (int i = 0; i < 2; i++)
             {
-                if (Sides[0] == false && Sides[1] == false)
-                    return;
                 for (int j = 1; j < RestrictionSettings.Coefficents.Count + 1; j++)
                 {
-                    //Debug.Log("test");
-
                     Side side = (Side)i;
                     CurrentLearn motion = (CurrentLearn)j;
-                    //RestrictionManager.instance.MotionWorks(PR.PastFrame(side), PastFrameRecorder.instance.GetControllerInfo(side), (CurrentLearn)j)
+                    
+                    FrameLogic.instance.InputRawMotionState(side, motion, MotionWorks(PR.PastFrame(side), PR.GetControllerInfo(side), motion), PR.GetControllerInfo(side).SpawnTime - PR.PastFrame(side).SpawnTime);
+                    bool Works = FrameLogic.instance.Calculate(side, motion);
 
-                    bool Works = MotionWorks(PR.PastFrame(side), PR.GetControllerInfo(side), motion);
-
-                    if (Sides[i] == true)
-                    {
-                        //Debug.Log("I: " + side.ToString() + "  Works: " + Works + " j: " + motion.ToString());
-                        ConditionManager.instance.PassValue(Works, motion, side);
-                    }
+                    //works -> frame logic = actual motion
+                    ConditionManager.instance.PassValue(Works, motion, side);
+                    
                 }
             }
         }
@@ -110,14 +100,17 @@ namespace RestrictionSystem
             }
 
         }
-        public bool MotionWorks(SingleInfo Frame1, SingleInfo Frame2, CurrentLearn motionType)
+        public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, CurrentLearn motionType)
         {
             List<float> TestValues = new List<float>();
             MotionRestriction restriction = RestrictionSettings.MotionRestrictions[(int)motionType - 1];
+
             for (int i = 0; i < restriction.Restrictions.Count; i++)
             {
-                TestValues.Add(RestrictionDictionary[restriction.Restrictions[i].restriction].Invoke(restriction.Restrictions[i], Frame1, Frame2));
+                TestValues.Add(RestrictionDictionary[restriction.Restrictions[i].restriction].Invoke(restriction.Restrictions[i], frame1, frame2));
             }
+
+            
             //bool Works = new LogisticRegression().Works(RestrictionSettings.Coefficents[(int)motionType - 1].GetDoubleCoefficents(), TestValues.Select(f => (double)f).ToArray());
 
             float Total = RestrictionSettings.Coefficents[(int)motionType - 1].Intercept;
@@ -147,11 +140,6 @@ namespace RestrictionSystem
             Vector3 forwardDir = EliminateAxis(restriction.UseAxisList, Quaternion.Euler(ForwardInput + restriction.Offset) * restriction.Direction);
 
             float AngleDistance = Vector3.Angle(EliminateAxis(restriction.UseAxisList, (frame2.HandPosType(restriction.UseLocalHandPos) - frame1.HandPosType(restriction.UseLocalHandPos)).normalized), forwardDir);
-            if (restriction.ShouldDebug)
-            {
-                //Debug.DrawLine(frame2.HandPos, frame2.HandPos + EliminateAxis(restriction.UseAxisList, (frame2.HandPosType(restriction.UseLocalHandPos) - frame1.HandPosType(restriction.UseLocalHandPos)).normalized) * DebugRestrictions.instance.LineLength, Color.yellow);
-                //Debug.DrawLine(frame2.HandPos, frame2.HandPos + (forwardDir * DebugRestrictions.instance.LineLength), Color.red);
-            }
             //restriction.Value = AngleDistance;
             return AngleDistance;
         }
@@ -159,11 +147,6 @@ namespace RestrictionSystem
         {
             Vector3 HandDir = EliminateAxis(restriction.UseAxisList, (Quaternion.Euler(frame2.HandRotType(restriction.UseLocalHandRot) + restriction.Offset) * restriction.Direction));
             Vector3 OtherDir = EliminateAxis(restriction.UseAxisList, restriction.checkType == CheckType.Other ? restriction.OtherDirection : -(frame2.HandPosType(restriction.UseLocalHandPos)).normalized);
-            if (restriction.ShouldDebug)
-            {
-                //Debug.DrawLine(frame2.HandPos, frame2.HandPos + (OtherDir * DebugRestrictions.instance.LineLength), Color.yellow);
-                //Debug.DrawLine(frame2.HandPos, frame2.HandPos + (HandDir * DebugRestrictions.instance.LineLength), Color.red);
-            }
             //restriction.Value = Vector3.Angle(HandDir, OtherDir);
             return Vector3.Angle(HandDir, OtherDir);
         }

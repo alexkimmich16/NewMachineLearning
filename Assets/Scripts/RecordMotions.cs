@@ -16,6 +16,7 @@ public class RecordMotions : MonoBehaviour
     public List<bool> Values;
 
     public Toggle CanRecordToggle;
+    public Toggle TrueMotion;
 
     public KeyCode RecordKey;
     private void Start()
@@ -45,7 +46,16 @@ public class RecordMotions : MonoBehaviour
             Values.Clear();
 
             FinalMotion.Infos = new List<SingleInfo>(CurrentMotionRecord);
-            LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
+            if (TrueMotion.isOn)
+            {
+                FinalMotion.TrueRanges = new List<Vector2>() { Vector2.zero};
+                LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions.Insert(0, FinalMotion);
+                //Vector2 Before = MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0];
+                //MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0] = new Vector2(Before.x, Before.y + 1);
+            }
+                
+            else
+                LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
             CurrentMotionRecord.Clear();
         }
 

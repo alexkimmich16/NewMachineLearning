@@ -56,6 +56,27 @@ namespace RestrictionSystem
             ConditionTester.instance.CalculateCoefficents();
             //recalculate
             PreformRegression(MotionEditor.instance.MotionType);
+            MotionEditor.instance.TestCurrentButton();
+        }
+        [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
+        public void RestrictionRecalculate()
+        {
+            //change true/false motions
+            MotionAssign.instance.GetTrueMotions();
+            MotionAssign.instance.PreformLock();
+            PreformRegression(MotionEditor.instance.MotionType);
+            MotionEditor.instance.TestCurrentButton();
+            //recalculate
+
+        }
+        [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
+        public void ConditionRecalculate()
+        {
+            //change true/false motions
+            MotionAssign.instance.GetTrueMotions();
+            MotionAssign.instance.PreformLock();
+            ConditionTester.instance.CalculateCoefficents();
+
         }
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void PreformRegressionAll()

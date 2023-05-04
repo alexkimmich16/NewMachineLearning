@@ -222,11 +222,7 @@ public class MotionEditor : SerializedMonoBehaviour
                     {
                         CurrentMotionTests[i].text = "";
                     }
-                    
-                    //
-                    //RM.RestrictionSettings.MotionRestrictions[0].
                 }
-                
             }
             else
             {

@@ -21,33 +21,25 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  FramesAgo: 2
   Coefficents:
-  - Intercept: -10.980837
+  - Intercept: -88.069176
     Coefficents:
     - Degrees:
-      - 0.7351929
-      - -0.5438324
-      - 0.033732947
+      - 4.0930915
+      - -1.1666031
+      - 0.08106185
+      - -0.0014918488
     - Degrees:
-      - 3.7266448
-      - -0.85081667
-      - 0.05445322
+      - -0.36587933
+      - 0.0033406992
+      - 0.0000014128561
+      - -0.000000045129443
     - Degrees:
-      - -22.873188
-      - 102.96425
-      - -129.68623
-    - Degrees:
-      - 45.418285
-      - -52.939194
-      - -9.880523
-    - Degrees:
-      - 0.28274253
-      - -0.005707533
-      - 0.000022539934
-    - Degrees:
-      - -0.14496997
-      - 0.001178561
-      - -0.000002876597
+      - 714.13715
+      - -2293.5798
+      - 3208.6055
+      - -1648.8914
   - Intercept: -32.90284
     Coefficents:
     - Degrees:
@@ -115,8 +107,8 @@ MonoBehaviour:
   MotionRestrictions:
   - Motion: Fireball
     Restrictions:
-    - Label: VerticleSpeed
-      Active: 1
+    - Label: Speed
+      Active: 0
       restriction: 0
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
@@ -124,54 +116,6 @@ MonoBehaviour:
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 01000000
-      ShouldDebug: 0
-      Value: 0
-    - Label: Horspeed
-      Active: 1
-      restriction: 0
-      checkType: 0
-      OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 0000000002000000
-      ShouldDebug: 0
-      Value: 0
-    - Label: VertHandDist
-      Active: 0
-      restriction: 3
-      checkType: 0
-      OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 01000000
-      ShouldDebug: 0
-      Value: 0
-    - Label: HorHandDist
-      Active: 0
-      restriction: 3
-      checkType: 0
-      OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 0000000002000000
-      ShouldDebug: 0
-      Value: 0
-    - Label: HandForward
-      Active: 0
-      restriction: 2
-      checkType: 2
-      OtherDirection: {x: 0, y: 0, z: 1}
-      UseLocalHandPos: 1
-      UseLocalHandRot: 1
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0
@@ -183,7 +127,19 @@ MonoBehaviour:
       UseLocalHandPos: 0
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 1}
+      Direction: {x: 0, y: 0, z: -1}
+      UseAxisList: 000000000100000002000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: 
+      Active: 0
+      restriction: 3
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0
@@ -373,8 +329,8 @@ MonoBehaviour:
       Value: 0
   LogicInfo:
   - FrameLogicEnabled: 1
-    MostTime: 0.23
-    Spread: 10.6
+    MostTime: 0.08
+    Spread: 10.9
     CutoffValue: 0.5
   - FrameLogicEnabled: 1
     MostTime: 0.28
@@ -386,17 +342,20 @@ MonoBehaviour:
     CutoffValue: 0.5
   MotionConditions:
   - Motion: fireball
-    conditionType: 0
     ResetOnMax: 1
     CastLevel: 1
-    ConditionLists:
+    Sequences:
     - StateToActivate: FireWarmup
       RegressionBased: 0
+      NewFrameOnDone: 0
+      waitType: 0
       Coefficents:
-      - 0.2
+      - 0.05
+      - 1000
       CutoffValue: 0
       SingleConditions:
-      - Label: distance
+      - Label: Distance
+        frameType: 0
         condition: 1
         restriction:
           Label: 
@@ -413,32 +372,23 @@ MonoBehaviour:
           Value: 0
     - StateToActivate: ShootFireball
       RegressionBased: 1
+      NewFrameOnDone: 0
+      waitType: 0
       Coefficents:
-      - -5.070752626532226
-      - 50.288225164601045
-      - -87.27125355434805
-      - 53.6272443045024
-      - -54.267070636939934
-      - 179.10454209340514
-      - -181.1753727749183
-      CutoffValue: 0.2
+      - 19.962730721802888
+      - -61.563711192271604
+      - 156.52721304788676
+      - -133.0830777123315
+      - 52.37787930822678
+      - -66.41869468571764
+      - 32.00716608813544
+      - 19.88986230560034
+      - 4.679357987373879
+      - 0.36479077844342495
+      CutoffValue: 0.037
       SingleConditions:
-      - Label: dist
-        condition: 1
-        restriction:
-          Label: dist from head
-          Active: 1
-          restriction: 3
-          checkType: 0
-          OtherDirection: {x: 0, y: 0, z: 0}
-          UseLocalHandPos: 0
-          UseLocalHandRot: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          UseAxisList: 000000000100000002000000
-          ShouldDebug: 0
-          Value: 0.4684659
       - Label: head dist
+        frameType: 0
         condition: 2
         restriction:
           Label: HeadDist
@@ -453,18 +403,75 @@ MonoBehaviour:
           UseAxisList: 000000000100000002000000
           ShouldDebug: 0
           Value: 0
-  - Motion: flames
-    conditionType: 1
-    ResetOnMax: 0
-    CastLevel: 1
-    ConditionLists:
-    - StateToActivate: 
+      - Label: head dist
+        frameType: 0
+        condition: 1
+        restriction:
+          Label: HeadDist
+          Active: 0
+          restriction: 3
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 000000000100000002000000
+          ShouldDebug: 0
+          Value: 0
+      - Label: 
+        frameType: 1
+        condition: 2
+        restriction:
+          Label: velocity
+          Active: 0
+          restriction: 0
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 000000000100000002000000
+          ShouldDebug: 0
+          Value: 0
+    - StateToActivate: WaitForSlowVelocity
       RegressionBased: 0
-      Coefficents: []
+      NewFrameOnDone: 1
+      waitType: 1
+      Coefficents:
+      - 0
+      - 1
       CutoffValue: 0
       SingleConditions:
-      - Label: 
-        condition: 4
+      - Label: low velocity
+        frameType: 1
+        condition: 2
+        restriction:
+          Label: velocity
+          Active: 0
+          restriction: 0
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 000000000100000002000000
+          ShouldDebug: 0
+          Value: 0
+    - StateToActivate: Control
+      RegressionBased: 0
+      NewFrameOnDone: 0
+      waitType: 1
+      Coefficents:
+      - 0.2
+      - 1000
+      CutoffValue: 0
+      SingleConditions:
+      - Label: distance from finish
+        frameType: 0
+        condition: 1
         restriction:
           Label: 
           Active: 0
@@ -478,8 +485,11 @@ MonoBehaviour:
           UseAxisList: 
           ShouldDebug: 0
           Value: 0
+  - Motion: flames
+    ResetOnMax: 0
+    CastLevel: 1
+    Sequences: []
   - Motion: Block
-    conditionType: 1
     ResetOnMax: 0
     CastLevel: 0
-    ConditionLists: []
+    Sequences: []

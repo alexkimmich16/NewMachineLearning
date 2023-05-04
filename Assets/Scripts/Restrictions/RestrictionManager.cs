@@ -64,9 +64,9 @@ namespace RestrictionSystem
             
             for (int i = 0; i < 2; i++)
             {
+                Side side = (Side)i;
                 for (int j = 1; j < RestrictionSettings.Coefficents.Count + 1; j++)
                 {
-                    Side side = (Side)i;
                     CurrentLearn motion = (CurrentLearn)j;
                     
                     FrameLogic.instance.InputRawMotionState(side, motion, MotionWorks(PR.PastFrame(side), PR.GetControllerInfo(side), motion), PR.GetControllerInfo(side).SpawnTime - PR.PastFrame(side).SpawnTime);
@@ -77,28 +77,6 @@ namespace RestrictionSystem
                     
                 }
             }
-        }
-        public bool TestCondition(SingleSequenceState SequenceCondition, SingleInfo Start, SingleInfo End)//onyl call if motion works
-        {
-            int Degrees = (SequenceCondition.Coefficents.Length - 1) / SequenceCondition.SingleConditions.Count;
-            double[] RawInputs = new double[SequenceCondition.SingleConditions.Count];
-            for (int i = 0; i < SequenceCondition.SingleConditions.Count; i++)
-            {
-                RawInputs[i] = ConditionManager.ConditionDictionary[SequenceCondition.SingleConditions[i].condition].Invoke(SequenceCondition.SingleConditions[i].restriction, Start, End);
-            }
-            if (SequenceCondition.RegressionBased)
-            {
-                double Total = SequenceCondition.Coefficents[0];
-                for (int j = 0; j < RawInputs.Length; j++)//each  variable
-                    for (int k = 0; k < Degrees; k++)
-                        Total += math.pow(RawInputs[j], k + 1) * SequenceCondition.Coefficents[(j * Degrees) + k + 1];
-                return 1f / (1f + Math.Exp(-Total)) > SequenceCondition.CutoffValue;
-            }
-            else
-            {
-                return Enumerable.Range(0, RawInputs.Length).All(x => RawInputs[x] > SequenceCondition.Coefficents[x]);
-            }
-
         }
         public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, CurrentLearn motionType)
         {

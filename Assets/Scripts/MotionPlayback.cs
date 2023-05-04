@@ -40,10 +40,10 @@ public class MotionPlayback : MonoBehaviour
 
 
 
-    public List<RestrictionSystem.CurrentLearn> CurrentMotions;
-    public bool OldFrameWorks() { return Frame - PastFrameRecorder.instance.FramesAgo >= 0; }
-    public RestrictionSystem.SingleInfo GetFrameInfo(bool Old) { return LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].GetRestrictionInfoAtIndex(MotionEditor.instance.MotionNum, Old ? MinFramesAgo() : Frame); }
-    public int MinFramesAgo() { return Frame - PastFrameRecorder.instance.FramesAgo >= 0 ? Frame - PastFrameRecorder.instance.FramesAgo : 0; }
+    public List<CurrentLearn> CurrentMotions;
+    public bool OldFrameWorks() { return Frame - PastFrameRecorder.instance.FramesAgo() >= 0; }
+    public SingleInfo GetFrameInfo(bool Old) { return LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].GetRestrictionInfoAtIndex(MotionEditor.instance.MotionNum, Old ? MinFramesAgo() : Frame); }
+    public int MinFramesAgo() { return Frame - PastFrameRecorder.instance.FramesAgo() >= 0 ? Frame - PastFrameRecorder.instance.FramesAgo() : 0; }
     private void Start()
     {
         MotionEditor.OnChangeMotion += OnSomethingChanged;

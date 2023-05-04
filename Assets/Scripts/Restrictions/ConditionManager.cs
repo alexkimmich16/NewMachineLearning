@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using System;
+using System.Linq;
+using Unity.Mathematics;
 namespace RestrictionSystem
 {
     public enum Condition
@@ -20,7 +22,7 @@ namespace RestrictionSystem
         private void Awake() { instance = this; }
         public MotionSettings conditions;
 
-        private ConditionProgress[,] ConditionStats = new ConditionProgress[2, 0];
+        [HideInInspector]public ConditionProgress[,] ConditionStats = new ConditionProgress[2, 0];
 
         [System.Serializable]
         public class ConditionProgress//represents all sequences within motion
@@ -56,86 +58,149 @@ namespace RestrictionSystem
         {
             ConditionProgress Holder = ConditionStats[(int)side, (int)Motion - 1];
             MotionConditionInfo Condition = conditions.MotionConditions[(int)Motion - 1];
+
             if (State != Holder.Active())
             {
-                if(Condition.conditionType == ConditionType.Prohibit)
+                if(Condition.Sequences.Count == 0)
                 {
-                    Condition.DoEvent(side, State, 0, Condition.CastLevel);
+                    Condition.DoEvent(side, State, Holder.SequenceState, Condition.CastLevel);
                     Holder.StartInfo = State ? PastFrameRecorder.instance.GetControllerInfo(side) : null;
+                    return;
                 }
-
-                if (Condition.conditionType == ConditionType.Sequence)
+                else
                 {
-                    if (State == true)
+                    if(Holder.SequenceState == 0 || Condition.Sequences[Holder.SequenceState].waitType == WaitType.Sequence)
                     {
-                        //Debug.Log("Create");
-                        Holder.StartInfo = PastFrameRecorder.instance.GetControllerInfo(side);
+                        Holder.StartInfo = State ? PastFrameRecorder.instance.GetControllerInfo(side) : null;
+                        if(State == false)
+                            SequenceReset();
                     }
-                    else
-                    {
-                        SequenceReset();
-                    }
-                    
                 }
+                   
+                
+
             }
+            if (Condition.Sequences.Count == 0)
+                return;
+            if (Holder.Active() == false)
+                return;
 
-
-            //if(Motion == CurrentLearn.Fireball)
-                //Debug.Log("Motion: " + Motion + " State: " + Holder.Active() + "  State: " + State);
-            if (Holder.Active() && Condition.conditionType == ConditionType.Sequence)
+            SingleSequenceState NowState = Condition.Sequences[Holder.SequenceState];
+            bool Works = TestCondition(NowState, Holder.StartInfo, PastFrameRecorder.instance.GetControllerInfo(side), PastFrameRecorder.instance.PastFrame(side));
+            //Debug.Log(Motion.ToString() + " " + State + "  First: " + (Holder.StartInfo != null) + "  NUm: " + Holder.SequenceState + "  Works: " + Works);
+            
+            //Debug.Log("mot: " + Motion.ToString() + "  1");
+            if (NowState.waitType == WaitType.Sequence)
             {
-                //Debug.Log("IsCounting: " + Motion);
-                bool Works = RestrictionManager.instance.TestCondition(Condition.ConditionLists[Holder.SequenceState], Holder.StartInfo, PastFrameRecorder.instance.GetControllerInfo(side));
-                if (Works)
+                if (Works && State == true)
                 {
-                    Condition.DoEvent(side, true, Holder.SequenceState, Condition.CastLevel);
-                    Holder.SequenceState += 1;
-                    //Debug.Log("next, now is: " + Holder.SequenceState);
-                    if (Holder.SequenceState > Condition.ConditionLists.Count - 1)
-                    {
-                        SequenceReset();
-                    }
+                    Progress();
+                }
+            }
+            else if (NowState.waitType == WaitType.UntilConditionMet)
+            {
+                //do nothing until condition = true, upon which: progress
+                if (Works == true)
+                {
+                    Progress();
                 }
             }
 
-            ConditionStats[(int)side, (int)Motion - 1] = Holder;
+
+            void Progress()
+            {
+                Condition.DoEvent(side, true, Holder.SequenceState, Condition.CastLevel);
+                //never for Empty Sequences
+                if (Holder.SequenceState < Condition.Sequences.Count - 1)
+                {
+                    if (NowState.NewFrameOnDone)
+                        Holder.StartInfo = PastFrameRecorder.instance.GetControllerInfo(side);
+
+                    Holder.SequenceState += 1;
+                }
+                else if (Condition.ResetOnMax && AtMax())
+                    SequenceReset();
+            }
             void SequenceReset()
             {
-               // Debug.Log("Reset");
+                // Debug.Log("Reset");
                 Holder.Reset();
-                for (int i = 0; i < Condition.ConditionLists.Count; i++)
+                for (int i = 0; i < Condition.Sequences.Count; i++)
                 {
                     Condition.DoEvent(side, false, i, Condition.CastLevel);
                 }
             }
+            bool AtMax() { return Holder.SequenceState == Condition.Sequences.Count - 1; }
+            ConditionStats[(int)side, (int)Motion - 1] = Holder;
+        }
+        public bool TestCondition(SingleSequenceState SequenceCondition, SingleInfo Point, SingleInfo Last, SingleInfo Now)//onyl call if motion works
+        {
+            if (SequenceCondition == null)
+                return true;
+            int Degrees = (SequenceCondition.Coefficents.Length - 1) / SequenceCondition.SingleConditions.Count;
+            double[] RawInputs = new double[SequenceCondition.SingleConditions.Count];
+            for (int i = 0; i < SequenceCondition.SingleConditions.Count; i++)
+            {
+                SingleInfo Frame1 = SequenceCondition.SingleConditions[i].frameType == UseFrameType.LastPoint ? Point : Last;
+                SingleInfo Frame2 = SequenceCondition.SingleConditions[i].frameType == UseFrameType.LastPoint ? Now : Now; //current
+
+                RawInputs[i] = ConditionDictionary[SequenceCondition.SingleConditions[i].condition].Invoke(SequenceCondition.SingleConditions[i].restriction, Frame1, Frame2);
+            }
+
+            if (SequenceCondition.RegressionBased)
+            {
+                double Total = SequenceCondition.Coefficents[0];
+                for (int j = 0; j < RawInputs.Length; j++)//each  variable
+                    for (int k = 0; k < Degrees; k++)
+                        Total += math.pow(RawInputs[j], k + 1) * SequenceCondition.Coefficents[(j * Degrees) + k + 1];
+                return 1f / (1f + Math.Exp(-Total)) > SequenceCondition.CutoffValue;
+            }
+            else
+            {
+                return Enumerable.Range(0, RawInputs.Length).All(i => SequenceCondition.Coefficents[(i * 2)] < RawInputs[i] && SequenceCondition.Coefficents[(i * 2) + 1] > RawInputs[i]);
+            }
 
         }
     }
+    /*
     public enum ConditionType
     {
         Sequence = 0,
         Prohibit = 1,
     }
+    */
     [Serializable]
     public class SingleSequenceState
     {
         public string StateToActivate;
         public bool RegressionBased;
+        public bool NewFrameOnDone;
+        public WaitType waitType;
         public double[] Coefficents;
-        public float CutoffValue;
+
+       [Range(0f,1f), ShowIf("RegressionBased")] public float CutoffValue;
         [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Label")] public List<SingleConditionInfo> SingleConditions;
+    }
+    public enum WaitType
+    {
+        Sequence = 0,
+        UntilConditionMet = 1,
+    }
+    public enum UseFrameType
+    {
+        LastPoint = 0,
+        FramesAgo = 1,
     }
     [Serializable]
     public class MotionConditionInfo
     {
         public string Motion;
-        public ConditionType conditionType;
         public static bool ShowRuntime = false;
         public bool ResetOnMax;
-        public int CastLevel;
+        [HideInInspector]public int CastLevel;
         
 
-        [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "StateToActivate"), ShowIf("conditionType", ConditionType.Sequence)] public List<SingleSequenceState> ConditionLists;
+        [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "StateToActivate")] public List<SingleSequenceState> Sequences;
         public event OnNewMotionState OnNewState;
         public void DoEvent(Side side, bool Newstate, int Index, int Level) { OnNewState?.Invoke(side, Newstate, Index, Level); }
     }
@@ -148,6 +213,7 @@ namespace RestrictionSystem
         
         
         public string Label;
+        public UseFrameType frameType;
         //public bool Active;
         public Condition condition;
         //public double[] Coefficents;

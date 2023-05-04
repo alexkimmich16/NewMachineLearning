@@ -90,6 +90,13 @@ namespace RestrictionSystem
 
             //handToChange[i].material = Materials[FrameLogic.instance.Calculate((Side)i, MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
             //handToChange[i].material = Materials[RestrictionManager.instance.MotionWorks(PR.PastFrame((Side)i), PR.GetControllerInfo((Side)i), MotionEditor.instance.CurrentTestMotion) ? 1 : 0]; //set hand
+            if(MotionEditor.instance.MotionType == CurrentLearn.Fireball && !MotionEditor.instance.TestAllMotions.isOn)
+            {
+                handToChange[0].material = Materials[ConditionManager.instance.ConditionStats[0, 0].SequenceState];
+
+                return;
+            }
+
             for (int i = 0; i < Enum.GetValues(typeof(Side)).Length; i++)
                 if (MotionEditor.instance.MotionType == CurrentLearn.Nothing)
                     handToChange[i].material = Materials[0];

@@ -13,7 +13,6 @@ namespace RestrictionSystem
         [ListDrawerSettings(ShowIndexLabels = true, Expanded = true)] public List<SingleInfo> LeftInfo;
 
         public int MaxStoreInfo = 10;
-        public int FramesAgo = 10;
 
         public List<Transform> TestMain;
         public List<Transform> TestCam;
@@ -114,10 +113,11 @@ namespace RestrictionSystem
             if (LeftInfo.Count > MaxStoreInfo)
                 LeftInfo.RemoveAt(0);
 
-            if (RightInfo.Count > FramesAgo)
+            if (RightInfo.Count > FramesAgo())
                 RestrictionManager.instance.TriggerFrameEvents();
         }
-        public SingleInfo PastFrame(Side side) { return (side == Side.right) ? RightInfo[RightInfo.Count - FramesAgo] : LeftInfo[LeftInfo.Count - FramesAgo]; }
+        public SingleInfo PastFrame(Side side) { return (side == Side.right) ? RightInfo[RightInfo.Count - FramesAgo()] : LeftInfo[LeftInfo.Count - FramesAgo()]; }
+        public int FramesAgo() { return RestrictionManager.instance.RestrictionSettings.FramesAgo; }
     }
     [System.Serializable]
     public class SingleInfo

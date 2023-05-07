@@ -23,7 +23,7 @@ MonoBehaviour:
     SerializationNodes: []
   FramesAgo: 2
   Coefficents:
-  - Intercept: -88.069176
+  - Intercept: -88.06916
     Coefficents:
     - Degrees:
       - 4.0930915

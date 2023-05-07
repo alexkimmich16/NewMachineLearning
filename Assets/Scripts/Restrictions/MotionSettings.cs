@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using System;
 namespace RestrictionSystem
 {
-    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/MotionSettings", order = 2)]
+    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/MotionSettings", order = 2), Serializable]
     public class MotionSettings : SerializedScriptableObject
     {
         public int FramesAgo;

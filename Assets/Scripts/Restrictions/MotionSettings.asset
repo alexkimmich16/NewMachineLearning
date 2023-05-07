@@ -348,6 +348,7 @@ MonoBehaviour:
     - StateToActivate: FireWarmup
       RegressionBased: 0
       NewFrameOnDone: 0
+      ExitIfAny: 0
       waitType: 0
       Coefficents:
       - 0.05
@@ -370,9 +371,11 @@ MonoBehaviour:
           UseAxisList: 
           ShouldDebug: 0
           Value: 0
+      ExitIfConditions: []
     - StateToActivate: ShootFireball
       RegressionBased: 1
       NewFrameOnDone: 0
+      ExitIfAny: 0
       waitType: 0
       Coefficents:
       - 19.962730721802888
@@ -435,9 +438,11 @@ MonoBehaviour:
           UseAxisList: 000000000100000002000000
           ShouldDebug: 0
           Value: 0
+      ExitIfConditions: []
     - StateToActivate: WaitForSlowVelocity
       RegressionBased: 0
       NewFrameOnDone: 1
+      ExitIfAny: 0
       waitType: 1
       Coefficents:
       - 0
@@ -460,9 +465,56 @@ MonoBehaviour:
           UseAxisList: 000000000100000002000000
           ShouldDebug: 0
           Value: 0
+      ExitIfConditions: []
+    - StateToActivate: GracePeriod
+      RegressionBased: 0
+      NewFrameOnDone: 0
+      ExitIfAny: 1
+      waitType: 1
+      Coefficents:
+      - 0.3
+      - 1000
+      - 0.1
+      - 1000
+      CutoffValue: 0
+      SingleConditions:
+      - Label: LeaveOnTime
+        frameType: 0
+        condition: 0
+        restriction:
+          Label: 
+          Active: 0
+          restriction: 0
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 
+          ShouldDebug: 0
+          Value: 0
+      ExitIfConditions:
+      - Label: break distance from point
+        frameType: 0
+        condition: 1
+        restriction:
+          Label: 
+          Active: 0
+          restriction: 0
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 
+          ShouldDebug: 0
+          Value: 0
     - StateToActivate: Control
       RegressionBased: 0
       NewFrameOnDone: 0
+      ExitIfAny: 0
       waitType: 1
       Coefficents:
       - 0.2
@@ -485,6 +537,7 @@ MonoBehaviour:
           UseAxisList: 
           ShouldDebug: 0
           Value: 0
+      ExitIfConditions: []
   - Motion: flames
     ResetOnMax: 0
     CastLevel: 1

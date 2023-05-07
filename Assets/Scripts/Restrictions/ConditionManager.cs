@@ -84,7 +84,30 @@ namespace RestrictionSystem
             if (Holder.Active() == false)
                 return;
 
+            
+
             SingleSequenceState NowState = Condition.Sequences[Holder.SequenceState];
+
+            if (NowState.ExitIfAny && NowState.ExitIfConditions != null)
+                if(NowState.ExitIfConditions.Count > 0)
+                {
+                    double[] RawInputs = GetRawInputs(NowState.ExitIfConditions, Holder.StartInfo, PastFrameRecorder.instance.GetControllerInfo(side), PastFrameRecorder.instance.PastFrame(side));
+                    int CoefficentStart = NowState.SingleConditions.Count * 2;
+                    for (int i = 0; i < RawInputs.Length; i++)
+                    {
+                        Debug.Log((CoefficentStart + (i * 2)));
+                        if(RawInputs[i] > NowState.Coefficents[CoefficentStart + (i * 2)] && RawInputs[i] < NowState.Coefficents[CoefficentStart + (i * 2) + 1])
+                        {
+                            SequenceReset();
+                            return;
+
+                        }
+                    }
+                }
+                    
+
+
+
             bool Works = TestCondition(NowState, Holder.StartInfo, PastFrameRecorder.instance.GetControllerInfo(side), PastFrameRecorder.instance.PastFrame(side));
             //Debug.Log(Motion.ToString() + " " + State + "  First: " + (Holder.StartInfo != null) + "  NUm: " + Holder.SequenceState + "  Works: " + Works);
             
@@ -99,6 +122,7 @@ namespace RestrictionSystem
             else if (NowState.waitType == WaitType.UntilConditionMet)
             {
                 //do nothing until condition = true, upon which: progress
+
                 if (Works == true)
                 {
                     Progress();
@@ -136,18 +160,13 @@ namespace RestrictionSystem
         {
             if (SequenceCondition == null)
                 return true;
-            int Degrees = (SequenceCondition.Coefficents.Length - 1) / SequenceCondition.SingleConditions.Count;
-            double[] RawInputs = new double[SequenceCondition.SingleConditions.Count];
-            for (int i = 0; i < SequenceCondition.SingleConditions.Count; i++)
-            {
-                SingleInfo Frame1 = SequenceCondition.SingleConditions[i].frameType == UseFrameType.LastPoint ? Point : Last;
-                SingleInfo Frame2 = SequenceCondition.SingleConditions[i].frameType == UseFrameType.LastPoint ? Now : Now; //current
-
-                RawInputs[i] = ConditionDictionary[SequenceCondition.SingleConditions[i].condition].Invoke(SequenceCondition.SingleConditions[i].restriction, Frame1, Frame2);
-            }
+            
+            
+            double[] RawInputs = GetRawInputs(SequenceCondition.SingleConditions, Point, Last, Now);
 
             if (SequenceCondition.RegressionBased)
             {
+                int Degrees = (SequenceCondition.Coefficents.Length - 1) / SequenceCondition.SingleConditions.Count;
                 double Total = SequenceCondition.Coefficents[0];
                 for (int j = 0; j < RawInputs.Length; j++)//each  variable
                     for (int k = 0; k < Degrees; k++)
@@ -160,25 +179,33 @@ namespace RestrictionSystem
             }
 
         }
+
+        double[] GetRawInputs(List<SingleConditionInfo> Trials, SingleInfo Point, SingleInfo Last, SingleInfo Now)
+        {
+            double[] RawInputs = new double[Trials.Count];
+            for (int i = 0; i < Trials.Count; i++)
+            {
+                SingleInfo Frame1 = Trials[i].frameType == UseFrameType.LastPoint ? Point : Last;
+                SingleInfo Frame2 = Trials[i].frameType == UseFrameType.LastPoint ? Now : Now; //current
+
+                RawInputs[i] = ConditionDictionary[Trials[i].condition].Invoke(Trials[i].restriction, Frame1, Frame2);
+            }
+            return RawInputs;
+        }
     }
-    /*
-    public enum ConditionType
-    {
-        Sequence = 0,
-        Prohibit = 1,
-    }
-    */
     [Serializable]
     public class SingleSequenceState
     {
         public string StateToActivate;
         public bool RegressionBased;
         public bool NewFrameOnDone;
+        public bool ExitIfAny;
         public WaitType waitType;
         public double[] Coefficents;
 
        [Range(0f,1f), ShowIf("RegressionBased")] public float CutoffValue;
         [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Label")] public List<SingleConditionInfo> SingleConditions;
+        [ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Label"), ShowIf("ExitIfAny")] public List<SingleConditionInfo> ExitIfConditions;
     }
     public enum WaitType
     {

@@ -87,7 +87,7 @@ public class Graph : MonoBehaviour
             return;
         }
 
-        List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions((RestrictionSystem.CurrentLearn)((int)MotionEditor.instance.MotionType), RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionEditor.instance.MotionType - 1]);
+        List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions((CurrentLearn)((int)MotionEditor.instance.MotionType), RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionEditor.instance.MotionType - 1]);
         List<List<int>> Overrides = new List<List<int>>();
 
         for (int i = 0; i < width; i++)

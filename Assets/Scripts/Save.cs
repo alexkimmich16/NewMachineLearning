@@ -1,13 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Networking;
-using System.Text;
 using System;
-using System.Linq;
-using Unity.Mathematics;
-using Newtonsoft.Json.Linq;
 public class Save : MonoBehaviour
 {
     // Start is called before the first frame update

@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using RestrictionSystem;
 using System.Linq;
-using System;
 public class ConditionTester : SerializedMonoBehaviour
 {
     //INVOLVES WHEN TO CAST

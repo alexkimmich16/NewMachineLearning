@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using UnityEngine;
 using Sirenix.OdinInspector;
-using RestrictionSystem;
 namespace RestrictionSystem
 {
     public class RestrictionStatManager : SerializedMonoBehaviour

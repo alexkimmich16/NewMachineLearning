@@ -5,12 +5,9 @@
   https://github.com/flo-wolf/UnitySharpNEAT
 ------------------------------------------------------------------
 */
-using SharpNeat.Core;
 using SharpNeat.Domains;
-using SharpNeat.EvolutionAlgorithms;
 using SharpNeat.Genomes.Neat;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;

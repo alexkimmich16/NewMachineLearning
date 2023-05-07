@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
@@ -7,7 +6,6 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Collections;
-using RestrictionSystem;
 public class BruteForce : SerializedMonoBehaviour
 {
     public static BruteForce instance;

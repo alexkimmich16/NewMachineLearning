@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using AOT;
 using UnityEditor;
@@ -13,7 +12,7 @@ namespace UnityEngine.XR.OpenXR.Samples.InterceptFeature
     /// <summary>
     /// Example feature showing how to intercept a single OpenXR function.
     /// </summary>
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     [OpenXRFeature(UiName = "Sample: Intercept Create Session",
         BuildTargetGroups = new []{BuildTargetGroup.Standalone, BuildTargetGroup.WSA, BuildTargetGroup.Android},
         Company = "Unity",

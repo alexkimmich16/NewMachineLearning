@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 using SharpNeat.Phenomes;
-using Sirenix.OdinInspector;
 using RestrictionSystem;
 //https://www.phyley.com/decompose-force-into-xy-components
 public enum learningState

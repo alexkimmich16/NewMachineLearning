@@ -6,7 +6,6 @@
 ------------------------------------------------------------------
 */
 using UnityEngine;
-using System.Collections;
 using SharpNeat.Core;
 using SharpNeat.Phenomes;
 using System.Collections.Generic;

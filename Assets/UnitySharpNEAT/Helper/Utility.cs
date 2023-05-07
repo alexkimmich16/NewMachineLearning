@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using SharpNeat.Phenomes;
 using SharpNeat.Genomes.Neat;
 using System.Xml;

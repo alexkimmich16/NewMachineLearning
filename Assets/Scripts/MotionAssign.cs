@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 using Sirenix.OdinInspector;
-using RestrictionSystem;
 using System.Linq;
 
 namespace RestrictionSystem

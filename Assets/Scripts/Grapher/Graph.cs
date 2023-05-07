@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Mathematics;
 using System.Linq;
 using RestrictionSystem;
-using TMPro;
 public class Graph : MonoBehaviour
 {
     public static Graph instance;

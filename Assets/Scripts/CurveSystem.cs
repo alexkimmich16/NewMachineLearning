@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
@@ -7,10 +6,7 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Collections;
-using System.Linq;
 using System;
-using System.Threading;
-using Unity.Collections.LowLevel.Unsafe;
 public class CurveSystem : SerializedMonoBehaviour
 {
     public static CurveSystem instance;

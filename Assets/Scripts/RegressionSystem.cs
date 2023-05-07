@@ -1,11 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using System.Linq;
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 
 namespace RestrictionSystem
@@ -16,8 +13,6 @@ namespace RestrictionSystem
         private void Awake() { instance = this; }
         
         [FoldoutGroup("Test")] public List<SingleFrameRestrictionValues> RestrictionValues;
-
-        //[FoldoutGroup("CoefficentStats"), ListDrawerSettings(ShowIndexLabels = true)] public Coefficents RegressionStats;
         
         [FoldoutGroup("CoefficentStats")] public int EachTotalDegree;
         //[FoldoutGroup("CoefficentStats")] public MotionRestriction UploadRestrictions;
@@ -32,6 +27,7 @@ namespace RestrictionSystem
 
         public static bool ShouldDebug = false;
 
+        [FoldoutGroup("MultiThreading")] public int Threads;
 
         public delegate void DoPreformRegression();
         public static event DoPreformRegression OnPreformRegression;

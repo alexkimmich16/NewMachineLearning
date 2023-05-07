@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with SharpNEAT.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System.Collections;
-using System.Collections.Generic;
 
 namespace SharpNeat.Core
 {

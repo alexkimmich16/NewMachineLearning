@@ -5,8 +5,6 @@
   https://github.com/flo-wolf/UnitySharpNEAT
 ------------------------------------------------------------------
 */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnitySharpNEAT

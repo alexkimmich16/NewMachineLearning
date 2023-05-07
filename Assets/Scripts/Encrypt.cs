@@ -1,7 +1,6 @@
 using System;
 using System.Security.Cryptography;
 //using System.Text.Json;
-using UnityEngine;
 public static class Encrypt
 {
     public static byte[] GenerateKey(string saltVal, string passphrase)

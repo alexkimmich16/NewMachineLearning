@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Sirenix.OdinInspector;
-using UnityEditor;
 using RestrictionSystem;
 
 public class LearnManager : SerializedMonoBehaviour

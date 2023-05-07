@@ -6,14 +6,12 @@
 ------------------------------------------------------------------
 */
 using UnityEngine;
-using System.Collections;
 using SharpNeat.Phenomes;
 using System.Collections.Generic;
 using SharpNeat.EvolutionAlgorithms;
 using SharpNeat.Genomes.Neat;
 using System;
 using System.Xml;
-using System.IO;
 using System.Linq;
 using SharpNeat.Core;
 

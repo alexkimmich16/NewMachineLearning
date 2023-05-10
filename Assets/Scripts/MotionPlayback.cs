@@ -78,7 +78,7 @@ public class MotionPlayback : MonoBehaviour
             handToChange.material = LM.FalseTrue[State ? 1 : 0];
 
             
-            if (ME.Setting == EditSettings.DisplayingBrute || ME.Setting == EditSettings.DisplayingMotion)
+            if (ME.Setting == EditSettings.DisplayingMotion)
             {
                 //ConditionManager.instance.PassValue(State, ME.CurrentTestMotion, Side.right);
             }
@@ -91,7 +91,7 @@ public class MotionPlayback : MonoBehaviour
 
             
             bool GetMotionFromInput() { return Frame - BruteForce.instance.PastFrameLookup >= 0 ? RestrictionManager.instance.MotionWorks(LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame), ME.MotionType) : false; }
-            MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.MotionType - 1]; }
+            //MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.MotionType - 1]; }
         }
         void moveAll(SingleInfo info)
         {

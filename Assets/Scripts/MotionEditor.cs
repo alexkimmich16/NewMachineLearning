@@ -14,8 +14,7 @@ public enum EditSide
 public enum EditSettings
 {
     Editing = 0,
-    DisplayingBrute = 1,
-    DisplayingMotion = 2,
+    DisplayingMotion = 1,
 }
 public class MotionEditor : SerializedMonoBehaviour
 {

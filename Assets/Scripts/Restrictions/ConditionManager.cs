@@ -12,7 +12,6 @@ namespace RestrictionSystem
         Distance = 1,
         Restriction = 2,
     }
-    public delegate bool ConditionWorksAndAdd(SingleConditionInfo Condition, SingleInfo CurrentFrame, SingleInfo PastFrame, bool NewState, Side side);
     public delegate void OnNewMotionState(Side side, bool NewState, int Index, int Level);
 
     public class ConditionManager : SerializedMonoBehaviour
@@ -36,9 +35,14 @@ namespace RestrictionSystem
                 StartInfo = null;
             }
         }
-
+        public void DisableSide(Side side)
+        {
+            for (int i = 0; i < conditions.MotionConditions.Count; i++)
+                DisableMotionSequence((CurrentLearn)(i + 1), side);
+        }
         private void Start()
         {
+            PastFrameRecorder.disableController += DisableSide;
             ConditionStats = new ConditionProgress[2, conditions.MotionConditions.Count];
             for (int i = 0; i < 2; i++)
                 for (int j = 0; j < conditions.MotionConditions.Count; j++)
@@ -144,17 +148,20 @@ namespace RestrictionSystem
                 else if (Condition.ResetOnMax && AtMax())
                     SequenceReset();
             }
-            void SequenceReset()
-            {
-                // Debug.Log("Reset");
-                Holder.Reset();
-                for (int i = 0; i < Condition.Sequences.Count; i++)
-                {
-                    Condition.DoEvent(side, false, i, Condition.CastLevel);
-                }
-            }
+            void SequenceReset() { DisableMotionSequence(Motion, side); }
             bool AtMax() { return Holder.SequenceState == Condition.Sequences.Count - 1; }
             ConditionStats[(int)side, (int)Motion - 1] = Holder;
+        }
+        public void DisableMotionSequence(CurrentLearn Motion, Side side)
+        {
+            ConditionProgress Holder = ConditionStats[(int)side, (int)Motion - 1];
+            MotionConditionInfo Condition = conditions.MotionConditions[(int)Motion - 1];
+
+            Holder.Reset();
+            for (int i = 0; i < Condition.Sequences.Count; i++)
+            {
+                Condition.DoEvent(side, false, i, Condition.CastLevel);
+            }
         }
         public bool TestCondition(SingleSequenceState SequenceCondition, SingleInfo Point, SingleInfo Last, SingleInfo Now)//onyl call if motion works
         {

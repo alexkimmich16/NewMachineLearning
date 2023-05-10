@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2236,7 +2236,7 @@ MonoBehaviour:
     SerializationNodes: []
   MotionNum: 2
   MotionType: 1
-  Setting: 0
+  Setting: 1
   Typing: 0
   input: {fileID: 1167088495}
   sideText: {fileID: 1650534509}
@@ -8990,9 +8990,9 @@ MonoBehaviour:
   - {fileID: 1867183570734329135}
   - {fileID: 1867183570487954631}
   Cam: {fileID: 1867183570494687147}
-  UseSides: d101
-  OverrideSides: 1
   DrawDebug: 0
+  HandsActive: 
+  MinMoveThreshold: 0
 --- !u!114 &944444324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9073,6 +9073,7 @@ MonoBehaviour:
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0
+  Threads: 0
 --- !u!114 &944444330
 MonoBehaviour:
   m_ObjectHideFlags: 0

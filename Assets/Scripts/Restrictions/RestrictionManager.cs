@@ -61,17 +61,21 @@ namespace RestrictionSystem
             for (int i = 0; i < 2; i++)
             {
                 Side side = (Side)i;
-                for (int j = 1; j < RestrictionSettings.Coefficents.Count + 1; j++)
+                if (PR.HandActive(side))
                 {
-                    CurrentLearn motion = (CurrentLearn)j;
-                    
-                    FrameLogic.instance.InputRawMotionState(side, motion, MotionWorks(PR.PastFrame(side), PR.GetControllerInfo(side), motion), PR.GetControllerInfo(side).SpawnTime - PR.PastFrame(side).SpawnTime);
-                    bool Works = FrameLogic.instance.Calculate(side, motion);
+                    for (int j = 1; j < RestrictionSettings.Coefficents.Count + 1; j++)
+                    {
+                        CurrentLearn motion = (CurrentLearn)j;
 
-                    //works -> frame logic = actual motion
-                    ConditionManager.instance.PassValue(Works, motion, side);
-                    
+                        FrameLogic.instance.InputRawMotionState(side, motion, MotionWorks(PR.PastFrame(side), PR.GetControllerInfo(side), motion), PR.GetControllerInfo(side).SpawnTime - PR.PastFrame(side).SpawnTime);
+                        bool Works = FrameLogic.instance.Calculate(side, motion);
+
+                        //works -> frame logic = actual motion
+                        ConditionManager.instance.PassValue(Works, motion, side);
+
+                    }
                 }
+                
             }
         }
         public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, CurrentLearn motionType)

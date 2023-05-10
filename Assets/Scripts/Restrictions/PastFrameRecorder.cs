@@ -8,8 +8,8 @@ namespace RestrictionSystem
     {
         public static PastFrameRecorder instance;
         private void Awake() { instance = this; }
-        [ListDrawerSettings(ShowIndexLabels = true, Expanded = true)] public List<SingleInfo> RightInfo;
-        [ListDrawerSettings(ShowIndexLabels = true, Expanded = true)] public List<SingleInfo> LeftInfo;
+        [ListDrawerSettings(ShowIndexLabels = true)] public List<SingleInfo> RightInfo;
+        [ListDrawerSettings(ShowIndexLabels = true)] public List<SingleInfo> LeftInfo;
 
         public int MaxStoreInfo = 10;
 
@@ -20,14 +20,41 @@ namespace RestrictionSystem
         public List<Transform> PlayerHands;
         public Transform Cam;
 
-        public List<bool> UseSides;
-
-        public bool OverrideSides;
-
         public bool DrawDebug;
+
+        public bool[] HandsActive;
+
+        public delegate void OnControllerDisable(Side side);
+        public static OnControllerDisable disableController;
+
+        public static Dictionary<XRNode, Side> XRHands = new Dictionary<XRNode, Side>(){{XRNode.RightHand, Side.right}, { XRNode.LeftHand, Side.left } };
 
         //public bool[] InvertHand;
         //118.012 to 
+        public bool HandActive(Side side) { return HandsActive[(int)side]; }
+        private void Start()
+        {
+            HandsActive = new bool[2];
+            InputTracking.trackingLost += TrackingLost;
+            InputTracking.trackingAcquired += TrackingFound;
+        }
+        public void TrackingLost(XRNodeState state)
+        {
+            if (XRHands.ContainsKey(state.nodeType))
+            {
+                Side side = XRHands[state.nodeType];
+                disableController?.Invoke(side);
+                HandsActive[(int)side] = false;
+            }
+        }
+        public void TrackingFound(XRNodeState state)
+        {
+            if (XRHands.ContainsKey(state.nodeType))
+            {
+                Side side = XRHands[state.nodeType];
+                HandsActive[(int)side] = true;
+            }
+        }
         public SingleInfo GetControllerInfo(Side side)
         {
             ResetStats();
@@ -94,15 +121,19 @@ namespace RestrictionSystem
         private void Update()
         {
             ManageLists();
+
+            if (!IsReady())
+                return;
+
+            RestrictionManager.instance.TriggerFrameEvents();
         }
         public static bool IsReady() { return instance.RightInfo.Count >= instance.MaxStoreInfo - 1; }
         public void ManageLists()
         {
-            InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.isTracked, out bool HeadsetActive);
-            InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.isTracked, out bool RightHandActive);
-            InputDevices.GetDeviceAtXRNode(XRNode.LeftHand).TryGetFeatureValue(CommonUsages.isTracked, out bool LeftHandActive);
-            if(!OverrideSides)
-                UseSides = new List<bool>() { RightHandActive && HeadsetActive, LeftHandActive && HeadsetActive };
+            //InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.isTracked, out bool HeadsetActive);
+            //UseSides = new List<bool>() { RightHandActive && HeadsetActive, LeftHandActive && HeadsetActive };
+
+            
 
             RightInfo.Add(GetControllerInfo(Side.right));
             if (RightInfo.Count > MaxStoreInfo)
@@ -111,10 +142,9 @@ namespace RestrictionSystem
             LeftInfo.Add(GetControllerInfo(Side.left));
             if (LeftInfo.Count > MaxStoreInfo)
                 LeftInfo.RemoveAt(0);
-
-            if (RightInfo.Count > FramesAgo())
-                RestrictionManager.instance.TriggerFrameEvents();
         }
+
+
         public SingleInfo PastFrame(Side side) { return (side == Side.right) ? RightInfo[RightInfo.Count - FramesAgo()] : LeftInfo[LeftInfo.Count - FramesAgo()]; }
         public int FramesAgo() { return RestrictionManager.instance.RestrictionSettings.FramesAgo; }
     }

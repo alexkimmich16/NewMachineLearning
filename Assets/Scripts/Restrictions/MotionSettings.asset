@@ -23,23 +23,38 @@ MonoBehaviour:
     SerializationNodes: []
   FramesAgo: 2
   Coefficents:
-  - Intercept: -88.06916
+  - Intercept: -8.313342
     Coefficents:
     - Degrees:
-      - 4.0930915
-      - -1.1666031
-      - 0.08106185
-      - -0.0014918488
+      - 3.1817553
+      - -1.5765979
+      - 0.21386194
+      - -0.008779014
     - Degrees:
-      - -0.36587933
-      - 0.0033406992
-      - 0.0000014128561
-      - -0.000000045129443
+      - 4.438174
+      - -1.3637966
+      - 0.10669152
+      - -0.0021568881
     - Degrees:
-      - 714.13715
-      - -2293.5798
-      - 3208.6055
-      - -1648.8914
+      - 6.3238297
+      - -76.904205
+      - 196.00465
+      - -182.11671
+    - Degrees:
+      - 51.90174
+      - -112.55648
+      - 79.22469
+      - -28.876965
+    - Degrees:
+      - 0.20509541
+      - -0.0065304595
+      - 0.00006514399
+      - -0.00000023104882
+    - Degrees:
+      - 0.058813035
+      - -0.0057013435
+      - 0.000055378707
+      - -0.0000001511006
   - Intercept: -32.90284
     Coefficents:
     - Degrees:
@@ -107,7 +122,7 @@ MonoBehaviour:
   MotionRestrictions:
   - Motion: Fireball
     Restrictions:
-    - Label: Speed
+    - Label: VerticleSpeed
       Active: 0
       restriction: 0
       checkType: 0
@@ -116,22 +131,22 @@ MonoBehaviour:
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 000000000100000002000000
+      UseAxisList: 01000000
       ShouldDebug: 0
       Value: 0
-    - Label: HandForwardVel
+    - Label: HorizontalSpeed
       Active: 0
-      restriction: 1
+      restriction: 0
       checkType: 1
       OtherDirection: {x: 0, y: 0, z: 0}
       UseLocalHandPos: 0
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: -1}
-      UseAxisList: 000000000100000002000000
+      UseAxisList: 0000000002000000
       ShouldDebug: 0
       Value: 0
-    - Label: 
+    - Label: VertHandDist
       Active: 0
       restriction: 3
       checkType: 0
@@ -140,6 +155,42 @@ MonoBehaviour:
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 01000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: HorHandDist
+      Active: 0
+      restriction: 3
+      checkType: 0
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 0
+      UseLocalHandRot: 0
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 0000000002000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: HandForward
+      Active: 0
+      restriction: 2
+      checkType: 2
+      OtherDirection: {x: 0, y: 0, z: 1}
+      UseLocalHandPos: 1
+      UseLocalHandRot: 1
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 1}
+      UseAxisList: 000000000100000002000000
+      ShouldDebug: 0
+      Value: 0
+    - Label: HandForwardVel
+      Active: 0
+      restriction: 1
+      checkType: 1
+      OtherDirection: {x: 0, y: 0, z: 0}
+      UseLocalHandPos: 1
+      UseLocalHandRot: 1
+      Offset: {x: 0, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0
@@ -328,7 +379,7 @@ MonoBehaviour:
       ShouldDebug: 0
       Value: 0
   LogicInfo:
-  - FrameLogicEnabled: 1
+  - FrameLogicEnabled: 0
     MostTime: 0.08
     Spread: 10.9
     CutoffValue: 0.5
@@ -351,7 +402,7 @@ MonoBehaviour:
       ExitIfAny: 0
       waitType: 0
       Coefficents:
-      - 0.05
+      - 0.02
       - 1000
       CutoffValue: 0
       SingleConditions:
@@ -373,62 +424,22 @@ MonoBehaviour:
           Value: 0
       ExitIfConditions: []
     - StateToActivate: ShootFireball
-      RegressionBased: 1
+      RegressionBased: 0
       NewFrameOnDone: 0
       ExitIfAny: 0
       waitType: 0
       Coefficents:
-      - 19.962730721802888
-      - -61.563711192271604
-      - 156.52721304788676
-      - -133.0830777123315
-      - 52.37787930822678
-      - -66.41869468571764
-      - 32.00716608813544
-      - 19.88986230560034
-      - 4.679357987373879
-      - 0.36479077844342495
-      CutoffValue: 0.037
+      - 0.4
+      - 1000
+      CutoffValue: 0.976
       SingleConditions:
-      - Label: head dist
-        frameType: 0
-        condition: 2
-        restriction:
-          Label: HeadDist
-          Active: 0
-          restriction: 3
-          checkType: 0
-          OtherDirection: {x: 0, y: 0, z: 0}
-          UseLocalHandPos: 0
-          UseLocalHandRot: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          UseAxisList: 000000000100000002000000
-          ShouldDebug: 0
-          Value: 0
-      - Label: head dist
+      - Label: ovedist dist
         frameType: 0
         condition: 1
         restriction:
           Label: HeadDist
           Active: 0
           restriction: 3
-          checkType: 0
-          OtherDirection: {x: 0, y: 0, z: 0}
-          UseLocalHandPos: 0
-          UseLocalHandRot: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          UseAxisList: 000000000100000002000000
-          ShouldDebug: 0
-          Value: 0
-      - Label: 
-        frameType: 1
-        condition: 2
-        restriction:
-          Label: velocity
-          Active: 0
-          restriction: 0
           checkType: 0
           OtherDirection: {x: 0, y: 0, z: 0}
           UseLocalHandPos: 0

@@ -29,12 +29,13 @@ namespace RestrictionSystem
         right = 0,
         left = 1,
     }
-    public enum CurrentLearn
+    public enum MotionState
     {
         Nothing = 0,
         Fireball = 1,
         Flames = 2,
         FlameBlock = 3,
+        FlameGuard = 4,
     }
 
 
@@ -65,7 +66,7 @@ namespace RestrictionSystem
                 {
                     for (int j = 1; j < RestrictionSettings.Coefficents.Count + 1; j++)
                     {
-                        CurrentLearn motion = (CurrentLearn)j;
+                        MotionState motion = (MotionState)j;
 
                         FrameLogic.instance.InputRawMotionState(side, motion, MotionWorks(PR.PastFrame(side), PR.GetControllerInfo(side), motion), PR.GetControllerInfo(side).SpawnTime - PR.PastFrame(side).SpawnTime);
                         bool Works = FrameLogic.instance.Calculate(side, motion);
@@ -78,11 +79,10 @@ namespace RestrictionSystem
                 
             }
         }
-        public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, CurrentLearn motionType)
+        public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, MotionState motionType)
         {
             List<float> TestValues = new List<float>();
             MotionRestriction restriction = RestrictionSettings.MotionRestrictions[(int)motionType - 1];
-
             for (int i = 0; i < restriction.Restrictions.Count; i++)
             {
                 TestValues.Add(RestrictionDictionary[restriction.Restrictions[i].restriction].Invoke(restriction.Restrictions[i], frame1, frame2));

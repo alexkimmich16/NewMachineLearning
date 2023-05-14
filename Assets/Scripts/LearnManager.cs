@@ -182,7 +182,7 @@ public class LearnManager : SerializedMonoBehaviour
                         if (RandomPick < CorrectMax)
                         {
                             if (ShouldDebug)
-                                Debug.Log("RandomPick: " + RandomPick + "  Motion: " + (CurrentLearn)i);
+                                Debug.Log("RandomPick: " + RandomPick + "  Motion: " + (MotionState)i);
                             return i;
                         }
                     }

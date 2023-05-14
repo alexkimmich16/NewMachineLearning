@@ -119,6 +119,8 @@ MonoBehaviour:
       - 0.2920992
       - -0.012843759
       - 0.000073899966
+  - Intercept: 0
+    Coefficents: []
   MotionRestrictions:
   - Motion: Fireball
     Restrictions:
@@ -378,6 +380,8 @@ MonoBehaviour:
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0
+  - Motion: Sweep
+    Restrictions: []
   LogicInfo:
   - FrameLogicEnabled: 0
     MostTime: 0.08
@@ -554,6 +558,10 @@ MonoBehaviour:
     CastLevel: 1
     Sequences: []
   - Motion: Block
+    ResetOnMax: 0
+    CastLevel: 0
+    Sequences: []
+  - Motion: SweepingFire
     ResetOnMax: 0
     CastLevel: 0
     Sequences: []

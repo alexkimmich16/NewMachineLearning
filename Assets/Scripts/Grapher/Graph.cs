@@ -79,7 +79,7 @@ public class Graph : MonoBehaviour
         TextureMap = new Texture2D(width, height);
         TextureMap.filterMode = FilterMode.Point;
 
-        if(MotionEditor.instance.MotionType == CurrentLearn.Nothing)
+        if(MotionEditor.instance.MotionType == MotionState.Nothing)
         {
             TextureMap.Apply();
             mySprite = Sprite.Create(TextureMap, new Rect(0.0f, 0.0f, TextureMap.width, TextureMap.height), new Vector2(0.5f, 0.5f), 1000.0f);
@@ -87,7 +87,7 @@ public class Graph : MonoBehaviour
             return;
         }
 
-        List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions((CurrentLearn)((int)MotionEditor.instance.MotionType), RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionEditor.instance.MotionType - 1]);
+        List<SingleFrameRestrictionValues> FrameInfo = BruteForce.instance.GetRestrictionsForMotions((MotionState)((int)MotionEditor.instance.MotionType), RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionEditor.instance.MotionType - 1]);
         List<List<int>> Overrides = new List<List<int>>();
 
         for (int i = 0; i < width; i++)
@@ -166,7 +166,7 @@ public class Graph : MonoBehaviour
         ColorSide.CurrentValues = new List<float>();
         ColorSide.lerp = new List<float>();
 
-        if (MotionEditor.instance.MotionType == CurrentLearn.Nothing)
+        if (MotionEditor.instance.MotionType == MotionState.Nothing)
             return;
 
         MotionRestriction restriction = RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionEditor.instance.MotionType - 1];

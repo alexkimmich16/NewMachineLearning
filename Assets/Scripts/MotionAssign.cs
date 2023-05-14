@@ -49,7 +49,7 @@ namespace RestrictionSystem
         [FoldoutGroup("AllTrueMotions"), Button(ButtonSizes.Small)]
         public void GetTrueMotions()
         {
-            CurrentLearn TrueMotionEdit = MotionEditor.instance.MotionType;
+            MotionState TrueMotionEdit = MotionEditor.instance.MotionType;
             List<bool> MotionStates = new List<bool>();
             for (int i = 0; i < LM.MovementList[(int)TrueMotionEdit].Motions.Count; i++)
                 MotionStates.Add(Enumerable.Range(0, LM.MovementList[(int)TrueMotionEdit].Motions[i].Infos.Count).Any(x => LM.MovementList[(int)TrueMotionEdit].Motions[i].AtFrameState(x)));

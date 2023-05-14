@@ -11,7 +11,7 @@ namespace RestrictionSystem
         public SideInfo()
         {
             Motions = new List<MotionInfo>();
-            for (int i = 0; i < Enum.GetValues(typeof(CurrentLearn)).Length - 1; i++)
+            for (int i = 0; i < Enum.GetValues(typeof(MotionState)).Length - 1; i++)
                 Motions.Add(new MotionInfo());
         }
     }
@@ -51,7 +51,7 @@ namespace RestrictionSystem
         public MotionSettings MotionSettings;
 
         //[FoldoutGroup("Output")] public List<float> Weights;
-        public MotionInfo GetMotionInfo(Side side, CurrentLearn motion) { return PastMotionFrames[(int)side].Motions[(int)motion - 1]; }
+        public MotionInfo GetMotionInfo(Side side, MotionState motion) { return PastMotionFrames[(int)side].Motions[(int)motion - 1]; }
         void Start()
         {
             //Initialize Frames
@@ -59,7 +59,7 @@ namespace RestrictionSystem
             for (int i = 0; i < Enum.GetValues(typeof(Side)).Length; i++)
                 PastMotionFrames.Add(new SideInfo());
         }
-        public void InputRawMotionState(Side side, CurrentLearn Motion, bool State, float Time)
+        public void InputRawMotionState(Side side, MotionState Motion, bool State, float Time)
         {
             MotionInfo info = GetMotionInfo(side, Motion);
             info.AddFrame(State, Time);
@@ -67,7 +67,7 @@ namespace RestrictionSystem
                 info.RemoveFrame();
         }
 
-        public bool Calculate(Side side, CurrentLearn Motion)
+        public bool Calculate(Side side, MotionState Motion)
         {
             //*sequence matters*
 

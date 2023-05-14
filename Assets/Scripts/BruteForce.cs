@@ -11,7 +11,7 @@ public class BruteForce : SerializedMonoBehaviour
     public static BruteForce instance;
     private void Awake() { instance = this; }
 
-    public RestrictionSystem.CurrentLearn motionGet;
+    public RestrictionSystem.MotionState motionGet;
     public int PastFrameLookup;
 
     [FoldoutGroup("BruteForce"), ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Motion")] public List<AllChanges> AllChangesList;
@@ -478,7 +478,7 @@ public class BruteForce : SerializedMonoBehaviour
         }
         return Output;
     }
-    public List<SingleFrameRestrictionValues> GetRestrictionsForMotions(RestrictionSystem.CurrentLearn FrameDataMotion, MotionRestriction RestrictionsMotion)
+    public List<SingleFrameRestrictionValues> GetRestrictionsForMotions(RestrictionSystem.MotionState FrameDataMotion, MotionRestriction RestrictionsMotion)
     {
         List<SingleFrameRestrictionValues> ReturnValue = new List<SingleFrameRestrictionValues>();
         List<int> ToCheck = UseAllMotions ? new List<int>() { 0, 1, 2, 3 } : new List<int>(){ 0, (int)FrameDataMotion };

@@ -77,13 +77,13 @@ namespace RestrictionSystem
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void PreformRegressionAll()
         {
-            for (int motion = 1; motion < Enum.GetValues(typeof(CurrentLearn)).Length; motion++)
-                PreformRegression((CurrentLearn)motion);
+            for (int motion = 1; motion < Enum.GetValues(typeof(MotionState)).Length; motion++)
+                PreformRegression((MotionState)motion);
         }
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
-        public void PreformRegressionCurrent() { PreformRegression((CurrentLearn)MotionEditor.instance.MotionType); }
+        public void PreformRegressionCurrent() { PreformRegression((MotionState)MotionEditor.instance.MotionType); }
 
-        public void PreformRegression(CurrentLearn Motion)
+        public void PreformRegression(MotionState Motion)
         {
             List<SingleFrameRestrictionValues> FrameInfo = RestrictionStatManager.instance.GetRestrictionsForMotions(Motion, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)Motion - 1]);
 

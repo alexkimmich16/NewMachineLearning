@@ -80,8 +80,16 @@ namespace RestrictionSystem
                 // Apply the mirrored rotation to the left controller
                 TestHand[(int)side].rotation = mirroredRotation;
                 YDifference = -YDifference; // * -1f
+
+
+
+                ///Really meaning: offset = 
+                ///handPos = CamPos + ((handPos - CamPos)[-x]) but campos always 0, so 
+                ///
+                ///handRot = mirroredRotation
+                ///
             }
-            
+
             //Debug.Log("side: " + side + "  YDifference: " + YDifference);
             Vector3 UncenteredHandPos = TestHand[(int)side].position;
             Vector3 UncenteredHandRot = TestHand[(int)side].rotation.eulerAngles;

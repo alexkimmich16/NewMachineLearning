@@ -12,14 +12,14 @@ namespace RestrictionSystem
         [FoldoutGroup("Info"), ShowIf("UseSpecialMotions")] public bool OnlyOtherTrueMotions;
 
         public LearnManager LM;
-        public List<int> GetToCheckList(CurrentLearn Motion)
+        public List<int> GetToCheckList(MotionState Motion)
         {
             List<int> ReturnList = UseSpecialMotions ? new List<int>() { 0, 1, 2, 3 } : new List<int>() { 0, (int)Motion };
             if (!UseFalseMotions)
                 ReturnList.RemoveAt(0);
             return ReturnList;
         }
-        public List<SingleFrameRestrictionValues> GetRestrictionsForMotions(CurrentLearn FrameDataMotion, MotionRestriction RestrictionsMotion)
+        public List<SingleFrameRestrictionValues> GetRestrictionsForMotions(MotionState FrameDataMotion, MotionRestriction RestrictionsMotion)
         {
             List<SingleFrameRestrictionValues> ReturnValue = new List<SingleFrameRestrictionValues>();
             List<int> MotionsToCheck = GetToCheckList(FrameDataMotion);

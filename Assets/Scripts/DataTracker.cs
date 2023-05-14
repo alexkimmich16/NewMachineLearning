@@ -39,12 +39,12 @@ public class DataTracker : SerializedMonoBehaviour
         int Set = LM.LoggingAI().Set;
 
         bool AtFrameState = LM.MovementList[Motion].Motions[Set].AtFrameState(LM.LoggingAI().Frame);
-        CurrentLearn Truth = (LM.AtFrameStateAlwaysTrue) ? ((CurrentLearn)Motion) : (AtFrameState ? (CurrentLearn)Motion : CurrentLearn.Nothing);
+        MotionState Truth = (LM.AtFrameStateAlwaysTrue) ? ((MotionState)Motion) : (AtFrameState ? (MotionState)Motion : MotionState.Nothing);
         //Debug.Log("Motion: " + (CurrentLearn)Motion + "  Truth: " + Truth + "");
         //Debug.Log("Same: " + ((CurrentLearn)Motion == Truth));
         SpellCalls[(int)Truth] += 1;
 
-        CurrentLearn Guess = LM.LoggingAI().CurrentGuess;
+        MotionState Guess = LM.LoggingAI().CurrentGuess;
 
         int PlayCount = LM.MovementList[Motion].Motions[Set].PlayCount;
         
@@ -87,8 +87,8 @@ public class AIStat
     public int Motion, Set;
     public int MotionPlayNum;
     public float Timer;
-    public CurrentLearn Guess, Truth;
-    public AIStat(int MotionStat, int SetStat, int MotionPlayNumStat, CurrentLearn GuessStat, CurrentLearn TruthStat)
+    public MotionState Guess, Truth;
+    public AIStat(int MotionStat, int SetStat, int MotionPlayNumStat, MotionState GuessStat, MotionState TruthStat)
     {
         Motion = MotionStat;
         Set = SetStat;

@@ -61,11 +61,11 @@ namespace UnitySharpNEAT
         }
         
         [Header("Output")]
-        public CurrentLearn CurrentGuess;
-        public CurrentLearn RealMotion;
+        public MotionState CurrentGuess;
+        public MotionState RealMotion;
 
         public int GuessStreak;
-        public CurrentLearn lastGuess;
+        public MotionState lastGuess;
 
         private float OutputMultiplier = 1000f;
         public List<SingleInfo> InterpolateFrames;
@@ -151,8 +151,8 @@ namespace UnitySharpNEAT
         }
         protected override void UseBlackBoxOutpts(ISignalArray outputSignalArray)//on output
         {
-            CurrentLearn Truth = TrueMotion();
-            CurrentLearn Guess = (CurrentLearn)GetGuess(out Conflict);
+            MotionState Truth = TrueMotion();
+            MotionState Guess = (MotionState)GetGuess(out Conflict);
 
             SetVariablesPublic();
             if (!Active())
@@ -172,15 +172,15 @@ namespace UnitySharpNEAT
 
             ChangeSameGuessStreak(Guess);
 
-            CurrentLearn TrueMotion()
+            MotionState TrueMotion()
             {
                 if (IsInterpolating())
-                    return CurrentLearn.Nothing;
+                    return MotionState.Nothing;
                 if (LearnManager.instance.AtFrameStateAlwaysTrue)
-                    return (CurrentLearn)MotionIndex;
+                    return (MotionState)MotionIndex;
 
                 bool IndexWorks = LearnManager.instance.MovementList[MotionIndex].Motions[Set].AtFrameState(Frame);
-                CurrentLearn IndexCheckMotion = (CurrentLearn)((IndexWorks) ? MotionIndex : 0);
+                MotionState IndexCheckMotion = (MotionState)((IndexWorks) ? MotionIndex : 0);
                 return IndexCheckMotion;
             }
             float FitnessIncrease()
@@ -191,7 +191,7 @@ namespace UnitySharpNEAT
                 if (LM.ShouldPunishStreak(GuessStreak))
                     GuessStreak = 0;
                 float MotionMultiplier = LM.UseWeightedRewardMultiplier ? LM.WeightedRewardMultiplier[(int)Truth] : 1;
-                float ShouldRewardOnFalse = (Truth == CurrentLearn.Nothing && LM.RewardNothingGuess == false) ? 0 : 1;
+                float ShouldRewardOnFalse = (Truth == MotionState.Nothing && LM.RewardNothingGuess == false) ? 0 : 1;
                 float HighestMultiplier = (LearnManager.instance.MultiplyByHighestGuess) ? (WeightedGuesses[GetGuess(out bool Conflict)] / OutputMultiplier) : 1;
                 float RewardOnInterpolateMultiplier = (IsInterpolating() && LearnManager.instance.RewardOnInterpolation || IsInterpolating() == false) ? 1f : 0f;
                 return (Increase + Subtract) * ShouldRewardOnFalse * MotionMultiplier * HighestMultiplier * RewardOnInterpolateMultiplier;
@@ -337,7 +337,7 @@ namespace UnitySharpNEAT
             */
         }
         #endregion
-        void ChangeSameGuessStreak(CurrentLearn Guess)
+        void ChangeSameGuessStreak(MotionState Guess)
         {
             if (Guess == lastGuess)
             {

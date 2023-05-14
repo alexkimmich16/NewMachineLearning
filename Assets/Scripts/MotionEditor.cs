@@ -22,7 +22,7 @@ public class MotionEditor : SerializedMonoBehaviour
     private void Awake() { instance = this; }
 
     public int MotionNum;
-    public CurrentLearn MotionType;
+    public MotionState MotionType;
     public EditSettings Setting;
     public bool Typing;
     
@@ -106,7 +106,7 @@ public class MotionEditor : SerializedMonoBehaviour
     }
     public void TestCurrentButton()
     {
-        if (MotionType == CurrentLearn.Nothing)
+        if (MotionType == MotionState.Nothing)
             return;
 
         RestrictionStatManager stats = RestrictionStatManager.instance;
@@ -142,10 +142,10 @@ public class MotionEditor : SerializedMonoBehaviour
     public void ChangeMotionType(int Change)
     {
         MotionType += Change;
-        if ((int)MotionType > Enum.GetValues(typeof(CurrentLearn)).Length - 1)
+        if ((int)MotionType > Enum.GetValues(typeof(MotionState)).Length - 1)
             MotionType = 0;
         else if((int)MotionType < 0)
-            MotionType = (CurrentLearn)Enum.GetValues(typeof(CurrentLearn)).Length - 1;
+            MotionType = (MotionState)Enum.GetValues(typeof(MotionState)).Length - 1;
 
         if (MotionNum > LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1)
             MotionNum = LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1;
@@ -199,7 +199,7 @@ public class MotionEditor : SerializedMonoBehaviour
         Side side = DisplayingRightStats.isOn ? Side.right : Side.left;
         if (PastFrameRecorder.IsReady() && (DisplayingVR.isOn == false && display.Frame == 0) == false)
         {
-            if (MotionType != CurrentLearn.Nothing)
+            if (MotionType != MotionState.Nothing)
             {
                 for (int i = 0; i < CurrentMotionTests.Length; i++)
                 {

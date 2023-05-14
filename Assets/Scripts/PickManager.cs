@@ -153,7 +153,7 @@ public class PickManager : SerializedMonoBehaviour
                     
                     Chances[j] += ChanceAddForThisMotion; //total average
                     if (ThisSubFrameCount != 0f && ShouldDebug)
-                        Debug.Log("I: " + (CurrentLearn)i + "  J: " + (CurrentLearn)j +
+                        Debug.Log("I: " + (MotionState)i + "  J: " + (MotionState)j +
                         "  ThisSubFrameCount: " + ThisSubFrameCount +
                         "  TotalFramesMotionParent: " + GetTotalMotionFrames(i) +
                         "  MyWeightOfTotal: " + (MyWeightOfTotal * 100f) + "%" +

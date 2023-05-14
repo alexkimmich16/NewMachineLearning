@@ -25,7 +25,7 @@ public class ConditionTester : SerializedMonoBehaviour
     //[FoldoutGroup("Testing")] public double[][] TestInputs;
     //[FoldoutGroup("Testing")] public double[] TestOutputs;
 
-    public CurrentLearn Motion() { return MotionEditor.instance.MotionType; }
+    public MotionState Motion() { return MotionEditor.instance.MotionType; }
 
     ///involves 2 things:
     ///getting correct coefficents
@@ -106,13 +106,13 @@ public class ConditionTester : SerializedMonoBehaviour
     }
     private void Start()
     {
-        ConditionManager.instance.conditions.MotionConditions[(int)CurrentLearn.Fireball - 1].OnNewState += FireballTest;
-        ConditionManager.instance.conditions.MotionConditions[(int)CurrentLearn.Flames - 1].OnNewState += FlameTest;
-        ConditionManager.instance.conditions.MotionConditions[(int)CurrentLearn.FlameBlock - 1].OnNewState += FireBlockTest;
+        ConditionManager.instance.conditions.MotionConditions[(int)MotionState.Fireball - 1].OnNewState += FireballTest;
+        ConditionManager.instance.conditions.MotionConditions[(int)MotionState.Flames - 1].OnNewState += FlameTest;
+        ConditionManager.instance.conditions.MotionConditions[(int)MotionState.FlameBlock - 1].OnNewState += FireBlockTest;
     }
     public void FireballTest(Side side, bool NewState, int Index, int Level)
     {
-        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == CurrentLearn.Fireball)
+        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == MotionState.Fireball)
         {
             //if (NewState == true)
             //Debug.Log("EventCalled: " + side.ToString() + "  " + Index);
@@ -126,7 +126,7 @@ public class ConditionTester : SerializedMonoBehaviour
     }
     public void FlameTest(Side side, bool NewState, int Index, int Level)
     {
-        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == CurrentLearn.Flames)
+        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == MotionState.Flames)
         {
             //if (NewState == true)
             //Debug.Log("EventCalled: " + side.ToString() + "  " + Index);
@@ -141,7 +141,7 @@ public class ConditionTester : SerializedMonoBehaviour
     }
     public void FireBlockTest(Side side, bool NewState, int Index, int Level)
     {
-        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == CurrentLearn.FlameBlock)
+        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == MotionState.FlameBlock)
         {
             //if (NewState == true)
             //Debug.Log("EventCalled: " + side.ToString() + "  " + Index);

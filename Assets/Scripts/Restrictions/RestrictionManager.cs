@@ -10,6 +10,8 @@ namespace RestrictionSystem
         HandFacing = 2,
         HandHeadDistance = 3,
         HandToHeadAngle = 4,
+        TimedAngleChange = 5,
+        AngleChange = 6,
     }
     
     public enum Axis
@@ -34,8 +36,7 @@ namespace RestrictionSystem
         Nothing = 0,
         Fireball = 1,
         Flames = 2,
-        FlameBlock = 3,
-        FlameGuard = 4,
+        Parry = 3,
     }
 
 
@@ -52,6 +53,8 @@ namespace RestrictionSystem
             {Restriction.HandFacing, HandFacing},
             {Restriction.HandHeadDistance, HandHeadDistance},
             {Restriction.HandToHeadAngle, HandToHeadAngle},
+            {Restriction.TimedAngleChange, TimedAngleChange},
+            {Restriction.AngleChange, AngleChange},
         };
         public MotionSettings RestrictionSettings;
         
@@ -150,6 +153,20 @@ namespace RestrictionSystem
             //restriction.Value = Angle;
             return Angle;
             
+        }
+        public static float TimedAngleChange(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
+        {
+            Vector3 OldDir = EliminateAxis(restriction.UseAxisList, frame1.HandPosType(restriction.UseLocalHandPos).normalized);
+            Vector3 NewDir = EliminateAxis(restriction.UseAxisList, frame2.HandPosType(restriction.UseLocalHandPos).normalized);
+            //restriction.Value = Vector3.Angle(HandDir, OtherDir);
+            return Vector3.Angle(OldDir, NewDir) / (frame2.SpawnTime - frame1.SpawnTime);
+        }
+        public static float AngleChange(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
+        {
+            Vector3 OldDir = EliminateAxis(restriction.UseAxisList, frame1.HandPosType(restriction.UseLocalHandPos).normalized);
+            Vector3 NewDir = EliminateAxis(restriction.UseAxisList, frame2.HandPosType(restriction.UseLocalHandPos).normalized);
+            //restriction.Value = Vector3.Angle(HandDir, OtherDir);
+            return Vector3.Angle(OldDir, NewDir);
         }
         #endregion
     }

@@ -51,10 +51,10 @@ namespace RestrictionSystem
         {
             MotionState TrueMotionEdit = MotionEditor.instance.MotionType;
             List<bool> MotionStates = new List<bool>();
-            for (int i = 0; i < LM.MovementList[(int)TrueMotionEdit].Motions.Count; i++)
-                MotionStates.Add(Enumerable.Range(0, LM.MovementList[(int)TrueMotionEdit].Motions[i].Infos.Count).Any(x => LM.MovementList[(int)TrueMotionEdit].Motions[i].AtFrameState(x)));
-            List<Vector2> Range = Motion.ConvertToRange(MotionStates);
-            TrueMotions[(int)TrueMotionEdit - 1] = Range;
+            List<Motion> motions = LM.MovementList[(int)TrueMotionEdit].Motions;
+            for (int i = 0; i < motions.Count; i++)
+                MotionStates.Add(motions[i].TrueRanges.Count > 0);
+            TrueMotions[(int)TrueMotionEdit - 1] = Motion.ConvertToRange(MotionStates);
         }
         
         [FoldoutGroup("Lock"), Button(ButtonSizes.Small)]
@@ -74,7 +74,8 @@ namespace RestrictionSystem
                     WorkingFrames[f] = false;
                 for (int n = 0; n < Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions.Count; n++)
                 {
-                    bool IsVelocityRelated = Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction == Restriction.VelocityInDirection || Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction == Restriction.VelocityThreshold;
+                    Restriction restriction = Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction;
+                    bool IsVelocityRelated = restriction == Restriction.VelocityInDirection || restriction == Restriction.VelocityThreshold || restriction == Restriction.TimedAngleChange || restriction == Restriction.AngleChange;
                     for (int i = IsVelocityRelated ? FramesAgo() : 0; i < LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count; i++)//ALL FRAMES
                     {
                         AllMotions allMotions = LM.MovementList[CurrentSpellEdit];

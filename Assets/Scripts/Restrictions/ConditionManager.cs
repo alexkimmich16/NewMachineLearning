@@ -57,6 +57,7 @@ namespace RestrictionSystem
         public static float Time(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return frame2.SpawnTime - frame1.SpawnTime; }
         public static float Distance(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return Vector3.Distance(frame1.HandPos, frame2.HandPos); }
         public static float Restriction(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return RestrictionManager.RestrictionDictionary[restriction.restriction].Invoke(restriction, frame2, frame1); }
+        
         public void PassValue(bool State, MotionState Motion, Side side)
         {
             ConditionProgress Holder = ConditionStats[(int)side, (int)Motion - 1];

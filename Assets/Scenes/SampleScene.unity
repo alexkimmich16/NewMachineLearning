@@ -1678,37 +1678,6 @@ RectTransform:
   m_AnchoredPosition: {x: 50, y: -205.65999}
   m_SizeDelta: {x: 100, y: 38.96}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &196990435
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 196990436}
-  m_Layer: 0
-  m_Name: Save
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &196990436
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 196990435}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.809358, y: 0.08325422, z: 2.2644844}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &209071108
 GameObject:
   m_ObjectHideFlags: 0
@@ -2235,8 +2204,8 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   MotionNum: 2
-  MotionType: 1
-  Setting: 1
+  MotionType: 3
+  Setting: 0
   Typing: 0
   input: {fileID: 1167088495}
   sideText: {fileID: 1650534509}
@@ -2542,36 +2511,22 @@ MonoBehaviour:
           ShouldDebug: 0
           Value: 0
         Lock: {x: 75, y: 285}
-    - Motion: block
+    - Motion: parry
       Restrictions:
       - Restriction:
-          Label: Vertical Speed
+          Label: RotSpeed
           Active: 0
-          restriction: 0
-          checkType: 0
-          OtherDirection: {x: 0, y: 0, z: 0}
-          UseLocalHandPos: 1
-          UseLocalHandRot: 0
-          Offset: {x: 0, y: 0, z: 0}
-          Direction: {x: 0, y: 0, z: 0}
-          UseAxisList: 000000000100000002000000
-          ShouldDebug: 0
-          Value: 0
-        Lock: {x: 0, y: 1.42}
-      - Restriction:
-          Label: VerthandDist
-          Active: 0
-          restriction: 3
+          restriction: 5
           checkType: 0
           OtherDirection: {x: 0, y: 0, z: 0}
           UseLocalHandPos: 0
           UseLocalHandRot: 0
           Offset: {x: 0, y: 0, z: 0}
           Direction: {x: 0, y: 0, z: 0}
-          UseAxisList: 01000000
+          UseAxisList: 000000000100000002000000
           ShouldDebug: 0
           Value: 0
-        Lock: {x: 0, y: 0.2}
+        Lock: {x: 90, y: 2000}
   LockButton: 0
 --- !u!1 &258064887
 GameObject:
@@ -8620,11 +8575,6 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  RightInfo:
-    Velocity: {x: 0, y: 0, z: 0}
-    Acceleration: {x: 0, y: 0, z: 0}
-    WorldPosition: {x: 0, y: 0, z: 0}
-    LocalPosition: {x: 0, y: 0, z: 0}
 --- !u!4 &905860387
 Transform:
   m_ObjectHideFlags: 0
@@ -8638,7 +8588,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &907999247
 GameObject:

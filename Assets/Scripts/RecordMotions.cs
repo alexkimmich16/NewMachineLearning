@@ -52,9 +52,12 @@ public class RecordMotions : MonoBehaviour
                 //Vector2 Before = MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0];
                 //MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0] = new Vector2(Before.x, Before.y + 1);
             }
-                
             else
+            {
+                FinalMotion.TrueRanges.Clear();
                 LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
+            }
+                
             CurrentMotionRecord.Clear();
         }
 

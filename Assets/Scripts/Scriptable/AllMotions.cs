@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RestrictionSystem;
 using Sirenix.OdinInspector;
+using System.Linq;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/AllData", order = 1)]
 [System.Serializable]
 public class AllMotions : ScriptableObject
@@ -39,6 +40,12 @@ public class Motion
         List<Vector2> ranges = new List<Vector2>();
         bool Last = false;
         int Start = 0;
+        if(Values.All(state => state == false))
+        {
+            return new List<Vector2> { new Vector2(-1f, -1f) };
+        }
+
+
         for (int i = 0; i < Values.Count; i++)
         {
             if (Values[i] != Last)//onchange

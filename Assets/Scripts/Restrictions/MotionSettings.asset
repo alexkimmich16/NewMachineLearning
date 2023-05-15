@@ -89,38 +89,33 @@ MonoBehaviour:
       - 0.06721488
       - -0.0015918927
       - 0.0000060239468
-  - Intercept: -26.71133
+  - Intercept: -24.805325
     Coefficents:
     - Degrees:
-      - 4.6991873
-      - -2.7781825
-      - 0.16096652
+      - 0.85644794
+      - -1.89568
+      - 0.2956073
+      - -0.012354735
     - Degrees:
-      - -6.8026824
-      - 0.7619672
-      - -0.014955502
+      - 98.701614
+      - -235.208
+      - 188.7427
+      - -41.803894
     - Degrees:
-      - 0.6442057
-      - -0.0042921747
-      - 0.000008314879
+      - 0.07747214
+      - -0.0001976118
+      - 0.00000019999466
+      - -6.553248e-11
     - Degrees:
-      - -7.0066385
-      - 177.05981
-      - -678.3554
+      - -0.13503318
+      - 0.0027166307
+      - -0.000010276384
+      - 0.0000000013643365
     - Degrees:
-      - 0.04121457
-      - 0.00022885951
-      - -0.0000011682149
-    - Degrees:
-      - 0.0032956747
-      - 0.0032298055
-      - -0.000030882744
-    - Degrees:
-      - 0.2920992
-      - -0.012843759
-      - 0.000073899966
-  - Intercept: 0
-    Coefficents: []
+      - -0.09566268
+      - 0.0044554956
+      - -0.00005173053
+      - 0.0000001610083
   MotionRestrictions:
   - Motion: Fireball
     Restrictions:
@@ -285,29 +280,17 @@ MonoBehaviour:
     - Label: HandForwardVel
       Active: 0
       restriction: 1
-      checkType: 1
+      checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
       UseLocalHandPos: 0
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 1}
+      Direction: {x: -1, y: 0, z: 0}
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0
-  - Motion: Block
+  - Motion: Parry
     Restrictions:
-    - Label: VerticleSpeed
-      Active: 1
-      restriction: 0
-      checkType: 0
-      OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 1
-      UseLocalHandRot: 0
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 01000000
-      ShouldDebug: 0
-      Value: 0
     - Label: Horspeed
       Active: 1
       restriction: 0
@@ -318,18 +301,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 0000000002000000
-      ShouldDebug: 0
-      Value: 0
-    - Label: HandHeadAngle
-      Active: 0
-      restriction: 4
-      checkType: 0
-      OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 
       ShouldDebug: 0
       Value: 0
     - Label: VertHandDist
@@ -344,44 +315,42 @@ MonoBehaviour:
       UseAxisList: 01000000
       ShouldDebug: 0
       Value: 0
-    - Label: PalmHeadY
+    - Label: invXZY
       Active: 0
-      restriction: 2
+      restriction: 5
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
       UseLocalHandPos: 0
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: -1, y: 0, z: 0}
-      UseAxisList: 0100000002000000
+      Direction: {x: 0, y: 0, z: 0}
+      UseAxisList: 010000000200000000000000
       ShouldDebug: 0
       Value: 0
-    - Label: PalmHeadZ
+    - Label: BackHandFor
       Active: 0
       restriction: 2
       checkType: 0
       OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
+      UseLocalHandPos: 1
+      UseLocalHandRot: 1
       Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: -1, y: 0, z: 0}
-      UseAxisList: 0200000000000000
+      Direction: {x: 0, y: 0, z: -1}
+      UseAxisList: 0000000002000000
       ShouldDebug: 0
       Value: 0
-    - Label: PalmHeadAll
+    - Label: HandForwardVel
       Active: 0
-      restriction: 2
-      checkType: 0
+      restriction: 1
+      checkType: 1
       OtherDirection: {x: 0, y: 0, z: 0}
       UseLocalHandPos: 0
       UseLocalHandRot: 0
       Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: -1, y: 0, z: 0}
+      Direction: {x: 0, y: 0, z: 1}
       UseAxisList: 000000000100000002000000
       ShouldDebug: 0
       Value: 0
-  - Motion: Sweep
-    Restrictions: []
   LogicInfo:
   - FrameLogicEnabled: 0
     MostTime: 0.08
@@ -392,8 +361,8 @@ MonoBehaviour:
     Spread: 0.1
     CutoffValue: 0.5
   - FrameLogicEnabled: 1
-    MostTime: 0.81
-    Spread: 100
+    MostTime: 0.58
+    Spread: 18.6
     CutoffValue: 0.5
   MotionConditions:
   - Motion: fireball
@@ -433,7 +402,7 @@ MonoBehaviour:
       ExitIfAny: 0
       waitType: 0
       Coefficents:
-      - 0.4
+      - 0.28
       - 1000
       CutoffValue: 0.976
       SingleConditions:
@@ -557,11 +526,61 @@ MonoBehaviour:
     ResetOnMax: 0
     CastLevel: 1
     Sequences: []
-  - Motion: Block
-    ResetOnMax: 0
+  - Motion: Parry
+    ResetOnMax: 1
     CastLevel: 0
-    Sequences: []
-  - Motion: SweepingFire
-    ResetOnMax: 0
-    CastLevel: 0
-    Sequences: []
+    Sequences:
+    - StateToActivate: OnComplete
+      RegressionBased: 0
+      NewFrameOnDone: 1
+      ExitIfAny: 0
+      waitType: 0
+      Coefficents:
+      - 30
+      - 1000
+      CutoffValue: 0
+      SingleConditions:
+      - Label: TotalAngleChange
+        frameType: 0
+        condition: 2
+        restriction:
+          Label: AngleChange
+          Active: 0
+          restriction: 6
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 0000000002000000
+          ShouldDebug: 0
+          Value: 0
+      ExitIfConditions: []
+    - StateToActivate: Cooldown/wait until false frame
+      RegressionBased: 0
+      NewFrameOnDone: 0
+      ExitIfAny: 0
+      waitType: 0
+      Coefficents:
+      - 0.5
+      - 100
+      CutoffValue: 0
+      SingleConditions:
+      - Label: Time
+        frameType: 0
+        condition: 0
+        restriction:
+          Label: 
+          Active: 0
+          restriction: 0
+          checkType: 0
+          OtherDirection: {x: 0, y: 0, z: 0}
+          UseLocalHandPos: 0
+          UseLocalHandRot: 0
+          Offset: {x: 0, y: 0, z: 0}
+          Direction: {x: 0, y: 0, z: 0}
+          UseAxisList: 
+          ShouldDebug: 0
+          Value: 0
+      ExitIfConditions: []

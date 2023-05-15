@@ -79,11 +79,11 @@ namespace RestrictionSystem
 
         [ShowIf("RequiresLocalPosOption")] public bool UseLocalHandPos;
         private bool RequiresLocalPosOption() { return LocalHandPosRestrictions.Contains(restriction); }
-        public static List<Restriction> LocalHandPosRestrictions = new List<Restriction>() { Restriction.VelocityInDirection, Restriction.HandFacing, Restriction.VelocityThreshold };
+        public static List<Restriction> LocalHandPosRestrictions = new List<Restriction>() { Restriction.VelocityInDirection, Restriction.HandFacing, Restriction.VelocityThreshold, Restriction.TimedAngleChange, Restriction.AngleChange };
 
         [ShowIf("RequiresLocalRotOption")] public bool UseLocalHandRot;
         private bool RequiresLocalRotOption() { return LocalHandRotRestrictions.Contains(restriction); }
-        public static List<Restriction> LocalHandRotRestrictions = new List<Restriction>() { Restriction.VelocityInDirection, Restriction.HandFacing};
+        public static List<Restriction> LocalHandRotRestrictions = new List<Restriction>() { Restriction.VelocityInDirection, Restriction.HandFacing, Restriction.TimedAngleChange, Restriction.AngleChange };
 
 
 
@@ -94,7 +94,7 @@ namespace RestrictionSystem
 
         [ShowIf("RequiresAxisList")] public List<Axis> UseAxisList;
         private bool RequiresAxisList() { return AxisListRestrictions.Contains(restriction); }
-        public static List<Restriction> AxisListRestrictions = new List<Restriction>() { Restriction.HandHeadDistance, Restriction.VelocityThreshold, Restriction.HandFacing, Restriction.VelocityInDirection };
+        public static List<Restriction> AxisListRestrictions = new List<Restriction>() { Restriction.HandHeadDistance, Restriction.VelocityThreshold, Restriction.HandFacing, Restriction.VelocityInDirection, Restriction.TimedAngleChange, Restriction.AngleChange };
 
         [ShowIf("ShowOld")] public bool ShouldDebug;
         [ReadOnly, ShowIf("ShowOld")] public float Value;

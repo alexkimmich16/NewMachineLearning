@@ -22,9 +22,6 @@ public class ConditionTester : SerializedMonoBehaviour
 
     public bool DoSphereCasting;
 
-    //[FoldoutGroup("Testing")] public double[][] TestInputs;
-    //[FoldoutGroup("Testing")] public double[] TestOutputs;
-
     public MotionState Motion() { return MotionEditor.instance.MotionType; }
 
     ///involves 2 things:
@@ -108,7 +105,7 @@ public class ConditionTester : SerializedMonoBehaviour
     {
         ConditionManager.instance.conditions.MotionConditions[(int)MotionState.Fireball - 1].OnNewState += FireballTest;
         ConditionManager.instance.conditions.MotionConditions[(int)MotionState.Flames - 1].OnNewState += FlameTest;
-        ConditionManager.instance.conditions.MotionConditions[(int)MotionState.FlameBlock - 1].OnNewState += FireBlockTest;
+        ConditionManager.instance.conditions.MotionConditions[(int)MotionState.Parry - 1].OnNewState += FireBlockTest;
     }
     public void FireballTest(Side side, bool NewState, int Index, int Level)
     {
@@ -141,17 +138,18 @@ public class ConditionTester : SerializedMonoBehaviour
     }
     public void FireBlockTest(Side side, bool NewState, int Index, int Level)
     {
-        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == MotionState.FlameBlock)
+        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == MotionState.Parry)
         {
             //if (NewState == true)
             //Debug.Log("EventCalled: " + side.ToString() + "  " + Index);
-            /*
+            
             if (NewState == true)
             {
                 GameObject SpawnedObject = Instantiate(SpawnPrefab[Index], PastFrameRecorder.instance.PlayerHands[(int)side].transform.position, PastFrameRecorder.instance.PlayerHands[(int)side].transform.rotation);
+                SpawnedObject.transform.forward = -PastFrameRecorder.instance.PlayerHands[(int)side].transform.forward;
                 Destroy(SpawnedObject, KillTime);
             }
-            */
+            
         }
     }
 }

@@ -59,7 +59,10 @@ namespace RestrictionSystem
             this.Motion = Motion;
             this.Restrictions = new List<SingleRestriction>(Restrictions);
         }
-        
+        public MotionRestriction()
+        {
+
+        }
     }
     [Serializable]
     public class SingleRestriction

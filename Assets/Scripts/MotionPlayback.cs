@@ -38,9 +38,9 @@ public class MotionPlayback : MonoBehaviour
 
 
 
-    public List<MotionState> CurrentMotions;
+    public List<Spell> CurrentMotions;
     public bool OldFrameWorks() { return Frame - PastFrameRecorder.instance.FramesAgo() >= 0; }
-    public SingleInfo GetFrameInfo(bool Old) { return LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].GetRestrictionInfoAtIndex(MotionEditor.instance.MotionNum, Old ? MinFramesAgo() : Frame); }
+    public SingleInfo GetFrameInfo(bool Old) { return MovementControl.instance.Movements[(int)MotionEditor.instance.MotionType].GetRestrictionInfoAtIndex(MotionEditor.instance.MotionNum, Old ? MinFramesAgo() : Frame); }
     public int MinFramesAgo() { return Frame - PastFrameRecorder.instance.FramesAgo() >= 0 ? Frame - PastFrameRecorder.instance.FramesAgo() : 0; }
     private void Start()
     {
@@ -52,7 +52,6 @@ public class MotionPlayback : MonoBehaviour
     }
     void Update()
     {
-        LearnManager LM = LearnManager.instance;
         if (type == PlayType.Repeat)
         {
             NextTime = 1 / PlaybackSpeed;
@@ -70,12 +69,12 @@ public class MotionPlayback : MonoBehaviour
             MotionEditor ME = MotionEditor.instance;
             
             
-            if (Frame >= LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].Infos.Count)
+            if (Frame >= MovementControl.instance.Movements[(int)ME.MotionType].Motions[ME.MotionNum].Infos.Count)
                 Frame = 0;
             //if (Frame - BruteForce.instance.PastFrameLookup >= 0)
-                //CurrentMotions = RestrictionManager.instance.AllWorkingMotions(LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame));
-            bool State = ME.Setting == EditSettings.Editing ? LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].AtFrameState(Frame) : GetMotionFromInput();
-            handToChange.material = LM.FalseTrue[State ? 1 : 0];
+                //CurrentMotions = RestrictionManager.instance.AllWorkingMotions(MovementControl.instance.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), MovementControl.instance.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame));
+            bool State = ME.Setting == EditSettings.Editing ? MovementControl.instance.Movements[(int)ME.MotionType].Motions[ME.MotionNum].AtFrameState(Frame) : GetMotionFromInput();
+            handToChange.material = DebugRestrictions.instance.Materials[State ? 1 : 0];
 
             
             if (ME.Setting == EditSettings.DisplayingMotion)
@@ -83,14 +82,14 @@ public class MotionPlayback : MonoBehaviour
                 //ConditionManager.instance.PassValue(State, ME.CurrentTestMotion, Side.right);
             }
 
-            SingleInfo info = LM.MovementList[(int)ME.MotionType].Motions[ME.MotionNum].Infos[Frame];
+            SingleInfo info = MovementControl.instance.Movements[(int)ME.MotionType].Motions[ME.MotionNum].Infos[Frame];
             
             moveAll(info);
             LastMotion = Motion;
             OnNewFrame?.Invoke();
 
             
-            bool GetMotionFromInput() { return Frame - MotionAssign.instance.FramesAgo() >= 0 ? RestrictionManager.instance.MotionWorks(LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - MotionAssign.instance.FramesAgo()), LM.MovementList[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame), ME.MotionType) : false; }
+            bool GetMotionFromInput() { return Frame - MotionAssign.instance.FramesAgo() >= 0 ? RestrictionManager.instance.MotionWorks(MovementControl.instance.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - MotionAssign.instance.FramesAgo()), MovementControl.instance.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame), ME.MotionType) : false; }
             //MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.MotionType - 1]; }
         }
         void moveAll(SingleInfo info)

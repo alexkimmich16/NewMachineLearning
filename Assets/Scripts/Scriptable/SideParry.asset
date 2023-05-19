@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab77ab17c1dff4942984a3fea7a8c7d5, type: 3}
-  m_Name: Parry
+  m_Name: SideParry
   m_EditorClassIdentifier: 
   Motions:
   - Infos:

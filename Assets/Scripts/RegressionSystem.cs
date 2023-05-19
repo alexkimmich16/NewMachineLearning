@@ -36,7 +36,7 @@ namespace RestrictionSystem
         public void GetTotalFrames()
         {
             int2 TrueFalseCount = 0;
-            foreach (Motion motion in LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions)
+            foreach (Motion motion in MovementControl.instance.Movements[(int)MotionEditor.instance.MotionType].Motions)
                 for (int i = 0; i < motion.Infos.Count; i++)
                     TrueFalseCount = new int2(TrueFalseCount.x + (motion.AtFrameState(i) ? 1 : 0), TrueFalseCount.y + (!motion.AtFrameState(i) ? 1 : 0));
             Debug.Log("TotalFrames: " + (TrueFalseCount.x + TrueFalseCount.y));
@@ -77,13 +77,13 @@ namespace RestrictionSystem
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
         public void PreformRegressionAll()
         {
-            for (int motion = 1; motion < Enum.GetValues(typeof(MotionState)).Length; motion++)
-                PreformRegression((MotionState)motion);
+            for (int motion = 1; motion < Enum.GetValues(typeof(Spell)).Length; motion++)
+                PreformRegression((Spell)motion);
         }
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
-        public void PreformRegressionCurrent() { PreformRegression((MotionState)MotionEditor.instance.MotionType); }
+        public void PreformRegressionCurrent() { PreformRegression((Spell)MotionEditor.instance.MotionType); }
 
-        public void PreformRegression(MotionState Motion)
+        public void PreformRegression(Spell Motion)
         {
             List<SingleFrameRestrictionValues> FrameInfo = RestrictionStatManager.instance.GetRestrictionsForMotions(Motion, RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)Motion - 1]);
 

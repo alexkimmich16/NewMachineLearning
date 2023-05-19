@@ -26,7 +26,7 @@ public class RecordMotions : MonoBehaviour
             //OnToggleChanged(CanRecordToggle);
         //});
     }
-    public bool HitRecordButton() { return LearnManager.instance.Right.GripPressed() || Input.GetKey(RecordKey); }
+    public bool HitRecordButton() { return PastFrameRecorder.instance.PlayerHands[(int)Side.right].GetComponent<HandActions>().GripPressed() || Input.GetKey(RecordKey); }
     private void Update()
     {
         if (CanRecordToggle.isOn == false)
@@ -48,14 +48,14 @@ public class RecordMotions : MonoBehaviour
             if (TrueMotion.isOn)
             {
                 FinalMotion.TrueRanges = new List<Vector2>() { Vector2.zero};
-                LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions.Insert(0, FinalMotion);
+                MovementControl.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Insert(0, FinalMotion);
                 //Vector2 Before = MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0];
                 //MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0] = new Vector2(Before.x, Before.y + 1);
             }
             else
             {
                 FinalMotion.TrueRanges.Clear();
-                LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
+                MovementControl.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
             }
                 
             CurrentMotionRecord.Clear();
@@ -65,7 +65,7 @@ public class RecordMotions : MonoBehaviour
             return;
 
         SingleInfo info = PastFrameRecorder.instance.GetControllerInfo(Side.right);
-        Values.Add(LearnManager.instance.Right.TriggerPressed());
+        Values.Add(PastFrameRecorder.instance.PlayerHands[(int)Side.right].GetComponent<HandActions>().TriggerPressed());
         CurrentMotionRecord.Add(info);
     }
 
@@ -96,7 +96,7 @@ public class RecordMotions : MonoBehaviour
             Values.Clear();
 
             FinalMotion.Infos = new List<SingleInfo>(CurrentMotionRecord);
-            LearnManager.instance.MovementList[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
+            MovementControl.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
             CurrentMotionRecord.Clear();
         }
 

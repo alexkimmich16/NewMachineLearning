@@ -38,7 +38,7 @@ namespace RestrictionSystem
         public void DisableSide(Side side)
         {
             for (int i = 0; i < conditions.MotionConditions.Count; i++)
-                DisableMotionSequence((MotionState)(i + 1), side);
+                DisableMotionSequence((Spell)(i + 1), side);
         }
         private void Start()
         {
@@ -58,7 +58,7 @@ namespace RestrictionSystem
         public static float Distance(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return Vector3.Distance(frame1.HandPos, frame2.HandPos); }
         public static float Restriction(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2) { return RestrictionManager.RestrictionDictionary[restriction.restriction].Invoke(restriction, frame2, frame1); }
         
-        public void PassValue(bool State, MotionState Motion, Side side)
+        public void PassValue(bool State, Spell Motion, Side side)
         {
             ConditionProgress Holder = ConditionStats[(int)side, (int)Motion - 1];
             MotionConditionInfo Condition = conditions.MotionConditions[(int)Motion - 1];
@@ -152,7 +152,7 @@ namespace RestrictionSystem
             bool AtMax() { return Holder.SequenceState == Condition.Sequences.Count - 1; }
             ConditionStats[(int)side, (int)Motion - 1] = Holder;
         }
-        public void DisableMotionSequence(MotionState Motion, Side side)
+        public void DisableMotionSequence(Spell Motion, Side side)
         {
             ConditionProgress Holder = ConditionStats[(int)side, (int)Motion - 1];
             MotionConditionInfo Condition = conditions.MotionConditions[(int)Motion - 1];

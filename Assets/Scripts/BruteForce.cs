@@ -11,7 +11,7 @@ public class BruteForce : SerializedMonoBehaviour
     public static BruteForce instance;
     private void Awake() { instance = this; }
 
-    public RestrictionSystem.MotionState motionGet;
+    public RestrictionSystem.Spell motionGet;
     public int PastFrameLookup;
 
     [FoldoutGroup("BruteForce"), ListDrawerSettings(ShowIndexLabels = true, ListElementLabelName = "Motion")] public List<AllChanges> AllChangesList;
@@ -49,8 +49,6 @@ public class BruteForce : SerializedMonoBehaviour
     [FoldoutGroup("Debug"), ListDrawerSettings(ShowIndexLabels = true)] public List<int> Test3;
     [FoldoutGroup("Debug"), ListDrawerSettings(ShowIndexLabels = true)] public List<float4> Test4;
     [FoldoutGroup("Debug")] public List<float> Weights;
-
-    [FoldoutGroup("References")] public LearnManager LM;
     public List<float2> GetRangeOfMinMaxValues(List<SingleFrameRestrictionValues> MotionValues)
     {
         List<float2> MinMax = new List<float2>();
@@ -478,24 +476,24 @@ public class BruteForce : SerializedMonoBehaviour
         }
         return Output;
     }
-    public List<SingleFrameRestrictionValues> GetRestrictionsForMotions(RestrictionSystem.MotionState FrameDataMotion, MotionRestriction RestrictionsMotion)
+    public List<SingleFrameRestrictionValues> GetRestrictionsForMotions(RestrictionSystem.Spell FrameDataMotion, MotionRestriction RestrictionsMotion)
     {
         List<SingleFrameRestrictionValues> ReturnValue = new List<SingleFrameRestrictionValues>();
         List<int> ToCheck = UseAllMotions ? new List<int>() { 0, 1, 2, 3 } : new List<int>(){ 0, (int)FrameDataMotion };
         for (int i = 0; i < ToCheck.Count; i++)//motions
-            for (int j = 0; j < LM.MovementList[ToCheck[i]].Motions.Count; j++)//set
-                for (int k = PastFrameLookup; k < LM.MovementList[ToCheck[i]].Motions[j].Infos.Count; k++)//frame
+            for (int j = 0; j < MovementControl.instance.Movements[ToCheck[i]].Motions.Count; j++)//set
+                for (int k = PastFrameLookup; k < MovementControl.instance.Movements[ToCheck[i]].Motions[j].Infos.Count; k++)//frame
                 {
                     List<float> OutputRestrictions = new List<float>();
                     for (int l = 0; l < RestrictionsMotion.Restrictions.Count; l++)
                     {
-                        float Value = RestrictionManager.RestrictionDictionary[RestrictionsMotion.Restrictions[l].restriction].Invoke(RestrictionsMotion.Restrictions[l], LM.MovementList[ToCheck[i]].GetRestrictionInfoAtIndex(j, k - PastFrameLookup), LM.MovementList[ToCheck[i]].GetRestrictionInfoAtIndex(j, k));
+                        float Value = RestrictionManager.RestrictionDictionary[RestrictionsMotion.Restrictions[l].restriction].Invoke(RestrictionsMotion.Restrictions[l], MovementControl.instance.Movements[ToCheck[i]].GetRestrictionInfoAtIndex(j, k - PastFrameLookup), MovementControl.instance.Movements[ToCheck[i]].GetRestrictionInfoAtIndex(j, k));
                         //if (Value < RegressionSystem.instance.SmallestInput)
                             //Value = RegressionSystem.instance.SmallestInput;
                         OutputRestrictions.Add(Value);
                     }
                         
-                    ReturnValue.Add(new SingleFrameRestrictionValues(OutputRestrictions, ToCheck[i] == (int)FrameDataMotion && LM.MovementList[ToCheck[i]].Motions[j].AtFrameState(k)));
+                    ReturnValue.Add(new SingleFrameRestrictionValues(OutputRestrictions, ToCheck[i] == (int)FrameDataMotion && MovementControl.instance.Movements[ToCheck[i]].Motions[j].AtFrameState(k)));
                 }
         return ReturnValue;
     }

@@ -22,7 +22,7 @@ public class ConditionTester : SerializedMonoBehaviour
 
     public bool DoSphereCasting;
 
-    public MotionState Motion() { return MotionEditor.instance.MotionType; }
+    public Spell Motion() { return MotionEditor.instance.MotionType; }
 
     ///involves 2 things:
     ///getting correct coefficents
@@ -41,12 +41,12 @@ public class ConditionTester : SerializedMonoBehaviour
             {
                 List<List<double>> Inputs = new List<List<double>>();
                 List<double> Outputs = new List<double>();
-                for (int i = 0; i < LearnManager.instance.MovementList[(int)Motion()].Motions.Count; i++)//for each start and end(for loop +=2 each time)
+                for (int i = 0; i < MovementControl.instance.Movements[(int)Motion()].Motions.Count; i++)//for each start and end(for loop +=2 each time)
                 {
                     //Debug.Log("AllowedEnter: " + MotionAssign.instance.TrueMotions[(int)Motion() - 1].Any(Vector => (i >= Vector.x && i <= Vector.y)));
                     if (MotionAssign.instance.TrueMotions[(int)Motion() - 1].Any(Vector => (i >= Vector.x && i <= Vector.y)))
                     {
-                        Motion motion = LearnManager.instance.MovementList[(int)Motion()].Motions[i];
+                        Motion motion = MovementControl.instance.Movements[(int)Motion()].Motions[i];
 
                         int Start = (int)motion.TrueRanges[0].x;
                         int End = (int)motion.TrueRanges[motion.TrueRanges.Count - 1].y;
@@ -103,13 +103,14 @@ public class ConditionTester : SerializedMonoBehaviour
     }
     private void Start()
     {
-        ConditionManager.instance.conditions.MotionConditions[(int)MotionState.Fireball - 1].OnNewState += FireballTest;
-        ConditionManager.instance.conditions.MotionConditions[(int)MotionState.Flames - 1].OnNewState += FlameTest;
-        ConditionManager.instance.conditions.MotionConditions[(int)MotionState.Parry - 1].OnNewState += FireBlockTest;
+        ConditionManager.instance.conditions.MotionConditions[(int)Spell.Fireball - 1].OnNewState += FireballTest;
+        ConditionManager.instance.conditions.MotionConditions[(int)Spell.Flames - 1].OnNewState += FlameTest;
+        ConditionManager.instance.conditions.MotionConditions[(int)Spell.SideParry - 1].OnNewState += SideParryTest;
+        ConditionManager.instance.conditions.MotionConditions[(int)Spell.UpParry - 1].OnNewState += UpParryTest;
     }
     public void FireballTest(Side side, bool NewState, int Index, int Level)
     {
-        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == MotionState.Fireball)
+        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == Spell.Fireball)
         {
             //if (NewState == true)
             //Debug.Log("EventCalled: " + side.ToString() + "  " + Index);
@@ -123,7 +124,7 @@ public class ConditionTester : SerializedMonoBehaviour
     }
     public void FlameTest(Side side, bool NewState, int Index, int Level)
     {
-        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == MotionState.Flames)
+        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == Spell.Flames)
         {
             //if (NewState == true)
             //Debug.Log("EventCalled: " + side.ToString() + "  " + Index);
@@ -136,9 +137,9 @@ public class ConditionTester : SerializedMonoBehaviour
             */
         }
     }
-    public void FireBlockTest(Side side, bool NewState, int Index, int Level)
+    public void SideParryTest(Side side, bool NewState, int Index, int Level)
     {
-        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == MotionState.Parry)
+        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == Spell.SideParry)
         {
             //if (NewState == true)
             //Debug.Log("EventCalled: " + side.ToString() + "  " + Index);
@@ -150,6 +151,22 @@ public class ConditionTester : SerializedMonoBehaviour
                 Destroy(SpawnedObject, KillTime);
             }
             
+        }
+    }
+    public void UpParryTest(Side side, bool NewState, int Index, int Level)
+    {
+        if (MotionEditor.instance.TestAllMotions.isOn == false && Motion() == Spell.UpParry)
+        {
+            //if (NewState == true)
+            //Debug.Log("EventCalled: " + side.ToString() + "  " + Index);
+
+            if (NewState == true)
+            {
+                GameObject SpawnedObject = Instantiate(SpawnPrefab[Index], PastFrameRecorder.instance.PlayerHands[(int)side].transform.position, PastFrameRecorder.instance.PlayerHands[(int)side].transform.rotation);
+                SpawnedObject.transform.forward = -PastFrameRecorder.instance.PlayerHands[(int)side].transform.forward;
+                Destroy(SpawnedObject, KillTime);
+            }
+
         }
     }
 }

@@ -22,7 +22,7 @@ public class MotionEditor : SerializedMonoBehaviour
     private void Awake() { instance = this; }
 
     public int MotionNum;
-    public MotionState MotionType;
+    public Spell MotionType;
     public EditSettings Setting;
     public bool Typing;
     
@@ -57,6 +57,8 @@ public class MotionEditor : SerializedMonoBehaviour
     public Toggle DisplayingRightStats;
     public Toggle DisplayingVR;
     public TextMeshProUGUI[] CurrentMotionTests;
+
+    private MovementControl MC => MovementControl.instance;
 
     public void RecieveSliderInfo(float PercentDone, int ETAInSeconds)
     {
@@ -99,20 +101,19 @@ public class MotionEditor : SerializedMonoBehaviour
     {
         if (!SafetyCheck)
             return;
-        
-        LearnManager.instance.MovementList[(int)MotionType].Motions.RemoveAt(MotionNum);
+
+        MC.Movements[(int)MotionType].Motions.RemoveAt(MotionNum);
 
         OnChangeMotion?.Invoke();
     }
     public void TestCurrentButton()
     {
-        if (MotionType == MotionState.Nothing)
+        if (MotionType == Spell.Nothing)
             return;
 
-        RestrictionStatManager stats = RestrictionStatManager.instance;
         MotionSettings MS = RestrictionManager.instance.RestrictionSettings;
 
-        List<SingleFrameRestrictionValues> FrameInfo = stats.GetRestrictionsForMotions(MotionType, MS.MotionRestrictions[(int)MotionType - 1]);
+        List<SingleFrameRestrictionValues> FrameInfo = RestrictionStatManager.instance.GetRestrictionsForMotions(MotionType, MS.MotionRestrictions[(int)MotionType - 1]);
         double[] Coefficents = MS.Coefficents[(int)MotionType - 1].GetCoefficents().Select(f => (double)f).ToArray();
 
         float Value = new LogisticRegression(RegressionSystem.GetInputValues(FrameInfo), RegressionSystem.GetOutputValues(FrameInfo), RegressionSystem.instance.EachTotalDegree, Coefficents).CorrectPercent();
@@ -142,13 +143,13 @@ public class MotionEditor : SerializedMonoBehaviour
     public void ChangeMotionType(int Change)
     {
         MotionType += Change;
-        if ((int)MotionType > Enum.GetValues(typeof(MotionState)).Length - 1)
+        if ((int)MotionType > Enum.GetValues(typeof(Spell)).Length - 1)
             MotionType = 0;
         else if((int)MotionType < 0)
-            MotionType = (MotionState)Enum.GetValues(typeof(MotionState)).Length - 1;
+            MotionType = (Spell)Enum.GetValues(typeof(Spell)).Length - 1;
 
-        if (MotionNum > LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1)
-            MotionNum = LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1;
+        if (MotionNum > MC.MovementCount(MotionType) - 1)
+            MotionNum = MC.MovementCount(MotionType) - 1;
 
         display.Frame = 0;
         OnChangeMotion?.Invoke();
@@ -156,9 +157,9 @@ public class MotionEditor : SerializedMonoBehaviour
 
     public void ChangeMotionNum(int Change)
     {
-        if(MotionNum + Change > LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1)
+        if(MotionNum + Change > MC.MovementCount(MotionType) - 1)
         {
-            MotionNum = LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1;
+            MotionNum = MC.MovementCount(MotionType) - 1;
             return;
         }
         else if(MotionNum + Change < 0)
@@ -180,10 +181,10 @@ public class MotionEditor : SerializedMonoBehaviour
             else if(Input.GetKeyDown(KeyCode.DownArrow))
                 ChangeMotionType(-1);
 
-        if (MotionNum >= LearnManager.instance.MovementList[(int)MotionType].Motions.Count)
-            MotionNum = LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1;
+        if (MotionNum >= MC.MovementCount(MotionType))
+            MotionNum = MC.MovementCount(MotionType) - 1;
 
-        int TrueRangeCount = LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Count;
+        int TrueRangeCount = MC.TrueRangeCount(MotionType, MotionNum);
         if (Input.GetKeyDown(KeyCode.PageDown) && MaxMinEditing < TrueRangeCount - 1)
             MaxMinEditing += 1;
         if (Input.GetKeyDown(KeyCode.PageUp) && MaxMinEditing > 0 || MaxMinEditing > TrueRangeCount)
@@ -191,20 +192,20 @@ public class MotionEditor : SerializedMonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.KeypadMinus))
             if (TrueRangeCount > 0)
-                LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.RemoveAt(TrueRangeCount - 1);
+                MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.RemoveAt(TrueRangeCount - 1);
 
         if (Input.GetKeyDown(KeyCode.KeypadPlus) && TrueRangeCount - 1 < TrueRangeTexts.Count)
-            LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Add(Vector2.zero);
+            MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.Add(Vector2.zero);
 
         Side side = DisplayingRightStats.isOn ? Side.right : Side.left;
         if (PastFrameRecorder.IsReady() && (DisplayingVR.isOn == false && display.Frame == 0) == false)
         {
-            if (MotionType != MotionState.Nothing)
+            if (MotionType != Spell.Nothing)
             {
                 for (int i = 0; i < CurrentMotionTests.Length; i++)
                 {
-                    SingleInfo Frame1 = DisplayingVR.isOn ? PastFrameRecorder.instance.PastFrame(side) : LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].Infos[display.Frame - 1];
-                    SingleInfo Frame2 = DisplayingVR.isOn ? PastFrameRecorder.instance.GetControllerInfo(side) : LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].Infos[display.Frame];
+                    SingleInfo Frame1 = DisplayingVR.isOn ? PastFrameRecorder.instance.PastFrame(side) : MC.Movements[(int)MotionType].Motions[MotionNum].Infos[display.Frame - 1];
+                    SingleInfo Frame2 = DisplayingVR.isOn ? PastFrameRecorder.instance.GetControllerInfo(side) : MC.Movements[(int)MotionType].Motions[MotionNum].Infos[display.Frame];
 
                     bool Inside = i < RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionType - 1].Restrictions.Count;
                     if (Inside)
@@ -243,8 +244,8 @@ public class MotionEditor : SerializedMonoBehaviour
         SettingText.text = "Settings: " + Setting.ToString();
         display.PlaybackSpeed += SpeedChangeAdd();
         PlaybackSpeed.text = "Speed: " + display.PlaybackSpeed.ToString("F2");
-        Max.text = "Max: " + LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].Infos.Count;
-        CurrentMotionNum.text = "MotionNum: " + MotionNum + "/" + (LearnManager.instance.MovementList[(int)MotionType].Motions.Count - 1);
+        Max.text = "Max: " + MC.Movements[(int)MotionType].Motions[MotionNum].Infos.Count;
+        CurrentMotionNum.text = "MotionNum: " + MotionNum + "/" + (MC.Movements[(int)MotionType].Motions.Count - 1);
 
         /*
         SingleInfo Frame = PastFrameRecorder.instance.GetControllerInfo(side);
@@ -257,8 +258,8 @@ public class MotionEditor : SerializedMonoBehaviour
         MiscDisplay.text = "MiscVal: " + Frame.HeadRot.y.ToString("f3") + "   Angle(" + Angle.ToString("f3") + ")";
         */
 
-        if (LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Count == 1)
-            CurrentValue.text = "X: " + LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].x + "\n" + "Y: " + LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].y;
+        if (MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.Count == 1)
+            CurrentValue.text = "X: " + MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].x + "\n" + "Y: " + MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].y;
         else
             CurrentValue.text = "X: " + "\n" + "Y: ";
 
@@ -288,9 +289,9 @@ public class MotionEditor : SerializedMonoBehaviour
 
         for (int i = 0; i < TrueRangeTexts.Count; i++)
         {
-            if(LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Count > i)
+            if(MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.Count > i)
             {
-                Vector2 TrueRange = LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[i];
+                Vector2 TrueRange = MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[i];
                 TrueRangeTexts[i].text = "X: " + TrueRange.x + " Y: " + TrueRange.y;
                 if (i == MaxMinEditing)
                     TrueRangeTexts[i].color = Color.red;
@@ -319,12 +320,12 @@ public class MotionEditor : SerializedMonoBehaviour
 
     public void Set(int ToSet, EditSide side)
     {
-        if (LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Count == 0)
-            LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges.Add(new Vector2(-1, -1));
-        Vector2 Range = LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing];
+        if (MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.Count == 0)
+            MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.Add(new Vector2(-1, -1));
+        Vector2 Range = MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing];
         if (side == EditSide.left)
-            LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(ToSet, Range.y);
+            MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(ToSet, Range.y);
         else if(side == EditSide.right)
-            LearnManager.instance.MovementList[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(Range.x, ToSet);
+            MC.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(Range.x, ToSet);
     }
 }

@@ -29,8 +29,6 @@ namespace RestrictionSystem
             }
         }
 
-        [FoldoutGroup("References")] public LearnManager LM;
-
         public bool AbleToCallWithButtons;
         public bool ShouldLockAll;
         public bool ShouldStitch;
@@ -49,9 +47,9 @@ namespace RestrictionSystem
         [FoldoutGroup("AllTrueMotions"), Button(ButtonSizes.Small)]
         public void GetTrueMotions()
         {
-            MotionState TrueMotionEdit = MotionEditor.instance.MotionType;
+            Spell TrueMotionEdit = MotionEditor.instance.MotionType;
             List<bool> MotionStates = new List<bool>();
-            List<Motion> motions = LM.MovementList[(int)TrueMotionEdit].Motions;
+            List<Motion> motions = MovementControl.instance.Movements[(int)TrueMotionEdit].Motions;
             for (int i = 0; i < motions.Count; i++)
                 MotionStates.Add(motions[i].TrueRanges.Count > 0);
             TrueMotions[(int)TrueMotionEdit - 1] = Motion.ConvertToRange(MotionStates);
@@ -63,22 +61,22 @@ namespace RestrictionSystem
             GetTrueMotions();
             int CurrentMotionEdit = GetComponent<MotionEditor>().MotionNum;
             int CurrentSpellEdit = (int)GetComponent<MotionEditor>().MotionType;
-            List<int> ToPreformOn = ShouldLockAll ? Enumerable.Range(0, LM.MovementList[CurrentSpellEdit].Motions.Count).Where(x => InsideTrueMotions(x, CurrentSpellEdit - 1)).ToList() : new List<int> { CurrentMotionEdit };
+            List<int> ToPreformOn = ShouldLockAll ? Enumerable.Range(0, MovementControl.instance.Movements[CurrentSpellEdit].Motions.Count).Where(x => InsideTrueMotions(x, CurrentSpellEdit - 1)).ToList() : new List<int> { CurrentMotionEdit };
             
             Debug.Log(ToPreformOn.Count);
 
             for (int m = 0; m < ToPreformOn.Count; m++)//ALL TO PREFORM ON
             {
-                List<bool> WorkingFrames = Enumerable.Repeat(true, LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count).ToList();//ALL RESTRICTIONS
+                List<bool> WorkingFrames = Enumerable.Repeat(true, MovementControl.instance.Movements[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count).ToList();//ALL RESTRICTIONS
                 for (int f = 0; f < FramesAgo(); f++)
                     WorkingFrames[f] = false;
                 for (int n = 0; n < Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions.Count; n++)
                 {
                     Restriction restriction = Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction;
                     bool IsVelocityRelated = restriction == Restriction.VelocityInDirection || restriction == Restriction.VelocityThreshold || restriction == Restriction.TimedAngleChange || restriction == Restriction.AngleChange;
-                    for (int i = IsVelocityRelated ? FramesAgo() : 0; i < LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count; i++)//ALL FRAMES
+                    for (int i = IsVelocityRelated ? FramesAgo() : 0; i < MovementControl.instance.Movements[CurrentSpellEdit].Motions[ToPreformOn[m]].Infos.Count; i++)//ALL FRAMES
                     {
-                        AllMotions allMotions = LM.MovementList[CurrentSpellEdit];
+                        AllMotions allMotions = MovementControl.instance.Movements[CurrentSpellEdit];
 
                         float OutputValue = RestrictionManager.RestrictionDictionary[Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction.restriction].Invoke(Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Restriction, IsVelocityRelated ? allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i - FramesAgo()) : null, allMotions.GetRestrictionInfoAtIndex(ToPreformOn[m], i));
                         if((OutputValue >= Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Lock.x && OutputValue <= Restrictions.Restrictions[CurrentSpellEdit - 1].Restrictions[n].Lock.y && InsideFrameLength(i)) == false)
@@ -95,10 +93,13 @@ namespace RestrictionSystem
                 }
                     
                 //Debug.Log("Index: " + ToPreformOn[m] + "  Frames: " + ToPreformOn);
-                LM.MovementList[CurrentSpellEdit].Motions[ToPreformOn[m]].SetRanges(WorkingRanges);
+                MovementControl.instance.Movements[CurrentSpellEdit].Motions[ToPreformOn[m]].SetRanges(WorkingRanges);
             }
         }
-
+        private void Start()
+        {
+            GetTrueMotions();
+        }
         public int FramesAgo() { return RestrictionManager.instance.RestrictionSettings.FramesAgo; }
         public bool InsideTrueMotions(int Try, int MotionIndex)
         {

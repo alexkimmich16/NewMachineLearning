@@ -79,7 +79,9 @@ public class Graph : MonoBehaviour
         TextureMap = new Texture2D(width, height);
         TextureMap.filterMode = FilterMode.Point;
 
-        if(MotionEditor.instance.MotionType == Spell.Nothing)
+        Spell motion = MotionEditor.instance.MotionType;
+
+        if (motion == Spell.Nothing)
         {
             TextureMap.Apply();
             mySprite = Sprite.Create(TextureMap, new Rect(0.0f, 0.0f, TextureMap.width, TextureMap.height), new Vector2(0.5f, 0.5f), 1000.0f);
@@ -87,7 +89,7 @@ public class Graph : MonoBehaviour
             return;
         }
 
-        List<SingleFrameRestrictionValues> FrameInfo = RestrictionStatManager.instance.GetRestrictionsForMotions((Spell)((int)MotionEditor.instance.MotionType), RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionEditor.instance.MotionType - 1]);
+        List<SingleFrameRestrictionValues> FrameInfo = RestrictionStatManager.instance.GetRestrictionsForMotions((Spell)((int)motion), RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)motion - 1]);
         List<List<int>> Overrides = new List<List<int>>();
 
         for (int i = 0; i < width; i++)
@@ -96,6 +98,9 @@ public class Graph : MonoBehaviour
         }
         GridHeights = new List<List<int>>();
         MaxMins = new List<float2>();
+
+        //set motion stat
+        
         for (int m = 0; m < FrameInfo[0].OutputRestrictions.Count; m++)
         {
             GridHeights.Add(new List<int>());
@@ -103,8 +108,9 @@ public class Graph : MonoBehaviour
             //plotted on Y axis
             float[] AssortedList = FrameInfo.Select(x => x.OutputRestrictions[m]).ToArray();
             float2 MinMax = new float2(AssortedList.Min(), AssortedList.Max());
+            
             MaxMins.Add(MinMax);
-            RegressionInfo.DegreeList Degrees = RestrictionManager.instance.RestrictionSettings.Coefficents[(int)MotionEditor.instance.MotionType - 1].Coefficents[m];
+            RegressionInfo.DegreeList Degrees = RestrictionManager.instance.RestrictionSettings.Coefficents[(int)motion - 1].Coefficents[m];
             //Maximum output plotting on X axis
 
             ///buttom is always 0

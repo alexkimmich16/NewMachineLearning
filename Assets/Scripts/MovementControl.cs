@@ -60,7 +60,7 @@ public class MovementControl : SerializedMonoBehaviour
     public int FrameCount(Spell Spell, int Motion) { return Movements[(int)Spell].Motions[Motion].Infos.Count; }
     public SingleInfo AtFrameInfo(Spell Spell, int Motion, int Frame) { return Movements[(int)Spell].Motions[Motion].Infos[Frame]; }
     public int TrueRangeCount(Spell Spell, int Motion) { return Movements[(int)Spell].Motions[Motion].TrueRanges.Count; }
-
+    public bool FrameWorks(Spell Spell, int Motion, int Frame) { return Movements[(int)Spell].Motions[Motion].AtFrameState(Frame); }
     public void CollectScriptableObjects()
     {
         Movements = new List<AllMotions>(Enumerable.Repeat<AllMotions>(null, Enum.GetValues(typeof(Spell)).Length));

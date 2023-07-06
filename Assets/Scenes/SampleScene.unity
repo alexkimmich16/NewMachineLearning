@@ -2168,7 +2168,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   MotionNum: 2
-  MotionType: 1
+  MotionType: 2
   Setting: 0
   Typing: 0
   input: {fileID: 1167088495}
@@ -2364,7 +2364,7 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 4
-      Data: 71
+      Data: 70
     - Name: 
       Entry: 8
       Data: 
@@ -2405,7 +2405,19 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
       Data: 0
+    - Name: 
+      Entry: 4
+      Data: 25
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -9101,6 +9113,7 @@ MonoBehaviour:
   UseSpecialMotions: 1
   UseFalseMotions: 0
   OnlyOtherTrueMotions: 1
+  FrameBreak: 5
   motion: 1
   CurrentCheckList: 
 --- !u!114 &944444331

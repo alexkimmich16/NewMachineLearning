@@ -14,6 +14,10 @@ namespace RestrictionSystem
         [FoldoutGroup("Info")] public bool UseFalseMotions;
         [FoldoutGroup("Info"), ShowIf("UseSpecialMotions")] public bool OnlyOtherTrueMotions;
 
+        public int FrameBreak;
+        private int CurrentBreak;
+        //public int CanBreak { get { } }
+
         [FoldoutGroup("Debug"), Button(ButtonSizes.Small)]
         public void CollectDebug()
         {
@@ -62,16 +66,28 @@ namespace RestrictionSystem
                     if(CanUseMotion(MotionsToCheck, MotionsToCheck[i], j, FrameDataMotion))
                         for (int k = FramesAgo; k < MovementControl.instance.Movements[MotionsToCheck[i]].Motions[j].Infos.Count; k++)//frame
                         {
-                            List<float> OutputRestrictions = new List<float>();
-                            for (int l = 0; l < RestrictionsMotion.Restrictions.Count; l++)
+                            if (MotionsToCheck[i] != (int)FrameDataMotion)
                             {
-                                float Value = RestrictionManager.RestrictionDictionary[RestrictionsMotion.Restrictions[l].restriction].Invoke(RestrictionsMotion.Restrictions[l], MovementControl.instance.Movements[MotionsToCheck[i]].GetRestrictionInfoAtIndex(j, k - FramesAgo), MovementControl.instance.Movements[MotionsToCheck[i]].GetRestrictionInfoAtIndex(j, k));
-                                //if (Value < RegressionSystem.instance.SmallestInput)
-                                //Value = RegressionSystem.instance.SmallestInput;
-                                OutputRestrictions.Add(Value);
+                                CurrentBreak += 1;
                             }
+                            if (MotionsToCheck[i] == (int)FrameDataMotion || CurrentBreak == FrameBreak)
+                            {
+                                if (CurrentBreak == FrameBreak)
+                                    CurrentBreak = 0;
 
-                            ReturnValue.Add(new SingleFrameRestrictionValues(OutputRestrictions, MotionsToCheck[i] == (int)FrameDataMotion && MovementControl.instance.Movements[MotionsToCheck[i]].Motions[j].AtFrameState(k)));
+
+                                List<float> OutputRestrictions = new List<float>();
+                                for (int l = 0; l < RestrictionsMotion.Restrictions.Count; l++)
+                                {
+                                    float Value = RestrictionManager.RestrictionDictionary[RestrictionsMotion.Restrictions[l].restriction].Invoke(RestrictionsMotion.Restrictions[l], MovementControl.instance.Movements[MotionsToCheck[i]].GetRestrictionInfoAtIndex(j, k - FramesAgo), MovementControl.instance.Movements[MotionsToCheck[i]].GetRestrictionInfoAtIndex(j, k));
+                                    //if (Value < RegressionSystem.instance.SmallestInput)
+                                    //Value = RegressionSystem.instance.SmallestInput;
+                                    OutputRestrictions.Add(Value);
+                                }
+
+                                ReturnValue.Add(new SingleFrameRestrictionValues(OutputRestrictions, MotionsToCheck[i] == (int)FrameDataMotion && MovementControl.instance.Movements[MotionsToCheck[i]].Motions[j].AtFrameState(k)));
+                            }
+                            
                         }
 
             return ReturnValue;

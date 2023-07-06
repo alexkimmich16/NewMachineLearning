@@ -1187,7 +1187,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 350.0537, y: 168.60048, z: 66.42049}
       SpawnTime: 28.346357
     TrueRanges:
-    - {x: 26, y: 60}
+    - {x: 26, y: 61}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -1696,7 +1696,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 343.24945, y: 177.15651, z: 65.169266}
       SpawnTime: 29.851236
     TrueRanges:
-    - {x: 30, y: 68}
+    - {x: 30, y: 67}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -2770,7 +2770,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 348.2686, y: 171.44882, z: 56.271873}
       SpawnTime: 32.935875
     TrueRanges:
-    - {x: 33, y: 80}
+    - {x: 33, y: 78}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -4507,7 +4507,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 351.07404, y: 174.6839, z: 69.94473}
       SpawnTime: 37.89656
     TrueRanges:
-    - {x: 30, y: 75}
+    - {x: 30, y: 76}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -5016,7 +5016,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 355.61572, y: 177.25108, z: 76.71772}
       SpawnTime: 39.520367
     TrueRanges:
-    - {x: 26, y: 67}
+    - {x: 26, y: 68}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -6062,7 +6062,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 340.77524, y: 183.02344, z: 54.836475}
       SpawnTime: 42.633053
     TrueRanges:
-    - {x: 32, y: 73}
+    - {x: 32, y: 74}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -6550,7 +6550,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 356.65894, y: 184.93263, z: 77.79169}
       SpawnTime: 44.142498
     TrueRanges:
-    - {x: 21, y: 66}
+    - {x: 22, y: 67}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -7652,7 +7652,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 349.89545, y: 178.69838, z: 67.0892}
       SpawnTime: 48.242252
     TrueRanges:
-    - {x: 21, y: 67}
+    - {x: 21, y: 68}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -8593,7 +8593,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 354.84085, y: 184.37201, z: 67.43575}
       SpawnTime: 51.416496
     TrueRanges:
-    - {x: 12, y: 53}
+    - {x: 12, y: 54}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -10552,7 +10552,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 347.97205, y: 131.0741, z: 53.61526}
       SpawnTime: 57.997272
     TrueRanges:
-    - {x: 23, y: 67}
+    - {x: 23, y: 68}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -11661,7 +11661,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 354.5706, y: 150.11604, z: 56.678013}
       SpawnTime: 61.5957
     TrueRanges:
-    - {x: 26, y: 73}
+    - {x: 26, y: 74}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -14634,7 +14634,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 344.0859, y: 179.42134, z: 64.02266}
       SpawnTime: 73.10899
     TrueRanges:
-    - {x: 10, y: 39}
+    - {x: 10, y: 38}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -16696,7 +16696,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 354.8351, y: 183.14194, z: 83.343285}
       SpawnTime: 80.66299
     TrueRanges:
-    - {x: 13, y: 58}
+    - {x: 13, y: 59}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -18403,7 +18403,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 342.89435, y: 196.99883, z: 11.492407}
       SpawnTime: 88.55919
     TrueRanges:
-    - {x: 22, y: 61}
+    - {x: 22, y: 62}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -18849,7 +18849,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 340.42792, y: 208.74423, z: 345.72177}
       SpawnTime: 94.92809
     TrueRanges:
-    - {x: 19, y: 60}
+    - {x: 19, y: 61}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -19337,7 +19337,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 337.3993, y: 209.14978, z: 359.74304}
       SpawnTime: 96.496635
     TrueRanges:
-    - {x: 26, y: 67}
+    - {x: 26, y: 64}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -22209,7 +22209,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 337.43903, y: 195.90431, z: 61.106472}
       SpawnTime: 106.66697
     TrueRanges:
-    - {x: 34, y: 74}
+    - {x: 34, y: 71}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -31379,7 +31379,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 350.52017, y: 223.57397, z: 61.054783}
       SpawnTime: 139.05498
     TrueRanges:
-    - {x: 11, y: 50}
+    - {x: 11, y: 51}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -32180,7 +32180,7 @@ MonoBehaviour:
       UncenteredHandRot: {x: 355.93207, y: 231.61284, z: 56.796635}
       SpawnTime: 142.07178
     TrueRanges:
-    - {x: 15, y: 52}
+    - {x: 15, y: 53}
     TrueIndex: 0
     PlayCount: 0
   - Infos:
@@ -32940,8 +32940,7 @@ MonoBehaviour:
       UncenteredHandPos: {x: 0.39599514, y: -0.7200277, z: -0.2602644}
       UncenteredHandRot: {x: 15.727827, y: 77.68499, z: 6.8158956}
       SpawnTime: 172.54146
-    TrueRanges:
-    - {x: 1, y: 106}
+    TrueRanges: []
     TrueIndex: 0
     PlayCount: 0
   - Infos:

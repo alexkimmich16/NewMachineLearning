@@ -38,28 +38,31 @@ public struct LogisticRegression
         //no first 0 passed
         //no powers passed
         float4 Guesses = float4.zero;
+        //Debug.Log(InputValues[0].Length);
+        //Debug.Log(Coefficents.Length);
         for (int i = 0; i < InputValues.Length; i++)//INPUT VALUES ALREADY CONTAIN POWER
         {
             double Total = Coefficents[0];
             for (int j = 0; j < InputValues[0].Length; j++)//each  variable
                 for (int k = 0; k < EachTotalDegree; k++)
                 {
-                    //Debug.Log(j + "  " + k);
+                    //Debug.Log(i + "  " + j);
+                    //Debug.Log(((j * EachTotalDegree) + k + 1));
                    // Debug.Log(InputValues[0].Length + "  " + EachTotalDegree + "  " + Coefficents.Length);
                     Total += math.pow(InputValues[i][j], k + 1) * Coefficents[(j * EachTotalDegree) + k + 1];
                 }
                     
 
             //insert formula
-            double GuessValue = 1f / (1f + Math.Exp(-Total));
-            bool Guess = GuessValue > 0.5f;
+            double GuessValue = 1d / (1d + Math.Exp(-Total));
+            bool Guess = GuessValue > 0.5d;
             bool IsTrue = Output[i] == 1d;
             bool Correct = Guess == IsTrue;
 
             Guesses.w += (Correct && IsTrue) ? 1f : 0f;
             Guesses.x += (!Correct && IsTrue) ? 1f : 0f;
             Guesses.y += (Correct && !IsTrue) ? 1f : 0f;
-            Guesses.z += (!Correct && !IsTrue) ? 1f : 0;
+            Guesses.z += (!Correct && !IsTrue) ? 1f : 0f;
         }
         return Guesses;
     }

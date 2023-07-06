@@ -81,7 +81,7 @@ namespace RestrictionSystem
                 PreformRegression((Spell)motion);
         }
         [FoldoutGroup("Functions"), Button(ButtonSizes.Small)]
-        public void PreformRegressionCurrent() { PreformRegression((Spell)MotionEditor.instance.MotionType); }
+        public void PreformRegressionCurrent() { PreformRegression(MotionEditor.instance.MotionType); }
 
         public void PreformRegression(Spell Motion)
         {

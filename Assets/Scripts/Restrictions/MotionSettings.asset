@@ -122,10 +122,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 4.71691274E-05
+      Data: -5.66016865
     - Name: 
       Entry: 4
-      Data: 28.15575
+      Data: 0.9657871
     - Name: 
       Entry: 8
       Data: 
@@ -134,10 +134,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 0.22363469
+      Data: 5.241832
     - Name: 
       Entry: 4
-      Data: 7.888966
+      Data: 14.8964462
     - Name: 
       Entry: 8
       Data: 
@@ -146,10 +146,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: -1.99867868
+      Data: 89.35845
     - Name: 
       Entry: 4
-      Data: 3.1665976
+      Data: 98.10515
     - Name: 
       Entry: 8
       Data: 
@@ -158,10 +158,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: -2.59842777
+      Data: -4.96547747
     - Name: 
       Entry: 4
-      Data: -9.509185E-05
+      Data: -4.174934E-05
     - Name: 
       Entry: 8
       Data: 
@@ -170,10 +170,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 6.847524
+      Data: 113.851021
     - Name: 
       Entry: 4
-      Data: 17.1523514
+      Data: 123.213707
     - Name: 
       Entry: 8
       Data: 
@@ -182,10 +182,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: -9.107076
+      Data: 62.1623344
     - Name: 
       Entry: 4
-      Data: -6.16756535
+      Data: 65.96452
     - Name: 
       Entry: 8
       Data: 
@@ -194,10 +194,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 13.7510624
+      Data: 42.6341858
     - Name: 
       Entry: 4
-      Data: 28.5260029
+      Data: 54.48437
     - Name: 
       Entry: 8
       Data: 
@@ -206,10 +206,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: -5.40762568
+      Data: -8.060099
     - Name: 
       Entry: 4
-      Data: 0.7798203
+      Data: -0.03154603
     - Name: 
       Entry: 8
       Data: 
@@ -403,40 +403,43 @@ MonoBehaviour:
       - -0.0057013435
       - 0.000055378707
       - -0.0000001511006
-  - Intercept: -32.90284
+  - Intercept: -284.11752
     Coefficents:
     - Degrees:
-      - 0.42716548
-      - -0.016906912
-      - 0.004929463
+      - 3.8950586
+      - -3.4592907
+      - 0.92204964
+      - -0.08379486
     - Degrees:
-      - 2.8034348
-      - -0.29161027
-      - 0.0072028837
+      - 7.4085355
+      - -1.5207508
+      - 0.13707809
+      - -0.004334163
     - Degrees:
-      - -0.006021667
-      - -0.00016916778
-      - 0.00000080538285
+      - -4.846934
+      - -109.044
+      - 396.4446
+      - -352.72992
     - Degrees:
-      - -22.158262
-      - 59.793797
-      - -45.711296
+      - 968.8601
+      - -2800.2593
+      - 3477.0955
+      - -1555.3865
     - Degrees:
-      - 53.388226
-      - -101.237236
-      - 72.577934
+      - 3.0642128
+      - -0.038866844
+      - 0.00020594313
+      - -0.00000038907805
     - Degrees:
-      - -0.034626022
-      - -0.0009321072
-      - 0.0000051073057
+      - 1.9537461
+      - -0.020611458
+      - 0.000091455346
+      - -0.00000014022785
     - Degrees:
-      - 0.5623474
-      - -0.0041218195
-      - 0.000010448588
-    - Degrees:
-      - 0.06721488
-      - -0.0015918927
-      - 0.0000060239468
+      - -0.04185057
+      - 0.0019297897
+      - -0.000015703738
+      - 0.000000027921194
   - Intercept: -12.979652
     Coefficents:
     - Degrees:
@@ -590,18 +593,6 @@ MonoBehaviour:
       Offset: {x: 0, y: 0, z: 0}
       Direction: {x: 0, y: 0, z: 0}
       UseAxisList: 0000000002000000
-      ShouldDebug: 0
-      Value: 0
-    - Label: HandHeadAngle
-      Active: 0
-      restriction: 4
-      checkType: 0
-      OtherDirection: {x: 0, y: 0, z: 0}
-      UseLocalHandPos: 0
-      UseLocalHandRot: 0
-      Offset: {x: 0, y: 0, z: 0}
-      Direction: {x: 0, y: 0, z: 0}
-      UseAxisList: 
       ShouldDebug: 0
       Value: 0
     - Label: VertHandDist
@@ -793,9 +784,9 @@ MonoBehaviour:
     MostTime: 0.08
     Spread: 10.9
     CutoffValue: 0.5
-  - FrameLogicEnabled: 1
+  - FrameLogicEnabled: 0
     MostTime: 0.28
-    Spread: 0.1
+    Spread: 0.7
     CutoffValue: 0.5
   - FrameLogicEnabled: 1
     MostTime: 0.58
@@ -897,7 +888,7 @@ MonoBehaviour:
       ExitIfAny: 1
       waitType: 1
       Coefficents:
-      - 0.3
+      - 0.1
       - 1000
       - 0.1
       - 1000
@@ -942,15 +933,15 @@ MonoBehaviour:
       ExitIfAny: 0
       waitType: 1
       Coefficents:
-      - 0.2
+      - 0.7
       - 1000
       CutoffValue: 0
       SingleConditions:
-      - Label: distance from finish
-        frameType: 0
-        condition: 1
+      - Label: Speed Break
+        frameType: 1
+        condition: 2
         restriction:
-          Label: 
+          Label: HorizontalSpeed
           Active: 0
           restriction: 0
           checkType: 0
@@ -959,7 +950,7 @@ MonoBehaviour:
           UseLocalHandRot: 0
           Offset: {x: 0, y: 0, z: 0}
           Direction: {x: 0, y: 0, z: 0}
-          UseAxisList: 
+          UseAxisList: 0000000002000000
           ShouldDebug: 0
           Value: 0
       ExitIfConditions: []

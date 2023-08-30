@@ -12,6 +12,8 @@ public class MovementControl : SerializedMonoBehaviour
     public static MovementControl instance;
     public string FollowingPath;
     public string FullPath { get { return Application.dataPath + FollowingPath; }}
+    
+
     private void Awake()
     {
         instance = this;
@@ -65,9 +67,6 @@ public class MovementControl : SerializedMonoBehaviour
     {
         Movements = new List<AllMotions>(Enumerable.Repeat<AllMotions>(null, Enum.GetValues(typeof(Spell)).Length));
 
-        //Debug.Log(Directory.Exists(FullPath));
-
-        //, new[] { FullPath }
         string[] guids = AssetDatabase.FindAssets("t:AllMotions"); // Find all assets of type ScriptableObject within the specified folder
         foreach (string guid in guids)
         {
@@ -85,6 +84,7 @@ public class MovementControl : SerializedMonoBehaviour
         }
     }
 
+    
 
     /*
     [FoldoutGroup("Rename"), Button(ButtonSizes.Small)]

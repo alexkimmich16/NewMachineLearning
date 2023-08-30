@@ -83,17 +83,21 @@ namespace RestrictionSystem
                 
             }
         }
-        public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, Spell motionType)
+
+        public List<float> GetRestrictionValues(SingleInfo frame1, SingleInfo frame2, Spell motionType)
         {
             List<float> TestValues = new List<float>();
-            MotionRestriction restriction = RestrictionSettings.MotionRestrictions[(int)motionType - 1];
-            for (int i = 0; i < restriction.Restrictions.Count; i++)
-            {
-                TestValues.Add(RestrictionDictionary[restriction.Restrictions[i].restriction].Invoke(restriction.Restrictions[i], frame1, frame2));
-            }
+            foreach (SingleRestriction restriction in RestrictionSettings.MotionRestrictions[(int)motionType - 1].Restrictions)
+                TestValues.Add(RestrictionDictionary[restriction.restriction].Invoke(restriction, frame1, frame2));
+            return TestValues;
+        }
+        public bool MotionWorks(SingleInfo frame1, SingleInfo frame2, Spell motionType)
+        {
+            List<float> TestValues = GetRestrictionValues(frame1, frame2, motionType);
 
-            
             //bool Works = new LogisticRegression().Works(RestrictionSettings.Coefficents[(int)motionType - 1].GetDoubleCoefficents(), TestValues.Select(f => (double)f).ToArray());
+
+
 
             float Total = RestrictionSettings.Coefficents[(int)motionType - 1].Intercept;
             for (int j = 0; j < RestrictionSettings.Coefficents[(int)motionType - 1].Coefficents.Count; j++)//each  variable
@@ -108,6 +112,9 @@ namespace RestrictionSystem
             return Correct;
         }
         public static Vector3 EliminateAxis(List<Axis> AllAxis, Vector3 Value) { return new Vector3(AllAxis.Contains(Axis.X) ? Value.x : 0, AllAxis.Contains(Axis.Y) ? Value.y : 0, AllAxis.Contains(Axis.Z) ? Value.z : 0); }
+
+
+
         #region Values
         public static float VelocityMagnitude(SingleRestriction restriction, SingleInfo frame1, SingleInfo frame2)
         {

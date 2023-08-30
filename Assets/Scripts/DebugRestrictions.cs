@@ -68,7 +68,10 @@ namespace RestrictionSystem
         {
             //Debug.Log("NewState: " + NewState + "  Index: " + Index);
         }
-
+        public void SetSideColor(Side side, int ColorIndex)
+        {
+            handToChange[(int)side].material = Materials[ColorIndex];
+        }
         void Update()
         {
             if (!Active)

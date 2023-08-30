@@ -53,6 +53,8 @@ namespace RestrictionSystem
                 ReturnList.Remove(0);
             return ReturnList;
         }
+
+
         public List<SingleFrameRestrictionValues> GetRestrictionsForMotions(Spell FrameDataMotion, MotionRestriction RestrictionsMotion)
         {
             List<SingleFrameRestrictionValues> ReturnValue = new List<SingleFrameRestrictionValues>();

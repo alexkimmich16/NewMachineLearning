@@ -32,6 +32,16 @@ namespace RestrictionSystem
         //public bool[] InvertHand;
         //118.012 to 
         public bool HandActive(Side side) { return HandsActive[(int)side]; }
+        public List<SingleInfo> GetFramesList(Side side, int Frames)
+        {
+            List<SingleInfo> SideList = side == Side.right ? RightInfo : LeftInfo;
+            List<SingleInfo> ReturnList = new List<SingleInfo>();
+            for (int i = 0; i < Frames; i++)
+            {
+                ReturnList.Add(SideList[i]);
+            }
+            return ReturnList;
+        }
         private void Start()
         {
             HandsActive = new bool[2];
@@ -184,6 +194,8 @@ namespace RestrictionSystem
             this.UncenteredHandRot = UncenteredHandRot;
             this.UncenteredHandPos = UncenteredHandPos;
         }
+
+        public float[] AsFloats() { return new float[] { HandPos.x, HandPos.y, HandPos.z, HandRot.x, HandRot.y, HandRot.z }; }
     }
 }
 

@@ -6,8 +6,13 @@ using RestrictionSystem;
 using Sirenix.OdinInspector;
 using System.Linq;
 using System.IO;
+using System;
+//using untiy.mat
 public class PythonTest : SerializedMonoBehaviour
 {
+    public static PythonTest instance;
+    private void Awake() { instance = this; }
+
     public bool Active;
     public NNModel modelAsset;
     private Model runtimeModel;
@@ -19,85 +24,103 @@ public class PythonTest : SerializedMonoBehaviour
     public int FramesAgoBuild;
     public int InputsPerFrameBuild = 13;
 
-    MovementControl MC => MovementControl.instance;
+    [Range(1,20)]public int PrintDecimals = 5;
 
-    [FoldoutGroup("Info")] public bool UseFalseMotions;
+    public MovementControl MC;
+
     public FinalMotion CalculatedMotion;
 
     public bool UsePreprocessing;
 
+    public int ExcelMotions;
+
+    public bool RunAccuracyTest;
+
+    public List<Spell> SpellsToUse;
+
+    //public List<int> AllActiveMotions { get { return Enumerable.Range(0, MC.MotionCount()).Where(motion => MotionsToUse[motion]).ToList(); } }
+
     [Button]
     public void TestModel()
     {
+        PythonTest.instance = this;
+
+
         runtimeModel = ModelLoader.Load(modelAsset);
         CheckWorker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, runtimeModel);
 
         Vector2 TrueFalse = new Vector2(0, 0);
-        for (int i = 0; i < MC.MovementCount(Spell.Fireball); i++)
+
+
+        List<float> FrameInputData = new List<float>();
+        int TotalCount = 0;
+        foreach (Spell SpellType in SpellsToUse)
         {
-            for (int j = FramesAgoBuild; j < MC.FrameCount(Spell.Fireball, i); j++)
+            //Debug.Log(SpellType);
+            for (int i = 0; i < MC.MovementCount(SpellType); i++)
             {
-                List<SingleInfo> Info = new List<SingleInfo>();
-                string BuildString = "";
-                for (int k = j - FramesAgoBuild; k < j + 1; k++)
+                for (int j = FramesAgoBuild; j < MC.FrameCount(SpellType, i); j++)
                 {
-                    BuildString = BuildString + k + " ";
-                    
-                    Info.Add(MC.AtFrameInfo(Spell.Fireball, i, k));
-                }
-                if (i == 0)
-                {
-                    //Debug.Log("j: " + j + "  Includes:  " + BuildString);
-                }
-                    List<float> Inputs = GetInputs(Info);
-
-                if (i == 0)
-                {
-                    //Debug.Log("  Inputs: " + Inputs.Count);
-                }
-
-
-                //Debug.Log(Inputs.Count);
-                bool State = MC.FrameWorks(Spell.Fireball, i, j);
-                //Debug.Log("j: " + j + "  Includes:  " + BuildString + "  Inputs: " + Inputs.Count);
-                // Debugging section
-                if (i == 0)
-                {
-                    string debugString = "frame: " + j;
-                    for (int x = 0; x < Inputs.Count; x++)
+                    List<SingleInfo> Info = new List<SingleInfo>();
+                    string BuildString = "";
+                    for (int k = j - FramesAgoBuild; k < j + 1; k++)
                     {
-                        debugString += " 'Inputs[" + x + "]':" + Inputs[x].ToString("f3");
+                        BuildString = BuildString + k + " ";
+
+                        Info.Add(MC.AtFrameInfo(SpellType, i, k));
                     }
-                   // Debug.Log(debugString);
+                    List<float> Inputs = FrameToValues(Info);
+                    Debug.Log(Inputs.Count);
+                    if (i == 0)
+                    {
+                        //Debug.Log("  Inputs: " + Inputs.Count);
+                    }
+
+
+                    //Debug.Log(Inputs.Count);
+                    bool State = MC.FrameWorks(SpellType, i, j);
+                    //if (i == 0 && SpellType == 1)
+                        //Debug.Log(BuildString);
+                        //Debug.Log("Start: " + 1 + "  finish: " + );
+                        //SpellType == 1 && i < 10 && !ExportTriggered
+                    if (true)
+                    {
+                        TotalCount++;
+                        
+                        //Debug.Log("TotalCount: " + TotalCount + " SpellType: " + SpellType + "  Movement: " + i + "  TopFrame: " + j);
+                        if (TotalCount < ExcelMotions)
+                        {
+                            for (int x = 0; x < Inputs.Count; x++)
+                            {
+                                //if (TotalCount >= 34 && TotalCount <= 36 && SpellType == 1)
+                                    //Debug.Log("Current: : " + (TotalCount - (10 - x)).ToString() + "val: " + Inputs[x]);
+                                if(Inputs[x] == -0.36851f)
+                                    Debug.Log("Movement: " + i  + "frame: " + j + "  TotalCount: : " + TotalCount + "  x: " + x + "  val: " + Inputs[x]);
+                                FrameInputData.Add(Inputs[x]);
+                                //debugString += " 'Inputs[" + x + "]':" + Inputs[x].ToString("f3");
+                            }
+                        }
+                       
+                        
+                    }
+                    if (RunAccuracyTest)
+                    {
+                        bool Prediction = PredictState(Info);
+                        bool Correct = Prediction == State;
+                        TrueFalse = Correct ? new Vector2(TrueFalse.x + 1, TrueFalse.y) : new Vector2(TrueFalse.x, TrueFalse.y + 1);
+                    }
+                    
                 }
-
-                Tensor CheckWorks = new Tensor(1, 1, FramesAgoBuild, InputsPerFrameBuild, Inputs.ToArray());
-
-                // Execute the neural network with the given input
-                CheckWorker.Execute(CheckWorks);
-
-                // Fetch the result
-                Tensor output = CheckWorker.PeekOutput();
-
-                // Convert the output to a boolean
-                bool predictedState = output[0] > 0.5f;
-
-                bool Correct = predictedState == State;
-
-                TrueFalse = Correct ? new Vector2(TrueFalse.x + 1, TrueFalse.y) : new Vector2(TrueFalse.x, TrueFalse.y + 1);
-                //Debug.Log("Output: " + output[0]);
-
-                CheckWorks.Dispose();
-                output.Dispose();
             }
-            //return;
-            //return;
         }
+        //Debug.Log(FrameInputData.Count);
+        SpreadSheet.OutputExcelInfo(FrameInputData.ToArray());
 
-        Debug.Log("Accuracy: " + (TrueFalse.x / (TrueFalse.x +TrueFalse.y)).ToString("f3") + "Correct: " + TrueFalse.x + "  Incorrect: " + TrueFalse.y);
+        if(RunAccuracyTest)
+            Debug.Log("Accuracy: " + (TrueFalse.x / (TrueFalse.x +TrueFalse.y)).ToString("f3") + "Correct: " + TrueFalse.x + "  Incorrect: " + TrueFalse.y);
     }
 
-    public string JSONDirectory { get { return "B:/WildfireLearning"; } }
+    public string JSONDirectory { get { return "B:/GitProjects/NewMachineLearning/NewMachineLearning/WildfireLearning"; } }
     [Button]
     public void ReloadJSON()
     {
@@ -105,6 +128,7 @@ public class PythonTest : SerializedMonoBehaviour
     }
     public void ReloadJSONType(Spell spell)
     {
+        PythonTest.instance = this;
         CalculatedMotion = GetAllMotionList(spell);
         string directory = Path.Combine(JSONDirectory, spell.ToString() + ".json");
         Debug.Log(directory);
@@ -125,12 +149,13 @@ public class PythonTest : SerializedMonoBehaviour
 
     public void GetPred()
     {
-        bool Pred = PredictGestureState(Side.right);
+        List<SingleInfo> frames = PastFrameRecorder.instance.GetFramesList(Side.right, FramesAgoBuild + 1);
+        bool Pred = PredictState(frames);
         //Debug.Log("returned: " + Pred);
         DebugRestrictions.instance.SetSideColor(Side.right, Pred ? 1 : 0);
     }
 
-    private List<float> GetInputs(List<SingleInfo> Frames)
+    private List<float> FrameToValues(List<SingleInfo> Frames)
     {
         List<float> FrameInputs = new List<float>();
 
@@ -146,46 +171,38 @@ public class PythonTest : SerializedMonoBehaviour
             {
                 SingleInfo Frame = Frames[i];
                 
+                //FrameInputs.AddRange(new List<float>() { Frame.HandPos.x, Frame.HandPos.y, Frame.HandPos.z, Frame.HandRot.x / 360f, Frame.HandRot.y / 360f, Frame.HandRot.z / 360f });
                 FrameInputs.AddRange(new List<float>() { Frame.HandPos.x, Frame.HandPos.y, Frame.HandPos.z, Frame.HandRot.x / 360f, Frame.HandRot.y / 360f, Frame.HandRot.z / 360f, Time() });
             }
             float Time() { return Frames[i + 1].SpawnTime - Frames[i].SpawnTime; }
         }
+        //Debug.Log(FrameInputs[0]);
+        FrameInputs = FrameInputs.Select(x => MathF.Round(x, PrintDecimals)).ToList();
+        //Debug.Log(FrameInputs[0]);
         return FrameInputs;
         
     }
-
-    public bool PredictGestureState(Side side)
+    public bool PredictState(List<SingleInfo> frames)
     {
         // Load the NNModel
         runtimeModel = ModelLoader.Load(modelAsset);
-
-        // Create a Barracuda worker (responsible for executing the model)
         worker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, runtimeModel);
 
-        List<SingleInfo> frames = PastFrameRecorder.instance.GetFramesList(side, FramesAgoBuild + 1);
+        //List<SingleInfo> frames = PastFrameRecorder.instance.GetFramesList(side, FramesAgoBuild + 1);
+        float[] Inputs = FrameToValues(frames).ToArray();
+
+        /*
         float[] Inputs = new float[0];
         for (int i = 1; i < FramesAgoBuild + 1; i++)
         {
-            //Debug.Log("i: " + i + "i+1: " + (i + 1));
-            List<float> FrameInputs = GetInputs(new List<SingleInfo>() { frames[i - 1], frames[i] });
-            //Debug.Log(FrameInputs.Count);
+            List<float> FrameInputs = FrameToValues(new List<SingleInfo>() { frames[i - 1], frames[i] });
             Inputs = Inputs.Concat(FrameInputs.ToArray()).ToArray();
-            //Debug.Log(i + "inputs: " + Inputs);
         }
-        //Debug.Log("Inputs: " + Inputs.Length);
-        // Create input tensor with the correct shape (1, sequenceLength, 12)
+        */
         Tensor input = new Tensor(1, 1, FramesAgoBuild, InputsPerFrameBuild, Inputs);
-
-        // Execute the neural network with the given input
         worker.Execute(input);
-
-        // Fetch the result
         Tensor output = worker.PeekOutput();
-
-        // Convert the output to a boolean
         bool predictedState = output[0] > 0.5f;
-        //Debug.Log("Output: " + output[0]);
-        // Dispose of the worker and input tensor when done
         input.Dispose();
         worker.Dispose();
 
@@ -194,46 +211,38 @@ public class PythonTest : SerializedMonoBehaviour
 
     public FinalMotion GetAllMotionList(Spell spell)
     {
-        List<int> UseMotions = Enumerable.Range(0, MC.MotionCount()).ToList();
-        if (!UseFalseMotions)
-            UseMotions.Remove(0);
-
-
         List<Motion> ReturnList = new List<Motion>();
 
-        foreach(int SpellType in UseMotions)
+        foreach(Spell SpellType in SpellsToUse)
         {
-            bool CanBeTrue = (int)spell == SpellType;
-            for (int i = 0; i < MC.MovementCount((Spell)SpellType); i++)
+            bool CanBeTrue = spell == SpellType;
+            for (int i = 0; i < MC.MovementCount(SpellType); i++)
             {
+                
                 List<Frame> frames = new List<Frame>();
-                for (int j = 1; j < MC.FrameCount((Spell)SpellType, i); j++)
+                //if (i == 0 && SpellType == Spell.Fireball)
+                    //Debug.Log(MC.FrameCount(SpellType, i));
+                for (int j = 1; j < MC.FrameCount(SpellType, i); j++)
                 {
-                    SingleInfo lastFrame = MC.AtFrameInfo((Spell)SpellType, i, j - 1);
-                    SingleInfo info = MC.AtFrameInfo((Spell)SpellType, i, j);
-                    bool State = MC.FrameWorks((Spell)SpellType, i, j) && CanBeTrue;
+                    //if(i==0&&SpellType == Spell.Fireball)
+                        //Debug.Log(j);
+                    SingleInfo lastFrame = MC.AtFrameInfo(SpellType, i, j - 1);
+                    SingleInfo info = MC.AtFrameInfo(SpellType, i, j);
+                    bool State = MC.FrameWorks(SpellType, i, j) && CanBeTrue;
 
-                    List<float> FramesInfo = GetInputs(new List<SingleInfo>() { lastFrame, info });
+
+
+                    List<float> FramesInfo = FrameToValues(new List<SingleInfo>() { lastFrame, info });
                     
-                    Frame frame = new Frame(FramesInfo.ToArray(), State, TimeSinceLast());
+                    Frame frame = new Frame(FramesInfo.ToArray(), State);
                     frames.Add(frame);
-
-
-                    float TimeSinceLast()
+                    if(i == 0 && j == 1 && SpellType == Spell.Fireball)
                     {
-                        if (j > 0)
-                        {
-                            float MyFrameTime = MC.AtFrameInfo((Spell)SpellType, i, j).SpawnTime;
-                            float lastFrameTime = MC.AtFrameInfo((Spell)SpellType, i, j - 1).SpawnTime;
-                            return MyFrameTime - lastFrameTime;
-                        }
-                        return 0f;
+                        //Debug.Log(FramesInfo[0]);
                     }
                 }
                 Motion motion = new Motion(frames);
                 ReturnList.Add(motion);
-
-                
             }
         }
 
@@ -243,7 +252,7 @@ public class PythonTest : SerializedMonoBehaviour
     [System.Serializable]
     public class FinalMotion
     {
-        public List<Motion> Motions;
+        [ListDrawerSettings(ShowIndexLabels = true)]public List<Motion> Motions;
         public FinalMotion(List<Motion> Motions)
         {
             this.Motions = Motions;
@@ -253,7 +262,7 @@ public class PythonTest : SerializedMonoBehaviour
     [System.Serializable]
     public class Motion
     {
-        public List<Frame> Frames;
+        [ListDrawerSettings(ShowIndexLabels = true)] public List<Frame> Frames;
         public Motion(List<Frame> Frames)
         {
             this.Frames = Frames;
@@ -262,9 +271,11 @@ public class PythonTest : SerializedMonoBehaviour
     [System.Serializable]
     public class Frame
     {
-        public float[] FrameInfo;
+        public string[] FrameInfo;
         public bool Active;
-        public float Time;
+        public string Time;
+
+
         /*
         public SingleInfo info;
         public float TimeSinceLast;
@@ -276,11 +287,16 @@ public class PythonTest : SerializedMonoBehaviour
         }
         */
 
-        public Frame(float[] FrameInfo, bool Active, float Time)
+        public Frame(float[] FrameInfo, bool Active)
         {
-            this.FrameInfo = FrameInfo;
+            this.Time = FrameInfo[FrameInfo.Length - 1].ToString();
+
+            List<float> RealFrameInfo = FrameInfo.ToList();
+            RealFrameInfo.RemoveAt(RealFrameInfo.Count - 1);
+            
+            this.FrameInfo = RealFrameInfo.Select(x => x.ToString()).ToArray();
             this.Active = Active;
-            this.Time = Time;
+            
         }
     }
 

@@ -2,14 +2,37 @@ import json
 import numpy as np
 import onnxruntime as ort
 import tensorflow as tf
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, Flatten, Dense, Dropout, BatchNormalization
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.utils.class_weight import compute_class_weight
+from openpyxl import load_workbook
+from itertools import chain
 import subprocess
+import openpyxl
+import os
+def write_to_excel(data_list, excel_filename="PythonData.xlsx"):
+    # Flatten the 2D data_list into a 1D list
+    flattened_data = list(chain.from_iterable(data_list))
+    print(flattened_data.count)
+    # If the Excel file exists, load it; otherwise create a new one
+    if os.path.exists(excel_filename):
+        book = openpyxl.load_workbook(excel_filename)
+    else:
+        book = openpyxl.Workbook()
+        
+    sheet = book.active
 
+    # Write the 1D list starting at cell A1
+    for idx, value in enumerate(flattened_data, 1):
+        cell = sheet.cell(row=1, column=idx)
+        cell.value = value
+
+    # Save the workbook
+    book.save(excel_filename)
 
 # Read data from JSON file
 with open('Fireball.json', 'r') as file:
@@ -21,36 +44,54 @@ num_frames = 10
 # Extract sequences
 sequences = []
 labels = []
-first_motion_done = False  # flag to indicate if the first motion has been processed
+ShouldDebug = True
+DoneDebugging = False  # flag to indicate if the first motion has been processed
 
+# Create an empty list to hold the Excel data
+total = 0
+excel_data = []
 for motion in data['Motions']:
-    #if first_motion_done:
+    #if DoneDebugging and ShouldDebug:
         #break  # Skip the remaining motions after the first one is processed
     
     # Start from num_frames and go to the last frame
-    for i in range(num_frames, len(motion['Frames'])):
-        sequence = [info['FrameInfo'] + [info['Time']] for info in motion['Frames'][i-num_frames:i]]
+    for i in range(num_frames, len(motion['Frames']) + 1):
+        print(len(motion['Frames']))
+        sequence = [[float(value) for value in info['FrameInfo']] + [float(info['Time'])] for info in motion['Frames'][i-num_frames:i]]
         
-        # Build debug string
+        #print(f"Frames involved in this sequence are {list(range(i - num_frames, i))}")
+        #print(data['Motions'][0]['Frames'][:10])
+        # Build debug string and Excel row
         debug_str = f"frame: {i} "
+        excel_row = []
+        DebugIndex = []
         for frame_index, frame in enumerate(sequence):
+            DebugIndex.append(frame_index * len(frame))
             for input_index, input_value in enumerate(frame):
-                debug_str += f"'Inputs[{input_index + frame_index * len(frame)}]':{input_value:.3f} "
+                rounded_value = round(input_value, 5)
+                debug_str += f"'Inputs[{input_index + frame_index * len(frame)}]':{rounded_value} "
+                excel_row.append(f"{rounded_value}")
         
-        # Log indices of frames involved in this sequence
-        frame_indices = [str(index) for index in range(i-num_frames, i)]
-        #print(f"Indices of frames involved: {','.join(frame_indices)}")
-        if(i == num_frames & first_motion_done == False):
-            first_motion_done = True
-            print(debug_str)  # Debugging statement
-        
+        #print(f"Frames involved in this sequence are {list(range(i - num_frames, i))}")
+        #print(DebugIndex)
+
+        # If this is the first frame of the first motion, write to Excel
+        if(ShouldDebug and total < 100):
+            excel_data.append(excel_row)
+            #if not DoneDebugging and ShouldDebug:
+            #print(debug_str)  # Debugging statement
+            #excel_data.append(excel_row)  # Append this frame's data to the Excel data list
+            #if i - 3 > 30:
+                #DoneDebugging = True
+                #write_to_excel(excel_data)  # Write the Excel data list to an Excel file
+        total += 1
         sequences.append(sequence)
-        
         label = motion['Frames'][i - 1]['Active']
         labels.append(int(label))
             
-    first_motion_done = True  # Mark that the first motion has been processed
+    #first_motion_done = True  # Mark that the first motion has been processed
 
+write_to_excel(excel_data)
 # Convert to numpy arrays
 X = np.array(sequences, dtype='float32')
 y = np.array(labels, dtype='float32')

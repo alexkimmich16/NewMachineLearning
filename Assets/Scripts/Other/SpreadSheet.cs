@@ -3,11 +3,14 @@ using System.IO;
 using Sirenix.OdinInspector;
 using OfficeOpenXml;
 using System.Diagnostics;
+using System;
 public class SpreadSheet : SerializedMonoBehaviour
 {
     public static SpreadSheet instance;
     private void Awake() { instance = this; }
 
+
+    public static PythonTest PY => PythonTest.instance;
     public static string ReadExcelCell(int row, int column)
     {
         FileInfo existingFile = new FileInfo(DegreeLocation2());
@@ -16,14 +19,27 @@ public class SpreadSheet : SerializedMonoBehaviour
         return worksheet.Cells[row + 1, column + 1].Value.ToString();
     }
     public static string DegreeLocation2() { return Application.dataPath + "/SpreadSheets/Tester.XLSX"; }
+    public static string CompareLocation() { return "B:/GitProjects/NewMachineLearning/NewMachineLearning/WildfireLearning/PythonData.XLSX"; }
 
     //[Button(ButtonSizes.Small)]
     public void OpenExcel()
     {
         Process.Start(DegreeLocation2());
-    }
 
+    }
+    
     //[Button(ButtonSizes.Small)]
+    public static void OutputExcelInfo(float[] Values)
+    {
+        FileInfo existingFile = new FileInfo(CompareLocation());
+        ExcelPackage package = new ExcelPackage(existingFile);
+        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+
+        //headers
+        for (int i = 0; i < Values.Length; i++)
+            worksheet.Cells[2, i + 1].Value = MathF.Round(Values[i], PY.PrintDecimals).ToString();
+        package.Save();
+    }
     /*
     public void PrintDegreeStats()
     {

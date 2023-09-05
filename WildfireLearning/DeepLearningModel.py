@@ -14,10 +14,11 @@ from itertools import chain
 import subprocess
 import openpyxl
 import os
+
 def write_to_excel(data_list, excel_filename="PythonData.xlsx"):
     # Flatten the 2D data_list into a 1D list
     flattened_data = list(chain.from_iterable(data_list))
-    print(flattened_data.count)
+    #print(flattened_data.count)
     # If the Excel file exists, load it; otherwise create a new one
     if os.path.exists(excel_filename):
         book = openpyxl.load_workbook(excel_filename)
@@ -35,7 +36,7 @@ def write_to_excel(data_list, excel_filename="PythonData.xlsx"):
     book.save(excel_filename)
 
 # Read data from JSON file
-with open('Fireball.json', 'r') as file:
+with open('B:/GitProjects/NewMachineLearning/NewMachineLearning/WildfireLearning/Fireball.json', 'r') as file:
     data = json.load(file)
 
 # Define the number of frames
@@ -56,34 +57,23 @@ for motion in data['Motions']:
     
     # Start from num_frames and go to the last frame
     for i in range(num_frames, len(motion['Frames']) + 1):
-        print(len(motion['Frames']))
-        sequence = [[float(value) for value in info['FrameInfo']] + [float(info['Time'])] for info in motion['Frames'][i-num_frames:i]]
-        
-        #print(f"Frames involved in this sequence are {list(range(i - num_frames, i))}")
-        #print(data['Motions'][0]['Frames'][:10])
+        #print(len(motion['Frames']))
+        sequence = [[float(value) for value in info['FrameInfo']] for info in motion['Frames'][i-num_frames:i]]
+    
         # Build debug string and Excel row
         debug_str = f"frame: {i} "
         excel_row = []
-        DebugIndex = []
         for frame_index, frame in enumerate(sequence):
-            DebugIndex.append(frame_index * len(frame))
             for input_index, input_value in enumerate(frame):
                 rounded_value = round(input_value, 5)
                 debug_str += f"'Inputs[{input_index + frame_index * len(frame)}]':{rounded_value} "
                 excel_row.append(f"{rounded_value}")
         
         #print(f"Frames involved in this sequence are {list(range(i - num_frames, i))}")
-        #print(DebugIndex)
 
         # If this is the first frame of the first motion, write to Excel
         if(ShouldDebug and total < 100):
             excel_data.append(excel_row)
-            #if not DoneDebugging and ShouldDebug:
-            #print(debug_str)  # Debugging statement
-            #excel_data.append(excel_row)  # Append this frame's data to the Excel data list
-            #if i - 3 > 30:
-                #DoneDebugging = True
-                #write_to_excel(excel_data)  # Write the Excel data list to an Excel file
         total += 1
         sequences.append(sequence)
         label = motion['Frames'][i - 1]['Active']
@@ -105,13 +95,13 @@ X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, shuffle=T
 
 # Define CNN model
 model = Sequential([
-    Conv1D(256, 3, activation='relu', kernel_regularizer=l2(0.001), input_shape=(num_frames, X_train.shape[2])),
+    Conv1D(256, 1, activation='relu', kernel_regularizer=l2(0.001), input_shape=(num_frames, X_train.shape[2])),
     BatchNormalization(),
-    MaxPooling1D(2),
+    MaxPooling1D(1),
     Dropout(0.5),
-    Conv1D(512, 3, activation='relu', kernel_regularizer=l2(0.001)),
+    Conv1D(512, 1, activation='relu', kernel_regularizer=l2(0.001)),
     BatchNormalization(),
-    MaxPooling1D(2),
+    MaxPooling1D(1),
     Dropout(0.5),
     Flatten(),
     Dense(256, activation='relu', kernel_regularizer=l2(0.001)),

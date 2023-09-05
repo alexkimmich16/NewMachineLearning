@@ -2909,14 +2909,14 @@ MonoBehaviour:
   - {fileID: 4831342677335988014}
   - {fileID: 6506236087757889267}
   - {fileID: 3410817365608400477}
-  - {fileID: -3125688267916732787}
   - {fileID: -2069116624197025601}
-  - {fileID: -3304790811523706836}
   - {fileID: 1846907992321245005}
   - {fileID: -7190486627079094308}
   - {fileID: -5041969999502339714}
   - {fileID: 12216654601919842}
   - {fileID: -2100719082455546850}
+  - {fileID: -3125688267916732787}
+  - {fileID: -3304790811523706836}
   - {fileID: 7232780002739011788}
   m_renderMode: 1
   m_depthSubmissionMode: 0
@@ -7853,7 +7853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 274c02963f889a64e90bc2e596e21d13, type: 3}
   m_Name: HTCViveControllerProfile Standalone
   m_EditorClassIdentifier: 
-  m_enabled: 0
+  m_enabled: 1
   nameUi: HTC Vive Controller Profile
   version: 0.0.1
   featureIdInternal: com.unity.openxr.feature.input.htcvive
@@ -10563,7 +10563,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d6ccd3d0ef0f1d458e69421dccbdae1, type: 3}
   m_Name: ValveIndexControllerProfile Standalone
   m_EditorClassIdentifier: 
-  m_enabled: 0
+  m_enabled: 1
   nameUi: Valve Index Controller Profile
   version: 0.0.1
   featureIdInternal: com.unity.openxr.feature.input.valveindex

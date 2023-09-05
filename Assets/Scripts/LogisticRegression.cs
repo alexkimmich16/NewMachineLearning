@@ -7,6 +7,7 @@ using Unity.Mathematics;
 using System;
 using System.Linq;
 using RestrictionSystem;
+
 public struct LogisticRegression
 {
     public static bool DebugEach = false;

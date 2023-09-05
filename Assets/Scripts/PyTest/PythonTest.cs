@@ -7,7 +7,11 @@ using Sirenix.OdinInspector;
 using System.Linq;
 using System.IO;
 using System;
+using Unity.Mathematics;
 //using untiy.mat
+
+
+
 public class PythonTest : SerializedMonoBehaviour
 {
     public static PythonTest instance;
@@ -22,8 +26,9 @@ public class PythonTest : SerializedMonoBehaviour
     //public int FramesAgo;
 
     public int FramesAgoBuild;
-    public int InputsPerFrameBuild = 13;
 
+    //private int InputsPerFrameBuild = 13;
+    //public int ActiveInputCount { get { return UsePreprocessing ? 7 : 7; } }
     [Range(1,20)]public int PrintDecimals = 5;
 
     public MovementControl MC;
@@ -31,12 +36,17 @@ public class PythonTest : SerializedMonoBehaviour
     public FinalMotion CalculatedMotion;
 
     public bool UsePreprocessing;
-
+    public bool DoExport;
     public int ExcelMotions;
 
     public bool RunAccuracyTest;
 
     public List<Spell> SpellsToUse;
+
+    public RestrictionManager RM;
+    public MotionEditor ME;
+
+    public bool TrackEndOnly;
 
     //public List<int> AllActiveMotions { get { return Enumerable.Range(0, MC.MotionCount()).Where(motion => MotionsToUse[motion]).ToList(); } }
 
@@ -49,11 +59,13 @@ public class PythonTest : SerializedMonoBehaviour
         runtimeModel = ModelLoader.Load(modelAsset);
         CheckWorker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, runtimeModel);
 
-        Vector2 TrueFalse = new Vector2(0, 0);
+        float4 Guesses = float4.zero;
 
 
         List<float> FrameInputData = new List<float>();
         int TotalCount = 0;
+        GuessLogging Logging = new GuessLogging();
+        
         foreach (Spell SpellType in SpellsToUse)
         {
             //Debug.Log(SpellType);
@@ -61,29 +73,28 @@ public class PythonTest : SerializedMonoBehaviour
             {
                 for (int j = FramesAgoBuild; j < MC.FrameCount(SpellType, i); j++)
                 {
-                    List<SingleInfo> Info = new List<SingleInfo>();
-                    string BuildString = "";
-                    for (int k = j - FramesAgoBuild; k < j + 1; k++)
-                    {
-                        BuildString = BuildString + k + " ";
+                     //Debug.Log("1: " + (j - FramesAgoBuild) + "  2: " + (j + 1));
+                    //Debug.Log(Enumss[0] + "  " + Enumss[^1]);
+                    //for (int l = 0; l < Enumss.Count; l++)
+                        //Debug.Log(Enumss[l]);
 
-                        Info.Add(MC.AtFrameInfo(SpellType, i, k));
-                    }
-                    List<float> Inputs = FrameToValues(Info);
-                    Debug.Log(Inputs.Count);
-                    if (i == 0)
-                    {
-                        //Debug.Log("  Inputs: " + Inputs.Count);
-                    }
+                    List<SingleInfo> AllInfos = Enumerable.Range(j - FramesAgoBuild, FramesAgoBuild + 1).Select(x => MC.AtFrameInfo(SpellType, i, x)).ToList();
+                    List<float> Inputs = FrameToValues(AllInfos);
 
 
                     //Debug.Log(Inputs.Count);
-                    bool State = MC.FrameWorks(SpellType, i, j);
-                    //if (i == 0 && SpellType == 1)
-                        //Debug.Log(BuildString);
-                        //Debug.Log("Start: " + 1 + "  finish: " + );
-                        //SpellType == 1 && i < 10 && !ExportTriggered
-                    if (true)
+                    /*
+                    for (int k = j - FramesAgoBuild + 1; k <= j; k++)
+                    {
+                        //Debug.Log(k + " of " + j);
+                        SingleInfo lastFrame = MC.AtFrameInfo(SpellType, i, k - 1);
+                        SingleInfo info = MC.AtFrameInfo(SpellType, i, k);
+                        Inputs.AddRange(FrameToValues(new List<SingleInfo>() { lastFrame, info }));
+                    }
+                    */
+
+
+                    if (DoExport)
                     {
                         TotalCount++;
                         
@@ -94,8 +105,8 @@ public class PythonTest : SerializedMonoBehaviour
                             {
                                 //if (TotalCount >= 34 && TotalCount <= 36 && SpellType == 1)
                                     //Debug.Log("Current: : " + (TotalCount - (10 - x)).ToString() + "val: " + Inputs[x]);
-                                if(Inputs[x] == -0.36851f)
-                                    Debug.Log("Movement: " + i  + "frame: " + j + "  TotalCount: : " + TotalCount + "  x: " + x + "  val: " + Inputs[x]);
+                                //if(Inputs[x] == -0.36851f)
+                                    //Debug.Log("Movement: " + i  + "frame: " + j + "  TotalCount: : " + TotalCount + "  x: " + x + "  val: " + Inputs[x]);
                                 FrameInputData.Add(Inputs[x]);
                                 //debugString += " 'Inputs[" + x + "]':" + Inputs[x].ToString("f3");
                             }
@@ -105,76 +116,75 @@ public class PythonTest : SerializedMonoBehaviour
                     }
                     if (RunAccuracyTest)
                     {
-                        bool Prediction = PredictState(Info);
-                        bool Correct = Prediction == State;
-                        TrueFalse = Correct ? new Vector2(TrueFalse.x + 1, TrueFalse.y) : new Vector2(TrueFalse.x, TrueFalse.y + 1);
+                        bool IsTrue = MC.FrameWorks(SpellType, i, j) && SpellType == Spell.Fireball;
+                        bool Guess = PredictState(Inputs);
+                        bool Correct = Guess == IsTrue;
+                        Logging.UpdateGuesses(Correct, IsTrue);
                     }
-                    
                 }
             }
         }
-        //Debug.Log(FrameInputData.Count);
-        SpreadSheet.OutputExcelInfo(FrameInputData.ToArray());
 
-        if(RunAccuracyTest)
-            Debug.Log("Accuracy: " + (TrueFalse.x / (TrueFalse.x +TrueFalse.y)).ToString("f3") + "Correct: " + TrueFalse.x + "  Incorrect: " + TrueFalse.y);
+        /*
+        ///testing:
+        for (int m = 0; m < CalculatedMotion.Motions.Count; m++)
+        {
+            //Debug.Log(SpellType);
+            for (int f = FramesAgoBuild - 1; f < CalculatedMotion.Motions[m].Frames.Count; f++)
+            {
+                List<float> InvolvedInputs = new List<float>();
+                for (int k = f - FramesAgoBuild + 1; k <= f; k++)
+                {
+                    Debug.Log(k + " of " + f);
+                    InvolvedInputs.AddRange(CalculatedMotion.Motions[m].Frames[k].InputList());
+                }
+                Debug.Log(InvolvedInputs.Count);
+                if (RunAccuracyTest)
+                {
+                    bool IsTrue = CalculatedMotion.Motions[m].Frames[f].Active;
+
+                    bool Guess = PredictState(InvolvedInputs);
+                    bool Correct = Guess == IsTrue;
+                    Logging.UpdateGuesses(Correct, IsTrue);
+                }
+
+            }
+        }
+        */
+
+        //Debug.Log(FrameInputData.Count);
+        if (DoExport)
+            SpreadSheet.OutputExcelInfo(FrameInputData.ToArray());
+
+        if (RunAccuracyTest)
+            Debug.Log(Logging.PercentSimpleString());
+            Debug.Log(Logging.GuessCountString());
+            Debug.Log(Logging.MotionCountString());
+            Debug.Log(Logging.OutcomesCountString());
     }
 
     public string JSONDirectory { get { return "B:/GitProjects/NewMachineLearning/NewMachineLearning/WildfireLearning"; } }
-    [Button]
-    public void ReloadJSON()
-    {
-        ReloadJSONType(Spell.Fireball);
-    }
-    public void ReloadJSONType(Spell spell)
-    {
-        PythonTest.instance = this;
-        CalculatedMotion = GetAllMotionList(spell);
-        string directory = Path.Combine(JSONDirectory, spell.ToString() + ".json");
-        Debug.Log(directory);
-        // Convert the ScriptableObject to a JSON string
-        string json = JsonUtility.ToJson(CalculatedMotion);
+    
 
-        // Write the JSON string to a file
-        File.WriteAllText(directory, json);
-    }
-    private void Update()
-    {
-        if (!Active)
-            return;
-        
-        if(PastFrameRecorder.IsReady())
-            GetPred();
-    }
-
-    public void GetPred()
-    {
-        List<SingleInfo> frames = PastFrameRecorder.instance.GetFramesList(Side.right, FramesAgoBuild + 1);
-        bool Pred = PredictState(frames);
-        //Debug.Log("returned: " + Pred);
-        DebugRestrictions.instance.SetSideColor(Side.right, Pred ? 1 : 0);
-    }
-
-    private List<float> FrameToValues(List<SingleInfo> Frames)
+    public List<float> FrameToValues(List<SingleInfo> Frames)
     {
         List<float> FrameInputs = new List<float>();
 
-        for (int i = 0; i < Frames.Count - 1; i++)
+        for (int i = 1; i < Frames.Count; i++)
         {
             //Debug.Log("I: " + i);
             if (UsePreprocessing)
             {
-                FrameInputs.AddRange(RestrictionManager.instance.GetRestrictionValues(Frames[i], Frames[i+1], Spell.Fireball));
+                FrameInputs.AddRange(RM.GetRestrictionValues(Frames[i - 1], Frames[i], Spell.Fireball));
                 FrameInputs.Add(Time());
             }
             else
             {
                 SingleInfo Frame = Frames[i];
                 
-                //FrameInputs.AddRange(new List<float>() { Frame.HandPos.x, Frame.HandPos.y, Frame.HandPos.z, Frame.HandRot.x / 360f, Frame.HandRot.y / 360f, Frame.HandRot.z / 360f });
                 FrameInputs.AddRange(new List<float>() { Frame.HandPos.x, Frame.HandPos.y, Frame.HandPos.z, Frame.HandRot.x / 360f, Frame.HandRot.y / 360f, Frame.HandRot.z / 360f, Time() });
             }
-            float Time() { return Frames[i + 1].SpawnTime - Frames[i].SpawnTime; }
+            float Time() { return Frames[i].SpawnTime - Frames[i - 1].SpawnTime; }
         }
         //Debug.Log(FrameInputs[0]);
         FrameInputs = FrameInputs.Select(x => MathF.Round(x, PrintDecimals)).ToList();
@@ -182,24 +192,16 @@ public class PythonTest : SerializedMonoBehaviour
         return FrameInputs;
         
     }
-    public bool PredictState(List<SingleInfo> frames)
+    public bool PredictState(List<float> Inputs)
     {
         // Load the NNModel
         runtimeModel = ModelLoader.Load(modelAsset);
+
+
         worker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, runtimeModel);
 
-        //List<SingleInfo> frames = PastFrameRecorder.instance.GetFramesList(side, FramesAgoBuild + 1);
-        float[] Inputs = FrameToValues(frames).ToArray();
-
-        /*
-        float[] Inputs = new float[0];
-        for (int i = 1; i < FramesAgoBuild + 1; i++)
-        {
-            List<float> FrameInputs = FrameToValues(new List<SingleInfo>() { frames[i - 1], frames[i] });
-            Inputs = Inputs.Concat(FrameInputs.ToArray()).ToArray();
-        }
-        */
-        Tensor input = new Tensor(1, 1, FramesAgoBuild, InputsPerFrameBuild, Inputs);
+        int ActiveInputCount = Inputs.Count / FramesAgoBuild;
+        Tensor input = new Tensor(1, 1, FramesAgoBuild, ActiveInputCount, Inputs.ToArray());
         worker.Execute(input);
         Tensor output = worker.PeekOutput();
         bool predictedState = output[0] > 0.5f;
@@ -218,19 +220,12 @@ public class PythonTest : SerializedMonoBehaviour
             bool CanBeTrue = spell == SpellType;
             for (int i = 0; i < MC.MovementCount(SpellType); i++)
             {
-                
                 List<Frame> frames = new List<Frame>();
-                //if (i == 0 && SpellType == Spell.Fireball)
-                    //Debug.Log(MC.FrameCount(SpellType, i));
                 for (int j = 1; j < MC.FrameCount(SpellType, i); j++)
                 {
-                    //if(i==0&&SpellType == Spell.Fireball)
-                        //Debug.Log(j);
                     SingleInfo lastFrame = MC.AtFrameInfo(SpellType, i, j - 1);
                     SingleInfo info = MC.AtFrameInfo(SpellType, i, j);
                     bool State = MC.FrameWorks(SpellType, i, j) && CanBeTrue;
-
-
 
                     List<float> FramesInfo = FrameToValues(new List<SingleInfo>() { lastFrame, info });
                     
@@ -249,6 +244,40 @@ public class PythonTest : SerializedMonoBehaviour
         return new FinalMotion(ReturnList);
     }
 
+    [Button]
+    public void ReloadJSON()
+    {
+        ReloadJSONType(ME.MotionType);
+        RunPythonScript.ExecutePythonScript(JSONDirectory + "/DeepLearningModel.py");
+    }
+    public void ReloadJSONType(Spell spell)
+    {
+        PythonTest.instance = this;
+        CalculatedMotion = GetAllMotionList(spell);
+        string directory = Path.Combine(JSONDirectory, spell.ToString() + ".json");
+        Debug.Log(directory);
+        // Convert the ScriptableObject to a JSON string
+        string json = JsonUtility.ToJson(CalculatedMotion);
+
+        // Write the JSON string to a file
+        File.WriteAllText(directory, json);
+    }
+    private void Update()
+    {
+        if (!Active)
+            return;
+
+        if (PastFrameRecorder.IsReady())
+            GetPred();
+    }
+
+    public void GetPred()
+    {
+        List<SingleInfo> frames = PastFrameRecorder.instance.GetFramesList(Side.right, FramesAgoBuild + 1);
+        bool Pred = PredictState(FrameToValues(frames));
+        //Debug.Log("returned: " + Pred);
+        DebugRestrictions.instance.SetSideColor(Side.right, Pred ? 1 : 0);
+    }
     [System.Serializable]
     public class FinalMotion
     {
@@ -273,7 +302,6 @@ public class PythonTest : SerializedMonoBehaviour
     {
         public string[] FrameInfo;
         public bool Active;
-        public string Time;
 
 
         /*
@@ -289,18 +317,61 @@ public class PythonTest : SerializedMonoBehaviour
 
         public Frame(float[] FrameInfo, bool Active)
         {
-            this.Time = FrameInfo[FrameInfo.Length - 1].ToString();
-
             List<float> RealFrameInfo = FrameInfo.ToList();
-            RealFrameInfo.RemoveAt(RealFrameInfo.Count - 1);
             
             this.FrameInfo = RealFrameInfo.Select(x => x.ToString()).ToArray();
             this.Active = Active;
             
+        }
+
+        public List<float> InputList()
+        {
+            List<float> newList = FrameInfo.Select(x => float.Parse(x)).ToList();
+            //newList.Add(float.Parse(Time));
+            return newList;
         }
     }
 
 
 
     ///pass values
+}
+public struct GuessLogging
+{
+    public void UpdateGuesses(bool Correct, bool IsTrue)
+    {
+        Guesses.w += (Correct && IsTrue) ? 1f : 0f;
+        Guesses.x += (!Correct && IsTrue) ? 1f : 0f;
+        Guesses.y += (Correct && !IsTrue) ? 1f : 0f;
+        Guesses.z += (!Correct && !IsTrue) ? 1f : 0f;
+    }
+
+    public float4 Guesses;
+    public GuessLogging(float4 Guesses)
+    {
+        this.Guesses = Guesses;
+    }
+    public float Total() { return Guesses.w + Guesses.x + Guesses.y + Guesses.z; }
+    public string PercentComplexString() { return "Correct: " + CorrectPercent() + "  Wrong: " + InCorrectPercent() + "  True: " + OnTruePercent() + "  False: " + OnFalsePercent(); }
+    public string PercentSimpleString() { return "CorrectOnTrue: " + CorrectOnTruePercent() + "/" + IncorrectOnTruePercent() + "   CorrectOnFalse: " + CorrectOnFalsePercent() + "/" + IncorrectOnFalsePercent(); }
+
+    public string MotionCountString() { return "True/False Frames: " + CorrectOnTrue() + IncorrectOnTrue() + "/" + CorrectOnFalse() +IncorrectOnFalse(); }
+    public string GuessCountString() { return "True/False Guesses: " + CorrectOnTrue() + IncorrectOnFalse() + "/" + CorrectOnFalse() + IncorrectOnTrue(); }
+    public string OutcomesCountString() { return "CorrectOnTrue: " + CorrectOnTrue() + "  IncorrectOnTrue: " + IncorrectOnTrue() + "  CorrectOnFalse: " + CorrectOnFalse() + "  IncorrectOnFalse: " + IncorrectOnFalse(); }
+
+    public float CorrectOnTrue() { return Guesses.w; }
+    public float IncorrectOnTrue() { return Guesses.x; }
+    public float CorrectOnFalse() { return Guesses.y; }
+    public float IncorrectOnFalse() { return Guesses.z; }
+
+    public float CorrectOnTruePercent() { return CorrectOnTrue() / (CorrectOnTrue() + IncorrectOnTrue()) * 100f; }
+    public float IncorrectOnTruePercent() { return IncorrectOnTrue() / (CorrectOnTrue() + IncorrectOnTrue()) * 100f; }
+    public float CorrectOnFalsePercent() { return CorrectOnFalse() / (CorrectOnFalse() + IncorrectOnFalse()) * 100f; }
+    public float IncorrectOnFalsePercent() { return IncorrectOnFalse() / (CorrectOnFalse() + IncorrectOnFalse()) * 100f; }
+
+
+    public float CorrectPercent() { return (CorrectOnTrue() + CorrectOnFalse()) / Total() * 100f; }
+    public float InCorrectPercent() { return (IncorrectOnTrue() + IncorrectOnFalse()) / Total() * 100f; }
+    public float OnTruePercent() { return (CorrectOnTrue() + IncorrectOnTrue()) / Total() * 100f; }
+    public float OnFalsePercent() { return (CorrectOnFalse() + IncorrectOnFalse()) / Total() * 100f; }
 }

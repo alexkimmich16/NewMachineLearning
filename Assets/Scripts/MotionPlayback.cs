@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RestrictionSystem;
+using System.Linq;
 public enum PlayType
 {
     WatchAI = 0,
@@ -36,7 +37,7 @@ public class MotionPlayback : MonoBehaviour
     public bool OneInterprolate;
     public List<SingleInfo> interpolating;
 
-
+    MotionEditor ME => MotionEditor.instance;
 
     public List<Spell> CurrentMotions;
     public bool OldFrameWorks() { return Frame - PastFrameRecorder.instance.FramesAgo() >= 0; }
@@ -66,7 +67,7 @@ public class MotionPlayback : MonoBehaviour
                 return;
             }
             Frame += 1;
-            MotionEditor ME = MotionEditor.instance;
+            
             
             
             if (Frame >= MovementControl.instance.Movements[(int)ME.MotionType].Motions[ME.MotionNum].Infos.Count)
@@ -89,7 +90,21 @@ public class MotionPlayback : MonoBehaviour
             OnNewFrame?.Invoke();
 
             
-            bool GetMotionFromInput() { return Frame - MotionAssign.instance.FramesAgo() >= 0 ? RestrictionManager.instance.MotionWorks(MovementControl.instance.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - MotionAssign.instance.FramesAgo()), MovementControl.instance.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame), ME.MotionType) : false; }
+            bool GetMotionFromInput()
+            {
+                //return Frame - MotionAssign.instance.FramesAgo() >= 0 ? RestrictionManager.instance.MotionWorks(MovementControl.instance.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - MotionAssign.instance.FramesAgo()), MovementControl.instance.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame), ME.MotionType) : false;
+                PythonTest Py = PythonTest.instance;
+
+                if (Frame <= Py.FramesAgoBuild + 1)
+                    return false;
+
+                //Debug.Log(Enumerable.Range(Frame - Py.FramesAgoBuild - 1, Py.FramesAgoBuild + 1).ToList()[^1]);
+                List<SingleInfo> Frames = Enumerable.Range(Frame - Py.FramesAgoBuild - 1, Py.FramesAgoBuild + 1).Select(x => MovementControl.instance.AtFrameInfo(ME.MotionType, ME.MotionNum, x)).ToList();
+
+                
+
+                return PythonTest.instance.PredictState(PythonTest.instance.FrameToValues(Frames));
+            }
             //MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.MotionType - 1]; }
         }
         void moveAll(SingleInfo info)

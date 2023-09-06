@@ -27,8 +27,6 @@ namespace RestrictionSystem
         //[FoldoutGroup("Values"), ReadOnly] public float AngleDistance;
         //[FoldoutGroup("Values"), ReadOnly] public Vector3 HandPosition;
         //[FoldoutGroup("Values"), ReadOnly] public float HandToHeadDir;
-
-        [FoldoutGroup("Testing")] public MotionRestriction Restrictions;
         //[FoldoutGroup("Testing")] public bool DebugHand;
         [FoldoutGroup("Testing")] public bool TestAll;
 
@@ -55,13 +53,12 @@ namespace RestrictionSystem
 
         
         //public bool ABS;
-
+        /*
         public bool DebugVelocity;
         public float LineLength;
         private void Start()
         {
             //ConditionManager.instance.MotionConditions[0].OnNewState += MotionDone;
-            ConditionManager.instance.conditions.MotionConditions[1].OnNewState += MotionDone;
             //ConditionManager.instance.MotionConditions[2].OnNewState += MotionDone;
         }
         public void MotionDone(Side side, bool NewState, int Index, int Level)
@@ -81,8 +78,8 @@ namespace RestrictionSystem
             if (!PastFrameRecorder.IsReady())
                 return;
             
-            SingleInfo frame1 = PR.PastFrame(Side.right);
-            SingleInfo frame2 = PastFrameRecorder.instance.GetControllerInfo(Side.right);
+            AthenaFrame frame1 = PR.PastFrame();
+            AthenaFrame frame2 = PastFrameRecorder.instance.GetControllerInfo();
 
             if (DebugVelocity)
                 Debug.DrawLine(frame2.HandPos, frame2.HandPos + ((frame2.HandPos - frame1.HandPos).normalized * LineLength), Color.blue);
@@ -125,7 +122,7 @@ namespace RestrictionSystem
 
             }
             //bool Works = RestrictionManager.instance.MotionWorks(PR.PastFrame(side), PastFrameRecorder.instance.GetControllerInfo(side), (CurrentLearn)j);
-            /*
+            
             if (debugType == DebugType.ThisDebugTest)
                 handToChange.material = Materials[RestrictionManager.MotionWorks(frame1, frame2, Restrictions) ? 1 : 0]; //set hand
             else if(debugType == DebugType.MotionSettings)
@@ -156,13 +153,13 @@ namespace RestrictionSystem
                 
             //Debug.Log("Motion: " + Motion.ToString());
         }
-            */
+            
         }
-        /*
-        public float GetVelocity(SingleInfo frame1, SingleInfo frame2) { return Vector3.Distance(frame1.HandPos, frame2.HandPos) / (1f / 60f); }
-        public Vector3 GetVelocityDirection(SingleInfo frame1, SingleInfo frame2) { return (frame2.HandPos - frame1.HandPos).normalized; }
-        public float GetAngleDistance(SingleInfo frame1, SingleInfo frame2) { return Vector3.Angle((frame2.HandPos - frame1.HandPos).normalized, frame2.HandRot.normalized); }
-        public Vector3 GetPosition(SingleInfo frame1, SingleInfo frame2) { return frame2.HandPos; }
+        
+        public float GetVelocity(AthenaFrame frame1, AthenaFrame frame2) { return Vector3.Distance(frame1.HandPos, frame2.HandPos) / (1f / 60f); }
+        public Vector3 GetVelocityDirection(AthenaFrame frame1, AthenaFrame frame2) { return (frame2.HandPos - frame1.HandPos).normalized; }
+        public float GetAngleDistance(AthenaFrame frame1, AthenaFrame frame2) { return Vector3.Angle((frame2.HandPos - frame1.HandPos).normalized, frame2.HandRot.normalized); }
+        public Vector3 GetPosition(AthenaFrame frame1, AthenaFrame frame2) { return frame2.HandPos; }
         */
     }
 

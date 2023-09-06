@@ -3,7 +3,7 @@ using UnityEditor;
 using RestrictionSystem;
 public class ScriptableObjectSave : EditorWindow
 {
-    private MotionSettings myScriptableObject;
+    private AthenaSpell myScriptableObject;
 
     [MenuItem("Window/My ScriptableObject Editor")]
     static void OpenWindow()
@@ -14,7 +14,7 @@ public class ScriptableObjectSave : EditorWindow
 
     private void OnGUI()
     {
-        myScriptableObject = EditorGUILayout.ObjectField("MotionSettings", myScriptableObject, typeof(MotionSettings), false) as MotionSettings;
+        myScriptableObject = EditorGUILayout.ObjectField("AthenaSpell", myScriptableObject, typeof(AthenaSpell), false) as AthenaSpell;
 
         EditorGUI.BeginChangeCheck();
         // Display and edit the properties of the Scriptable Object here

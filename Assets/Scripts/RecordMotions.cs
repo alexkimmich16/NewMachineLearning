@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using RestrictionSystem;
 using UnityEngine.UI;
+using UnityEngine.XR;
+
 public class RecordMotions : MonoBehaviour
 {
     //public int FramesPerSecond;
     //private float FrameInterval;
 
-    public List<SingleInfo> CurrentMotionRecord = new List<SingleInfo>();
+    public List<AthenaFrame> CurrentMotionRecord = new List<AthenaFrame>();
     private bool RecordingMotion;
 
     //private float Timer;
@@ -26,7 +28,11 @@ public class RecordMotions : MonoBehaviour
             //OnToggleChanged(CanRecordToggle);
         //});
     }
-    public bool HitRecordButton() { return PastFrameRecorder.instance.PlayerHands[(int)Side.right].GetComponent<HandActions>().GripPressed() || Input.GetKey(RecordKey); }
+    public bool HitRecordButton()
+    {
+        InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.trigger, out float Trigger);
+        return Trigger > 0.5 || Input.GetKey(RecordKey);
+    }
     private void Update()
     {
         if (CanRecordToggle.isOn == false)
@@ -40,22 +46,22 @@ public class RecordMotions : MonoBehaviour
         {
             RecordingMotion = false;
 
-            Motion FinalMotion = new Motion();
-            FinalMotion.SetRanges(Values);
+            AthenaMotion FinalMotion = new AthenaMotion();
+            FinalMotion.TrueRanges = AthenaMotion.ConvertToRange(Values);
             Values.Clear();
 
-            FinalMotion.Infos = new List<SingleInfo>(CurrentMotionRecord);
+            FinalMotion.Infos = new List<AthenaFrame>(CurrentMotionRecord);
             if (TrueMotion.isOn)
             {
                 FinalMotion.TrueRanges = new List<Vector2>() { Vector2.zero};
-                MovementControl.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Insert(0, FinalMotion);
+                Athena.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Insert(0, FinalMotion);
                 //Vector2 Before = MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0];
                 //MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0] = new Vector2(Before.x, Before.y + 1);
             }
             else
             {
                 FinalMotion.TrueRanges.Clear();
-                MovementControl.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
+                Athena.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
             }
                 
             CurrentMotionRecord.Clear();
@@ -64,8 +70,8 @@ public class RecordMotions : MonoBehaviour
         if (RecordingMotion == false)
             return;
 
-        SingleInfo info = PastFrameRecorder.instance.GetControllerInfo(Side.right);
-        Values.Add(PastFrameRecorder.instance.PlayerHands[(int)Side.right].GetComponent<HandActions>().TriggerPressed());
+        AthenaFrame info = PastFrameRecorder.instance.GetControllerInfo();
+        Values.Add(false);
         CurrentMotionRecord.Add(info);
     }
 
@@ -95,7 +101,7 @@ public class RecordMotions : MonoBehaviour
             FinalMotion.SetRanges(Values);
             Values.Clear();
 
-            FinalMotion.Infos = new List<SingleInfo>(CurrentMotionRecord);
+            FinalMotion.Infos = new List<AthenaFrame>(CurrentMotionRecord);
             MovementControl.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
             CurrentMotionRecord.Clear();
         }
@@ -103,7 +109,7 @@ public class RecordMotions : MonoBehaviour
         if (RecordingMotion == false)
             return;
 
-        SingleInfo info = PastFrameRecorder.instance.GetControllerInfo(Side.right);
+        AthenaFrame info = PastFrameRecorder.instance.GetControllerInfo(Side.right);
         Values.Add(LearnManager.instance.Right.TriggerPressed());
         CurrentMotionRecord.Add(info);
     }

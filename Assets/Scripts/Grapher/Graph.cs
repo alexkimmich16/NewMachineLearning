@@ -6,6 +6,7 @@ using System.Linq;
 using RestrictionSystem;
 public class Graph : MonoBehaviour
 {
+    /*
     public static Graph instance;
     private void Awake() { instance = this; }
 
@@ -54,13 +55,13 @@ public class Graph : MonoBehaviour
     {
         TextureMap = new Texture2D(width, height);
         TextureMap.filterMode = FilterMode.Point;
-        /*
+        
         for (int i = 0; i < RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionEditor.instance.MotionType - 1].Restrictions.Count; i++)
         {
             TextDisplay[i].text = RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionEditor.instance.MotionType - 1].Restrictions[i].Label;
             ColorDisplay[i].color = Colors[i];
         }
-        */
+        
         UpdateGraph();
         MotionEditor.OnChangeMotion += UpdateGraph;
         RegressionSystem.OnPreformRegression += UpdateGraph;
@@ -161,8 +162,8 @@ public class Graph : MonoBehaviour
     public void UpdateCurrentDisplay(ColorChange ColorSide)
     {
         Side side = ColorSide.side;
-        SingleInfo Frame1 = PastFrameRecorder.instance.PastFrame(side);
-        SingleInfo Frame2 = PastFrameRecorder.instance.GetControllerInfo(side);
+        AthenaFrame Frame1 = PastFrameRecorder.instance.PastFrame(side);
+        AthenaFrame Frame2 = PastFrameRecorder.instance.GetControllerInfo(side);
 
         if (ColorSide.PreviousGridColumns.Count != 0)
             for (int i = 0; i < ColorSide.PreviousGridColumns.Count; i++)
@@ -193,6 +194,7 @@ public class Graph : MonoBehaviour
         mySprite = Sprite.Create(TextureMap, new Rect(0.0f, 0.0f, TextureMap.width, TextureMap.height), new Vector2(0.5f, 0.5f), 1000.0f);
         Display().sprite = mySprite;
     }
+    */
     /*
     private void OldUpdateGraph()
     {

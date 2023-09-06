@@ -10,38 +10,37 @@ using System.Linq;
 
 public class Athena : SerializedMonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static Athena instance;
+    private void Awake() { instance = this; }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [FoldoutGroup("Movements")] public List<AthenaSpell> Movements;
+
+    public int MotionCount() { return Movements.Count; }
+    public int MovementCount(Spell Spell) { return Movements[(int)Spell].Motions.Count; }
+
+    public int FrameCount(Spell Spell, int Motion) { return Movements[(int)Spell].Motions[Motion].Infos.Count; }
+    public AthenaFrame AtFrameInfo(Spell Spell, int Motion, int Frame) { return Movements[(int)Spell].Motions[Motion].Infos[Frame]; }
+    public int TrueRangeCount(Spell Spell, int Motion) { return Movements[(int)Spell].Motions[Motion].TrueRanges.Count; }
+    public bool FrameWorks(Spell Spell, int Motion, int Frame) { return Movements[(int)Spell].Motions[Motion].AtFrameState(Frame); }
+
 }
 
 [System.Serializable]
 public class AthenaSpell : ScriptableObject
 {
     [ListDrawerSettings(Expanded = false, ShowIndexLabels = true)] public List<AthenaMotion> Motions;
-    //public Vector2 Punishment = new Vector2(-1, -1);
-    //public Vector2 Reward = new Vector2(1,1);
-
-    //x is i guessed false
-    public DeviceInfo GetRestrictionInfoAtIndex(int Motion, int Frame) { return Motions[Motion].Infos[Frame]; }
 }
 
 [System.Serializable]
 public class AthenaMotion
 {
-    //[HideInInspector]
-    public List<DeviceInfo> Infos;
+    public bool AtFrameState(int Frame) { return TrueRanges.Any(range => Frame >= range.x && Frame <= range.y); }
+   
+    public List<AthenaFrame> Infos;
     public List<Vector2> TrueRanges;
     [HideInInspector] public int TrueIndex;
     [HideInInspector] public int PlayCount;
+    
     public static List<Vector2> ConvertToRange(List<bool> Values)
     {
         List<Vector2> ranges = new List<Vector2>();
@@ -79,10 +78,15 @@ public class AthenaMotion
 
 public class AthenaFrame
 {
-    public DeviceInfo[] Devices;
-    
-    public List<float> AsInputs() { return Devices.SelectMany(x => x.AsFloats()).ToList(); }
-    public AthenaFrame(DeviceInfo[] Devices)
+    public List<DeviceInfo> Devices;
+    public float frameTime;
+    public List<float> AsInputs()
+    {
+        List<float> Inputs = Devices.SelectMany(x => x.AsFloats()).ToList();
+        Inputs.Add(frameTime);
+        return Inputs;
+    }
+    public AthenaFrame(List<DeviceInfo> Devices)
     {
         this.Devices = Devices;
     }

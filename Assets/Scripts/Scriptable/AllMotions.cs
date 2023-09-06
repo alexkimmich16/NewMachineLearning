@@ -12,7 +12,7 @@ public class AllMotions : ScriptableObject
     //public Vector2 Reward = new Vector2(1,1);
 
     //x is i guessed false
-    public SingleInfo GetRestrictionInfoAtIndex(int Motion, int Frame) { return Motions[Motion].Infos[Frame]; }
+    public AthenaFrame GetRestrictionInfoAtIndex(int Motion, int Frame) { return Motions[Motion].Infos[Frame]; }
     public List<Motion> Random()
     {
         List<Motion> NewMotions = new List<Motion>(Motions);
@@ -31,7 +31,7 @@ public class AllMotions : ScriptableObject
 public class Motion
 {
     //[HideInInspector]
-    public List<SingleInfo> Infos;
+    public List<AthenaFrame> Infos;
     public List<Vector2> TrueRanges;
     [HideInInspector] public int TrueIndex;
     [HideInInspector] public int PlayCount;

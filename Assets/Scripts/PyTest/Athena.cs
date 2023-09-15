@@ -103,6 +103,14 @@ public class DeviceInfo
     public Vector3 acceleration;
     public Vector3 angularAcceleration;
 
+    public List<float> AsFloats()
+    {
+        //Vector3
+        if(true)
+            return new List<Vector3>() { Pos, Rot, velocity, angularVelocity, acceleration, angularAcceleration }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList();
+        else
+            return new List<Vector3>() { Pos, Rot, velocity, angularVelocity, acceleration, angularAcceleration }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList();
+    }
 
-    public List<float> AsFloats() { return new List<Vector3>() { Pos, Rot, velocity, angularVelocity, acceleration, angularAcceleration }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList(); }
+    //public List<float> () { return new List<Vector3>() { Pos, Rot, velocity, angularVelocity, acceleration, angularAcceleration }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList(); }
 }

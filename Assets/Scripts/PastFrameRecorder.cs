@@ -9,7 +9,7 @@ namespace RestrictionSystem
     {
         public static PastFrameRecorder instance;
         private void Awake() { instance = this; }
-        [ListDrawerSettings(ShowIndexLabels = true)] public List<AthenaFrame> FrameInfo;
+        [ListDrawerSettings(ShowIndexLabels = true)] public List<List<AthenaFrame>> FrameInfo;
 
         public int MaxStoreInfo = 10;
 
@@ -30,7 +30,7 @@ namespace RestrictionSystem
 
         public static List<XRNode> DeviceOrder { get { return new List<XRNode>() { XRNode.RightHand, XRNode.LeftHand, XRNode.Head }; } }
 
-        public List<XRPreviousValues> PreviousValues;
+        public List<List<XRPreviousValues>> PreviousValues;
         public class XRPreviousValues
         {
             public Vector3 LastVel;
@@ -51,7 +51,7 @@ namespace RestrictionSystem
         //118.012 to 
         public bool HandActive(Side side) { return HandsActive[(int)side]; }
         
-        public List<AthenaFrame> GetFramesList(int Frames) { return Enumerable.Range(0, Frames).Select(x => FrameInfo[x]).ToList(); }
+        public List<AthenaFrame> GetFramesList(Side side, int Frames) { return Enumerable.Range(0, Frames).Select(x => FrameInfo[(int)side][x]).ToList(); }
         
         private void Start()
         {
@@ -76,14 +76,16 @@ namespace RestrictionSystem
                 HandsActive[(int)side] = true;
             }
         }
-        public AthenaFrame GetControllerInfo()
+        public AthenaFrame GetControllerInfo(Side side)
         {
+            //fill all device info
+
+            List<XRNode> Devices = side == Side.right ? new List<XRNode>() { XRNode.RightHand, XRNode.Head } : new List<XRNode>() { XRNode.LeftHand, XRNode.Head };
             List<DeviceInfo> DeviceInfos = new List<DeviceInfo>();
-            for (int i = 0; i < DeviceOrder.Count; i++)
+            for (int i = 0; i < Devices.Count; i++)
             {
                 XRNode Device = DeviceOrder[i];
                 DeviceInfo deviceInfo = new DeviceInfo();
-
 
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.devicePosition, out deviceInfo.Pos);
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion quat);
@@ -92,7 +94,7 @@ namespace RestrictionSystem
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.deviceVelocity, out deviceInfo.velocity);
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out deviceInfo.angularVelocity);
 
-                if (PreviousValues[i].LastTime != 0)
+                if (PreviousValues[(int)side][i].LastTime != 0)
                 {
                     float deltaTime = Time.time - PreviousValues[i].LastTime;
                     deviceInfo.acceleration = (deviceInfo.velocity - PreviousValues[i].LastVel) / deltaTime;
@@ -106,20 +108,24 @@ namespace RestrictionSystem
                 DeviceInfos.Add(deviceInfo);
             }
 
+            Vector3 DistanceFromOrigin = DeviceInfos[1].Pos;
+            for (int i = 0; i < DeviceInfos.Count; i++)
+                DeviceInfos[i].Pos = DeviceInfos[i].Pos - DistanceFromOrigin;
+
             return new AthenaFrame(DeviceInfos);
         }
         private void Update()
         {
-            FrameInfo.Add(GetControllerInfo());
-            if (FrameInfo.Count > MaxStoreInfo)
-                FrameInfo.RemoveAt(0);
+            FrameInfo[(int)Side.right].Add(GetControllerInfo(Side.right));
+            if (FrameInfo[(int)Side.right].Count > MaxStoreInfo)
+                FrameInfo[(int)Side.right].RemoveAt(0);
 
             if (!IsReady())
                 return;
 
             //RestrictionManager.instance.TriggerFrameEvents();
         }
-        public static bool IsReady() { return instance.FrameInfo.Count >= instance.MaxStoreInfo - 1; }
+        public static bool IsReady() { return instance.FrameInfo[0].Count >= instance.MaxStoreInfo - 1; }
 
         //public AthenaFrame PastFrame() { return (side == Side.right) ? RightInfo[RightInfo.Count - FramesAgo()] : LeftInfo[LeftInfo.Count - FramesAgo()]; }
         //public int FramesAgo() { return RestrictionManager.instance.RestrictionSettings.FramesAgo; }

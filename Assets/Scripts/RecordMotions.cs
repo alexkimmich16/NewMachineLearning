@@ -3,7 +3,7 @@ using UnityEngine;
 using RestrictionSystem;
 using UnityEngine.UI;
 using UnityEngine.XR;
-
+using Athena;
 public class RecordMotions : MonoBehaviour
 {
     //public int FramesPerSecond;
@@ -54,14 +54,14 @@ public class RecordMotions : MonoBehaviour
             if (TrueMotion.isOn)
             {
                 FinalMotion.TrueRanges = new List<Vector2>() { Vector2.zero};
-                Athena.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Insert(0, FinalMotion);
+                Athena.Athena.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Insert(0, FinalMotion);
                 //Vector2 Before = MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0];
                 //MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0] = new Vector2(Before.x, Before.y + 1);
             }
             else
             {
                 FinalMotion.TrueRanges.Clear();
-                Athena.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
+                Athena.Athena.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
             }
                 
             CurrentMotionRecord.Clear();
@@ -70,7 +70,7 @@ public class RecordMotions : MonoBehaviour
         if (RecordingMotion == false)
             return;
 
-        AthenaFrame info = PastFrameRecorder.instance.GetControllerInfo();
+        AthenaFrame info = PastFrameRecorder.instance.GetControllerInfo(Side.right);
         Values.Add(false);
         CurrentMotionRecord.Add(info);
     }

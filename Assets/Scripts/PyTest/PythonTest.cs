@@ -8,36 +8,19 @@ using System.Linq;
 using System.IO;
 using System;
 using Unity.Mathematics;
+using Athena;
 //using untiy.mat
 
 
-public enum Side
-{
-    right = 0,
-    left = 1,
-}
-public enum Spell
-{
-    Nothing = 0,
-    Fireball = 1,
-    Flames = 2,
-    SideParry = 3,
-    UpParry = 4,
-}
+
 public class PythonTest : SerializedMonoBehaviour
 {
     public static PythonTest instance;
     private void Awake() { instance = this; }
 
     public bool Active;
-    public NNModel modelAsset;
-    private Model runtimeModel;
-    private IWorker worker;
+    
     private IWorker CheckWorker;
-
-    //public int FramesAgo;
-
-    public int FramesAgoBuild;
 
     [Range(1,20)]public int PrintDecimals = 5;
 
@@ -54,7 +37,8 @@ public class PythonTest : SerializedMonoBehaviour
 
     public bool TrackEndOnly;
 
-    public Athena A => Athena.instance;
+    public Athena.Athena A => Athena.Athena.instance;
+    public Runtime R => Runtime.instance;
     public MotionEditor ME => MotionEditor.instance;
 
     //public List<int> AllActiveMotions { get { return Enumerable.Range(0, A.MotionCount()).Where(motion => MotionsToUse[motion]).ToList(); } }
@@ -63,11 +47,8 @@ public class PythonTest : SerializedMonoBehaviour
     public void TestModel()
     {
         PythonTest.instance = this;
-
-
-        runtimeModel = ModelLoader.Load(modelAsset);
-        CheckWorker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, runtimeModel);
-
+        CheckWorker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, Runtime.instance.runtimeModel);
+        
         float4 Guesses = float4.zero;
 
 
@@ -80,14 +61,14 @@ public class PythonTest : SerializedMonoBehaviour
             //Debug.Log(SpellType);
             for (int i = 0; i < A.MovementCount(SpellType); i++)
             {
-                for (int j = FramesAgoBuild; j < A.FrameCount(SpellType, i); j++)
+                for (int j = R.FramesAgoBuild; j < A.FrameCount(SpellType, i); j++)
                 {
                      //Debug.Log("1: " + (j - FramesAgoBuild) + "  2: " + (j + 1));
                     //Debug.Log(Enumss[0] + "  " + Enumss[^1]);
                     //for (int l = 0; l < Enumss.Count; l++)
                         //Debug.Log(Enumss[l]);
 
-                    List<AthenaFrame> AllInfos = Enumerable.Range(j - FramesAgoBuild, FramesAgoBuild + 1).Select(x => A.AtFrameInfo(SpellType, i, x)).ToList();
+                    List<AthenaFrame> AllInfos = Enumerable.Range(j - R.FramesAgoBuild, R.FramesAgoBuild + 1).Select(x => A.AtFrameInfo(SpellType, i, x)).ToList();
                     List<float> Inputs = FrameToValues(AllInfos);
 
 
@@ -126,7 +107,7 @@ public class PythonTest : SerializedMonoBehaviour
                     if (RunAccuracyTest)
                     {
                         bool IsTrue = A.FrameWorks(SpellType, i, j) && SpellType == Spell.Fireball;
-                        bool Guess = PredictState(Inputs);
+                        bool Guess = R.PredictState(Inputs);
                         bool Correct = Guess == IsTrue;
                         Logging.UpdateGuesses(Correct, IsTrue);
                     }
@@ -180,27 +161,9 @@ public class PythonTest : SerializedMonoBehaviour
         List<float> FrameInputs = Frames.SelectMany(x => x.AsInputs()).ToList();
         FrameInputs = FrameInputs.Select(x => MathF.Round(x, PrintDecimals)).ToList();
         return FrameInputs;
-        
     }
     
-    public bool PredictState(List<float> Inputs)
-    {
-        // Load the NNModel
-        runtimeModel = ModelLoader.Load(modelAsset);
-
-
-        worker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, runtimeModel);
-
-        int ActiveInputCount = Inputs.Count / FramesAgoBuild;
-        Tensor input = new Tensor(1, 1, FramesAgoBuild, ActiveInputCount, Inputs.ToArray());
-        worker.Execute(input);
-        Tensor output = worker.PeekOutput();
-        bool predictedState = output[0] > 0.5f;
-        input.Dispose();
-        worker.Dispose();
-
-        return predictedState;
-    }
+    
 
     public FinalMotion GetAllMotionList(Spell spell)
     {
@@ -263,8 +226,8 @@ public class PythonTest : SerializedMonoBehaviour
 
     public void GetPred()
     {
-        List<AthenaFrame> frames = PastFrameRecorder.instance.GetFramesList(Side.right, FramesAgoBuild + 1);
-        bool Pred = PredictState(FrameToValues(frames));
+        List<AthenaFrame> frames = PastFrameRecorder.instance.GetFramesList(Side.right, R.FramesAgoBuild + 1);
+        bool Pred = R.PredictState(FrameToValues(frames));
         //Debug.Log("returned: " + Pred);
         //DebugRestrictions.instance.SetSideColor(Side.right, Pred ? 1 : 0);
     }

@@ -36,7 +36,7 @@ def write_to_excel(data_list, excel_filename="PythonData.xlsx"):
     book.save(excel_filename)
 
 # Read data from JSON file
-with open('B:/GitProjects/NewMachineLearning/NewMachineLearning/WildfireLearning/Fireball.json', 'r') as file:
+with open('Fireball.json', 'r') as file:
     data = json.load(file)
 
 # Define the number of frames

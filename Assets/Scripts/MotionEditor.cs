@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using Sirenix.OdinInspector;
 using RestrictionSystem;
+using Athena;
 public enum EditSide
 {
     left = 0,
@@ -58,7 +59,7 @@ public class MotionEditor : SerializedMonoBehaviour
     public Toggle DisplayingVR;
     public TextMeshProUGUI[] CurrentMotionTests;
 
-    private Athena A => Athena.instance;
+    private Athena.Athena A => Athena.Athena.instance;
 
     public void RecieveSliderInfo(float PercentDone, int ETAInSeconds)
     {

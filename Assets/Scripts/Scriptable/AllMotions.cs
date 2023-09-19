@@ -3,6 +3,8 @@ using UnityEngine;
 using RestrictionSystem;
 using Sirenix.OdinInspector;
 using System.Linq;
+using Athena;
+
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/AllData", order = 1)]
 [System.Serializable]
 public class AllMotions : ScriptableObject

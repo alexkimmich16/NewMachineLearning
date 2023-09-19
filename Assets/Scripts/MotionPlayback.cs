@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RestrictionSystem;
 using System.Linq;
+using Athena;
 public enum PlayType
 {
     WatchAI = 0,
@@ -34,8 +35,10 @@ public class MotionPlayback : MonoBehaviour
     public delegate void NewFrame();
     public static event NewFrame OnNewFrame;
 
+    public Athena.Athena A => Athena.Athena.instance;
+    public Runtime R => Runtime.instance;
     MotionEditor ME => MotionEditor.instance;
-    Athena A => Athena.instance;
+    
 
     public List<Spell> CurrentMotions;
     private void Start()
@@ -56,8 +59,6 @@ public class MotionPlayback : MonoBehaviour
                 return;
             Timer = 0;
             Frame += 1;
-            
-            
             
             if (Frame >= A.Movements[(int)ME.MotionType].Motions[ME.MotionNum].Infos.Count)
                 Frame = 0;
@@ -84,15 +85,15 @@ public class MotionPlayback : MonoBehaviour
                 //return Frame - MotionAssign.instance.FramesAgo() >= 0 ? RestrictionManager.instance.MotionWorks(A.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - MotionAssign.instance.FramesAgo()), A.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame), ME.MotionType) : false;
                 PythonTest Py = PythonTest.instance;
 
-                if (Frame <= Py.FramesAgoBuild + 1)
+                if (Frame <= R.FramesAgoBuild + 1)
                     return false;
 
                 //Debug.Log(Enumerable.Range(Frame - Py.FramesAgoBuild - 1, Py.FramesAgoBuild + 1).ToList()[^1]);
-                List<AthenaFrame> Frames = Enumerable.Range(Frame - Py.FramesAgoBuild - 1, Py.FramesAgoBuild + 1).Select(x => A.AtFrameInfo(ME.MotionType, ME.MotionNum, x)).ToList();
+                List<AthenaFrame> Frames = Enumerable.Range(Frame - R.FramesAgoBuild - 1, R.FramesAgoBuild + 1).Select(x => A.AtFrameInfo(ME.MotionType, ME.MotionNum, x)).ToList();
 
                 
 
-                return Py.PredictState(Py.FrameToValues(Frames));
+                return R.PredictState(Py.FrameToValues(Frames));
             }
             //MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.MotionType - 1]; }
         }

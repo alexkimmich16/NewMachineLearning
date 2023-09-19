@@ -3,7 +3,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.XR;
 using System.Linq;
-namespace RestrictionSystem
+namespace Athena
 {
     public class PastFrameRecorder : SerializedMonoBehaviour
     {
@@ -26,6 +26,8 @@ namespace RestrictionSystem
 
         public delegate void OnControllerDisable(Side side);
         public static OnControllerDisable disableController;
+
+        public List<UnityEngine.XR.Interaction.Toolkit.XRController> Controllers;
 
 
         public static List<XRNode> DeviceOrder { get { return new List<XRNode>() { XRNode.RightHand, XRNode.LeftHand, XRNode.Head }; } }
@@ -52,7 +54,8 @@ namespace RestrictionSystem
         public bool HandActive(Side side) { return HandsActive[(int)side]; }
         
         public List<AthenaFrame> GetFramesList(Side side, int Frames) { return Enumerable.Range(0, Frames).Select(x => FrameInfo[(int)side][x]).ToList(); }
-        
+       
+
         private void Start()
         {
             HandsActive = new bool[2];
@@ -79,7 +82,7 @@ namespace RestrictionSystem
         public AthenaFrame GetControllerInfo(Side side)
         {
             //fill all device info
-
+            
             List<XRNode> Devices = side == Side.right ? new List<XRNode>() { XRNode.RightHand, XRNode.Head } : new List<XRNode>() { XRNode.LeftHand, XRNode.Head };
             List<DeviceInfo> DeviceInfos = new List<DeviceInfo>();
             for (int i = 0; i < Devices.Count; i++)
@@ -94,16 +97,18 @@ namespace RestrictionSystem
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.deviceVelocity, out deviceInfo.velocity);
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out deviceInfo.angularVelocity);
 
+                Controllers[(int)side].inputDevice.TryGetFeatureValue(CommonUsages.deviceAcceleration, out deviceInfo.acceleration);
+
                 if (PreviousValues[(int)side][i].LastTime != 0)
                 {
-                    float deltaTime = Time.time - PreviousValues[i].LastTime;
-                    deviceInfo.acceleration = (deviceInfo.velocity - PreviousValues[i].LastVel) / deltaTime;
-                    deviceInfo.angularAcceleration = (deviceInfo.angularVelocity - PreviousValues[i].LastVelRot) / deltaTime;
+                    float deltaTime = Time.time - PreviousValues[(int)side][i].LastTime;
+                    //deviceInfo.acceleration = (deviceInfo.velocity - PreviousValues[(int)side][i].LastVel) / deltaTime;
+                    deviceInfo.angularAcceleration = (deviceInfo.angularVelocity - PreviousValues[i][0].LastVelRot) / deltaTime;
                 }
 
-                PreviousValues[i].LastVel = deviceInfo.velocity;
-                PreviousValues[i].LastVelRot = deviceInfo.angularVelocity;
-                PreviousValues[i].LastTime = Time.time;
+                PreviousValues[(int)side][i].LastVel = deviceInfo.velocity;
+                PreviousValues[(int)side][i].LastVelRot = deviceInfo.angularVelocity;
+                PreviousValues[(int)side][i].LastTime = Time.time;
 
                 DeviceInfos.Add(deviceInfo);
             }
@@ -120,10 +125,8 @@ namespace RestrictionSystem
             if (FrameInfo[(int)Side.right].Count > MaxStoreInfo)
                 FrameInfo[(int)Side.right].RemoveAt(0);
 
-            if (!IsReady())
-                return;
-
-            //RestrictionManager.instance.TriggerFrameEvents();
+            if (IsReady())
+                Runtime.instance.RunModel();
         }
         public static bool IsReady() { return instance.FrameInfo[0].Count >= instance.MaxStoreInfo - 1; }
 

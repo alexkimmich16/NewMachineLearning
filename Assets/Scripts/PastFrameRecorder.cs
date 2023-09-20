@@ -9,7 +9,7 @@ namespace Athena
     {
         public static PastFrameRecorder instance;
         private void Awake() { instance = this; }
-        [ListDrawerSettings(ShowIndexLabels = true)] public List<List<AthenaFrame>> FrameInfo;
+        [ListDrawerSettings(ShowIndexLabels = true)] public List<AthenaFrame> FrameInfo;
 
         public int MaxStoreInfo = 10;
 
@@ -33,7 +33,7 @@ namespace Athena
         public static List<XRNode> DeviceOrder { get { return new List<XRNode>() { XRNode.RightHand, XRNode.LeftHand, XRNode.Head }; } }
 
         public List<List<XRPreviousValues>> PreviousValues;
-        public class XRPreviousValues
+        public struct XRPreviousValues
         {
             public Vector3 LastVel;
             public Vector3 LastVelRot;
@@ -53,32 +53,11 @@ namespace Athena
         //118.012 to 
         public bool HandActive(Side side) { return HandsActive[(int)side]; }
         
-        public List<AthenaFrame> GetFramesList(Side side, int Frames) { return Enumerable.Range(0, Frames).Select(x => FrameInfo[(int)side][x]).ToList(); }
+        public List<AthenaFrame> GetFramesList(int Frames) { return Enumerable.Range(0, Frames).Select(x => FrameInfo[x]).ToList(); }
        
 
-        private void Start()
-        {
-            HandsActive = new bool[2];
-            InputTracking.trackingLost += TrackingLost;
-            InputTracking.trackingAcquired += TrackingFound;
-        }
-        public void TrackingLost(XRNodeState state)
-        {
-            if (XRHands.ContainsKey(state.nodeType))
-            {
-                Side side = XRHands[state.nodeType];
-                disableController?.Invoke(side);
-                HandsActive[(int)side] = false;
-            }
-        }
-        public void TrackingFound(XRNodeState state)
-        {
-            if (XRHands.ContainsKey(state.nodeType))
-            {
-                Side side = XRHands[state.nodeType];
-                HandsActive[(int)side] = true;
-            }
-        }
+        
+        
         public AthenaFrame GetControllerInfo(Side side)
         {
             //fill all device info
@@ -105,10 +84,7 @@ namespace Athena
                     //deviceInfo.acceleration = (deviceInfo.velocity - PreviousValues[(int)side][i].LastVel) / deltaTime;
                     deviceInfo.angularAcceleration = (deviceInfo.angularVelocity - PreviousValues[i][0].LastVelRot) / deltaTime;
                 }
-
-                PreviousValues[(int)side][i].LastVel = deviceInfo.velocity;
-                PreviousValues[(int)side][i].LastVelRot = deviceInfo.angularVelocity;
-                PreviousValues[(int)side][i].LastTime = Time.time;
+                PreviousValues[(int)side][i] = new XRPreviousValues(deviceInfo.velocity, deviceInfo.angularVelocity, Time.time);
 
                 DeviceInfos.Add(deviceInfo);
             }
@@ -121,14 +97,37 @@ namespace Athena
         }
         private void Update()
         {
-            FrameInfo[(int)Side.right].Add(GetControllerInfo(Side.right));
-            if (FrameInfo[(int)Side.right].Count > MaxStoreInfo)
-                FrameInfo[(int)Side.right].RemoveAt(0);
+            FrameInfo.Add(GetControllerInfo(Side.right));
+            if (FrameInfo.Count > MaxStoreInfo)
+                FrameInfo.RemoveAt(0);
 
-            if (IsReady())
+            if (IsReady)
                 Runtime.instance.RunModel();
         }
-        public static bool IsReady() { return instance.FrameInfo[0].Count >= instance.MaxStoreInfo - 1; }
+        public static bool IsReady { get { return instance.FrameInfo.Count >= instance.MaxStoreInfo - 1; } }
+        private void Start()
+        {
+            HandsActive = new bool[2];
+            InputTracking.trackingLost += TrackingLost;
+            InputTracking.trackingAcquired += TrackingFound;
+        }
+        public void TrackingLost(XRNodeState state)
+        {
+            if (XRHands.ContainsKey(state.nodeType))
+            {
+                Side side = XRHands[state.nodeType];
+                disableController?.Invoke(side);
+                HandsActive[(int)side] = false;
+            }
+        }
+        public void TrackingFound(XRNodeState state)
+        {
+            if (XRHands.ContainsKey(state.nodeType))
+            {
+                Side side = XRHands[state.nodeType];
+                HandsActive[(int)side] = true;
+            }
+        }
 
         //public AthenaFrame PastFrame() { return (side == Side.right) ? RightInfo[RightInfo.Count - FramesAgo()] : LeftInfo[LeftInfo.Count - FramesAgo()]; }
         //public int FramesAgo() { return RestrictionManager.instance.RestrictionSettings.FramesAgo; }

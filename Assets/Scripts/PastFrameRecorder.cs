@@ -9,7 +9,7 @@ namespace Athena
     {
         public static PastFrameRecorder instance;
         private void Awake() { instance = this; }
-        [ListDrawerSettings(ShowIndexLabels = true)] public List<AthenaFrame> FrameInfo;
+        [ListDrawerSettings(ShowIndexLabels = true)] public List<List<AthenaFrame>> FrameInfo;
 
         public int MaxStoreInfo = 10;
 
@@ -53,15 +53,12 @@ namespace Athena
         //118.012 to 
         public bool HandActive(Side side) { return HandsActive[(int)side]; }
         
-        public List<AthenaFrame> GetFramesList(int Frames) { return Enumerable.Range(0, Frames).Select(x => FrameInfo[x]).ToList(); }
-       
-
-        
+        public List<AthenaFrame> GetFramesList(Side side, int Frames) { return Enumerable.Range(0, Frames).Select(x => FrameInfo[(int)side][x]).ToList(); }
         
         public AthenaFrame GetControllerInfo(Side side)
         {
             //fill all device info
-            
+            //vel raw, acc raw, 
             List<XRNode> Devices = side == Side.right ? new List<XRNode>() { XRNode.RightHand, XRNode.Head } : new List<XRNode>() { XRNode.LeftHand, XRNode.Head };
             List<DeviceInfo> DeviceInfos = new List<DeviceInfo>();
             for (int i = 0; i < Devices.Count; i++)
@@ -71,12 +68,17 @@ namespace Athena
 
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.devicePosition, out deviceInfo.Pos);
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion quat);
-                deviceInfo.Rot = quat.eulerAngles;
+                
 
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.deviceVelocity, out deviceInfo.velocity);
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out deviceInfo.angularVelocity);
 
-                Controllers[(int)side].inputDevice.TryGetFeatureValue(CommonUsages.deviceAcceleration, out deviceInfo.acceleration);
+                //choose hand or head
+                InputDevice accDevice = i == 0 ? Controllers[(int)side].inputDevice : InputDevices.GetDeviceAtXRNode(Device);
+                accDevice.TryGetFeatureValue(CommonUsages.deviceAcceleration, out deviceInfo.acceleration);
+
+
+
 
                 if (PreviousValues[(int)side][i].LastTime != 0)
                 {
@@ -84,6 +86,25 @@ namespace Athena
                     //deviceInfo.acceleration = (deviceInfo.velocity - PreviousValues[(int)side][i].LastVel) / deltaTime;
                     deviceInfo.angularAcceleration = (deviceInfo.angularVelocity - PreviousValues[i][0].LastVelRot) / deltaTime;
                 }
+
+                if(side == Side.left)
+                {
+                    deviceInfo.Pos.x = -deviceInfo.Pos.x;
+                    quat.w = -quat.w;
+                    quat.x = -quat.x;
+                    deviceInfo.velocity.x = -deviceInfo.velocity.x;
+                    deviceInfo.acceleration.x = -deviceInfo.acceleration.x;
+
+                    //OR -w, -x, y, z 
+                    deviceInfo.angularVelocity.x = -deviceInfo.angularVelocity.x;
+                    deviceInfo.angularAcceleration.x = -deviceInfo.angularAcceleration.x;
+
+                    
+
+                }
+
+                deviceInfo.Rot = quat.eulerAngles;
+
                 PreviousValues[(int)side][i] = new XRPreviousValues(deviceInfo.velocity, deviceInfo.angularVelocity, Time.time);
 
                 DeviceInfos.Add(deviceInfo);
@@ -97,10 +118,12 @@ namespace Athena
         }
         private void Update()
         {
-            FrameInfo.Add(GetControllerInfo(Side.right));
-            if (FrameInfo.Count > MaxStoreInfo)
-                FrameInfo.RemoveAt(0);
-
+            for (int i = 0; i < FrameInfo.Count; i++)
+            {
+                FrameInfo[i].Add(GetControllerInfo((Side)i));
+                if (FrameInfo[i].Count > MaxStoreInfo)
+                    FrameInfo[i].RemoveAt(0);
+            }
             if (IsReady)
                 Runtime.instance.RunModel();
         }

@@ -30,22 +30,16 @@ namespace Athena
         public static Athena instance;
         private void Awake() { instance = this; }
 
-        [FoldoutGroup("Movements")] public List<AthenaSpell> Movements;
+        [FoldoutGroup("Movements")] public Dictionary<Spell, AthenaSpell> Movements;
 
         public int MotionCount() { return Movements.Count; }
-        public int MovementCount(Spell Spell) { return Movements[(int)Spell].Motions.Count; }
+        public int MovementCount(Spell Spell) { return Movements[Spell].Motions.Count; }
 
-        public int FrameCount(Spell Spell, int Motion) { return Movements[(int)Spell].Motions[Motion].Infos.Count; }
-        public AthenaFrame AtFrameInfo(Spell Spell, int Motion, int Frame) { return Movements[(int)Spell].Motions[Motion].Infos[Frame]; }
-        public int TrueRangeCount(Spell Spell, int Motion) { return Movements[(int)Spell].Motions[Motion].TrueRanges.Count; }
-        public bool FrameWorks(Spell Spell, int Motion, int Frame) { return Movements[(int)Spell].Motions[Motion].AtFrameState(Frame); }
+        public int FrameCount(Spell Spell, int Motion) { return Movements[Spell].Motions[Motion].Infos.Count; }
+        public AthenaFrame AtFrameInfo(Spell Spell, int Motion, int Frame) { return Movements[Spell].Motions[Motion].Infos[Frame]; }
+        public int TrueRangeCount(Spell Spell, int Motion) { return Movements[Spell].Motions[Motion].TrueRanges.Count; }
+        public bool FrameWorks(Spell Spell, int Motion, int Frame) { return Movements[Spell].Motions[Motion].AtFrameState(Frame); }
 
-    }
-
-    [System.Serializable]
-    public class AthenaSpell : ScriptableObject
-    {
-        [ListDrawerSettings(Expanded = false, ShowIndexLabels = true)] public List<AthenaMotion> Motions;
     }
 
     [System.Serializable]

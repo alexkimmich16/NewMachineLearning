@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1718,15 +1718,64 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 25347d6485546f640922a2d4cfd85b57, type: 2}
+    - {fileID: 11400000, guid: 18a3b38a205183d40bd01ea7eb1a28e4, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
-  Movements:
-  - {fileID: 0}
-  - {fileID: 0}
+    SerializationNodes:
+    - Name: Movements
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Spell, Assembly-CSharp],[Athena.AthenaSpell,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Spell, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!114 &211389152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7411,10 +7460,77 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e045355e26d470047a0edc04509d2076, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 2608482829048369067}
+    - {fileID: 5940410813187525387}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: Hands
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Side, Assembly-CSharp],[UnityEngine.SkinnedMeshRenderer,
+        UnityEngine.CoreModule]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Side, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   References:
   - Pos: {fileID: 576212479}
     Vel: {fileID: 1677558217}
     Acc: {fileID: 1592992987}
+  Materials:
+  - {fileID: 2100000, guid: dbd4aed6d0cbd204abdc789ae6ce43d8, type: 2}
+  - {fileID: 2100000, guid: 6383519db53c4274c8dc728274771cc0, type: 2}
+  RotMutiplier: 1
+  AngularVelMutiplier: 5
+  AngularAccMutiplier: 25
 --- !u!4 &779057223
 Transform:
   m_ObjectHideFlags: 0
@@ -8696,22 +8812,97 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes:
     - Name: FrameInfo
-      Entry: 6
-      Data: 
-    - Name: PreviousValues
       Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[System.Collections.Generic.List`1[[Athena.PastFrameRecorder+XRPreviousValues,
+      Data: 0|System.Collections.Generic.List`1[[System.Collections.Generic.List`1[[Athena.AthenaFrame,
         Assembly-CSharp]], mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 2
     - Name: 
       Entry: 7
-      Data: 1|System.Collections.Generic.List`1[[Athena.PastFrameRecorder+XRPreviousValues,
+      Data: 1|System.Collections.Generic.List`1[[Athena.AthenaFrame, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|System.Collections.Generic.List`1[[Athena.AthenaFrame, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: PreviousValues
+      Entry: 7
+      Data: 3|System.Collections.Generic.List`1[[System.Collections.Generic.List`1[[Athena.PastFrameRecorder+XRPreviousValues,
+        Assembly-CSharp]], mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 4|System.Collections.Generic.List`1[[Athena.PastFrameRecorder+XRPreviousValues,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: Athena.PastFrameRecorder+XRPreviousValues, Assembly-CSharp
+    - Name: LastVel
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LastVelRot
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LastTime
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 7
       Data: Athena.PastFrameRecorder+XRPreviousValues, Assembly-CSharp
@@ -8759,11 +8950,89 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 2|System.Collections.Generic.List`1[[Athena.PastFrameRecorder+XRPreviousValues,
+      Data: 5|System.Collections.Generic.List`1[[Athena.PastFrameRecorder+XRPreviousValues,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: Athena.PastFrameRecorder+XRPreviousValues, Assembly-CSharp
+    - Name: LastVel
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
       Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LastVelRot
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LastTime
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Athena.PastFrameRecorder+XRPreviousValues, Assembly-CSharp
+    - Name: LastVel
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LastVelRot
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LastTime
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -9715,7 +9984,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Active: 1
+  Active: 0
   PrintDecimals: 5
   CalculatedMotion:
     Motions:

@@ -54,25 +54,26 @@ public class RecordMotions : MonoBehaviour
             if (TrueMotion.isOn)
             {
                 FinalMotion.TrueRanges = new List<Vector2>() { Vector2.zero};
-                Athena.Athena.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Insert(0, FinalMotion);
+                Athena.Athena.instance.Movements[MotionEditor.instance.MotionType].Motions.Insert(0, FinalMotion);
                 //Vector2 Before = MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0];
                 //MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0] = new Vector2(Before.x, Before.y + 1);
             }
             else
             {
                 FinalMotion.TrueRanges.Clear();
-                Athena.Athena.instance.Movements[(int)MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
+                Athena.Athena.instance.Movements[MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
             }
                 
             CurrentMotionRecord.Clear();
         }
 
-        if (RecordingMotion == false)
-            return;
-
-        AthenaFrame info = PastFrameRecorder.instance.GetControllerInfo(Side.right);
-        Values.Add(false);
-        CurrentMotionRecord.Add(info);
+        if (RecordingMotion)
+        {
+            AthenaFrame info = PastFrameRecorder.instance.GetControllerInfo(Side.right);
+            Values.Add(false);
+            CurrentMotionRecord.Add(info);
+        }
+        
     }
 
     /*

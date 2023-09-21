@@ -226,7 +226,7 @@ public class PythonTest : SerializedMonoBehaviour
 
     public void GetPred()
     {
-        List<AthenaFrame> frames = PastFrameRecorder.instance.GetFramesList(R.FramesAgoBuild + 1);
+        List<AthenaFrame> frames = PastFrameRecorder.instance.GetFramesList(Side.right, R.FramesAgoBuild + 1);
         bool Pred = R.PredictState(FrameToValues(frames));
         //Debug.Log("returned: " + Pred);
         //DebugRestrictions.instance.SetSideColor(Side.right, Pred ? 1 : 0);

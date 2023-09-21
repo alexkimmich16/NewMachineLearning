@@ -42,12 +42,14 @@ namespace Athena
 
         public void RunModel()
         {
+            ///AS ONE FOR NOW
             for (int i = 0; i < 2; i++)
             {
                 Side side = (Side)i;
-
+                List <AthenaFrame> Frame = PastFrameRecorder.instance.GetFramesList(side, FramesAgoBuild);
+                bool State = PredictState(Frame.SelectMany(x => x.AsInputs()).ToList());
+                StateChange?.Invoke(side, State ? 1 : 0);
             }
-
             //run model with controller inputs
             //set color of controllers
         }

@@ -165,6 +165,26 @@ MonoBehaviour:
   priority: 0
   required: 0
   message: Hello from C#!
+--- !u!114 &-8909536532974649488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 486b5e28864f9a94b979b9620ce5006d, type: 3}
+  m_Name: ConformanceAutomationFeature Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &-8909262936724880551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -926,6 +946,26 @@ MonoBehaviour:
   company: Unity
   priority: 0
   required: 0
+--- !u!114 &-7897470577510750023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: ConformanceAutomationFeature Standalone
+  m_EditorClassIdentifier: Unity.XR.OpenXR.Features.ConformanceAutomation:UnityEngine.XR.OpenXR.Features.ConformanceAutomation:ConformanceAutomationFeature
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &-7819638650402459136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1226,9 +1266,9 @@ MonoBehaviour:
   features:
   - {fileID: -7093739772582124346}
   - {fileID: 527211817476813619}
-  - {fileID: 6456004212672909609}
+  - {fileID: 8972246867357387558}
   - {fileID: -6331691681517981385}
-  - {fileID: -3480984642189688643}
+  - {fileID: 9195708926145086887}
   - {fileID: 8225525859544921409}
   - {fileID: 6521890784050184127}
   - {fileID: -8090220967158835776}
@@ -1618,12 +1658,12 @@ MonoBehaviour:
   features:
   - {fileID: -2964171165538159560}
   - {fileID: 5925765762324924998}
-  - {fileID: 6387835509304029704}
-  - {fileID: -2724422794487682299}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 3193424097384514031}
-  - {fileID: 4033083804093416669}
+  - {fileID: 0}
   - {fileID: -1555638274539337660}
-  - {fileID: -310573439628394573}
+  - {fileID: 0}
   - {fileID: -6243120696650897998}
   - {fileID: 6016978444838108994}
   - {fileID: -7911987692638387220}
@@ -2260,6 +2300,26 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &-5884796589844877367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 761fdd4502cb7a84e9ec7a2b24f33f37, type: 3}
+  m_Name: MicrosoftMotionControllerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &-5816562839706507695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2342,6 +2402,26 @@ MonoBehaviour:
   priority: 0
   required: 0
   message: Hello from C#!
+--- !u!114 &-5718828569375923781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f928d0d73a35f294fbe357ca17aa3547, type: 3}
+  m_Name: MicrosoftHandInteraction Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &-5705705376598584769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2487,6 +2567,27 @@ MonoBehaviour:
   required: 0
   cacheSize: 1048576
   perThreadCacheSize: 51200
+--- !u!114 &-5576614061706635903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55a4959af032305438a04d410c6b0418, type: 3}
+  m_Name: InterceptCreateSessionFeature Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
+  message: Hello from C#!
 --- !u!114 &-5570672706987166459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2610,6 +2711,27 @@ MonoBehaviour:
   priority: 0
   required: 0
   ignoreValidationErrors: 0
+--- !u!114 &-5330302870627879607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55a4959af032305438a04d410c6b0418, type: 3}
+  m_Name: InterceptCreateSessionFeature Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 1
+  nameUi: 'Sample: Intercept Create Session'
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.example.intercept
+  openxrExtensionStrings: XR_test
+  company: Unity
+  priority: 0
+  required: 0
+  message: Hello from C#!
 --- !u!114 &-5329486777870105735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3012,9 +3134,9 @@ MonoBehaviour:
   - {fileID: 4831342677335988014}
   - {fileID: 6506236087757889267}
   - {fileID: 3410817365608400477}
-  - {fileID: 2908551262906867002}
+  - {fileID: 0}
   - {fileID: -2069116624197025601}
-  - {fileID: -53362298194858581}
+  - {fileID: 0}
   - {fileID: 1846907992321245005}
   - {fileID: -7190486627079094308}
   - {fileID: -5041969999502339714}
@@ -3084,6 +3206,26 @@ MonoBehaviour:
   priority: 0
   required: 0
   message: Hello from C#!
+--- !u!114 &-4494974969352885128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2fe570546b5b2046873e03d7b882369, type: 3}
+  m_Name: MeshingTeapotFeature WSA
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 'Sample: Meshing Teapot'
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.example.meshing
+  openxrExtensionStrings: 
+  company: Unity
+  priority: 0
+  required: 0
 --- !u!114 &-4470001299258328707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3120,6 +3262,26 @@ MonoBehaviour:
   nameUi: Microsoft Motion Controller Profile
   version: 0.0.1
   featureIdInternal: com.unity.openxr.feature.input.microsoftmotioncontroller
+  openxrExtensionStrings: 
+  company: Unity
+  priority: 0
+  required: 0
+--- !u!114 &-4456308714361484676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2fe570546b5b2046873e03d7b882369, type: 3}
+  m_Name: MeshingTeapotFeature Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 'Sample: Meshing Teapot'
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.example.meshing
   openxrExtensionStrings: 
   company: Unity
   priority: 0
@@ -3628,7 +3790,7 @@ MonoBehaviour:
   - {fileID: -7902205932748080209}
   - {fileID: 4985701733703282034}
   - {fileID: -3096639716888461303}
-  - {fileID: 1901633235771608713}
+  - {fileID: 0}
   m_renderMode: 1
   m_depthSubmissionMode: 0
 --- !u!114 &-3525843728277435976
@@ -3876,6 +4038,27 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &-3371954866292767518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: MockRuntime Standalone
+  m_EditorClassIdentifier: Unity.XR.OpenXR.Features.MockRuntime:UnityEngine.XR.OpenXR.Features.Mock:MockRuntime
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
+  ignoreValidationErrors: 0
 --- !u!114 &-3360702199942686766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4021,6 +4204,26 @@ MonoBehaviour:
   priority: 0
   required: 0
   message: Hello from C#!
+--- !u!114 &-3150006562544500516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3cf79659a011bd419c7a2a30eb74e9a, type: 3}
+  m_Name: EyeGazeInteraction Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: Eye Gaze Interaction Profile
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.input.eyetracking
+  openxrExtensionStrings: XR_EXT_eye_gaze_interaction
+  company: Unity
+  priority: 0
+  required: 0
 --- !u!114 &-3125688267916732787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4453,6 +4656,26 @@ MonoBehaviour:
   company: Unity
   priority: 0
   required: 0
+--- !u!114 &-2590207961616528362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: MicrosoftHandInteraction Standalone
+  m_EditorClassIdentifier: Unity.XR.OpenXR:UnityEngine.XR.OpenXR.Features.Interactions:MicrosoftHandInteraction
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &-2580026495045244723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4592,6 +4815,26 @@ MonoBehaviour:
   required: 0
   cacheSize: 1048576
   perThreadCacheSize: 51200
+--- !u!114 &-2430277139492492619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: ValveIndexControllerProfile Standalone
+  m_EditorClassIdentifier: Unity.XR.OpenXR:UnityEngine.XR.OpenXR.Features.Interactions:ValveIndexControllerProfile
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &-2369093871276725669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5103,6 +5346,27 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &-1616699380345539194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55a4959af032305438a04d410c6b0418, type: 3}
+  m_Name: InterceptCreateSessionFeature Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
+  message: Hello from C#!
 --- !u!114 &-1562040801677663963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5495,6 +5759,26 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &-1004036807240405684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d6ccd3d0ef0f1d458e69421dccbdae1, type: 3}
+  m_Name: ValveIndexControllerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &-986640320812347232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5658,6 +5942,26 @@ MonoBehaviour:
   featureIdInternal: 
   openxrExtensionStrings: 
   company: 
+  priority: 0
+  required: 0
+--- !u!114 &-805928648856046166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 486b5e28864f9a94b979b9620ce5006d, type: 3}
+  m_Name: ConformanceAutomationFeature Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: Conformance Automation
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.conformance
+  openxrExtensionStrings: XR_EXT_conformance_automation
+  company: Unity
   priority: 0
   required: 0
 --- !u!114 &-775178122365083076
@@ -5940,6 +6244,28 @@ MonoBehaviour:
   company: Unity
   priority: 0
   required: 0
+--- !u!114 &-214144124880457168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: RuntimeDebuggerOpenXRFeature Standalone
+  m_EditorClassIdentifier: Unity.XR.OpenXR.Features.RuntimeDebugger:UnityEngine.XR.OpenXR.Features.RuntimeDebugger:RuntimeDebuggerOpenXRFeature
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
+  cacheSize: 1048576
+  perThreadCacheSize: 51200
 --- !u!114 &-202895987102961703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5981,6 +6307,21 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &-187284861681882179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Standalone
+  m_EditorClassIdentifier: Unity.XR.OpenXR:UnityEngine.XR.OpenXR:OpenXRSettings
+  features: []
+  m_renderMode: 1
+  m_depthSubmissionMode: 0
 --- !u!114 &-148822412087862749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6097,7 +6438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Keys: 01000000070000000e000000
   Values:
-  - {fileID: -4712117318836915329}
+  - {fileID: 6080332806063687459}
   - {fileID: -7405516569895304985}
   - {fileID: 5735993733675388818}
 --- !u!114 &5176585019240457
@@ -6158,6 +6499,26 @@ MonoBehaviour:
   featureIdInternal: com.unity.openxr.feature.input.oculustouch
   openxrExtensionStrings: 
   company: Unity
+  priority: 0
+  required: 0
+--- !u!114 &42049364814594137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2fe570546b5b2046873e03d7b882369, type: 3}
+  m_Name: MeshingTeapotFeature Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
   priority: 0
   required: 0
 --- !u!114 &43639949276817635
@@ -6773,6 +7134,27 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &1209834270633291452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55a4959af032305438a04d410c6b0418, type: 3}
+  m_Name: InterceptCreateSessionFeature WSA
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 'Sample: Intercept Create Session'
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.example.intercept
+  openxrExtensionStrings: XR_test
+  company: Unity
+  priority: 0
+  required: 0
+  message: Hello from C#!
 --- !u!114 &1215271388010402909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7027,6 +7409,28 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &1592526900875853977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056125dd64c0ed540b40a4af74f7b495, type: 3}
+  m_Name: RuntimeDebuggerOpenXRFeature Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
+  cacheSize: 1048576
+  perThreadCacheSize: 51200
 --- !u!114 &1623777328705781321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7079,6 +7483,26 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: EyeGazeInteraction Standalone
   m_EditorClassIdentifier: Unity.XR.OpenXR:UnityEngine.XR.OpenXR.Features.Interactions:EyeGazeInteraction
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
+--- !u!114 &1731902263782658170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: MicrosoftMotionControllerProfile Standalone
+  m_EditorClassIdentifier: Unity.XR.OpenXR:UnityEngine.XR.OpenXR.Features.Interactions:MicrosoftMotionControllerProfile
   m_enabled: 0
   nameUi: 
   version: 
@@ -7369,6 +7793,26 @@ MonoBehaviour:
   company: Unity
   priority: 0
   required: 0
+--- !u!114 &2005497808839594454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2fe570546b5b2046873e03d7b882369, type: 3}
+  m_Name: MeshingTeapotFeature Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &2020202303969176376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7553,6 +7997,26 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &2379999412724153697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 274c02963f889a64e90bc2e596e21d13, type: 3}
+  m_Name: HTCViveControllerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &2399796139181739430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7634,6 +8098,26 @@ MonoBehaviour:
   priority: 0
   required: 0
   message: Hello from C#!
+--- !u!114 &2508124030912330832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feeef8d85de8db242bdda70cc7ff5acd, type: 3}
+  m_Name: OculusTouchControllerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &2512852395900266366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7722,6 +8206,26 @@ MonoBehaviour:
   priority: 0
   required: 0
   message: Hello from C#!
+--- !u!114 &2614339099568172809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: HTCViveControllerProfile Standalone
+  m_EditorClassIdentifier: Unity.XR.OpenXR:UnityEngine.XR.OpenXR.Features.Interactions:HTCViveControllerProfile
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &2632252387563806257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7820,6 +8324,26 @@ MonoBehaviour:
   featureIdInternal: com.unity.openxr.feature.example.meshing
   openxrExtensionStrings: 
   company: Unity
+  priority: 0
+  required: 0
+--- !u!114 &2787963271638912681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: MeshingTeapotFeature Standalone
+  m_EditorClassIdentifier: Assembly-CSharp:UnityEngine.XR.OpenXR.Samples.MeshingFeature:MeshingTeapotFeature
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
   priority: 0
   required: 0
 --- !u!114 &2878134214680317689
@@ -7924,6 +8448,27 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &3094960460502770731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7de993716e042c6499d0c18eed3a773c, type: 3}
+  m_Name: MockRuntime Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: Mock Runtime
+  version: 0.0.2
+  featureIdInternal: com.unity.openxr.feature.mockruntime
+  openxrExtensionStrings: XR_UNITY_null_gfx
+  company: Unity
+  priority: 0
+  required: 0
+  ignoreValidationErrors: 0
 --- !u!114 &3131669565944129579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8005,6 +8550,26 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &3243191654099474453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3cf79659a011bd419c7a2a30eb74e9a, type: 3}
+  m_Name: EyeGazeInteraction Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &3265947331925384651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8068,6 +8633,27 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &3361650956044853741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: InterceptCreateSessionFeature Standalone
+  m_EditorClassIdentifier: Assembly-CSharp:UnityEngine.XR.OpenXR.Samples.InterceptFeature:InterceptCreateSessionFeature
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
+  message: Hello from C#!
 --- !u!114 &3364360892281869315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8353,6 +8939,26 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &3884351195098434788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: KHRSimpleControllerProfile Standalone
+  m_EditorClassIdentifier: Unity.XR.OpenXR:UnityEngine.XR.OpenXR.Features.Interactions:KHRSimpleControllerProfile
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &3898324389263569292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8391,6 +8997,46 @@ MonoBehaviour:
   featureIdInternal: com.unity.openxr.feature.input.khrsimpleprofile
   openxrExtensionStrings: 
   company: Unity
+  priority: 0
+  required: 0
+--- !u!114 &3974912610296722987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: OculusTouchControllerProfile Standalone
+  m_EditorClassIdentifier: Unity.XR.OpenXR:UnityEngine.XR.OpenXR.Features.Interactions:OculusTouchControllerProfile
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
+--- !u!114 &4033057189014035567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: EyeGazeInteraction Standalone
+  m_EditorClassIdentifier: Unity.XR.OpenXR:UnityEngine.XR.OpenXR.Features.Interactions:EyeGazeInteraction
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
   priority: 0
   required: 0
 --- !u!114 &4033083804093416669
@@ -8696,6 +9342,28 @@ MonoBehaviour:
   company: Unity
   priority: 0
   required: 0
+--- !u!114 &4357401315084752738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056125dd64c0ed540b40a4af74f7b495, type: 3}
+  m_Name: RuntimeDebuggerOpenXRFeature Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: Runtime Debugger
+  version: 1
+  featureIdInternal: com.unity.openxr.features.runtimedebugger
+  openxrExtensionStrings: 
+  company: Unity
+  priority: 0
+  required: 0
+  cacheSize: 1048576
+  perThreadCacheSize: 51200
 --- !u!114 &4382665541552263612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8951,6 +9619,26 @@ MonoBehaviour:
   nameUi: 'Sample: Meshing Teapot'
   version: 0.0.1
   featureIdInternal: com.unity.openxr.feature.example.meshing
+  openxrExtensionStrings: 
+  company: Unity
+  priority: 0
+  required: 0
+--- !u!114 &4647400453006885642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 761fdd4502cb7a84e9ec7a2b24f33f37, type: 3}
+  m_Name: MicrosoftMotionControllerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: Microsoft Motion Controller Profile
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.input.microsoftmotioncontroller
   openxrExtensionStrings: 
   company: Unity
   priority: 0
@@ -9529,6 +10217,26 @@ MonoBehaviour:
   company: Unity
   priority: 0
   required: 0
+--- !u!114 &5517919359566275187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feeef8d85de8db242bdda70cc7ff5acd, type: 3}
+  m_Name: OculusTouchControllerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: Oculus Touch Controller Profile
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.input.oculustouch
+  openxrExtensionStrings: 
+  company: Unity
+  priority: 0
+  required: 0
 --- !u!114 &5533420904983684447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9611,6 +10319,27 @@ MonoBehaviour:
   company: Unity
   priority: 0
   required: 0
+--- !u!114 &5652506363026197957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7de993716e042c6499d0c18eed3a773c, type: 3}
+  m_Name: MockRuntime Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
+  ignoreValidationErrors: 0
 --- !u!114 &5664603982622226302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9709,9 +10438,9 @@ MonoBehaviour:
   - {fileID: 7781683553349455305}
   - {fileID: 3807227843578661049}
   - {fileID: -6482528697637298085}
-  - {fileID: -8933084435910356210}
+  - {fileID: 1209834270633291452}
   - {fileID: -5121727285417497301}
-  - {fileID: 5600462236454353427}
+  - {fileID: -4494974969352885128}
   - {fileID: -4397288176519711206}
   - {fileID: 4849540719308942733}
   - {fileID: -3419926401363433197}
@@ -9719,6 +10448,26 @@ MonoBehaviour:
   - {fileID: 1299212206941831275}
   m_renderMode: 1
   m_depthSubmissionMode: 0
+--- !u!114 &5760716855717015089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f6bfdbcb316ed242b30a8798c9eb853, type: 3}
+  m_Name: KHRSimpleControllerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: Khronos Simple Controller Profile
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.input.khrsimpleprofile
+  openxrExtensionStrings: 
+  company: Unity
+  priority: 0
+  required: 0
 --- !u!114 &5769195749575037085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10009,6 +10758,33 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &6080332806063687459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5a1f07dc5afe854f9f12a4194aca3fb, type: 3}
+  m_Name: Standalone
+  m_EditorClassIdentifier: 
+  features:
+  - {fileID: -805928648856046166}
+  - {fileID: -3150006562544500516}
+  - {fileID: 7169705080373129164}
+  - {fileID: -5330302870627879607}
+  - {fileID: 5760716855717015089}
+  - {fileID: -4456308714361484676}
+  - {fileID: 6358967884700906166}
+  - {fileID: 4647400453006885642}
+  - {fileID: 3094960460502770731}
+  - {fileID: 5517919359566275187}
+  - {fileID: 4357401315084752738}
+  - {fileID: 6274499966539422028}
+  m_renderMode: 1
+  m_depthSubmissionMode: 0
 --- !u!114 &6098872173857877513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10211,6 +10987,26 @@ MonoBehaviour:
   company: 
   priority: 0
   required: 0
+--- !u!114 &6274499966539422028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d6ccd3d0ef0f1d458e69421dccbdae1, type: 3}
+  m_Name: ValveIndexControllerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: Valve Index Controller Profile
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.input.valveindex
+  openxrExtensionStrings: 
+  company: Unity
+  priority: 0
+  required: 0
 --- !u!114 &6316622358851228593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10269,6 +11065,26 @@ MonoBehaviour:
   version: 0.0.1
   featureIdInternal: com.unity.openxr.feature.example.meshing
   openxrExtensionStrings: 
+  company: Unity
+  priority: 0
+  required: 0
+--- !u!114 &6358967884700906166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f928d0d73a35f294fbe357ca17aa3547, type: 3}
+  m_Name: MicrosoftHandInteraction Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: Microsoft Hand Interaction Profile
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.input.handtracking
+  openxrExtensionStrings: XR_MSFT_hand_interaction
   company: Unity
   priority: 0
   required: 0
@@ -10900,6 +11716,26 @@ MonoBehaviour:
   company: Unity
   priority: 0
   required: 0
+--- !u!114 &7169705080373129164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 274c02963f889a64e90bc2e596e21d13, type: 3}
+  m_Name: HTCViveControllerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: HTC Vive Controller Profile
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.input.htcvive
+  openxrExtensionStrings: 
+  company: Unity
+  priority: 0
+  required: 0
 --- !u!114 &7232780002739011788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11023,7 +11859,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: -3102849292006595259}
   - {fileID: -6707232662257897359}
-  - {fileID: 5533420904983684447}
+  - {fileID: 0}
   - {fileID: 1315317492190605416}
   - {fileID: 5212979006808509267}
   - {fileID: 0}
@@ -11612,6 +12448,26 @@ MonoBehaviour:
   priority: 0
   required: 0
   ignoreValidationErrors: 0
+--- !u!114 &8568184882096942104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f6bfdbcb316ed242b30a8798c9eb853, type: 3}
+  m_Name: KHRSimpleControllerProfile Standalone
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 
+  version: 
+  featureIdInternal: 
+  openxrExtensionStrings: 
+  company: 
+  priority: 0
+  required: 0
 --- !u!114 &8598435551015151937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11855,6 +12711,27 @@ MonoBehaviour:
   company: Unity
   priority: 0
   required: 0
+--- !u!114 &8972246867357387558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55a4959af032305438a04d410c6b0418, type: 3}
+  m_Name: InterceptCreateSessionFeature Android
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 'Sample: Intercept Create Session'
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.example.intercept
+  openxrExtensionStrings: XR_test
+  company: Unity
+  priority: 0
+  required: 0
+  message: Hello from C#!
 --- !u!114 &8979226901005296662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12112,6 +12989,26 @@ MonoBehaviour:
   nameUi: Khronos Simple Controller Profile
   version: 0.0.1
   featureIdInternal: com.unity.openxr.feature.input.khrsimpleprofile
+  openxrExtensionStrings: 
+  company: Unity
+  priority: 0
+  required: 0
+--- !u!114 &9195708926145086887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2fe570546b5b2046873e03d7b882369, type: 3}
+  m_Name: MeshingTeapotFeature Android
+  m_EditorClassIdentifier: 
+  m_enabled: 0
+  nameUi: 'Sample: Meshing Teapot'
+  version: 0.0.1
+  featureIdInternal: com.unity.openxr.feature.example.meshing
   openxrExtensionStrings: 
   company: Unity
   priority: 0

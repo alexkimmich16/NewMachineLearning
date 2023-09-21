@@ -103,7 +103,7 @@ public class MotionEditor : SerializedMonoBehaviour
         if (!SafetyCheck)
             return;
 
-        A.Movements[(int)MotionType].Motions.RemoveAt(MotionNum);
+        A.Movements[MotionType].Motions.RemoveAt(MotionNum);
 
         OnChangeMotion?.Invoke();
     }
@@ -178,10 +178,10 @@ public class MotionEditor : SerializedMonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.KeypadMinus))
             if (TrueRangeCount > 0)
-                A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.RemoveAt(TrueRangeCount - 1);
+                A.Movements[MotionType].Motions[MotionNum].TrueRanges.RemoveAt(TrueRangeCount - 1);
 
         if (Input.GetKeyDown(KeyCode.KeypadPlus) && TrueRangeCount - 1 < TrueRangeTexts.Count)
-            A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.Add(Vector2.zero);
+            A.Movements[MotionType].Motions[MotionNum].TrueRanges.Add(Vector2.zero);
 
         /*
         Side side = DisplayingRightStats.isOn ? Side.right : Side.left;
@@ -231,8 +231,8 @@ public class MotionEditor : SerializedMonoBehaviour
         SettingText.text = "Settings: " + Setting.ToString();
         display.PlaybackSpeed += SpeedChangeAdd();
         PlaybackSpeed.text = "Speed: " + display.PlaybackSpeed.ToString("F2");
-        Max.text = "Max: " + A.Movements[(int)MotionType].Motions[MotionNum].Infos.Count;
-        CurrentMotionNum.text = "MotionNum: " + MotionNum + "/" + (A.Movements[(int)MotionType].Motions.Count - 1);
+        Max.text = "Max: " + A.Movements[MotionType].Motions[MotionNum].Infos.Count;
+        CurrentMotionNum.text = "MotionNum: " + MotionNum + "/" + (A.Movements[MotionType].Motions.Count - 1);
 
         /*
         AthenaFrame Frame = PastFrameRecorder.instance.GetControllerInfo(side);
@@ -245,8 +245,8 @@ public class MotionEditor : SerializedMonoBehaviour
         MiscDisplay.text = "MiscVal: " + Frame.HeadRot.y.ToString("f3") + "   Angle(" + Angle.ToString("f3") + ")";
         */
 
-        if (A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.Count == 1)
-            CurrentValue.text = "X: " + A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].x + "\n" + "Y: " + A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].y;
+        if (A.Movements[MotionType].Motions[MotionNum].TrueRanges.Count == 1)
+            CurrentValue.text = "X: " + A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].x + "\n" + "Y: " + A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].y;
         else
             CurrentValue.text = "X: " + "\n" + "Y: ";
 
@@ -276,9 +276,9 @@ public class MotionEditor : SerializedMonoBehaviour
 
         for (int i = 0; i < TrueRangeTexts.Count; i++)
         {
-            if(A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.Count > i)
+            if(A.Movements[MotionType].Motions[MotionNum].TrueRanges.Count > i)
             {
-                Vector2 TrueRange = A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[i];
+                Vector2 TrueRange = A.Movements[MotionType].Motions[MotionNum].TrueRanges[i];
                 TrueRangeTexts[i].text = "X: " + TrueRange.x + " Y: " + TrueRange.y;
                 if (i == MaxMinEditing)
                     TrueRangeTexts[i].color = Color.red;
@@ -307,12 +307,12 @@ public class MotionEditor : SerializedMonoBehaviour
 
     public void Set(int ToSet, EditSide side)
     {
-        if (A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.Count == 0)
-            A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges.Add(new Vector2(-1, -1));
-        Vector2 Range = A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing];
+        if (A.Movements[MotionType].Motions[MotionNum].TrueRanges.Count == 0)
+            A.Movements[MotionType].Motions[MotionNum].TrueRanges.Add(new Vector2(-1, -1));
+        Vector2 Range = A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing];
         if (side == EditSide.left)
-            A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(ToSet, Range.y);
+            A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(ToSet, Range.y);
         else if(side == EditSide.right)
-            A.Movements[(int)MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(Range.x, ToSet);
+            A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(Range.x, ToSet);
     }
 }

@@ -60,11 +60,11 @@ public class MotionPlayback : MonoBehaviour
             Timer = 0;
             Frame += 1;
             
-            if (Frame >= A.Movements[(int)ME.MotionType].Motions[ME.MotionNum].Infos.Count)
+            if (Frame >= A.Movements[ME.MotionType].Motions[ME.MotionNum].Infos.Count)
                 Frame = 0;
             //if (Frame - BruteForce.instance.PastFrameLookup >= 0)
                 //CurrentMotions = RestrictionManager.instance.AllWorkingMotions(A.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), A.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame));
-            bool State = ME.Setting == EditSettings.Editing ? A.Movements[(int)ME.MotionType].Motions[ME.MotionNum].AtFrameState(Frame) : GetMotionFromInput();
+            bool State = ME.Setting == EditSettings.Editing ? A.Movements[ME.MotionType].Motions[ME.MotionNum].AtFrameState(Frame) : GetMotionFromInput();
             //handToChange.material = DebugRestrictions.instance.Materials[State ? 1 : 0];
 
             
@@ -73,7 +73,7 @@ public class MotionPlayback : MonoBehaviour
                 //ConditionManager.instance.PassValue(State, ME.CurrentTestMotion, Side.right);
             }
 
-            AthenaFrame info = A.Movements[(int)ME.MotionType].Motions[ME.MotionNum].Infos[Frame];
+            AthenaFrame info = A.Movements[ME.MotionType].Motions[ME.MotionNum].Infos[Frame];
             
             moveAll(info);
             LastMotion = Motion;

@@ -2,9 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Athena;
-public class InputDebug : MonoBehaviour
+using Sirenix.OdinInspector;
+public class InputDebug : SerializedMonoBehaviour
 {
+    public static InputDebug instance;
+    private void Awake() { instance = this; }
+
     public List<DeviceTestRef> References;
+
+    public Dictionary<Side, SkinnedMeshRenderer> Hands;
+    public List<Material> Materials;
+
+
+    public float RotMutiplier, AngularVelMutiplier, AngularAccMutiplier;
+
+    public PastFrameRecorder P => PastFrameRecorder.instance;
+
     [System.Serializable]
     public class DeviceTestRef
     {
@@ -15,21 +28,27 @@ public class InputDebug : MonoBehaviour
             Pos.position = Info.Pos;
             Vel.position = Info.velocity;
             Acc.position = Info.acceleration;
-            Pos.rotation = Quaternion.Euler(Info.Rot);
-            Vel.rotation = Quaternion.Euler(Info.angularVelocity);
-            Acc.rotation = Quaternion.Euler(Info.angularAcceleration);
+            Pos.rotation = Quaternion.Euler(Info.Rot * InputDebug.instance.RotMutiplier);
+            Vel.rotation = Quaternion.Euler(Info.angularVelocity * InputDebug.instance.AngularVelMutiplier);
+            Acc.rotation = Quaternion.Euler(Info.angularAcceleration * InputDebug.instance.AngularAccMutiplier);
         }
     }
-    
-    public PastFrameRecorder P => PastFrameRecorder.instance;
+    private void Start()
+    {
+        Runtime.StateChange += RecieveStateChange;
+    }
 
-
-    // Update is called once per frame
+    public void RecieveStateChange(Side side, int Index)
+    {
+        Hands[side].material = Materials[Index];
+    }
     void Update()
     {
         if (PastFrameRecorder.IsReady)
         {
-            References[0].Set(P.FrameInfo[^1].Devices[0]);
+            References[0].Set(P.GetFramesList(Side.right, 1)[0].Devices[1]);
+            
+            //References[1].Set(P.FrameInfo[^1].Devices[1]);
         }
     }
 }

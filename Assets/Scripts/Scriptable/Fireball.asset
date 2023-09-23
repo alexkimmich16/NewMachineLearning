@@ -12,4 +12,1008 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea95240da0a67104db16ba66d6ba455b, type: 3}
   m_Name: Fireball
   m_EditorClassIdentifier: 
-  Motions: []
+  Motions:
+  - Infos:
+    - Devices:
+      - Pos: {x: 0.14293599, y: 1.6792269, z: -0.5801834}
+        Rot: {x: 290.63867, y: 290.1449, z: 62.555756}
+        velocity: {x: 0.11091941, y: -0.044582404, z: 0.029650882}
+        angularVelocity: {x: 0.1410479, y: 0.17707784, z: -0.048103016}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 11.910707
+    - Devices:
+      - Pos: {x: 0.14345896, y: 1.6797732, z: -0.5801985}
+        Rot: {x: 290.67468, y: 288.91153, z: 64.28259}
+        velocity: {x: 0.08034004, y: -0.028969483, z: 0.023839219}
+        angularVelocity: {x: 0.32057005, y: 0.25327423, z: 0.012028594}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 11.927374
+    - Devices:
+      - Pos: {x: 0.14427173, y: 1.6794394, z: -0.57992756}
+        Rot: {x: 290.729, y: 288.02515, z: 65.59544}
+        velocity: {x: 0.069246575, y: -0.025547221, z: 0.020969125}
+        angularVelocity: {x: 0.3770158, y: 0.28984213, z: 0.03142197}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 11.943291
+    - Devices:
+      - Pos: {x: 0.14438927, y: 1.6797993, z: -0.58008647}
+        Rot: {x: 290.5816, y: 287.65576, z: 66.45862}
+        velocity: {x: 0.050181933, y: -0.020305285, z: 0.012541927}
+        angularVelocity: {x: 0.3513203, y: 0.36293536, z: 0.09796312}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 11.959957
+    - Devices:
+      - Pos: {x: 0.14407754, y: 1.6798174, z: -0.58055234}
+        Rot: {x: 290.38907, y: 287.35345, z: 66.84586}
+        velocity: {x: 0.027079236, y: -0.018855194, z: 0.0049504004}
+        angularVelocity: {x: 0.25419527, y: 0.27096057, z: 0.13756731}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 11.976624
+    - Devices:
+      - Pos: {x: 0.14331424, y: 1.6802689, z: -0.5814853}
+        Rot: {x: 290.53165, y: 287.35596, z: 66.77335}
+        velocity: {x: 0.008067344, y: -0.016392348, z: -0.0017081785}
+        angularVelocity: {x: 0.16322398, y: 0.15297316, z: 0.031051742}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 11.99329
+    - Devices:
+      - Pos: {x: 0.14258367, y: 1.680376, z: -0.5819415}
+        Rot: {x: 290.95605, y: 288.03354, z: 65.32566}
+        velocity: {x: -0.0082549555, y: -0.014862036, z: -0.003830813}
+        angularVelocity: {x: -0.024952432, y: -0.12969041, z: -0.17966542}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.009066
+    - Devices:
+      - Pos: {x: 0.14179498, y: 1.6801939, z: -0.58224046}
+        Rot: {x: 291.47482, y: 288.78232, z: 63.958424}
+        velocity: {x: -0.021336775, y: -0.016494732, z: -0.003204925}
+        angularVelocity: {x: -0.15190254, y: -0.27776635, z: -0.34956676}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.025705
+    - Devices:
+      - Pos: {x: 0.14076608, y: 1.6803844, z: -0.5826571}
+        Rot: {x: 291.60052, y: 289.45435, z: 62.91688}
+        velocity: {x: -0.02951155, y: -0.015063864, z: 0.00016648509}
+        angularVelocity: {x: -0.22051619, y: -0.27822766, z: -0.30197132}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.042372
+    - Devices:
+      - Pos: {x: 0.14028203, y: 1.6801717, z: -0.582453}
+        Rot: {x: 291.48853, y: 289.61166, z: 62.90189}
+        velocity: {x: -0.029447272, y: -0.01449126, z: 0.0042597847}
+        angularVelocity: {x: -0.15703166, y: -0.13513072, z: -0.16304977}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.059039
+    - Devices:
+      - Pos: {x: 0.14016527, y: 1.6800003, z: -0.58205175}
+        Rot: {x: 291.06158, y: 288.55948, z: 64.40863}
+        velocity: {x: -0.024223436, y: -0.010866253, z: 0.011088118}
+        angularVelocity: {x: 0.039083026, y: 0.035301287, z: 0.07898718}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.075167
+    - Devices:
+      - Pos: {x: 0.13943511, y: 1.6803272, z: -0.58208275}
+        Rot: {x: 291.03476, y: 287.61172, z: 65.72155}
+        velocity: {x: -0.024420718, y: -0.007521888, z: 0.014568713}
+        angularVelocity: {x: 0.19136475, y: 0.13307501, z: 0.109077945}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.091833
+    - Devices:
+      - Pos: {x: 0.1387955, y: 1.6804246, z: -0.5823579}
+        Rot: {x: 291.1363, y: 287.17023, z: 66.17853}
+        velocity: {x: -0.024162857, y: -0.007867137, z: 0.013215386}
+        angularVelocity: {x: 0.19159831, y: 0.08888337, z: 0.056410633}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.108095
+    - Devices:
+      - Pos: {x: 0.13854587, y: 1.6805588, z: -0.58239067}
+        Rot: {x: 291.25446, y: 287.29883, z: 65.94543}
+        velocity: {x: -0.019360956, y: -0.007834279, z: 0.012300291}
+        angularVelocity: {x: 0.10694503, y: 0.023440903, z: -0.01763269}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.124656
+    - Devices:
+      - Pos: {x: 0.13846636, y: 1.6803024, z: -0.58214796}
+        Rot: {x: 291.35626, y: 288.03204, z: 64.93768}
+        velocity: {x: -0.014130805, y: -0.010172215, z: 0.012707695}
+        angularVelocity: {x: -0.04051344, y: -0.055143088, z: -0.07538356}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.140737
+    - Devices:
+      - Pos: {x: 0.13850796, y: 1.6803663, z: -0.5820776}
+        Rot: {x: 291.2953, y: 289.0328, z: 63.714504}
+        velocity: {x: -0.007129573, y: -0.010230664, z: 0.0129468385}
+        angularVelocity: {x: -0.18427512, y: -0.08391268, z: -0.07301548}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.157403
+    - Devices:
+      - Pos: {x: 0.13851017, y: 1.6806823, z: -0.5820346}
+        Rot: {x: 291.2362, y: 288.98944, z: 63.958744}
+        velocity: {x: 0.00036698207, y: -0.008623433, z: 0.01650929}
+        angularVelocity: {x: -0.096690126, y: 0.018318528, z: -0.02338489}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.173646
+    - Devices:
+      - Pos: {x: 0.13872927, y: 1.6807008, z: -0.58170795}
+        Rot: {x: 291.36502, y: 287.71808, z: 65.67023}
+        velocity: {x: 0.006420104, y: -0.0063574314, z: 0.019038247}
+        angularVelocity: {x: 0.1738256, y: 0.12916651, z: -0.0072151995}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.190312
+    - Devices:
+      - Pos: {x: 0.13874751, y: 1.6809231, z: -0.5818229}
+        Rot: {x: 291.54263, y: 287.0037, z: 66.493126}
+        velocity: {x: 0.0074690194, y: -0.0043638023, z: 0.01702736}
+        angularVelocity: {x: 0.24421538, y: 0.1139445, z: -0.035249226}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.20698
+    - Devices:
+      - Pos: {x: 0.13871187, y: 1.6814969, z: -0.5821594}
+        Rot: {x: 291.61475, y: 287.0869, z: 66.32201}
+        velocity: {x: 0.008733706, y: 0.00033586565, z: 0.013350823}
+        angularVelocity: {x: 0.14663017, y: 0.047157668, z: -0.06670185}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.22347
+    - Devices:
+      - Pos: {x: 0.13895905, y: 1.681689, z: -0.58199227}
+        Rot: {x: 291.57925, y: 288.07892, z: 64.88749}
+        velocity: {x: 0.010792678, y: 0.0040739905, z: 0.012258705}
+        angularVelocity: {x: -0.076580994, y: -0.08430068, z: -0.07969596}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.239816
+    - Devices:
+      - Pos: {x: 0.13940227, y: 1.6821969, z: -0.5821595}
+        Rot: {x: 291.36755, y: 288.8836, z: 63.733677}
+        velocity: {x: 0.015448224, y: 0.009914818, z: 0.010935056}
+        angularVelocity: {x: -0.21425715, y: -0.14365351, z: -0.022399792}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.2561
+    - Devices:
+      - Pos: {x: 0.13974291, y: 1.6828799, z: -0.5820646}
+        Rot: {x: 291.0539, y: 288.6872, z: 64.14788}
+        velocity: {x: 0.018521847, y: 0.0165982, z: 0.01357059}
+        angularVelocity: {x: -0.12737796, y: -0.030478548, z: 0.10124599}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.272766
+    - Devices:
+      - Pos: {x: 0.1401326, y: 1.6835744, z: -0.5817821}
+        Rot: {x: 290.9027, y: 287.93384, z: 65.217636}
+        velocity: {x: 0.019583022, y: 0.022382056, z: 0.016231816}
+        angularVelocity: {x: 0.033346478, y: 0.06566529, z: 0.15899155}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.289433
+    - Devices:
+      - Pos: {x: 0.14004284, y: 1.6845587, z: -0.58213973}
+        Rot: {x: 290.6942, y: 287.27917, z: 65.85398}
+        velocity: {x: 0.016643032, y: 0.026574295, z: 0.012017643}
+        angularVelocity: {x: 0.08151335, y: 0.029103344, z: 0.19074091}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.305601
+    - Devices:
+      - Pos: {x: 0.14017564, y: 1.6849759, z: -0.5819994}
+        Rot: {x: 290.6831, y: 286.84573, z: 66.12404}
+        velocity: {x: 0.013473112, y: 0.027741384, z: 0.010299141}
+        angularVelocity: {x: 0.08620274, y: -0.04985932, z: 0.14003053}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.3222685
+    - Devices:
+      - Pos: {x: 0.140077, y: 1.6855345, z: -0.58188117}
+        Rot: {x: 290.87006, y: 286.2779, z: 66.096245}
+        velocity: {x: 0.0068229716, y: 0.02978869, z: 0.009229157}
+        angularVelocity: {x: 0.07120376, y: -0.24013752, z: 0.03207267}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.338131
+    - Devices:
+      - Pos: {x: 0.1395477, y: 1.6866999, z: -0.58242905}
+        Rot: {x: 290.99365, y: 285.6353, z: 65.737946}
+        velocity: {x: -0.00027841073, y: 0.034629393, z: 0.0052798847}
+        angularVelocity: {x: 0.015618885, y: -0.49767506, z: -0.038097814}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.354797
+    - Devices:
+      - Pos: {x: 0.13935661, y: 1.6879847, z: -0.58283675}
+        Rot: {x: 290.94305, y: 285.0748, z: 65.82278}
+        velocity: {x: -0.0008897012, y: 0.041507807, z: 0.003836495}
+        angularVelocity: {x: 0.009362168, y: -0.4883454, z: -0.0077102436}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.371465
+    - Devices:
+      - Pos: {x: 0.13961476, y: 1.689343, z: -0.58280087}
+        Rot: {x: 290.50333, y: 285.00174, z: 65.63926}
+        velocity: {x: 0.0037052669, y: 0.053870954, z: 0.005009907}
+        angularVelocity: {x: -0.05881858, y: -0.4153023, z: 0.12988873}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.386924
+    - Devices:
+      - Pos: {x: 0.13969123, y: 1.6912408, z: -0.5826087}
+        Rot: {x: 290.23712, y: 283.89188, z: 66.87024}
+        velocity: {x: 0.005680024, y: 0.073223576, z: 0.010555953}
+        angularVelocity: {x: 0.07586419, y: -0.2661132, z: 0.2273711}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.40359
+    - Devices:
+      - Pos: {x: 0.13946241, y: 1.6941516, z: -0.58269906}
+        Rot: {x: 290.15973, y: 281.90607, z: 69.004654}
+        velocity: {x: 0.0026568766, y: 0.10174793, z: 0.012121582}
+        angularVelocity: {x: 0.2884633, y: -0.1693436, z: 0.26571313}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.420244
+    - Devices:
+      - Pos: {x: 0.13932067, y: 1.6977209, z: -0.5826454}
+        Rot: {x: 290.02383, y: 280.0232, z: 69.934906}
+        velocity: {x: -0.0019444656, y: 0.14123696, z: 0.009193934}
+        angularVelocity: {x: 0.26745465, y: -0.47360387, z: 0.26851997}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.436911
+    - Devices:
+      - Pos: {x: 0.13966477, y: 1.7030897, z: -0.5824208}
+        Rot: {x: 289.08643, y: 278.802, z: 70.50063}
+        velocity: {x: 0.0064031794, y: 0.20325989, z: 0.010503012}
+        angularVelocity: {x: 0.120788015, y: -0.5082638, z: 0.5003449}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.453578
+    - Devices:
+      - Pos: {x: 0.14003927, y: 1.7093515, z: -0.58236074}
+        Rot: {x: 288.06604, y: 277.93762, z: 71.85306}
+        velocity: {x: 0.016521033, y: 0.26319373, z: 0.015869308}
+        angularVelocity: {x: 0.056357227, y: -0.21093118, z: 0.7243489}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.470244
+    - Devices:
+      - Pos: {x: 0.14048392, y: 1.7167907, z: -0.5821307}
+        Rot: {x: 287.16412, y: 275.41122, z: 74.42295}
+        velocity: {x: 0.022827191, y: 0.33016658, z: 0.021551648}
+        angularVelocity: {x: 0.1373522, y: -0.14905792, z: 0.89930314}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.486143
+    - Devices:
+      - Pos: {x: 0.14087713, y: 1.7257174, z: -0.5819373}
+        Rot: {x: 286.68362, y: 270.79565, z: 79.439445}
+        velocity: {x: 0.02737213, y: 0.4011836, z: 0.027076047}
+        angularVelocity: {x: 0.4506519, y: -0.036950283, z: 1.0088762}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.50281
+    - Devices:
+      - Pos: {x: 0.14063168, y: 1.7366701, z: -0.5824472}
+        Rot: {x: 286.2437, y: 266.0669, z: 84.407814}
+        velocity: {x: 0.02626209, y: 0.47775313, z: 0.026499797}
+        angularVelocity: {x: 0.6108945, y: -0.014385203, z: 1.07822}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.51884
+    - Devices:
+      - Pos: {x: 0.14133221, y: 1.748053, z: -0.58170784}
+        Rot: {x: 285.40265, y: 262.33926, z: 88.17912}
+        velocity: {x: 0.031218193, y: 0.55044484, z: 0.032689244}
+        angularVelocity: {x: 0.50149804, y: -0.038825266, z: 1.1718982}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.535282
+    - Devices:
+      - Pos: {x: 0.14226335, y: 1.7603503, z: -0.5808189}
+        Rot: {x: 284.50308, y: 259.13458, z: 91.40283}
+        velocity: {x: 0.036298774, y: 0.6206056, z: 0.037171982}
+        angularVelocity: {x: 0.34327886, y: -0.05996503, z: 1.206905}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.5519495
+    - Devices:
+      - Pos: {x: 0.14302027, y: 1.7739114, z: -0.5800344}
+        Rot: {x: 283.80115, y: 256.0629, z: 93.99625}
+        velocity: {x: 0.037491895, y: 0.68753237, z: 0.040313177}
+        angularVelocity: {x: 0.20459458, y: -0.22883704, z: 1.1394892}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.568426
+    - Devices:
+      - Pos: {x: 0.14334953, y: 1.7892898, z: -0.5788655}
+        Rot: {x: 283.29312, y: 253.51529, z: 95.891266}
+        velocity: {x: 0.03418607, y: 0.76368797, z: 0.050719958}
+        angularVelocity: {x: 0.103265055, y: -0.40216848, z: 0.9977084}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.585093
+    - Devices:
+      - Pos: {x: 0.14388007, y: 1.8043648, z: -0.577453}
+        Rot: {x: 283.01422, y: 250.39417, z: 99.13197}
+        velocity: {x: 0.03242878, y: 0.81618506, z: 0.06353262}
+        angularVelocity: {x: 0.16309182, y: -0.25243977, z: 0.9201127}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.601028
+    - Devices:
+      - Pos: {x: 0.143938, y: 1.8202475, z: -0.57588875}
+        Rot: {x: 283.02905, y: 246.77673, z: 103.46152}
+        velocity: {x: 0.023105657, y: 0.86594534, z: 0.07436764}
+        angularVelocity: {x: 0.31406158, y: 0.036538236, z: 0.89014184}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.617695
+    - Devices:
+      - Pos: {x: 0.14408654, y: 1.836867, z: -0.5744597}
+        Rot: {x: 282.54428, y: 241.9235, z: 108.23869}
+        velocity: {x: 0.014852269, y: 0.91820693, z: 0.075194165}
+        angularVelocity: {x: 0.27230453, y: -0.047464326, z: 1.0016336}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.633249
+    - Devices:
+      - Pos: {x: 0.14449632, y: 1.8548641, z: -0.57294834}
+        Rot: {x: 281.92587, y: 235.08218, z: 114.51453}
+        velocity: {x: 0.011843756, y: 0.977403, z: 0.07406537}
+        angularVelocity: {x: 0.20177387, y: -0.25218135, z: 1.1801484}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.649917
+    - Devices:
+      - Pos: {x: 0.14432287, y: 1.874016, z: -0.57145965}
+        Rot: {x: 281.94748, y: 230.48882, z: 119.46796}
+        velocity: {x: 0.0070299115, y: 1.0380433, z: 0.07695548}
+        angularVelocity: {x: 0.2830926, y: -0.09517611, z: 1.1259918}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.666583
+    - Devices:
+      - Pos: {x: 0.14376503, y: 1.8951321, z: -0.5713198}
+        Rot: {x: 282.44305, y: 227.3326, z: 122.58571}
+        velocity: {x: -0.0026193447, y: 1.0889494, z: 0.06401924}
+        angularVelocity: {x: 0.41246748, y: -0.11342572, z: 0.9052236}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.682079
+    - Devices:
+      - Pos: {x: 0.14368832, y: 1.915419, z: -0.57079864}
+        Rot: {x: 282.75427, y: 224.11488, z: 125.20417}
+        velocity: {x: -0.006155502, y: 1.1379379, z: 0.05204621}
+        angularVelocity: {x: 0.42983022, y: -0.30947652, z: 0.76728123}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.698679
+    - Devices:
+      - Pos: {x: 0.14395511, y: 1.9358679, z: -0.5702033}
+        Rot: {x: 282.9109, y: 220.2846, z: 128.68509}
+        velocity: {x: -0.00032550842, y: 1.1934769, z: 0.046199597}
+        angularVelocity: {x: 0.38377732, y: -0.36332628, z: 0.7856071}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.715345
+    - Devices:
+      - Pos: {x: 0.14439464, y: 1.9599739, z: -0.56981945}
+        Rot: {x: 283.1433, y: 215.02672, z: 134.24483}
+        velocity: {x: 0.010880628, y: 1.2570983, z: 0.038921967}
+        angularVelocity: {x: 0.36282074, y: -0.17870596, z: 0.9378115}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.731269
+    - Devices:
+      - Pos: {x: 0.14505166, y: 1.983595, z: -0.56898844}
+        Rot: {x: 283.7836, y: 210.61496, z: 139.74712}
+        velocity: {x: 0.025349354, y: 1.3190999, z: 0.035850618}
+        angularVelocity: {x: 0.47879145, y: 0.19344015, z: 1.0645226}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.747789
+    - Devices:
+      - Pos: {x: 0.1463387, y: 2.0081172, z: -0.56926894}
+        Rot: {x: 284.21207, y: 205.39142, z: 145.42372}
+        velocity: {x: 0.04496888, y: 1.3836889, z: 0.0129732285}
+        angularVelocity: {x: 0.4244525, y: 0.22650257, z: 1.2168838}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.764457
+    - Devices:
+      - Pos: {x: 0.14777929, y: 2.03296, z: -0.5702319}
+        Rot: {x: 284.34354, y: 199.97646, z: 151.27744}
+        velocity: {x: 0.061534077, y: 1.4277022, z: -0.012374667}
+        angularVelocity: {x: 0.24532926, y: 0.2518617, z: 1.3251846}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.781123
+    - Devices:
+      - Pos: {x: 0.14940387, y: 2.0583265, z: -0.5718428}
+        Rot: {x: 284.9477, y: 196.27121, z: 155.89395}
+        velocity: {x: 0.071905516, y: 1.4662613, z: -0.040767275}
+        angularVelocity: {x: 0.275382, y: 0.42745584, z: 1.3367068}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.79779
+    - Devices:
+      - Pos: {x: 0.15019989, y: 2.0841646, z: -0.573683}
+        Rot: {x: 285.91812, y: 195.27402, z: 158.51378}
+        velocity: {x: 0.068503305, y: 1.4967272, z: -0.064440556}
+        angularVelocity: {x: 0.4686, y: 0.8264381, z: 1.2264913}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.813811
+    - Devices:
+      - Pos: {x: 0.15092522, y: 2.1083713, z: -0.5754646}
+        Rot: {x: 286.89417, y: 195.18011, z: 160.18726}
+        velocity: {x: 0.0644276, y: 1.514611, z: -0.08089761}
+        angularVelocity: {x: 0.5978014, y: 1.0812618, z: 1.1085185}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.830478
+    - Devices:
+      - Pos: {x: 0.15146786, y: 2.13595, z: -0.57842314}
+        Rot: {x: 286.81696, y: 193.02884, z: 163.6053}
+        velocity: {x: 0.054604392, y: 1.5300758, z: -0.10717633}
+        angularVelocity: {x: 0.2804231, y: 1.1127418, z: 1.032039}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.847144
+    - Devices:
+      - Pos: {x: 0.15232903, y: 2.161059, z: -0.5805551}
+        Rot: {x: 286.5064, y: 191.85063, z: 166.59099}
+        velocity: {x: 0.04786208, y: 1.5258522, z: -0.11473267}
+        angularVelocity: {x: 0.015717184, y: 1.3453182, z: 0.92750424}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.862603
+    - Devices:
+      - Pos: {x: 0.15203339, y: 2.1870265, z: -0.583639}
+        Rot: {x: 287.03198, y: 193.81967, z: 166.76724}
+        velocity: {x: 0.033130225, y: 1.5157262, z: -0.12352677}
+        angularVelocity: {x: 0.20982939, y: 1.6490644, z: 0.71004987}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.879271
+    - Devices:
+      - Pos: {x: 0.15172738, y: 2.2118564, z: -0.58628535}
+        Rot: {x: 287.69055, y: 198.27484, z: 164.29118}
+        velocity: {x: 0.01749755, y: 1.4759537, z: -0.13174595}
+        angularVelocity: {x: 0.48332316, y: 1.799643, z: 0.27611065}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.895937
+    - Devices:
+      - Pos: {x: 0.15140522, y: 2.2316928, z: -0.58846426}
+        Rot: {x: 288.0044, y: 201.50954, z: 160.67514}
+        velocity: {x: 0.0043582506, y: 1.4083325, z: -0.13557367}
+        angularVelocity: {x: 0.5410259, y: 1.1406394, z: -0.16705741}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.911997
+    - Devices:
+      - Pos: {x: 0.15173328, y: 2.2520337, z: -0.5916139}
+        Rot: {x: 287.8189, y: 204.15962, z: 157.42737}
+        velocity: {x: 0.010367539, y: 1.3222497, z: -0.13261425}
+        angularVelocity: {x: 0.3854943, y: 0.5989286, z: -0.4482014}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.928663
+    - Devices:
+      - Pos: {x: 0.15258342, y: 2.2708602, z: -0.59391284}
+        Rot: {x: 286.74362, y: 207.53777, z: 155.91772}
+        velocity: {x: 0.025943615, y: 1.2160136, z: -0.11721207}
+        angularVelocity: {x: -0.07846646, y: 0.9994829, z: -0.48901388}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.945036
+    - Devices:
+      - Pos: {x: 0.15399551, y: 2.284943, z: -0.5951035}
+        Rot: {x: 285.46857, y: 209.97069, z: 155.45319}
+        velocity: {x: 0.048908554, y: 1.0717777, z: -0.09377737}
+        angularVelocity: {x: -0.49197116, y: 1.3449461, z: -0.4005598}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.961702
+    - Devices:
+      - Pos: {x: 0.15617609, y: 2.2962265, z: -0.5959978}
+        Rot: {x: 284.76105, y: 213.49571, z: 153.34732}
+        velocity: {x: 0.072768725, y: 0.9355314, z: -0.083475}
+        angularVelocity: {x: -0.58278316, y: 1.4280026, z: -0.47399208}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.978259
+    - Devices:
+      - Pos: {x: 0.15837127, y: 2.3065, z: -0.5984193}
+        Rot: {x: 283.95868, y: 215.90099, z: 151.24596}
+        velocity: {x: 0.095226765, y: 0.80231047, z: -0.08981414}
+        angularVelocity: {x: -0.66906136, y: 1.0649172, z: -0.49135402}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 12.994926
+    - Devices:
+      - Pos: {x: 0.1604402, y: 2.3152304, z: -0.60136235}
+        Rot: {x: 282.99695, y: 218.10406, z: 148.70026}
+        velocity: {x: 0.11286721, y: 0.68069375, z: -0.10502253}
+        angularVelocity: {x: -0.800647, y: 0.5949674, z: -0.4992607}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.011593
+    - Devices:
+      - Pos: {x: 0.16313058, y: 2.3192778, z: -0.603305}
+        Rot: {x: 281.12402, y: 218.18985, z: 147.96744}
+        velocity: {x: 0.12576656, y: 0.5319019, z: -0.113969944}
+        angularVelocity: {x: -1.2332462, y: 0.13448681, z: -0.3299019}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.028259
+    - Devices:
+      - Pos: {x: 0.16420513, y: 2.3252516, z: -0.60581183}
+        Rot: {x: 279.33466, y: 216.51834, z: 148.8366}
+        velocity: {x: 0.11065967, y: 0.43799964, z: -0.11312524}
+        angularVelocity: {x: -1.4352341, y: -0.22679888, z: -0.099007905}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.044683
+    - Devices:
+      - Pos: {x: 0.16588336, y: 2.326254, z: -0.6066052}
+        Rot: {x: 278.49026, y: 216.31894, z: 148.94865}
+        velocity: {x: 0.09454104, y: 0.32730034, z: -0.09464043}
+        angularVelocity: {x: -1.2567518, y: -0.18677944, z: -0.032576185}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.060494
+    - Devices:
+      - Pos: {x: 0.1656475, y: 2.3279028, z: -0.6071292}
+        Rot: {x: 278.3087, y: 217.7251, z: 148.24901}
+        velocity: {x: 0.053486206, y: 0.24415225, z: -0.07390093}
+        angularVelocity: {x: -0.88418645, y: 0.13086179, z: -0.04491643}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.077161
+    - Devices:
+      - Pos: {x: 0.16445464, y: 2.3295195, z: -0.6084633}
+        Rot: {x: 278.5132, y: 219.60268, z: 146.85593}
+        velocity: {x: 0.011020934, y: 0.17869447, z: -0.06237219}
+        angularVelocity: {x: -0.4781951, y: 0.24940039, z: -0.084822804}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.093827
+    - Devices:
+      - Pos: {x: 0.16349125, y: 2.3302794, z: -0.60932326}
+        Rot: {x: 279.09518, y: 221.93465, z: 145.07683}
+        velocity: {x: -0.018243207, y: 0.12675115, z: -0.05268669}
+        angularVelocity: {x: -0.11577422, y: 0.36520085, z: -0.17684223}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.110019
+    - Devices:
+      - Pos: {x: 0.16234893, y: 2.3316264, z: -0.6124555}
+        Rot: {x: 279.7721, y: 223.83693, z: 143.82324}
+        velocity: {x: -0.03742894, y: 0.08888119, z: -0.060921956}
+        angularVelocity: {x: 0.15542236, y: 0.4918213, z: -0.20083599}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.126685
+    - Devices:
+      - Pos: {x: 0.16213107, y: 2.332909, z: -0.6144817}
+        Rot: {x: 280.38, y: 224.08588, z: 144.41652}
+        velocity: {x: -0.03222078, y: 0.064633556, z: -0.058933616}
+        angularVelocity: {x: 0.34326258, y: 0.6100735, z: -0.14651808}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.143177
+    - Devices:
+      - Pos: {x: 0.16204655, y: 2.333209, z: -0.61504865}
+        Rot: {x: 280.83768, y: 224.26495, z: 145.29759}
+        velocity: {x: -0.022624746, y: 0.049406577, z: -0.05136531}
+        angularVelocity: {x: 0.3908502, y: 0.7661452, z: -0.07458445}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.159193
+    - Devices:
+      - Pos: {x: 0.16037941, y: 2.3307784, z: -0.61386144}
+        Rot: {x: 280.95615, y: 223.4478, z: 146.61546}
+        velocity: {x: -0.019758675, y: 0.020171866, z: -0.035697557}
+        angularVelocity: {x: 0.30686808, y: 0.6629482, z: 0.05010551}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.175859
+    - Devices:
+      - Pos: {x: 0.16034675, y: 2.331555, z: -0.614611}
+        Rot: {x: 280.9243, y: 221.6526, z: 148.33348}
+        velocity: {x: -0.009448487, y: 0.023266297, z: -0.032461215}
+        angularVelocity: {x: 0.22750822, y: 0.3834294, z: 0.15279864}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.192381
+    - Devices:
+      - Pos: {x: 0.16074163, y: 2.3300567, z: -0.61353517}
+        Rot: {x: 280.74988, y: 221.22519, z: 148.37134}
+        velocity: {x: -0.0008843383, y: 0.018324537, z: -0.016316015}
+        angularVelocity: {x: 0.138909, y: 0.14564347, z: 0.1656879}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.209048
+    - Devices:
+      - Pos: {x: 0.16074306, y: 2.3302217, z: -0.6137234}
+        Rot: {x: 280.45425, y: 221.17798, z: 148.2881}
+        velocity: {x: 0.0037462434, y: 0.014381498, z: -0.006915292}
+        angularVelocity: {x: -0.03971043, y: 0.053221572, z: 0.1201222}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.22569
+    - Devices:
+      - Pos: {x: 0.16121036, y: 2.3308098, z: -0.61335456}
+        Rot: {x: 280.08658, y: 221.98735, z: 147.47554}
+        velocity: {x: 0.009887884, y: 0.018912872, z: 0.006857604}
+        angularVelocity: {x: -0.1514194, y: 0.022859918, z: 0.0733896}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.242356
+    - Devices:
+      - Pos: {x: 0.16142553, y: 2.3313727, z: -0.6136664}
+        Rot: {x: 280.16467, y: 222.55493, z: 147.24374}
+        velocity: {x: 0.012039341, y: 0.021146877, z: 0.0068959594}
+        angularVelocity: {x: -0.097773366, y: 0.13945754, z: 0.027995115}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.257898
+    - Devices:
+      - Pos: {x: 0.16164625, y: 2.3310134, z: -0.61289656}
+        Rot: {x: 280.42096, y: 221.79646, z: 148.36848}
+        velocity: {x: 0.015202537, y: 0.019410122, z: 0.008246859}
+        angularVelocity: {x: 0.02552228, y: 0.21900587, z: 0.05454251}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.274566
+    - Devices:
+      - Pos: {x: 0.16181076, y: 2.332165, z: -0.61304736}
+        Rot: {x: 280.5236, y: 220.04848, z: 150.02725}
+        velocity: {x: 0.01698324, y: 0.025384976, z: 0.004045294}
+        angularVelocity: {x: 0.076361015, y: 0.118139, z: 0.15296492}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.291232
+    - Devices:
+      - Pos: {x: 0.16213441, y: 2.331942, z: -0.6130028}
+        Rot: {x: 280.44336, y: 217.52234, z: 152.61813}
+        velocity: {x: 0.020343514, y: 0.019429, z: 0.0024576178}
+        angularVelocity: {x: 0.050771255, y: 0.08761923, z: 0.267259}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.3078985
+    - Devices:
+      - Pos: {x: 0.16268444, y: 2.3322425, z: -0.6123812}
+        Rot: {x: 280.2141, y: 214.20323, z: 156.19289}
+        velocity: {x: 0.0246646, y: 0.019193312, z: 0.012641732}
+        angularVelocity: {x: -0.012090025, y: 0.13126083, z: 0.4035416}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.324323
+    - Devices:
+      - Pos: {x: 0.16301769, y: 2.3322692, z: -0.61315084}
+        Rot: {x: 280.25964, y: 211.51436, z: 159.52354}
+        velocity: {x: 0.025513714, y: 0.009861788, z: 0.008192584}
+        angularVelocity: {x: -0.01641819, y: 0.29652864, z: 0.4875628}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.340989
+    - Devices:
+      - Pos: {x: 0.16355693, y: 2.3318474, z: -0.6122184}
+        Rot: {x: 280.5078, y: 211.65579, z: 160.31178}
+        velocity: {x: 0.024947535, y: 0.00019880873, z: 0.02185199}
+        angularVelocity: {x: 0.06592058, y: 0.5284096, z: 0.3640596}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.356954
+    - Devices:
+      - Pos: {x: 0.16370845, y: 2.3315198, z: -0.61108756}
+        Rot: {x: 280.5504, y: 213.41798, z: 158.66623}
+        velocity: {x: 0.016305499, y: -0.0040500406, z: 0.030375069}
+        angularVelocity: {x: 0.07714483, y: 0.38816562, z: 0.1286796}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.37362
+    - Devices:
+      - Pos: {x: 0.16305119, y: 2.3320112, z: -0.6109433}
+        Rot: {x: 280.41547, y: 215.89699, z: 155.7246}
+        velocity: {x: 0.002944828, y: -0.0036714696, z: 0.031311832}
+        angularVelocity: {x: 0.010225465, y: 0.09434219, z: -0.07903694}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.390287
+    - Devices:
+      - Pos: {x: 0.16252571, y: 2.3318367, z: -0.6114255}
+        Rot: {x: 280.27795, y: 217.70325, z: 153.72807}
+        velocity: {x: -0.0032126792, y: -0.0066231336, z: 0.025711853}
+        angularVelocity: {x: -0.060855966, y: 0.017884241, z: -0.18982658}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.406954
+    - Devices:
+      - Pos: {x: 0.16323203, y: 2.3321128, z: -0.61118627}
+        Rot: {x: 280.2495, y: 218.83646, z: 152.84142}
+        velocity: {x: 0.005595834, y: -0.0020396397, z: 0.029054025}
+        angularVelocity: {x: -0.039700765, y: 0.08565297, z: -0.15905708}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.42254
+    - Devices:
+      - Pos: {x: 0.16451108, y: 2.3327003, z: -0.61110747}
+        Rot: {x: 280.39185, y: 219.03459, z: 153.22054}
+        velocity: {x: 0.020188676, y: 0.0019580552, z: 0.028615413}
+        angularVelocity: {x: 0.0094759185, y: 0.2689349, z: -0.1108215}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.439207
+    - Devices:
+      - Pos: {x: 0.16510803, y: 2.3329053, z: -0.6105453}
+        Rot: {x: 280.44333, y: 219.43692, z: 153.39702}
+        velocity: {x: 0.02555797, y: 0.0055034366, z: 0.030272475}
+        angularVelocity: {x: 0.024704967, y: 0.37940547, z: -0.064798534}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.454298
+    - Devices:
+      - Pos: {x: 0.16547716, y: 2.3335166, z: -0.61001813}
+        Rot: {x: 280.38617, y: 219.38861, z: 153.92409}
+        velocity: {x: 0.030957077, y: 0.013335141, z: 0.029194826}
+        angularVelocity: {x: -0.0015520588, y: 0.42889374, z: 0.0062631033}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.470964
+    - Devices:
+      - Pos: {x: 0.16625237, y: 2.3340833, z: -0.6098964}
+        Rot: {x: 280.22632, y: 219.09494, z: 154.59299}
+        velocity: {x: 0.038031705, y: 0.016788946, z: 0.023392335}
+        angularVelocity: {x: -0.05031919, y: 0.40328446, z: 0.052571367}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.487631
+    - Devices:
+      - Pos: {x: 0.16693103, y: 2.3345876, z: -0.6100954}
+        Rot: {x: 280.04102, y: 218.35106, z: 155.35564}
+        velocity: {x: 0.04196515, y: 0.018383887, z: 0.014684402}
+        angularVelocity: {x: -0.100301996, y: 0.26844928, z: 0.092686705}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.504173
+    - Devices:
+      - Pos: {x: 0.16787148, y: 2.3346195, z: -0.60987043}
+        Rot: {x: 279.8628, y: 217.81087, z: 155.81113}
+        velocity: {x: 0.04791054, y: 0.01295735, z: 0.014766136}
+        angularVelocity: {x: -0.12782584, y: 0.15409417, z: 0.09417986}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.520504
+    - Devices:
+      - Pos: {x: 0.16909069, y: 2.3339925, z: -0.60960495}
+        Rot: {x: 279.753, y: 218.328, z: 155.37592}
+        velocity: {x: 0.052828066, y: 0.0053565297, z: 0.017113132}
+        angularVelocity: {x: -0.13498765, y: 0.11876612, z: 0.03191218}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: -0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 13.537171
+    TrueRanges: []
+    TrueIndex: 0
+    PlayCount: 0

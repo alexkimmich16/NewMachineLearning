@@ -24,28 +24,18 @@ namespace Athena
 
         public bool[] HandsActive;
 
-        public delegate void OnControllerDisable(Side side);
-        public static OnControllerDisable disableController;
+        public delegate void ControllerSide(Side side);
+        public static ControllerSide disableController;
+        public static ControllerSide NewFrame;
+
+        //public int SmoothingFrames = 3;
 
         public List<UnityEngine.XR.Interaction.Toolkit.XRController> Controllers;
 
 
+
+
         public static List<XRNode> DeviceOrder { get { return new List<XRNode>() { XRNode.RightHand, XRNode.LeftHand, XRNode.Head }; } }
-
-        public List<List<XRPreviousValues>> PreviousValues;
-        public struct XRPreviousValues
-        {
-            public Vector3 LastVel;
-            public Vector3 LastVelRot;
-            public float LastTime;
-
-            public XRPreviousValues(Vector3 LastVel, Vector3 LastVelRot, float LastTime)
-            {
-                this.LastVel = LastVel;
-                this.LastVelRot = LastVelRot;
-                this.LastTime = LastTime;
-            }
-        }
 
         public static Dictionary<XRNode, Side> XRHands = new Dictionary<XRNode, Side>(){{XRNode.RightHand, Side.right}, { XRNode.LeftHand, Side.left } };
 
@@ -53,9 +43,10 @@ namespace Athena
         //118.012 to 
         public bool HandActive(Side side) { return HandsActive[(int)side]; }
         
-        public List<AthenaFrame> GetFramesList(Side side, int Frames) { return Enumerable.Range(0, Frames).Select(x => FrameInfo[(int)side][x]).ToList(); }
+        public List<AthenaFrame> GetFramesList(Side side, int Frames) { return Enumerable.Range(FrameInfo[(int)side].Count - Frames, Frames).Reverse().Select(x => FrameInfo[(int)side][x]).ToList(); }
+    
         
-        public AthenaFrame GetControllerInfo(Side side)
+        private AthenaFrame GetControllerInfo(Side side)
         {
             //fill all device info
             //vel raw, acc raw, 
@@ -74,18 +65,19 @@ namespace Athena
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out deviceInfo.angularVelocity);
 
                 //choose hand or head
-                InputDevice accDevice = i == 0 ? Controllers[(int)side].inputDevice : InputDevices.GetDeviceAtXRNode(Device);
-                accDevice.TryGetFeatureValue(CommonUsages.deviceAcceleration, out deviceInfo.acceleration);
-
-
-
-
-                if (PreviousValues[(int)side][i].LastTime != 0)
+                //InputDevice accDevice = i == 0 ? Controllers[(int)side].inputDevice : InputDevices.GetDeviceAtXRNode(Device);
+                //accDevice.TryGetFeatureValue(CommonUsages.deviceAcceleration, out deviceInfo.acceleration);
+                /*
+                if (FrameInfo[(int)side].Count > SmoothingFrames)
                 {
-                    float deltaTime = Time.time - PreviousValues[(int)side][i].LastTime;
-                    //deviceInfo.acceleration = (deviceInfo.velocity - PreviousValues[(int)side][i].LastVel) / deltaTime;
-                    deviceInfo.angularAcceleration = (deviceInfo.angularVelocity - PreviousValues[i][0].LastVelRot) / deltaTime;
+                    AthenaFrame PastFrame = FrameInfo[(int)side][^SmoothingFrames];
+
+
+                    float TimeBetween = Time.time - PastFrame.frameTime;
+                    deviceInfo.acceleration = (deviceInfo.velocity - PastFrame.Devices[i].velocity) / TimeBetween;
+                    deviceInfo.angularAcceleration = (deviceInfo.angularVelocity - PastFrame.Devices[i].angularVelocity) / TimeBetween;
                 }
+                */
 
                 if(side == Side.left)
                 {
@@ -93,11 +85,11 @@ namespace Athena
                     quat.w = -quat.w;
                     quat.x = -quat.x;
                     deviceInfo.velocity.x = -deviceInfo.velocity.x;
-                    deviceInfo.acceleration.x = -deviceInfo.acceleration.x;
+                    //deviceInfo.acceleration.x = -deviceInfo.acceleration.x;
 
                     //OR -w, -x, y, z 
                     deviceInfo.angularVelocity.x = -deviceInfo.angularVelocity.x;
-                    deviceInfo.angularAcceleration.x = -deviceInfo.angularAcceleration.x;
+                    //deviceInfo.angularAcceleration.x = -deviceInfo.angularAcceleration.x;
 
                     
 
@@ -105,7 +97,7 @@ namespace Athena
 
                 deviceInfo.Rot = quat.eulerAngles;
 
-                PreviousValues[(int)side][i] = new XRPreviousValues(deviceInfo.velocity, deviceInfo.angularVelocity, Time.time);
+                //PreviousValues[(int)side][i] = new XRPreviousValues(deviceInfo.velocity, deviceInfo.angularVelocity, Time.time);
 
                 DeviceInfos.Add(deviceInfo);
             }
@@ -123,11 +115,12 @@ namespace Athena
                 FrameInfo[i].Add(GetControllerInfo((Side)i));
                 if (FrameInfo[i].Count > MaxStoreInfo)
                     FrameInfo[i].RemoveAt(0);
+                NewFrame?.Invoke((Side)i);
             }
             if (IsReady)
                 Runtime.instance.RunModel();
         }
-        public static bool IsReady { get { return instance.FrameInfo.Count >= instance.MaxStoreInfo - 1; } }
+        public static bool IsReady { get { return instance.FrameInfo[0].Count >= instance.MaxStoreInfo - 1; } }
         private void Start()
         {
             HandsActive = new bool[2];

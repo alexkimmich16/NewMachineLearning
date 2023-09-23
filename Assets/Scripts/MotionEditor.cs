@@ -36,49 +36,20 @@ public class MotionEditor : SerializedMonoBehaviour
     public TextMeshProUGUI PlaybackSpeed;
     public TextMeshProUGUI MotionTypeText;
     public TextMeshProUGUI SettingText;
-
-    public TextMeshProUGUI PercentDone;
-    public TextMeshProUGUI ETA;
+    //public TextMeshProUGUI ETA;
 
     public TextMeshProUGUI TestValue;
 
-    public TextMeshProUGUI MotionTestDisplay;
     public TextMeshProUGUI CurrentMotionNum;
 
     public TextMeshProUGUI MiscDisplay;
 
     public Toggle TestAllMotions;
 
-    
-
-    public Slider DoneSlider;
-
     public MotionPlayback display;
-
-    public Toggle DisplayingRightStats;
-    public Toggle DisplayingVR;
-    public TextMeshProUGUI[] CurrentMotionTests;
 
     private Athena.Athena A => Athena.Athena.instance;
 
-    public void RecieveSliderInfo(float PercentDone, int ETAInSeconds)
-    {
-        this.PercentDone.text = PercentDone.ToString("f8") ;
-        DoneSlider.value = PercentDone;
-
-        int CurrentETA = ETAInSeconds;
-        int Hours = TimeSpan.FromSeconds(CurrentETA).Hours;
-        CurrentETA -= TimeSpan.FromSeconds(CurrentETA).Hours * 3600;
-        int Minutes = TimeSpan.FromSeconds(CurrentETA).Minutes;
-        CurrentETA -= TimeSpan.FromSeconds(CurrentETA).Minutes * 60;
-        int Seconds = TimeSpan.FromSeconds(CurrentETA).Seconds;
-
-        ETA.text = "ETA: " + DigitString(Hours) + ":" + DigitString(Minutes) + ":" + DigitString(Seconds);
-        string DigitString(int Info)
-        {
-            return Info > 10 ? Info.ToString() : "0" + Info.ToString();
-        }
-    }
     //public List<RectTransform> ArrowSpots;
     public List<TextMeshProUGUI> TrueRangeTexts;
 
@@ -161,6 +132,9 @@ public class MotionEditor : SerializedMonoBehaviour
 
     void Update()
     {
+        if (MotionType != Spell.Fireball)
+            return;
+        
         if (Input.GetKey(KeyCode.LeftAlt))
             if(Input.GetKeyDown(KeyCode.UpArrow))
                 ChangeMotionType(1);
@@ -183,45 +157,6 @@ public class MotionEditor : SerializedMonoBehaviour
         if (Input.GetKeyDown(KeyCode.KeypadPlus) && TrueRangeCount - 1 < TrueRangeTexts.Count)
             A.Movements[MotionType].Motions[MotionNum].TrueRanges.Add(Vector2.zero);
 
-        /*
-        Side side = DisplayingRightStats.isOn ? Side.right : Side.left;
-        if (PastFrameRecorder.IsReady() && (DisplayingVR.isOn == false && display.Frame == 0) == false)
-        {
-            if (MotionType != Spell.Nothing)
-            {
-                for (int i = 0; i < CurrentMotionTests.Length; i++)
-                {
-                    AthenaFrame Frame1 = DisplayingVR.isOn ? PastFrameRecorder.instance.PastFrame(side) : A.Movements[(int)MotionType].Motions[MotionNum].Infos[display.Frame - 1];
-                    AthenaFrame Frame2 = DisplayingVR.isOn ? PastFrameRecorder.instance.GetControllerInfo(side) : A.Movements[(int)MotionType].Motions[MotionNum].Infos[display.Frame];
-
-                    bool Inside = i < RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionType - 1].Restrictions.Count;
-                    if (Inside)
-                    {
-                        SingleRestriction Restriction = RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)MotionType - 1].Restrictions[i];
-
-                        float Value = RestrictionManager.RestrictionDictionary[Restriction.restriction].Invoke(Restriction, Frame1, Frame2);
-
-                        CurrentMotionTests[i].text = Restriction.Label + ": " + Value.ToString("f4");
-                        CurrentMotionTests[i].color = Graph.instance.Colors[i];
-                    }
-                    else
-                    {
-                        CurrentMotionTests[i].text = "";
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < CurrentMotionTests.Length; i++)
-                {
-                    CurrentMotionTests[i].text = "";
-                    //CurrentMotionTests[i].color = Graph.instance.Colors[i];
-                }
-            }
-            
-        }
-        */
-
 
         input.ActivateInputField();
         sideText.text = "#" + MotionNum;
@@ -233,17 +168,6 @@ public class MotionEditor : SerializedMonoBehaviour
         PlaybackSpeed.text = "Speed: " + display.PlaybackSpeed.ToString("F2");
         Max.text = "Max: " + A.Movements[MotionType].Motions[MotionNum].Infos.Count;
         CurrentMotionNum.text = "MotionNum: " + MotionNum + "/" + (A.Movements[MotionType].Motions.Count - 1);
-
-        /*
-        AthenaFrame Frame = PastFrameRecorder.instance.GetControllerInfo(side);
-        Vector3 Adjusted = new Vector3(Frame.HandPos.x, 0, Frame.HandPos.z).normalized;
-
-        Quaternion quat = Quaternion.Euler(new Vector3(Frame.HeadPos.x, 0, Frame.HeadPos.z));//inside always 0
-        Vector3 forwardDir = (quat * Vector3.forward).normalized;
-
-        float Angle = Frame.HeadRot.y + Vector3.SignedAngle(Adjusted, forwardDir, Vector3.up) + 180f;
-        MiscDisplay.text = "MiscVal: " + Frame.HeadRot.y.ToString("f3") + "   Angle(" + Angle.ToString("f3") + ")";
-        */
 
         if (A.Movements[MotionType].Motions[MotionNum].TrueRanges.Count == 1)
             CurrentValue.text = "X: " + A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].x + "\n" + "Y: " + A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].y;
@@ -274,24 +198,6 @@ public class MotionEditor : SerializedMonoBehaviour
             input.ActivateInputField();
         }
 
-        for (int i = 0; i < TrueRangeTexts.Count; i++)
-        {
-            if(A.Movements[MotionType].Motions[MotionNum].TrueRanges.Count > i)
-            {
-                Vector2 TrueRange = A.Movements[MotionType].Motions[MotionNum].TrueRanges[i];
-                TrueRangeTexts[i].text = "X: " + TrueRange.x + " Y: " + TrueRange.y;
-                if (i == MaxMinEditing)
-                    TrueRangeTexts[i].color = Color.red;
-                else
-                    TrueRangeTexts[i].color = Color.white;
-            }
-            else
-            {
-                TrueRangeTexts[i].text = "";
-                TrueRangeTexts[i].color = Color.white;
-            }
-            
-        }
         input.text = input.text.Replace("+", "");
         input.text = input.text.Replace("-", "");
 

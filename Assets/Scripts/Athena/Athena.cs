@@ -86,10 +86,10 @@ namespace Athena
             return ranges;
         }
     }
-
+    [System.Serializable]
     public class AthenaFrame
     {
-        public List<DeviceInfo> Devices;
+        public List<DeviceInfo> Devices = new List<DeviceInfo>(2);
         public float frameTime;
         public List<float> AsInputs()
         {
@@ -100,9 +100,10 @@ namespace Athena
         public AthenaFrame(List<DeviceInfo> Devices)
         {
             this.Devices = Devices;
+            frameTime = Time.time;
         }
     }
-
+    [System.Serializable]
     public class DeviceInfo
     {
         public Vector3 Pos;
@@ -111,16 +112,16 @@ namespace Athena
         public Vector3 velocity;
         public Vector3 angularVelocity;
 
-        public Vector3 acceleration;
-        public Vector3 angularAcceleration;
+        //public Vector3 acceleration;
+        //public Vector3 angularAcceleration;
 
         public List<float> AsFloats()
         {
             //Vector3
             if (true)
-                return new List<Vector3>() { Pos, Rot, velocity, angularVelocity, acceleration, angularAcceleration }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList();
-            else
-                return new List<Vector3>() { Pos, Rot, velocity, angularVelocity, acceleration, angularAcceleration }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList();
+                return new List<Vector3>() { Pos, Rot, velocity, angularVelocity }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList();
+            //else
+                //return new List<Vector3>() { Pos, Rot, velocity, angularVelocity, acceleration, angularAcceleration }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList();
         }
 
         //public List<float> () { return new List<Vector3>() { Pos, Rot, velocity, angularVelocity, acceleration, angularAcceleration }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList(); }

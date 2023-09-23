@@ -17,8 +17,6 @@ public class MotionPlayback : MonoBehaviour
     private int LastMotion;
     public float PlaybackSpeed = 1f;
     public PlayType type;
-    public bool LocalHandPos;
-    public bool LocalHandRot;
 
     [Header("Info")]
     public int Frame;
@@ -27,10 +25,12 @@ public class MotionPlayback : MonoBehaviour
 
     [Header("Trans")]
     public Transform Head;
-    public Transform Left;
     public Transform Right;
 
     public SkinnedMeshRenderer handToChange;
+    public Material[] Materials;
+
+
 
     public delegate void NewFrame();
     public static event NewFrame OnNewFrame;
@@ -38,9 +38,8 @@ public class MotionPlayback : MonoBehaviour
     public Athena.Athena A => Athena.Athena.instance;
     public Runtime R => Runtime.instance;
     MotionEditor ME => MotionEditor.instance;
-    
 
-    public List<Spell> CurrentMotions;
+   
     private void Start()
     {
         MotionEditor.OnChangeMotion += OnSomethingChanged;
@@ -66,8 +65,9 @@ public class MotionPlayback : MonoBehaviour
                 //CurrentMotions = RestrictionManager.instance.AllWorkingMotions(A.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), A.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame));
             bool State = ME.Setting == EditSettings.Editing ? A.Movements[ME.MotionType].Motions[ME.MotionNum].AtFrameState(Frame) : GetMotionFromInput();
             //handToChange.material = DebugRestrictions.instance.Materials[State ? 1 : 0];
+            handToChange.material = Materials[State ? 1 : 0];
 
-            
+
             if (ME.Setting == EditSettings.DisplayingMotion)
             {
                 //ConditionManager.instance.PassValue(State, ME.CurrentTestMotion, Side.right);
@@ -88,20 +88,14 @@ public class MotionPlayback : MonoBehaviour
                 if (Frame <= R.FramesAgoBuild + 1)
                     return false;
 
-                //Debug.Log(Enumerable.Range(Frame - Py.FramesAgoBuild - 1, Py.FramesAgoBuild + 1).ToList()[^1]);
-                List<AthenaFrame> Frames = Enumerable.Range(Frame - R.FramesAgoBuild - 1, R.FramesAgoBuild + 1).Select(x => A.AtFrameInfo(ME.MotionType, ME.MotionNum, x)).ToList();
-
-                
-
-                return R.PredictState(Py.FrameToValues(Frames));
+                return R.PredictState(PastFrameRecorder.instance.GetFramesList(Side.right, R.FramesAgoBuild).SelectMany(x => x.AsInputs()).ToList());
             }
             //MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.MotionType - 1]; }
         }
         void moveAll(AthenaFrame info)
         {
             MoveDevice(Right, info.Devices[0]);
-            MoveDevice(Left, info.Devices[1]);
-            MoveDevice(Head, info.Devices[2]);
+            MoveDevice(Head, info.Devices[1]);
         }
     }
     public void MoveDevice(Transform trans, DeviceInfo info)

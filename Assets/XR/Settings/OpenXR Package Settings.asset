@@ -10774,14 +10774,14 @@ MonoBehaviour:
   - {fileID: -805928648856046166}
   - {fileID: -3150006562544500516}
   - {fileID: 7169705080373129164}
-  - {fileID: -5330302870627879607}
   - {fileID: 5760716855717015089}
-  - {fileID: -4456308714361484676}
   - {fileID: 6358967884700906166}
   - {fileID: 4647400453006885642}
   - {fileID: 3094960460502770731}
   - {fileID: 5517919359566275187}
   - {fileID: 4357401315084752738}
+  - {fileID: -5330302870627879607}
+  - {fileID: -4456308714361484676}
   - {fileID: 6274499966539422028}
   m_renderMode: 1
   m_depthSubmissionMode: 0
@@ -11728,7 +11728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 274c02963f889a64e90bc2e596e21d13, type: 3}
   m_Name: HTCViveControllerProfile Standalone
   m_EditorClassIdentifier: 
-  m_enabled: 0
+  m_enabled: 1
   nameUi: HTC Vive Controller Profile
   version: 0.0.1
   featureIdInternal: com.unity.openxr.feature.input.htcvive

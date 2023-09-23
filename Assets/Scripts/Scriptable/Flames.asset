@@ -12,4 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea95240da0a67104db16ba66d6ba455b, type: 3}
   m_Name: Flames
   m_EditorClassIdentifier: 
-  Motions: []
+  Motions:
+  - Infos:
+    - Devices:
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: 0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: 0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 0
+    - Devices:
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: 0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      - Pos: {x: 0, y: 0, z: 0}
+        Rot: {x: 0, y: 0, z: 0}
+        velocity: {x: 0, y: 0, z: 0}
+        angularVelocity: {x: 0, y: 0, z: 0}
+      frameTime: 0
+    TrueRanges:
+    - {x: -1, y: -1}
+    TrueIndex: 0
+    PlayCount: 0

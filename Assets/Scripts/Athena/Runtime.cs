@@ -15,7 +15,7 @@ namespace Athena
         public static Runtime instance;
         private void Awake() { instance = this; }
 
-
+        public bool ReadModel;
         public int FramesAgoBuild;
         public NNModel modelAsset;
         public Model runtimeModel { get { return ModelLoader.Load(modelAsset); } }
@@ -47,8 +47,13 @@ namespace Athena
             {
                 Side side = (Side)i;
                 List <AthenaFrame> Frame = PastFrameRecorder.instance.GetFramesList(side, FramesAgoBuild);
-                bool State = PredictState(Frame.SelectMany(x => x.AsInputs()).ToList());
-                StateChange?.Invoke(side, State ? 1 : 0);
+                if (ReadModel)
+                {
+                    bool State = PredictState(Frame.SelectMany(x => x.AsInputs()).ToList());
+
+                    StateChange?.Invoke(side, State ? 1 : 0);
+                }
+                    
             }
             //run model with controller inputs
             //set color of controllers

@@ -28,7 +28,8 @@ namespace Athena
         public static ControllerSide disableController;
         public static ControllerSide NewFrame;
 
-        //public int SmoothingFrames = 3;
+        public int SmoothingFrames = 3;
+        public float TimeDifferenceMultiplier = 3;
 
         public List<UnityEngine.XR.Interaction.Toolkit.XRController> Controllers;
 
@@ -43,7 +44,7 @@ namespace Athena
         //118.012 to 
         public bool HandActive(Side side) { return HandsActive[(int)side]; }
         
-        public List<AthenaFrame> GetFramesList(Side side, int Frames) { return Enumerable.Range(FrameInfo[(int)side].Count - Frames, Frames).Reverse().Select(x => FrameInfo[(int)side][x]).ToList(); }
+        public List<AthenaFrame> GetFramesList(Side side, int Frames) { return Enumerable.Range(FrameInfo[(int)side].Count - Frames, Frames).Select(x => FrameInfo[(int)side][x]).ToList(); }
     
         
         private AthenaFrame GetControllerInfo(Side side)
@@ -67,17 +68,18 @@ namespace Athena
                 //choose hand or head
                 //InputDevice accDevice = i == 0 ? Controllers[(int)side].inputDevice : InputDevices.GetDeviceAtXRNode(Device);
                 //accDevice.TryGetFeatureValue(CommonUsages.deviceAcceleration, out deviceInfo.acceleration);
-                /*
+
+                
                 if (FrameInfo[(int)side].Count > SmoothingFrames)
                 {
                     AthenaFrame PastFrame = FrameInfo[(int)side][^SmoothingFrames];
 
 
-                    float TimeBetween = Time.time - PastFrame.frameTime;
+                    float TimeBetween = (Time.time - PastFrame.frameTime) *TimeDifferenceMultiplier;
                     deviceInfo.acceleration = (deviceInfo.velocity - PastFrame.Devices[i].velocity) / TimeBetween;
-                    deviceInfo.angularAcceleration = (deviceInfo.angularVelocity - PastFrame.Devices[i].angularVelocity) / TimeBetween;
+                    //deviceInfo.angularAcceleration = (deviceInfo.angularVelocity - PastFrame.Devices[i].angularVelocity) / TimeBetween;
                 }
-                */
+                
 
                 if(side == Side.left)
                 {
@@ -95,7 +97,7 @@ namespace Athena
 
                 }
 
-                deviceInfo.Rot = quat.eulerAngles;
+                deviceInfo.Rot = new Vector3(quat.eulerAngles.x / 360f, quat.eulerAngles.y / 360f, quat.eulerAngles.z / 360f);
 
                 //PreviousValues[(int)side][i] = new XRPreviousValues(deviceInfo.velocity, deviceInfo.angularVelocity, Time.time);
 

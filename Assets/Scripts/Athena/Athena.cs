@@ -40,10 +40,20 @@ namespace Athena
         public int TrueRangeCount(Spell Spell, int Motion) { return Movements[Spell].Motions[Motion].TrueRanges.Count; }
         public bool FrameWorks(Spell Spell, int Motion, int Frame) { return Movements[Spell].Motions[Motion].AtFrameState(Frame); }
 
+
+        public List<AthenaFrame> GetFrames(Spell Spell, int Motion, int FirstFrame, int LastFrame)
+        {
+            List<AthenaFrame> Frames = new List<AthenaFrame> ();
+            for (int i = FirstFrame; i < LastFrame; i++)
+            {
+                Frames.Add(AtFrameInfo(Spell, Motion, i));
+            }
+            return Frames;
+        } 
+
     }
 
-    [System.Serializable]
-    public class AthenaMotion
+    [System.Serializable]public class AthenaMotion
     {
         public bool AtFrameState(int Frame) { return TrueRanges.Any(range => Frame >= range.x && Frame <= range.y); }
 
@@ -86,15 +96,16 @@ namespace Athena
             return ranges;
         }
     }
-    [System.Serializable]
-    public class AthenaFrame
+    [System.Serializable]public class AthenaFrame
     {
         public List<DeviceInfo> Devices = new List<DeviceInfo>(2);
         public float frameTime;
         public List<float> AsInputs()
         {
-            List<float> Inputs = Devices.SelectMany(x => x.AsFloats()).ToList();
-            Inputs.Add(frameTime);
+            //List<float> Inputs = Devices.SelectMany(x => x.AsFloats()).ToList();
+            List<float> Inputs = new List<float>();
+            Inputs.AddRange(Devices[0].AsFloats());
+            //Inputs.Add(frameTime);
             return Inputs;
         }
         public AthenaFrame(List<DeviceInfo> Devices)
@@ -103,8 +114,8 @@ namespace Athena
             frameTime = Time.time;
         }
     }
-    [System.Serializable]
-    public class DeviceInfo
+    
+    [System.Serializable]public class DeviceInfo
     {
         public Vector3 Pos;
         public Vector3 Rot;
@@ -112,18 +123,21 @@ namespace Athena
         public Vector3 velocity;
         public Vector3 angularVelocity;
 
-        //public Vector3 acceleration;
+        public Vector3 acceleration;
         //public Vector3 angularAcceleration;
 
         public List<float> AsFloats()
         {
             //Vector3
             if (true)
-                return new List<Vector3>() { Pos, Rot, velocity, angularVelocity }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList();
+                return new List<Vector3>() { Pos, Rot, velocity, angularVelocity, acceleration }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList();
             //else
                 //return new List<Vector3>() { Pos, Rot, velocity, angularVelocity, acceleration, angularAcceleration }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList();
         }
 
         //public List<float> () { return new List<Vector3>() { Pos, Rot, velocity, angularVelocity, acceleration, angularAcceleration }.SelectMany(vec => new[] { vec.x, vec.y, vec.z }).ToList(); }
     }
+
+
+    
 }

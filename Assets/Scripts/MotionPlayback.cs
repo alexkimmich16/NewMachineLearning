@@ -63,7 +63,8 @@ public class MotionPlayback : MonoBehaviour
                 Frame = 0;
             //if (Frame - BruteForce.instance.PastFrameLookup >= 0)
                 //CurrentMotions = RestrictionManager.instance.AllWorkingMotions(A.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), A.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame));
-            bool State = ME.Setting == EditSettings.Editing ? A.Movements[ME.MotionType].Motions[ME.MotionNum].AtFrameState(Frame) : GetMotionFromInput();
+            bool State = ME.Setting == EditSettings.Editing ? A.FrameWorks(ME.MotionType, ME.MotionNum, Frame) : GetMotionFromInput();
+            //Debug.Log(State);
             //handToChange.material = DebugRestrictions.instance.Materials[State ? 1 : 0];
             handToChange.material = Materials[State ? 1 : 0];
 
@@ -88,7 +89,12 @@ public class MotionPlayback : MonoBehaviour
                 if (Frame <= R.FramesAgoBuild + 1)
                     return false;
 
-                return R.PredictState(PastFrameRecorder.instance.GetFramesList(Side.right, R.FramesAgoBuild).SelectMany(x => x.AsInputs()).ToList());
+
+
+                List<AthenaFrame> Frames = A.GetFrames(ME.MotionType, ME.MotionNum, Frame - R.FramesAgoBuild, Frame);
+                List<float> Values = PythonTest.instance.FrameToValues(Frames);
+                //Debug.Log(Values.Count);
+                return R.PredictState(Values);
             }
             //MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.MotionType - 1]; }
         }
@@ -101,7 +107,7 @@ public class MotionPlayback : MonoBehaviour
     public void MoveDevice(Transform trans, DeviceInfo info)
     {
         trans.localPosition = info.Pos;
-        trans.localEulerAngles = info.Rot;
+        trans.localEulerAngles = info.Rot * 360f;
     }
     
 }

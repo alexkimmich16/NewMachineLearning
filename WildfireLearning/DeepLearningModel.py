@@ -40,7 +40,7 @@ with open('Fireball.json', 'r') as file:
     data = json.load(file)
 
 # Define the number of frames
-num_frames = 10
+num_frames = 5
 
 # Extract sequences
 sequences = []
@@ -52,14 +52,10 @@ DoneDebugging = False  # flag to indicate if the first motion has been processed
 total = 0
 excel_data = []
 for motion in data['Motions']:
-    #if DoneDebugging and ShouldDebug:
-        #break  # Skip the remaining motions after the first one is processed
-    
     # Start from num_frames and go to the last frame
     for i in range(num_frames, len(motion['Frames']) + 1):
-        #print(len(motion['Frames']))
         sequence = [[float(value) for value in info['FrameInfo']] for info in motion['Frames'][i-num_frames:i]]
-    
+
         # Build debug string and Excel row
         debug_str = f"frame: {i} "
         excel_row = []
@@ -68,20 +64,15 @@ for motion in data['Motions']:
                 rounded_value = round(input_value, 5)
                 debug_str += f"'Inputs[{input_index + frame_index * len(frame)}]':{rounded_value} "
                 excel_row.append(f"{rounded_value}")
-        
-        #print(f"Frames involved in this sequence are {list(range(i - num_frames, i))}")
 
         # If this is the first frame of the first motion, write to Excel
-        if(ShouldDebug and total < 100):
+        if ShouldDebug and total < 100:
             excel_data.append(excel_row)
         total += 1
         sequences.append(sequence)
         label = motion['Frames'][i - 1]['Active']
         labels.append(int(label))
-            
-    #first_motion_done = True  # Mark that the first motion has been processed
 
-write_to_excel(excel_data)
 # Convert to numpy arrays
 X = np.array(sequences, dtype='float32')
 y = np.array(labels, dtype='float32')
@@ -95,11 +86,11 @@ X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, shuffle=T
 
 # Define CNN model
 model = Sequential([
-    Conv1D(256, 1, activation='relu', kernel_regularizer=l2(0.001), input_shape=(num_frames, X_train.shape[2])),
+    Conv1D(512, 1, activation='relu', kernel_regularizer=l2(0.001), input_shape=(num_frames, X_train.shape[2])),
     BatchNormalization(),
     MaxPooling1D(1),
     Dropout(0.5),
-    Conv1D(512, 1, activation='relu', kernel_regularizer=l2(0.001)),
+    Conv1D(1024, 1, activation='relu', kernel_regularizer=l2(0.001)),
     BatchNormalization(),
     MaxPooling1D(1),
     Dropout(0.5),
@@ -118,8 +109,7 @@ model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
 early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 
 # Train the model with class weights
-model.fit(X_train, y_train, epochs=50, validation_data=(X_val, y_val), callbacks=[early_stopping], class_weight=class_weight_dict)
-
+model.fit(X_train, y_train, epochs=50, batch_size=64, validation_data=(X_val, y_val), callbacks=[early_stopping], class_weight=class_weight_dict)
 # Initialize counters
 correct_true_guess = 0
 correct_false_guess = 0
@@ -160,7 +150,7 @@ model.save(model_path)
 
 try:
     # Convert to ONNX
-    onnx_output_directory = "B:\\GitProjects\\NewMachineLearning\\NewMachineLearning\\Assets\\Scripts\\PyTest"
+    onnx_output_directory = "B:\\GitProjects\\NewMachineLearning\\NewMachineLearning\\Assets\\Scripts\\Athena"
     onnx_command = f"python -m tf2onnx.convert --saved-model saved_model --output {onnx_output_directory}\\model.onnx"
     #onnx_command = f"python -m tf2onnx.convert --saved-model saved_model --output {onnx_output_directory}/model.onnx --fold_const False"
     #onnx_command = f"python -m tf2onnx.convert --saved-model saved_model --output {onnx_output_directory}\\model.onnx --optimizers ''"

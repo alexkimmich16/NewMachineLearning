@@ -27,7 +27,7 @@ public class InputDebug : SerializedMonoBehaviour
         {
             Pos.position = Info.Pos;
             Vel.position = Info.velocity;
-            //Acc.position = Info.acceleration;
+            Acc.position = Info.acceleration;
             Pos.rotation = Quaternion.Euler(Info.Rot * InputDebug.instance.RotMutiplier);
             Vel.rotation = Quaternion.Euler(Info.angularVelocity * InputDebug.instance.AngularVelMutiplier);
             //Acc.rotation = Quaternion.Euler(Info.angularAcceleration * InputDebug.instance.AngularAccMutiplier);
@@ -51,4 +51,7 @@ public class InputDebug : SerializedMonoBehaviour
             //References[1].Set(P.FrameInfo[^1].Devices[1]);
         }
     }
+
+
+
 }

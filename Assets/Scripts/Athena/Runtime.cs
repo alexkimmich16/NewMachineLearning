@@ -26,16 +26,21 @@ namespace Athena
 
         public bool PredictState(List<float> Inputs)
         {
+            //Debug.Log(Inputs.Count);
+            
             // Load the NNModel
             worker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, runtimeModel);
 
             int ActiveInputCount = Inputs.Count / FramesAgoBuild;
+            //Debug.Log(ActiveInputCount); 
             Tensor input = new Tensor(1, 1, FramesAgoBuild, ActiveInputCount, Inputs.ToArray());
             worker.Execute(input);
             Tensor output = worker.PeekOutput();
             bool predictedState = output[0] > 0.5f;
             input.Dispose();
             worker.Dispose();
+
+            //Debug.Log(predictedState);
 
             return predictedState;
         }
@@ -46,10 +51,10 @@ namespace Athena
             for (int i = 0; i < 2; i++)
             {
                 Side side = (Side)i;
-                List <AthenaFrame> Frame = PastFrameRecorder.instance.GetFramesList(side, FramesAgoBuild);
+                List <AthenaFrame> Frames = PastFrameRecorder.instance.GetFramesList(side, FramesAgoBuild);
                 if (ReadModel)
                 {
-                    bool State = PredictState(Frame.SelectMany(x => x.AsInputs()).ToList());
+                    bool State = PredictState(PythonTest.instance.FrameToValues(Frames));
 
                     StateChange?.Invoke(side, State ? 1 : 0);
                 }

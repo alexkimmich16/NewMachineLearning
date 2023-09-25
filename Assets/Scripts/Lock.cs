@@ -86,7 +86,7 @@ public class Lock : SerializedMonoBehaviour
             
             for (int i = 0; i < A.MovementCount(spell); i++)
             {
-                Debug.Log(spell.ToString() +  "  " + i);
+                //Debug.Log(spell.ToString() + "  " + i);
                 //int Start = 
                 LockMotion(spell, i);
             }
@@ -96,15 +96,24 @@ public class Lock : SerializedMonoBehaviour
     public void LockMotion(Spell spell, int MotionIndex)
     {
         //ALL FRAMES
+
+        bool Works = A.Movements[spell].IsTrueMotion(MotionIndex);
+        if (!Works)
+        {
+            A.Movements[spell].Motions[MotionIndex].TrueRanges = new List<Vector2>() { new Vector2(-1f, -1f) };
+
+            return;
+        }
+
+
         List<bool> WorkingFrames = Enumerable.Repeat(true, A.FrameCount(spell, MotionIndex)).ToList();//ALL RESTRICTIONS
         foreach (RestrictionSettings settings in Restrictions[spell].Restrictions)
         {
             for (int i = 0; i < A.FrameCount(spell, MotionIndex); i++)
             {
-
                 float Output = settings.Restriction.Returnvalue(A.AtFrameInfo(spell, MotionIndex, i));
-                Debug.Log("index:" + i + "  " + Output + " Works: " + (Output < settings.Lock.x || Output > settings.Lock.y));
-                if (Output < settings.Lock.x || Output > settings.Lock.y) //|| InsideFrameLength(i) == true
+                //Debug.Log("index:" + i + "  " + Output + " Works: " + (Output < settings.Lock.x || Output > settings.Lock.y));
+                if (Output < settings.Lock.x || Output > settings.Lock.y || !Works) //|| InsideFrameLength(i) == true
                     WorkingFrames[i] = false;
             }
         }

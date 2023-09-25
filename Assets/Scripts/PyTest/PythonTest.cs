@@ -9,6 +9,7 @@ using System.IO;
 using System;
 using Unity.Mathematics;
 using Athena;
+using System.IO;
 //using untiy.mat
 
 
@@ -32,17 +33,15 @@ public class PythonTest : SerializedMonoBehaviour
 
     public bool RunAccuracyTest;
 
-    public List<Spell> SpellsToUse;
-
 
     public bool TrackEndOnly;
 
     public Athena.Athena A => Athena.Athena.instance;
     public Runtime R => Runtime.instance;
-    public MotionEditor ME => MotionEditor.instance;
+    public MotionEditor ME = MotionEditor.instance;
 
     //public List<int> AllActiveMotions { get { return Enumerable.Range(0, A.MotionCount()).Where(motion => MotionsToUse[motion]).ToList(); } }
-
+    public string JSONDirectory { get {return Path.Combine(Path.GetDirectoryName(Application.dataPath), "WildfireLearning"); } }
     [Button]
     public void TestModel()
     {
@@ -56,7 +55,7 @@ public class PythonTest : SerializedMonoBehaviour
         int TotalCount = 0;
         GuessLogging Logging = new GuessLogging();
         
-        foreach (Spell SpellType in SpellsToUse)
+        foreach (Spell SpellType in Athena.Athena.instance.Movements.Keys)
         {
             //Debug.Log(SpellType);
             for (int i = 0; i < A.MovementCount(SpellType); i++)
@@ -153,7 +152,7 @@ public class PythonTest : SerializedMonoBehaviour
             Debug.Log(Logging.OutcomesCountString());
     }
 
-    public string JSONDirectory { get { return "B:/GitProjects/NewMachineLearning/NewMachineLearning/WildfireLearning"; } }
+    
     
     
     public List<float> FrameToValues(List<AthenaFrame> Frames)
@@ -169,7 +168,7 @@ public class PythonTest : SerializedMonoBehaviour
     {
         List<Motion> ReturnList = new List<Motion>();
 
-        foreach(Spell SpellType in SpellsToUse)
+        foreach(Spell SpellType in Athena.Athena.instance.Movements.Keys)
         {
             bool CanBeTrue = spell == SpellType;
             for (int i = 0; i < A.MovementCount(SpellType); i++)
@@ -200,7 +199,7 @@ public class PythonTest : SerializedMonoBehaviour
     [Button]
     public void ReloadJSON()
     {
-        ReloadJSONType(ME.MotionType);
+        ReloadJSONType(GameObject.FindObjectOfType<MotionEditor>().MotionType);
         //RunPythonScript.ExecutePythonScript(JSONDirectory + "/DeepLearningModel.py");
     }
     public void ReloadJSONType(Spell spell)
@@ -208,7 +207,7 @@ public class PythonTest : SerializedMonoBehaviour
         PythonTest.instance = this;
         CalculatedMotion = GetAllMotionList(spell);
         string directory = Path.Combine(JSONDirectory, spell.ToString() + ".json");
-        //Debug.Log(directory);
+        
         // Convert the ScriptableObject to a JSON string
         string json = JsonUtility.ToJson(CalculatedMotion);
 

@@ -4,6 +4,7 @@ import onnxruntime as ort
 import tensorflow as tf
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, accuracy_score
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, Flatten, Dense, Dropout, BatchNormalization
 from tensorflow.keras.regularizers import l2
@@ -40,7 +41,8 @@ with open('Fireball.json', 'r') as file:
     data = json.load(file)
 
 # Define the number of frames
-num_frames = 5
+num_frames = 2
+StateCount = 2
 
 # Extract sequences
 sequences = []
@@ -70,8 +72,9 @@ for motion in data['Motions']:
             excel_data.append(excel_row)
         total += 1
         sequences.append(sequence)
-        label = motion['Frames'][i - 1]['Active']
-        labels.append(int(label))
+        label = int(motion['Frames'][i - 1]['State'])  # Already updated in the provided code
+        labels.append(label)
+
 
 # Convert to numpy arrays
 X = np.array(sequences, dtype='float32')
@@ -84,26 +87,18 @@ class_weight_dict = {i: weight for i, weight in enumerate(class_weights)}
 # Split data into training and validation sets
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, shuffle=True)
 
-# Define CNN model
 model = Sequential([
-    Conv1D(512, 1, activation='relu', kernel_regularizer=l2(0.001), input_shape=(num_frames, X_train.shape[2])),
+    Conv1D(32, 2, activation='relu', input_shape=(num_frames, X_train.shape[2])),
     BatchNormalization(),
-    MaxPooling1D(1),
-    Dropout(0.5),
-    Conv1D(1024, 1, activation='relu', kernel_regularizer=l2(0.001)),
-    BatchNormalization(),
-    MaxPooling1D(1),
     Dropout(0.5),
     Flatten(),
-    Dense(256, activation='relu', kernel_regularizer=l2(0.001)),
+    Dense(48, activation='relu'),
     Dropout(0.5),
-    Dense(128, activation='relu', kernel_regularizer=l2(0.001)),
-    Dropout(0.5),
-    Dense(1, activation='sigmoid')
+    Dense(StateCount, activation='softmax')  # Note the change to 3 neurons and softmax activation
 ])
 
 # Compile the model
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # Early stopping callback
 early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
@@ -111,38 +106,10 @@ early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weig
 # Train the model with class weights
 model.fit(X_train, y_train, epochs=50, batch_size=64, validation_data=(X_val, y_val), callbacks=[early_stopping], class_weight=class_weight_dict)
 # Initialize counters
-correct_true_guess = 0
-correct_false_guess = 0
-incorrect_true_guess = 0
-incorrect_false_guess = 0
 
 # Evaluate the model on the validation set
-y_pred = model.predict(X_val).squeeze()
-y_pred_bool = y_pred > 0.5
-
-# Iterate through true and predicted labels
-for true_label, predicted_label in zip(y_val, y_pred_bool):
-    if true_label == 1:
-        if predicted_label == 1:
-            correct_true_guess += 1
-        else:
-            incorrect_false_guess += 1
-    else:
-        if predicted_label == 0:
-            correct_false_guess += 1
-        else:
-            incorrect_true_guess += 1
-
-# Output counts
-print(f"Correct True Guess: {correct_true_guess}")
-print(f"Correct False Guess: {correct_false_guess}")
-print(f"Incorrect True Guess: {incorrect_true_guess}")
-print(f"Incorrect False Guess: {incorrect_false_guess}")
-
-# Calculate accuracy
-total = correct_true_guess + correct_false_guess + incorrect_true_guess + incorrect_false_guess
-accuracy = (correct_true_guess + correct_false_guess) / total
-print(f"Model Accuracy: {accuracy * 100:.2f}%")
+y_pred = model.predict(X_val)
+y_pred_classes = np.argmax(y_pred, axis=1)  # Convert softmax outputs to class indices
 
 # Save the model
 model_path = 'saved_model'
@@ -152,11 +119,8 @@ try:
     # Convert to ONNX
     onnx_output_directory = "B:\\GitProjects\\NewMachineLearning\\NewMachineLearning\\Assets\\Scripts\\Athena"
     onnx_command = f"python -m tf2onnx.convert --saved-model saved_model --output {onnx_output_directory}\\model.onnx"
-    #onnx_command = f"python -m tf2onnx.convert --saved-model saved_model --output {onnx_output_directory}/model.onnx --fold_const False"
-    #onnx_command = f"python -m tf2onnx.convert --saved-model saved_model --output {onnx_output_directory}\\model.onnx --optimizers ''"
-    #onnx_command = f"python -m tf2onnx.convert --saved-model saved_model --output {onnx_output_directory}\\model.onnx --optimization disable"
-    
-    process = subprocess.run(onnx_command, shell=True, check=True)
+
+    process = subprocess.run(onnx_command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     if process.returncode == 0:
         print(f"Conversion successful. ONNX model is saved in {onnx_output_directory}.")
@@ -171,9 +135,6 @@ except Exception as e:
     print("An unexpected error occurred:")
     print(e)
 
-finally:
-    input("Press Enter to exit...")
-
 # Test the ONNX model using onnxruntime
 # Create an ONNX runtime session
 ort_session = ort.InferenceSession(f"{onnx_output_directory}\\model.onnx")
@@ -186,39 +147,28 @@ output_name = ort_session.get_outputs()[0].name
 y_pred_onnx = ort_session.run([output_name], {input_name: X_val})[0]
 
 # Flatten the output array from ONNX
-y_pred_onnx = y_pred_onnx.squeeze()
-
-# Convert ONNX outputs to boolean (based on a threshold of 0.5)
-y_pred_onnx_bool = y_pred_onnx > 0.5
+y_pred_onnx_classes = np.argmax(y_pred_onnx, axis=1)
 
 # Initialize counters for ONNX model
-correct_true_guess_onnx = 0
-correct_false_guess_onnx = 0
-incorrect_true_guess_onnx = 0
-incorrect_false_guess_onnx = 0
+confusion_counts = {}
+for actual_state in range(StateCount):
+    for predicted_state in range(StateCount):
+        confusion_counts[(actual_state, predicted_state)] = 0
 
 # Iterate through true and predicted labels from ONNX model
-for true_label, predicted_label in zip(y_val, y_pred_onnx_bool):
-    if true_label == 1:
-        if predicted_label == 1:
-            correct_true_guess_onnx += 1
-        else:
-            incorrect_false_guess_onnx += 1
-    else:
-        if predicted_label == 0:
-            correct_false_guess_onnx += 1
-        else:
-            incorrect_true_guess_onnx += 1
+for true_label, predicted_label in zip(y_val, y_pred_onnx_classes):
+    confusion_counts[(int(true_label), int(predicted_label))] += 1
 
-# Output counts for ONNX model
-print(f"ONNX - Correct True Guess: {correct_true_guess_onnx}")
-print(f"ONNX - Correct False Guess: {correct_false_guess_onnx}")
-print(f"ONNX - Incorrect True Guess: {incorrect_true_guess_onnx}")
-print(f"ONNX - Incorrect False Guess: {incorrect_false_guess_onnx}")
+# To print the counts:
+for actual_state in range(StateCount):
+    for predicted_state in range(StateCount):
+        print(f"True State {actual_state}, Predicted State {predicted_state}: {confusion_counts[(actual_state, predicted_state)]}")
 
 # Calculate accuracy for ONNX model
-total_onnx = correct_true_guess_onnx + correct_false_guess_onnx + incorrect_true_guess_onnx + incorrect_false_guess_onnx
-accuracy_onnx = (correct_true_guess_onnx + correct_false_guess_onnx) / total_onnx
+conf_mat_onnx = confusion_matrix(y_val, y_pred_onnx_classes)
+accuracy_onnx = accuracy_score(y_val, y_pred_onnx_classes)
+
+print(f"ONNX Confusion Matrix:\n{conf_mat_onnx}")
 print(f"ONNX Model Accuracy: {accuracy_onnx * 100:.2f}%")
 
 if process.returncode == 0:

@@ -48,8 +48,6 @@ public class MotionEditor : SerializedMonoBehaviour
 
     public MotionPlayback display;
 
-    private Athena.Athena A => Athena.Athena.instance;
-
     //public List<RectTransform> ArrowSpots;
     public List<TextMeshProUGUI> TrueRangeTexts;
 
@@ -74,7 +72,7 @@ public class MotionEditor : SerializedMonoBehaviour
         if (!SafetyCheck)
             return;
 
-        A.Movements[MotionType].Motions.RemoveAt(MotionNum);
+        Cycler.Movements[MotionType].Motions.RemoveAt(MotionNum);
 
         OnChangeMotion?.Invoke();
     }
@@ -105,8 +103,8 @@ public class MotionEditor : SerializedMonoBehaviour
         else if((int)MotionType < 0)
             MotionType = (Spell)Enum.GetValues(typeof(Spell)).Length - 1;
 
-        if (MotionNum > A.MovementCount(MotionType) - 1)
-            MotionNum = A.MovementCount(MotionType) - 1;
+        if (MotionNum > Cycler.MovementCount(MotionType) - 1)
+            MotionNum = Cycler.MovementCount(MotionType) - 1;
 
         display.Frame = 0;
         OnChangeMotion?.Invoke();
@@ -114,9 +112,9 @@ public class MotionEditor : SerializedMonoBehaviour
 
     public void ChangeMotionNum(int Change)
     {
-        if(MotionNum + Change > A.MovementCount(MotionType) - 1)
+        if(MotionNum + Change > Cycler.MovementCount(MotionType) - 1)
         {
-            MotionNum = A.MovementCount(MotionType) - 1;
+            MotionNum = Cycler.MovementCount(MotionType) - 1;
             return;
         }
         else if(MotionNum + Change < 0)
@@ -141,10 +139,10 @@ public class MotionEditor : SerializedMonoBehaviour
             else if(Input.GetKeyDown(KeyCode.DownArrow))
                 ChangeMotionType(-1);
 
-        if (MotionNum >= A.MovementCount(MotionType))
-            MotionNum = A.MovementCount(MotionType) - 1;
+        if (MotionNum >= Cycler.MovementCount(MotionType))
+            MotionNum = Cycler.MovementCount(MotionType) - 1;
 
-        int TrueRangeCount = A.TrueRangeCount(MotionType, MotionNum);
+        int TrueRangeCount = Cycler.TrueRangeCount(MotionType, MotionNum);
         if (Input.GetKeyDown(KeyCode.PageDown) && MaxMinEditing < TrueRangeCount - 1)
             MaxMinEditing += 1;
         if (Input.GetKeyDown(KeyCode.PageUp) && MaxMinEditing > 0 || MaxMinEditing > TrueRangeCount)
@@ -152,10 +150,10 @@ public class MotionEditor : SerializedMonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.KeypadMinus))
             if (TrueRangeCount > 0)
-                A.Movements[MotionType].Motions[MotionNum].TrueRanges.RemoveAt(TrueRangeCount - 1);
+                Cycler.Movements[MotionType].Motions[MotionNum].TrueRanges.RemoveAt(TrueRangeCount - 1);
 
         if (Input.GetKeyDown(KeyCode.KeypadPlus) && TrueRangeCount - 1 < TrueRangeTexts.Count)
-            A.Movements[MotionType].Motions[MotionNum].TrueRanges.Add(Vector2.zero);
+            Cycler.Movements[MotionType].Motions[MotionNum].TrueRanges.Add(Vector2.zero);
 
 
         input.ActivateInputField();
@@ -166,11 +164,11 @@ public class MotionEditor : SerializedMonoBehaviour
         SettingText.text = "Settings: " + Setting.ToString();
         display.PlaybackSpeed += SpeedChangeAdd();
         PlaybackSpeed.text = "Speed: " + display.PlaybackSpeed.ToString("F2");
-        Max.text = "Max: " + A.Movements[MotionType].Motions[MotionNum].Infos.Count;
-        CurrentMotionNum.text = "MotionNum: " + MotionNum + "/" + (A.Movements[MotionType].Motions.Count - 1);
+        Max.text = "Max: " + Cycler.Movements[MotionType].Motions[MotionNum].Infos.Count;
+        CurrentMotionNum.text = "MotionNum: " + MotionNum + "/" + (Cycler.Movements[MotionType].Motions.Count - 1);
 
-        if (A.Movements[MotionType].Motions[MotionNum].TrueRanges.Count == 1)
-            CurrentValue.text = "X: " + A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].x + "\n" + "Y: " + A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].y;
+        if (Cycler.Movements[MotionType].Motions[MotionNum].TrueRanges.Count == 1)
+            CurrentValue.text = "X: " + Cycler.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].x + "\n" + "Y: " + Cycler.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing].y;
         else
             CurrentValue.text = "X: " + "\n" + "Y: ";
 
@@ -213,12 +211,12 @@ public class MotionEditor : SerializedMonoBehaviour
 
     public void Set(int ToSet, EditSide side)
     {
-        if (A.Movements[MotionType].Motions[MotionNum].TrueRanges.Count == 0)
-            A.Movements[MotionType].Motions[MotionNum].TrueRanges.Add(new Vector2(-1, -1));
-        Vector2 Range = A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing];
+        if (Cycler.Movements[MotionType].Motions[MotionNum].TrueRanges.Count == 0)
+            Cycler.Movements[MotionType].Motions[MotionNum].TrueRanges.Add(new Vector2(-1, -1));
+        Vector2 Range = Cycler.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing];
         if (side == EditSide.left)
-            A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(ToSet, Range.y);
+            Cycler.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(ToSet, Range.y);
         else if(side == EditSide.right)
-            A.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(Range.x, ToSet);
+            Cycler.Movements[MotionType].Motions[MotionNum].TrueRanges[MaxMinEditing] = new Vector2(Range.x, ToSet);
     }
 }

@@ -12,17 +12,6 @@ namespace Athena
         public List<Vector2> TrueMotions;
 
         public bool IsTrueMotion(int Index) { return TrueMotions.Any(vector => Index >= vector.x && Index <= vector.y); }
-
-        public void AdjustValues()
-        {
-            foreach(AthenaMotion mot in Motions)
-            {
-                foreach (AthenaFrame fra in mot.Infos)
-                {
-                    //fra.Devices[0].Rot = new Vector3(fra.Devices[0].Rot.x / 360f, fra.Devices[0].Rot.y / 360f, fra.Devices[0].Rot.z / 360f);
-                }
-            }
-        }
     }
 }
 

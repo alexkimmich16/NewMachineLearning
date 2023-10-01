@@ -71,7 +71,6 @@ public class Lock : SerializedMonoBehaviour
 
     [FoldoutGroup("Lock")] public KeyCode LockButton;
 
-    public Athena.Athena A = Athena.Athena.instance;
     public MotionEditor M = MotionEditor.instance;
 
     public bool InsideFrameLength(int Frame) { return RestrictFrameLength ? Frame >= WithinFrames.x && Frame <= WithinFrames.y : true; }
@@ -84,7 +83,7 @@ public class Lock : SerializedMonoBehaviour
         foreach(Spell spell in Restrictions.Keys)
         {
             
-            for (int i = 0; i < A.MovementCount(spell); i++)
+            for (int i = 0; i < Cycler.MovementCount(spell); i++)
             {
                 //Debug.Log(spell.ToString() + "  " + i);
                 //int Start = 
@@ -92,26 +91,28 @@ public class Lock : SerializedMonoBehaviour
             }
         }
     }
+
+
     [FoldoutGroup("Lock"), Button(ButtonSizes.Small)] public void LockCurrent() { LockMotion(M.MotionType, M.MotionNum); }
     public void LockMotion(Spell spell, int MotionIndex)
     {
         //ALL FRAMES
 
-        bool Works = A.Movements[spell].IsTrueMotion(MotionIndex);
+        bool Works = Cycler.Movements[spell].IsTrueMotion(MotionIndex);
         if (!Works)
         {
-            A.Movements[spell].Motions[MotionIndex].TrueRanges = new List<Vector2>() { new Vector2(-1f, -1f) };
+            Cycler.Movements[spell].Motions[MotionIndex].TrueRanges = new List<Vector2>() { new Vector2(-1f, -1f) };
 
             return;
         }
 
 
-        List<bool> WorkingFrames = Enumerable.Repeat(true, A.FrameCount(spell, MotionIndex)).ToList();//ALL RESTRICTIONS
+        List<bool> WorkingFrames = Enumerable.Repeat(true, Cycler.FrameCount(spell, MotionIndex)).ToList();//ALL RESTRICTIONS
         foreach (RestrictionSettings settings in Restrictions[spell].Restrictions)
         {
-            for (int i = 0; i < A.FrameCount(spell, MotionIndex); i++)
+            for (int i = 0; i < Cycler.FrameCount(spell, MotionIndex); i++)
             {
-                float Output = settings.Restriction.Returnvalue(A.AtFrameInfo(spell, MotionIndex, i));
+                float Output = settings.Restriction.Returnvalue(Cycler.AtFrameInfo(spell, MotionIndex, i));
                 //Debug.Log("index:" + i + "  " + Output + " Works: " + (Output < settings.Lock.x || Output > settings.Lock.y));
                 if (Output < settings.Lock.x || Output > settings.Lock.y || !Works) //|| InsideFrameLength(i) == true
                     WorkingFrames[i] = false;
@@ -125,7 +126,7 @@ public class Lock : SerializedMonoBehaviour
             Vector2 StitchedVector = new Vector2(WorkingRanges[0].x, WorkingRanges[WorkingRanges.Count - 1].y);
             WorkingRanges = new List<Vector2>() { StitchedVector };
         }
-        A.Movements[spell].Motions[MotionIndex].TrueRanges = WorkingRanges;
+        Cycler.Movements[spell].Motions[MotionIndex].TrueRanges = WorkingRanges;
 
     }
     /*

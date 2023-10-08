@@ -37,7 +37,7 @@ public class SpreadSheet : SerializedMonoBehaviour
 
         //headers
         for (int i = 0; i < Values.Length; i++)
-            worksheet.Cells[2, i + 1].Value = MathF.Round(Values[i], PY.PrintDecimals).ToString();
+            worksheet.Cells[2, i + 1].Value = MathF.Round(Values[i], PythonTest.PrintDecimals).ToString();
         package.Save();
     }
     /*

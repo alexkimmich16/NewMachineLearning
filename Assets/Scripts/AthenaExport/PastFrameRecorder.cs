@@ -13,10 +13,6 @@ namespace Athena
 
         public const int MaxStoreInfo = 10;
 
-        public List<Transform> TestMain;
-        public List<Transform> TestCam;
-        public List<Transform> TestHand;
-
         public List<Transform> PlayerHands;
         public Transform Cam;
 
@@ -32,9 +28,6 @@ namespace Athena
         public const float AccelerationMultiplier = 3;
 
         public List<UnityEngine.XR.Interaction.Toolkit.XRController> Controllers;
-
-
-
 
         public static List<XRNode> DeviceOrder { get { return new List<XRNode>() { XRNode.RightHand, XRNode.LeftHand, XRNode.Head }; } }
 

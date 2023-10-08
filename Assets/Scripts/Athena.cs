@@ -8,13 +8,8 @@ using UnityEngine.XR.Interaction.Toolkit;
 using Sirenix.OdinInspector;
 using System.Linq;
 
-
-
 namespace Athena
 {
-    
-
-
     public class Athena : SerializedMonoBehaviour
     {
         public static Athena instance;
@@ -64,9 +59,4 @@ namespace Athena
             return ranges;
         }
     }
-    
 }
-
-
-    
-

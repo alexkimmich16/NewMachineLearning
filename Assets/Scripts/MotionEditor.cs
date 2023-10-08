@@ -95,16 +95,19 @@ public class MotionEditor : SerializedMonoBehaviour
 
         return Change;
     }
-    public void ChangeMotionType(int Change)
+    public void ChangeMovement(int Change)
     {
         MotionType += Change;
         if ((int)MotionType > Enum.GetValues(typeof(Spell)).Length - 1)
-            MotionType = 0;
-        else if((int)MotionType < 0)
+            MotionType = (Spell)1;
+        else if((int)MotionType <= 0)
             MotionType = (Spell)Enum.GetValues(typeof(Spell)).Length - 1;
 
         if (MotionNum > Cycler.MovementCount(MotionType) - 1)
             MotionNum = Cycler.MovementCount(MotionType) - 1;
+
+        //if(MotionType == Spell.Nothing)
+            //MotionType = (Spell)1;
 
         display.Frame = 0;
         OnChangeMotion?.Invoke();
@@ -135,9 +138,9 @@ public class MotionEditor : SerializedMonoBehaviour
         
         if (Input.GetKey(KeyCode.LeftAlt))
             if(Input.GetKeyDown(KeyCode.UpArrow))
-                ChangeMotionType(1);
+                ChangeMovement(1);
             else if(Input.GetKeyDown(KeyCode.DownArrow))
-                ChangeMotionType(-1);
+                ChangeMovement(-1);
 
         if (MotionNum >= Cycler.MovementCount(MotionType))
             MotionNum = Cycler.MovementCount(MotionType) - 1;

@@ -21,7 +21,7 @@ public class PythonTest : SerializedMonoBehaviour
     public static PythonTest instance;
     private void Awake() { instance = this; }
 
-    [Range(1,20)]public int PrintDecimals = 5;
+    [Range(1,20)]public const int PrintDecimals = 5;
 
     public FinalMotion CalculatedMotion;
 
@@ -40,7 +40,7 @@ public class PythonTest : SerializedMonoBehaviour
     public MotionEditor ME = MotionEditor.instance;
 
     //public List<int> AllActiveMotions { get { return Enumerable.Range(0, Cycler.MotionCount()).Where(motion => MotionsToUse[motion]).ToList(); } }
-    public string JSONDirectory { get {return Path.Combine(Path.GetDirectoryName(Application.dataPath), "WildfireLearning"); } }
+    public static string JSONDirectory { get {return Path.Combine(Path.GetDirectoryName(Application.dataPath), "WildfireLearning"); } }
     
    
     
@@ -109,8 +109,24 @@ public class PythonTest : SerializedMonoBehaviour
             Debug.Log(Logging.OutcomesCountString());
             Debug.Log(Logging.PercentComplexString());
     }
-
     
+    [Button]public void ReloadJSON()
+    {
+        foreach(Spell spell in Cycler.Movements.Keys)
+        {
+            PythonTest.instance = this;
+            CalculatedMotion = GetAllMotionList(spell);
+            string directory = Path.Combine(JSONDirectory, spell.ToString() + ".json");
+
+            // Convert the ScriptableObject to a JSON string
+            string json = JsonUtility.ToJson(CalculatedMotion);
+
+            // Write the JSON string to a file
+            File.WriteAllText(directory, json);
+        }
+        //RunPythonScript.ExecutePythonScript(JSONDirectory + "/DeepLearningModel.py");
+    }
+
 
     public FinalMotion GetAllMotionList(Spell spellType)
     {
@@ -152,24 +168,7 @@ public class PythonTest : SerializedMonoBehaviour
         }
     }
 
-    [Button]public void ReloadJSON()
-    {
-        ReloadJSONType(GameObject.FindObjectOfType<MotionEditor>().MotionType);
-
-        void ReloadJSONType(Spell spell)
-        {
-            PythonTest.instance = this;
-            CalculatedMotion = GetAllMotionList(spell);
-            string directory = Path.Combine(JSONDirectory, spell.ToString() + ".json");
-
-            // Convert the ScriptableObject to a JSON string
-            string json = JsonUtility.ToJson(CalculatedMotion);
-
-            // Write the JSON string to a file
-            File.WriteAllText(directory, json);
-        }
-        //RunPythonScript.ExecutePythonScript(JSONDirectory + "/DeepLearningModel.py");
-    }
+    
     
     
     [System.Serializable]public class FinalMotion
@@ -204,6 +203,9 @@ public class PythonTest : SerializedMonoBehaviour
         }
     }
 }
+
+
+
 /*
 public string scriptPath { get { return Path.Combine(JSONDirectory, "DeepLearningModel.py"); } }
     private string pythonPath = "python"; // or "python3" for some systems   

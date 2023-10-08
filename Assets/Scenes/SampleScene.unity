@@ -2108,16 +2108,17 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 5022602860645237092, guid: cf208cec217815549888bc24a1635915, type: 3}
+    - {fileID: 5022602860645237092, guid: 5b7560f824bfd9c4a95c5f488c6e3d2a, type: 3}
+    - {fileID: 5022602860645237092, guid: 1125ab1b9031ccd48a7e9dd8059d81da, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: AiModels
+    - Name: Spells
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[Spell, Assembly-CSharp],[Unity.Barracuda.NNModel,
-        Unity.Barracuda]], mscorlib
+      Data: 0|System.Collections.Generic.Dictionary`2[[Spell, Assembly-CSharp],[Athena.Runtime+SpellReferences,
+        Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
       Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Spell, Assembly-CSharp]],
@@ -2133,7 +2134,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 7
       Data: 
@@ -2141,8 +2142,32 @@ MonoBehaviour:
       Entry: 3
       Data: 1
     - Name: $v
+      Entry: 7
+      Data: Athena.Runtime+SpellReferences, Assembly-CSharp
+    - Name: Model
       Entry: 10
       Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: Athena.Runtime+SpellReferences, Assembly-CSharp
+    - Name: Model
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -2152,8 +2177,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  FramesAgoBuild: 2
-  modelAsset: {fileID: 5022602860645237092, guid: cf208cec217815549888bc24a1635915, type: 3}
 --- !u!114 &211389153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2214,15 +2237,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  TestMain:
-  - {fileID: 0}
-  - {fileID: 0}
-  TestCam:
-  - {fileID: 0}
-  - {fileID: 0}
-  TestHand:
-  - {fileID: 0}
-  - {fileID: 0}
   PlayerHands:
   - {fileID: 1867183570734329135}
   - {fileID: 1867183570487954631}
@@ -2451,7 +2465,6 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  PrintDecimals: 5
   CalculatedMotion:
     Motions:
     - Frames:

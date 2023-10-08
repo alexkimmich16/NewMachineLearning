@@ -66,12 +66,10 @@ namespace Athena
             Tensor input = new Tensor(1, 1, FramesAgoBuild, ActiveInputCount, Inputs.ToArray());
             worker.Execute(input);
             Tensor output = worker.PeekOutput();
-            //bool predictedState = output[0] > 0.5f;
+
             int predictedClass = output.ArgMax()[0];
             input.Dispose();
             worker.Dispose();
-
-            //Debug.Log(predictedState);
 
             return predictedClass;
         }

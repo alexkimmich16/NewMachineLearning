@@ -37,7 +37,10 @@ public static class Cycler
 
     public static int FrameCount(Spell Spell, int Motion) { return Movements[Spell].Motions[Motion].Infos.Count; }
     public static AthenaFrame AtFrameInfo(Spell Spell, int Motion, int Frame) { return Movements[Spell].Motions[Motion].Infos[Frame]; }
+    public static int MaxTrueMotion(Spell spell) { return (int)Movements[spell].TrueMotions.y; }
     public static int TrueRangeCount(Spell Spell, int Motion) { return Movements[Spell].Motions[Motion].TrueRanges.Count; }
+    public static Vector2 TrueRange(Spell Spell, int Motion) { return Movements[Spell].Motions[Motion].TrueRanges[0]; }
+
     public static bool FrameWorks(Spell Spell, int Motion, int Frame) { return Movements[Spell].Motions[Motion].AtFrameState(Frame); }
 
 

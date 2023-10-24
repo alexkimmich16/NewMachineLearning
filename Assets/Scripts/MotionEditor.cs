@@ -62,7 +62,8 @@ public class MotionEditor : SerializedMonoBehaviour
     public static event ChangeMotion OnChangeMotion;
 
     //[ShowIf("Setting", EditSettings.DisplayingMotion)] 
-
+    //
+    //public bool ShouldRead;
     public bool SafetyCheck;
 
 
@@ -133,7 +134,7 @@ public class MotionEditor : SerializedMonoBehaviour
 
     void Update()
     {
-        if (MotionType != Spell.Fireball)
+        if (MotionType == Spell.Nothing)
             return;
         
         if (Input.GetKey(KeyCode.LeftAlt))

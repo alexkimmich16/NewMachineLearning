@@ -39,12 +39,87 @@ public class PythonTest : SerializedMonoBehaviour
     public Runtime R = Runtime.instance;
     public MotionEditor ME = MotionEditor.instance;
 
+    public bool ModelSequenceAll;
+
+    [Button]public void RunFullModelSequence()
+    {
+        GetComponent<Lock>().LockAll();
+        ReloadJSON();
+        ExecutePythonScript();
+    }
+
     //public List<int> AllActiveMotions { get { return Enumerable.Range(0, Cycler.MotionCount()).Where(motion => MotionsToUse[motion]).ToList(); } }
-    public static string JSONDirectory { get {return Path.Combine(Path.GetDirectoryName(Application.dataPath), "WildfireLearning"); } }
-    
-   
-    
-    [Button]public void TestModel()
+
+    #region RunModel
+    public static string JSONDirectory { get { return Path.Combine(Path.GetDirectoryName(Application.dataPath), "WildfireLearning"); } }
+    public static string pythonScriptPath { get { return Path.Combine(JSONDirectory, "DeepLearningModel.py"); } }
+    public static string pythonVersionPath { get { return Path.Combine(JSONDirectory, "venv\\Scripts\\python.exe"); } }
+
+    [Button]
+    public void ExecutePythonScript()
+    {
+        int arg = Runtime.FramesAgoBuild;
+        int SpellBakeType = ModelSequenceAll ? 3 : (int)ME.MotionType - 1;
+        // Log the paths just for verification
+        //Debug.Log("JSON Directory: " + JSONDirectory);
+        Debug.Log("Python Script Path: " + pythonScriptPath);
+        Debug.Log("Python Version Path: " + pythonVersionPath);
+
+        ProcessStartInfo start = new ProcessStartInfo
+        {
+            FileName = pythonVersionPath,
+            Arguments = $"\"{pythonScriptPath}\" {arg} {SpellBakeType}",
+            UseShellExecute = true,  // Use the system shell to start the process
+        };
+
+        Process process = new Process { StartInfo = start };
+        process.Start();
+    }
+    #endregion
+    #region copyfolder
+    public static string dataLocation { get { return Path.Combine(Application.dataPath, "Scripts/AthenaExport"); } }
+    [Button]public void TransferData()
+    {
+        // 1. Extract root GitProjects directory from dataLocation
+        DirectoryInfo dataDirInfo = new DirectoryInfo(dataLocation);
+        DirectoryInfo gitProjectsDir = dataDirInfo.Parent;
+
+        // Navigate up to GitProjects folder
+        while (gitProjectsDir != null && gitProjectsDir.Name != "GitProjects")
+        {
+            gitProjectsDir = gitProjectsDir.Parent;
+        }
+
+        // If we can't find the GitProjects directory, exit early
+        if (gitProjectsDir == null)
+        {
+            Debug.LogError("Could not find GitProjects directory.");
+            return;
+        }
+
+        // 2. Append the relative path to derive the exportLocation
+        string exportLocation = Path.Combine(gitProjectsDir.FullName, @"WildfireVR\Assets\Scripts\AthenaExport");
+
+        // Ensure exportLocation exists or create it
+        if (!Directory.Exists(exportLocation))
+        {
+            Directory.CreateDirectory(exportLocation);
+        }
+
+        // 3. Copy contents from dataLocation to exportLocation
+        foreach (string file in Directory.GetFiles(dataLocation))
+        {
+            string destFile = Path.Combine(exportLocation, Path.GetFileName(file));
+            File.Copy(file, destFile, true); // This will overwrite files with the same name in exportLocation
+        }
+
+        Debug.Log($"Copied files from {dataLocation} to {exportLocation}");
+    }
+    #endregion
+
+
+    /*
+    public void TestModel()
     {
         PythonTest.instance = this;
         float4 Guesses = float4.zero;
@@ -66,7 +141,7 @@ public class PythonTest : SerializedMonoBehaviour
                         //Debug.Log(Enumss[l]);
 
                     List<AthenaFrame> AllInfos = Enumerable.Range(j - Runtime.FramesAgoBuild, Runtime.FramesAgoBuild).Select(x => Cycler.AtFrameInfo(SpellType, i, x)).ToList();
-                    List<float> Inputs = Runtime.FrameToValues(AllInfos);
+                    List<float> Inputs = Runtime.instance.FrameToValues(AllInfos);
 
 
                     if (DoExport)
@@ -87,16 +162,17 @@ public class PythonTest : SerializedMonoBehaviour
                     }
                     if (RunAccuracyTest)
                     {
-                        int IsTrue = (Cycler.FrameWorks(SpellType, i, j) && SpellType == ME.MotionType) ? 1 : 0;
-                        int Guess = R.PredictState(Inputs, SpellType);
-                        bool Correct = Guess == IsTrue;
-                        Logging.UpdateGuesses(Correct, IsTrue);
+                        //int IsTrue = (Cycler.FrameWorks(SpellType, i, j) && SpellType == ME.MotionType) ? 1 : 0;
+                        //int Guess = R.PredictState(Inputs, SpellType);
+                        //bool Correct = Guess == IsTrue;
+                        //Logging.UpdateGuesses(Correct, IsTrue);
 
 
                     }
                 }
             }
         }
+    
 
         //Debug.Log(FrameInputDatCycler.Count);
         if (DoExport)
@@ -109,12 +185,12 @@ public class PythonTest : SerializedMonoBehaviour
             Debug.Log(Logging.OutcomesCountString());
             Debug.Log(Logging.PercentComplexString());
     }
-    
+    */
+
     [Button]public void ReloadJSON()
     {
         foreach(Spell spell in Cycler.Movements.Keys)
         {
-            PythonTest.instance = this;
             CalculatedMotion = GetAllMotionList(spell);
             string directory = Path.Combine(JSONDirectory, spell.ToString() + ".json");
 
@@ -134,7 +210,7 @@ public class PythonTest : SerializedMonoBehaviour
         List<Frame> currentFrames = new List<Frame>();
         Cycler.FrameLoop((spell, motionIndex, frameIndex, frame) => {
 
-            float[] FramesInfo = Runtime.FrameToValues(new List<AthenaFrame>() { frame }).ToArray();
+            float[] FramesInfo = R.FrameToValues(new List<AthenaFrame>() { frame }).ToArray();
             bool MotionActiveState = spell == spellType && Cycler.FrameWorks(spell, motionIndex, frameIndex);
 
             int LastFrame = currentFrames.Count > 0 ? currentFrames[^1].State : 0;
@@ -147,7 +223,7 @@ public class PythonTest : SerializedMonoBehaviour
 
         int GetState(bool State, int LastFrame)
         {
-            if(spellType == Spell.Fireball)
+            if (spellType == Spell.Fireball)
             {
                 if (State == false)
                 {
@@ -160,6 +236,14 @@ public class PythonTest : SerializedMonoBehaviour
                     return 1;
 
             }
+            else if (spellType == Spell.Flames)
+            {
+                return State ? 1 : 0;
+            }
+            else if (spellType == Spell.Parry)
+            {
+                return State ? 1 : 0;
+            }
             else
                 Debug.LogError("unfamiliar spelltype of type: " + spellType.ToString());
 
@@ -167,9 +251,6 @@ public class PythonTest : SerializedMonoBehaviour
             return 100;
         }
     }
-
-    
-    
     
     [System.Serializable]public class FinalMotion
     {
@@ -203,36 +284,3 @@ public class PythonTest : SerializedMonoBehaviour
         }
     }
 }
-
-
-
-/*
-public string scriptPath { get { return Path.Combine(JSONDirectory, "DeepLearningModel.py"); } }
-    private string pythonPath = "python"; // or "python3" for some systems   
-[Button]public void RunPythonMachineLearning()
-   {
-       ProcessStartInfo start = new ProcessStartInfo();
-       start.FileName = pythonPath;
-       start.Arguments = string.Format("\"{0}\"", scriptPath);
-       start.UseShellExecute = false; // Do not use OS shell
-       start.CreateNoWindow = true; // We don't need a new window
-       start.RedirectStandardOutput = true; // Any output, generated by application will be redirected back
-       start.RedirectStandardError = true; // Any error in standard output will be redirected back
-
-       using (Process process = Process.Start(start))
-       {
-           using (System.IO.StreamReader reader = process.StandardOutput)
-           {
-               string stderr = process.StandardError.ReadToEnd(); // Here are the exceptions from our Python script
-               string result = reader.ReadToEnd(); // Here is the result of StdOut(for example: print "test")
-
-               if (!string.IsNullOrEmpty(stderr))
-               {
-                   Debug.LogError("Python Error: " + stderr);
-               }
-
-               Debug.Log(result);
-           }
-       }
-   }
-   */

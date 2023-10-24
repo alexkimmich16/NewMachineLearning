@@ -9,9 +9,9 @@ namespace Athena
     public class AthenaSpell : ScriptableObject
     {
         [ListDrawerSettings(Expanded = false, ShowIndexLabels = true)] public List<AthenaMotion> Motions;
-        public List<Vector2> TrueMotions;
+        public Vector2 TrueMotions;
 
-        public bool IsTrueMotion(int Index) { return TrueMotions.Any(vector => Index >= vector.x && Index <= vector.y); }
+        public bool IsTrueMotion(int Index) { return Index >= TrueMotions.x && Index <= TrueMotions.y; }
     }
 }
 

@@ -22,8 +22,6 @@ namespace Athena
 
         public List<AthenaFrame> Infos;
         public List<Vector2> TrueRanges;
-        [HideInInspector] public int TrueIndex;
-        [HideInInspector] public int PlayCount;
 
         public static List<Vector2> ConvertToRange(List<bool> Values)
         {

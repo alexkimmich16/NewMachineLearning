@@ -28,10 +28,10 @@ public class MotionPlayback : MonoBehaviour
     public List<LineRenderer> Velocities;
     public List<LineRenderer> Accelerations;
 
-    public SkinnedMeshRenderer handToChange;
+    public MeshRenderer handToChange;
     public Material[] Materials;
 
-    
+    public bool DoLines = true;
 
 
 
@@ -46,10 +46,19 @@ public class MotionPlayback : MonoBehaviour
     private void Start()
     {
         MotionEditor.OnChangeMotion += OnSomethingChanged;
+        if(type == PlayType.WatchPlayer)
+            Runtime.AllSpellChangeState += SpellStateChange;
     }
     public void OnSomethingChanged()
     {
         Frame = 0;
+    }
+    public void SpellStateChange(Spell spell, Side side, int state)
+    {
+        if (spell == MotionEditor.instance.MotionType && side == Side.right && handToChange != null)
+        {
+            handToChange.material = Materials[state];
+        }
     }
     void Update()
     {
@@ -64,12 +73,6 @@ public class MotionPlayback : MonoBehaviour
             
             if (Frame >= Cycler.FrameCount(ME.MotionType, ME.MotionNum))
                 Frame = 0;
-            //if (Frame - BruteForce.instance.PastFrameLookup >= 0)
-                //CurrentMotions = RestrictionManager.instance.AllWorkingMotions(Cycler.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - BruteForce.instance.PastFrameLookup), Cycler.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame));
-            bool State = ME.Setting == EditSettings.Editing ? Cycler.FrameWorks(ME.MotionType, ME.MotionNum, Frame) : GetMotionFromInput();
-            //Debug.Log(State);
-            //handToChange.material = DebugRestrictions.instance.Materials[State ? 1 : 0];
-            handToChange.material = Materials[State ? 1 : 0];
 
 
             if (ME.Setting == EditSettings.DisplayingMotion)
@@ -78,26 +81,12 @@ public class MotionPlayback : MonoBehaviour
             }
 
             AthenaFrame info = Cycler.AtFrameInfo(ME.MotionType, ME.MotionNum, Frame);
-            
+
+            handToChange.material = Materials[Cycler.FrameWorks(ME.MotionType, ME.MotionNum, Frame) ? 1 : 0];
+
             moveAll(info);
             LastMotion = Motion;
             OnNewFrame?.Invoke();
-            
-            
-            bool GetMotionFromInput()
-            {
-                //return Frame - MotionAssign.instance.FramesAgo() >= 0 ? RestrictionManager.instance.MotionWorks(Cycler.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame - MotionAssign.instance.FramesAgo()), Cycler.Movements[(int)ME.MotionType].GetRestrictionInfoAtIndex(ME.MotionNum, Frame), ME.MotionType) : false;
-
-                if (Frame <= Runtime.FramesAgoBuild + 1)
-                    return false;
-
-
-
-                List<AthenaFrame> Frames = Cycler.GetFrames(ME.MotionType, ME.MotionNum, Frame - Runtime.FramesAgoBuild, Frame);
-                List<float> Values = Runtime.FrameToValues(Frames);
-                //Debug.Log(Values.Count);
-                return R.PredictState(Values, ME.MotionType) == 1;
-            }
 
             //MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.MotionType - 1]; }
         }
@@ -127,9 +116,12 @@ public class MotionPlayback : MonoBehaviour
     }
     public void SetLine(LineRenderer renderer, DeviceInfo info, bool Vel, Transform devicePos)
     {
+        if (!DoLines)
+            return;
+        
         renderer.positionCount = 2;
         renderer.SetPosition(0, devicePos.position);
         renderer.SetPosition(1, devicePos.position + (Vel ? info.velocity : info.acceleration));
-        renderer.startColor = Vel ? Color.blue : Color.red;
+        //renderer.startColor = Vel ? Color.blue : Color.red;
     }
 }

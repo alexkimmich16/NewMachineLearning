@@ -20,6 +20,8 @@ public class RecordMotions : MonoBehaviour
     public Toggle TrueMotion;
 
     public KeyCode RecordKey;
+
+    public Side RecordSide;
     private void Start()
     {
         //FrameInterval = 1 / FramesPerSecond;
@@ -28,10 +30,16 @@ public class RecordMotions : MonoBehaviour
             //OnToggleChanged(CanRecordToggle);
         //});
     }
-    public bool HitRecordButton()
+    public bool HitRecordButton(out Side side)
     {
-        InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.gripButton, out bool Trigger);
-        return Trigger || Input.GetKey(RecordKey);
+        side = Side.right;
+        InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.gripButton, out bool RightPress);
+        InputDevices.GetDeviceAtXRNode(XRNode.LeftHand).TryGetFeatureValue(CommonUsages.gripButton, out bool LeftPress);
+        if (RightPress || LeftPress)
+            side = RightPress ? Side.right : Side.left;
+
+
+        return RightPress || LeftPress || Input.GetKey(RecordKey);
     }
 
     public void NewRecordingState(bool State)
@@ -48,36 +56,40 @@ public class RecordMotions : MonoBehaviour
         if (CanRecordToggle.isOn == false)
             return;
 
-        if (RecordingMotion == false && HitRecordButton() == true)
+        bool RecordButtonHit = HitRecordButton(out Side side);
+
+        if (RecordingMotion == false && RecordButtonHit == true)
+        {
+            RecordSide = side; // THIS FOR ALLOW BOTH SIDES
             NewRecordingState(true);
-        else if (RecordingMotion == true && HitRecordButton() == false)
+        }
+        else if (RecordingMotion == true && RecordButtonHit == false)
         {
             NewRecordingState(false);
 
             AthenaMotion FinalMotion = new AthenaMotion();
             FinalMotion.TrueRanges = AthenaMotion.ConvertToRange(Values);
             Values.Clear();
-
             FinalMotion.Infos = new List<AthenaFrame>(CurrentMotionRecord);
+            FinalMotion.TrueRanges.Clear();
             if (TrueMotion.isOn)
             {
-                FinalMotion.TrueRanges = new List<Vector2>() { Vector2.zero };
                 Cycler.Movements[MotionEditor.instance.MotionType].Motions.Insert(0, FinalMotion);
-                //Vector2 Before = MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0];
-                //MotionAssign.instance.TrueMotions[(int)MotionEditor.instance.MotionType][0] = new Vector2(Before.x, Before.y + 1);
+                Cycler.Movements[MotionEditor.instance.MotionType].TrueMotions.y += 1;
             }
             else
             {
-                FinalMotion.TrueRanges.Clear();
                 Cycler.Movements[MotionEditor.instance.MotionType].Motions.Add(FinalMotion);
             }
+            
+            
 
             CurrentMotionRecord.Clear();
         }        
     }
     public void NewFrame(Side side)
     {
-        if(side == Side.right)
+        if(side == RecordSide)
         {
             //AthenaFrame info = PastFrameRecorder.instance.GetControllerInfo(Side.right);
             AthenaFrame info = PastFrameRecorder.instance.GetFramesList(side, 1)[0];

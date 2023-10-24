@@ -9,54 +9,20 @@ public class Lock : SerializedMonoBehaviour
 
     public static Lock instance;
     private void Awake() { instance = this; }
-
-    public enum Restriction
-    {
-        Magnitude = 0,
-        TestValue = 1,
-    }
-    public struct RestrictionUI
-    {
-        public Restriction restriction;
-        [ShowIf("restriction", Restriction.TestValue)] public Axis axis;
-        //[ShowIf("restriction", Restriction.TestValue)] 
-        public Value value;
-
-        public enum Axis { X, Y, Z }
-        public enum Value { pos, rot, vel, velRot }
-
-        public float Returnvalue(AthenaFrame frame)
-        {
-            DeviceInfo info = frame.Devices[0];
-            Dictionary<Value, Vector3> Values = new Dictionary<Value, Vector3>() { { Value.pos, info.Pos }, { Value.rot, info.Rot }, { Value.vel, info.velocity }, { Value.velRot, info.angularVelocity } };
-            if (restriction == Restriction.Magnitude)
-            {
-                return Values[value].magnitude;
-            }
-            else if (restriction == Restriction.TestValue)
-            {
-                List<float> Vector3Axis = new List<float>() { Values[value].x, Values[value].y, Values[value].z};
-                return Vector3Axis[(int)axis];
-            }
-            Debug.LogError("outside of possible options");
-            return 0f;
-        }
-
-
-    }
-
+    [ReadOnly]public List<int> InActive;
+    
 
 
     public Dictionary<Spell, SingleRestriction> Restrictions;
     [System.Serializable] public struct SingleRestriction
     {
         public List<RestrictionSettings> Restrictions;
-        
+        public int2 FrameLock;
     }
     [System.Serializable]public struct RestrictionSettings
     {
         //[GUIColor("Orange")] 
-        public RestrictionUI Restriction;
+        public RestrictionListItem Restriction;
         public Vector2 Lock;
     }
 
@@ -85,13 +51,13 @@ public class Lock : SerializedMonoBehaviour
             
             for (int i = 0; i < Cycler.MovementCount(spell); i++)
             {
-                //Debug.Log(spell.ToString() + "  " + i);
-                //int Start = 
                 LockMotion(spell, i);
             }
         }
-    }
 
+        GetInActiveMotions(M.MotionType);
+    }
+    public void GetInActiveMotions(Spell spell) { InActive = Enumerable.Range(0, Cycler.MaxTrueMotion(spell)).Where(x => Cycler.TrueRange(spell, x) == new Vector2(-1, -1)).ToList(); }
 
     [FoldoutGroup("Lock"), Button(ButtonSizes.Small)] public void LockCurrent() { LockMotion(M.MotionType, M.MotionNum); }
     public void LockMotion(Spell spell, int MotionIndex)
@@ -105,16 +71,16 @@ public class Lock : SerializedMonoBehaviour
 
             return;
         }
-
-
-        List<bool> WorkingFrames = Enumerable.Repeat(true, Cycler.FrameCount(spell, MotionIndex)).ToList();//ALL RESTRICTIONS
+        
+        List<bool> WorkingFrames = Enumerable.Range(0, Cycler.FrameCount(spell, MotionIndex)).Select(index => index >= Restrictions[spell].FrameLock.x && index <= Restrictions[spell].FrameLock.y).ToList();
         foreach (RestrictionSettings settings in Restrictions[spell].Restrictions)
         {
             for (int i = 0; i < Cycler.FrameCount(spell, MotionIndex); i++)
             {
-                float Output = settings.Restriction.Returnvalue(Cycler.AtFrameInfo(spell, MotionIndex, i));
+                List<float> Output = settings.Restriction.GetValue(Cycler.AtFrameInfo(spell, MotionIndex, i));
+
                 //Debug.Log("index:" + i + "  " + Output + " Works: " + (Output < settings.Lock.x || Output > settings.Lock.y));
-                if (Output < settings.Lock.x || Output > settings.Lock.y || !Works) //|| InsideFrameLength(i) == true
+                if (Output[0] < settings.Lock.x || Output[0] > settings.Lock.y || !Works) //|| InsideFrameLength(i) == true
                     WorkingFrames[i] = false;
             }
         }
@@ -123,11 +89,16 @@ public class Lock : SerializedMonoBehaviour
         List<Vector2> WorkingRanges = AthenaMotion.ConvertToRange(WorkingFrames);
         if (ShouldStitch)
         {
-            Vector2 StitchedVector = new Vector2(WorkingRanges[0].x, WorkingRanges[WorkingRanges.Count - 1].y);
+            if (WorkingRanges.Count <= 0)
+            {
+                Debug.LogWarning("something wrong");
+                return;
+            }
+            Vector2 StitchedVector = new Vector2(WorkingRanges[0].x, WorkingRanges[^1].y);
             WorkingRanges = new List<Vector2>() { StitchedVector };
         }
         Cycler.Movements[spell].Motions[MotionIndex].TrueRanges = WorkingRanges;
-
+        //GetInActiveMotions(spell);
     }
     /*
     public bool InsideTrueMotions(int Try, int MotionIndex)

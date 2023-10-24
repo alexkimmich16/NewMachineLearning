@@ -6,6 +6,7 @@ import numpy as np
 import onnxruntime as ort
 import tensorflow as tf
 import pandas as pd
+import sys
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, accuracy_score
 from tensorflow.keras.models import Sequential
@@ -15,24 +16,48 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.utils.class_weight import compute_class_weight
 from itertools import chain
 
-# Get a list of all .json files in the current directory
-json_files = [f for f in os.listdir() if os.path.isfile(f) and f.endswith('.json')]
-
-# Display options to the user
-print("Select a motion to bake:")
-for index, filename in enumerate(json_files):
-    print(f"{index}. {filename}")
-print(f"{len(json_files)}. Bake All")
-
-while True:
+# Define the number of frames
+num_frames = 5
+StateCount = 2
+chosen = False
+if len(sys.argv) > 1:
     try:
-        choice = int(input("Enter your choice: "))
-        if 0 <= choice <= len(json_files):  # ensures choice is within the range
-            break
-        else:
-            print("Please enter a valid choice from the given options.")
+        num_frames = int(sys.argv[1])
+        print("arg: " + str(num_frames))
     except ValueError:
-        print("Invalid input. Please enter a number corresponding to your choice.")
+        print("The provided argument is not a valid integer.")
+    if len(sys.argv) > 2:
+        try:
+            choice = int(sys.argv[2])
+            chosen = True
+            print("choice arg: " + str(choice))
+        except ValueError:
+            print("The provided argument for choice is not a valid integer.")
+else:
+    print("No argument received.")
+
+# Get the directory where the script is located
+script_directory = os.path.dirname(os.path.abspath(__file__))
+
+# Get a list of all .json files in the script's directory
+json_files = [f for f in os.listdir(script_directory) if os.path.isfile(os.path.join(script_directory, f)) and f.endswith('.json')]
+
+if not chosen:
+    # Display options to the user
+    print("Select a motion to bake:")
+    for index, filename in enumerate(json_files):
+        print(f"{index}. {filename}")
+    print(f"{len(json_files)}. Bake All")
+
+    while True:
+        try:
+            choice = int(input("Enter your choice: "))
+            if 0 <= choice <= len(json_files):  # ensures choice is within the range
+                break
+            else:
+                print("Please enter a valid choice from the given options.")
+        except ValueError:
+            print("Invalid input. Please enter a number corresponding to your choice.")
 
 if choice == len(json_files):
     files_to_process = json_files
@@ -40,13 +65,13 @@ else:
     files_to_process = [json_files[choice]]
 
 for file_name in files_to_process:
+    # Update the path to use the full path to the file
+    full_path = os.path.join(script_directory, file_name)
     
-    with open(file_name, 'r') as file:
+    with open(full_path, 'r') as file:
         data = json.load(file)
 
-    # Define the number of frames
-    num_frames = 2
-    StateCount = 2
+    
 
     # Extract sequences
     sequences = []
@@ -102,14 +127,14 @@ for file_name in files_to_process:
     early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 
     # Train the model with class weights
-    model.fit(X_train, y_train, epochs=50, batch_size=64, validation_data=(X_val, y_val), callbacks=[early_stopping], class_weight=class_weight_dict, verbose=0)
+    model.fit(X_train, y_train, epochs=50, batch_size=128, validation_data=(X_val, y_val), callbacks=[early_stopping], class_weight=class_weight_dict, verbose=0)
     # Initialize counters
 
     # Evaluate the model on the validation set
     y_pred = model.predict(X_val)
     y_pred_classes = np.argmax(y_pred, axis=1)  # Convert softmax outputs to class indices
 
-    # Save the model
+    # Save the model0
     model_identifier = os.path.splitext(file_name)[0]
     RawSpellName = model_identifier.replace(".json", "")
     model_path = f'saved_model_{model_identifier}'
@@ -139,7 +164,7 @@ for file_name in files_to_process:
 
     # Test the ONNX model using onnxruntime
     # Create an ONNX runtime session
-    ort_session = ort.InferenceSession(f"{onnx_output_directory}\\model.onnx")
+    ort_session = ort.InferenceSession(f"{onnx_output_directory}\\{RawSpellName}.onnx")
 
     # Define the input name and output name
     input_name = ort_session.get_inputs()[0].name

@@ -10,8 +10,6 @@ namespace Athena
     {
         [ListDrawerSettings(Expanded = false, ShowIndexLabels = true)] public List<AthenaMotion> Motions;
         public Vector2 TrueMotions;
-
-        public bool IsTrueMotion(int Index) { return Index >= TrueMotions.x && Index <= TrueMotions.y; }
     }
 }
 

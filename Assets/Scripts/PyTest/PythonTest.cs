@@ -209,15 +209,19 @@ public class PythonTest : SerializedMonoBehaviour
         List<Motion> ReturnList = new List<Motion>();
         List<Frame> currentFrames = new List<Frame>();
         Cycler.FrameLoop((spell, motionIndex, frameIndex, frame) => {
-
-            float[] FramesInfo = R.FrameToValues(new List<AthenaFrame>() { frame }).ToArray();
-            bool MotionActiveState = spell == spellType && Cycler.FrameWorks(spell, motionIndex, frameIndex);
-
-            int LastFrame = currentFrames.Count > 0 ? currentFrames[^1].State : 0;
-            currentFrames.Add(new Frame(FramesInfo, GetState(MotionActiveState, LastFrame)));
+            if (spell == spellType || Cycler.MotionWorks(spell, motionIndex))
+            {
+                float[] FramesInfo = R.FrameToValues(new List<AthenaFrame>() { frame }).ToArray();
+                bool FrameState = spell == spellType && Cycler.FrameWorks(spell, motionIndex, frameIndex);
+                int LastFrame = currentFrames.Count > 0 ? currentFrames[^1].State : 0;
+                currentFrames.Add(new Frame(FramesInfo, GetState(FrameState, LastFrame)));
+            }
+            
+            
+            
         },
             () => { },//spell change
-            () => { ReturnList.Add(new Motion(currentFrames)); currentFrames = new List<Frame>(); });//new motion
+            () => { if (currentFrames.Count > 0) { ReturnList.Add(new Motion(currentFrames)); } currentFrames = new List<Frame>(); });//new motion
         return new FinalMotion(ReturnList);
 
 

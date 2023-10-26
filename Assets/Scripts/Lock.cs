@@ -35,8 +35,6 @@ public class Lock : SerializedMonoBehaviour
     public bool RestrictFrameLength = false;
     [FoldoutGroup("Lock"), ShowIf("RestrictFrameLength")] public int2 WithinFrames;
 
-    [FoldoutGroup("Lock")] public KeyCode LockButton;
-
     public MotionEditor M = MotionEditor.instance;
 
     public bool InsideFrameLength(int Frame) { return RestrictFrameLength ? Frame >= WithinFrames.x && Frame <= WithinFrames.y : true; }
@@ -57,14 +55,12 @@ public class Lock : SerializedMonoBehaviour
 
         GetInActiveMotions(M.MotionType);
     }
-    public void GetInActiveMotions(Spell spell) { InActive = Enumerable.Range(0, Cycler.MaxTrueMotion(spell)).Where(x => Cycler.TrueRange(spell, x) == new Vector2(-1, -1)).ToList(); }
-
-    [FoldoutGroup("Lock"), Button(ButtonSizes.Small)] public void LockCurrent() { LockMotion(M.MotionType, M.MotionNum); }
+    public void GetInActiveMotions(Spell spell) { InActive = Enumerable.Range(0, Cycler.MaxTrueMotion(spell) + 1).Where(x => Cycler.TrueRange(spell, x) == new Vector2(-1, -1)).ToList(); }
     public void LockMotion(Spell spell, int MotionIndex)
     {
         //ALL FRAMES
-
-        bool Works = Cycler.Movements[spell].IsTrueMotion(MotionIndex);
+        Debug.Log(Cycler.MaxTrueMotion(spell));
+        bool Works = MotionIndex <= Cycler.MaxTrueMotion(spell);
         if (!Works)
         {
             Cycler.Movements[spell].Motions[MotionIndex].TrueRanges = new List<Vector2>() { new Vector2(-1f, -1f) };
@@ -114,8 +110,6 @@ public class Lock : SerializedMonoBehaviour
         //degree assign
         if (!AbleToCallWithButtons)
             return;
-        if (Input.GetKeyDown(LockButton))
-            LockCurrent();
 
         //270 on right, 90 on left
         //Value = RestrictionManager.RestrictionDictionary[Restriction.HandToHeadAngle].Invoke(null, PR.PastFrame(Side.right), PastFrameRecorder.instance.GetControllerInfo(Side.right));

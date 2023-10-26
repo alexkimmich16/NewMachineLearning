@@ -42,7 +42,7 @@ public static class Cycler
     public static Vector2 TrueRange(Spell Spell, int Motion) { return Movements[Spell].Motions[Motion].TrueRanges[0]; }
 
     public static bool FrameWorks(Spell Spell, int Motion, int Frame) { return Movements[Spell].Motions[Motion].AtFrameState(Frame); }
-
+    public static bool MotionWorks(Spell Spell, int Motion) { return Motion > MaxTrueMotion(Spell); }
 
 
     public static List<AthenaFrame> GetFrames(Spell Spell, int Motion, int FirstFrame, int LastFrame)

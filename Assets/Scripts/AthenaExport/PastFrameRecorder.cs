@@ -183,11 +183,6 @@ namespace Athena
 
         public Vector3 acceleration;
 
-        public void Invert()
-        {
-
-        }
-
 
         [HideInInspector] public Vector3 AccelerationHold;
 

@@ -31,11 +31,11 @@ namespace Athena
         public const int FramesAgoBuild = 15;
         public AthenaSpellHolder SpellHolder;
 
-        public Dictionary<Spell, Dictionary<Side, IWorker>> Workers = new Dictionary<Spell, Dictionary<Side, IWorker>>();
+        private Dictionary<Spell, Dictionary<Side, IWorker>> Workers = new Dictionary<Spell, Dictionary<Side, IWorker>>();
 
         [Range(1, 20)] public const int PrintDecimals = 5;
 
-        public Dictionary<Spell, Dictionary<Side, int>> SideStates = new Dictionary<Spell, Dictionary<Side, int>>();
+        private Dictionary<Spell, Dictionary<Side, int>> SideStates = new Dictionary<Spell, Dictionary<Side, int>>();
         public Model GetModel(Spell spell) { return SpellHolder.GetModel(spell); }
 
         public static List<Side> Sides = new List<Side>() { Side.right, Side.left };

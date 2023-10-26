@@ -25,9 +25,6 @@ namespace Athena
 
         public const int sampleSize = 5;  // for example, considering the last 5 samples
 
-        public List<UnityEngine.XR.Interaction.Toolkit.XRController> Controllers;
-
-
         public static Dictionary<XRNode, Side> XRHands = new Dictionary<XRNode, Side>() { { XRNode.RightHand, Side.right }, { XRNode.LeftHand, Side.left } };
 
         public List<AthenaFrame> GetFramesList(Side side, int Frames) { return Enumerable.Range(FrameInfo[(int)side].Count - Frames, Frames).Select(x => FrameInfo[(int)side][x]).ToList(); }
@@ -109,6 +106,7 @@ namespace Athena
             */
             return new AthenaFrame(DeviceInfos);
         }
+        
         private void Update()
         {
             //both sides
@@ -184,6 +182,12 @@ namespace Athena
         public Vector3 angularVelocity;
 
         public Vector3 acceleration;
+
+        public void Invert()
+        {
+
+        }
+
 
         [HideInInspector] public Vector3 AccelerationHold;
 

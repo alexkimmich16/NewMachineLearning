@@ -21,24 +21,15 @@ public class PythonTest : SerializedMonoBehaviour
     public static PythonTest instance;
     private void Awake() { instance = this; }
 
-    [Range(1,20)]public const int PrintDecimals = 5;
-
     public FinalMotion CalculatedMotion;
 
-    //public bool UsePreprocessing;
-    public bool DoExport;
-    public int ExcelMotions;
 
-    public bool RunAccuracyTest;
-
-
-    public bool TrackEndOnly;
-
-    public bool differentLastFrame;
+    [HideInInspector]public bool differentLastFrame;
 
     public Runtime R = Runtime.instance;
     public MotionEditor ME = MotionEditor.instance;
 
+    public bool UseOtherFalseFrames;
     public bool ModelSequenceAll;
 
     [Button]public void RunFullModelSequence()
@@ -59,7 +50,7 @@ public class PythonTest : SerializedMonoBehaviour
     public void ExecutePythonScript()
     {
         int arg = Runtime.FramesAgoBuild;
-        int SpellBakeType = ModelSequenceAll ? 3 : (int)ME.MotionType - 1;
+        int SpellBakeType = ModelSequenceAll ? Cycler.MotionCount() : (int)ME.MotionType - 1;
         // Log the paths just for verification
         //Debug.Log("JSON Directory: " + JSONDirectory);
         Debug.Log("Python Script Path: " + pythonScriptPath);
@@ -143,29 +134,12 @@ public class PythonTest : SerializedMonoBehaviour
                     List<AthenaFrame> AllInfos = Enumerable.Range(j - Runtime.FramesAgoBuild, Runtime.FramesAgoBuild).Select(x => Cycler.AtFrameInfo(SpellType, i, x)).ToList();
                     List<float> Inputs = Runtime.instance.FrameToValues(AllInfos);
 
-
-                    if (DoExport)
-                    {
-                        TotalCount++;
-                        
-                        //Debug.Log("TotalCount: " + TotalCount + " SpellType: " + SpellType + "  Movement: " + i + "  TopFrame: " + j);
-                        if (TotalCount < ExcelMotions)
-                        {
-                            for (int x = 0; x < Inputs.Count; x++)
-                            {
-                                FrameInputData.Add(Inputs[x]);
-                                //debugString += " 'Inputs[" + x + "]':" + Inputs[x].ToString("f3");
-                            }
-                        }
-                       
-                        
-                    }
                     if (RunAccuracyTest)
                     {
-                        //int IsTrue = (Cycler.FrameWorks(SpellType, i, j) && SpellType == ME.MotionType) ? 1 : 0;
-                        //int Guess = R.PredictState(Inputs, SpellType);
-                        //bool Correct = Guess == IsTrue;
-                        //Logging.UpdateGuesses(Correct, IsTrue);
+                        int IsTrue = (Cycler.FrameWorks(SpellType, i, j) && SpellType == ME.MotionType) ? 1 : 0;
+                        int Guess = R.PredictState(Inputs, SpellType);
+                        bool Correct = Guess == IsTrue;
+                        Logging.UpdateGuesses(Correct, IsTrue);
 
 
                     }
@@ -191,14 +165,25 @@ public class PythonTest : SerializedMonoBehaviour
     {
         foreach(Spell spell in Cycler.Movements.Keys)
         {
-            CalculatedMotion = GetAllMotionList(spell);
+            FinalMotion NewMotion = GetAllMotionList(spell);
+
+
             string directory = Path.Combine(JSONDirectory, spell.ToString() + ".json");
 
             // Convert the ScriptableObject to a JSON string
-            string json = JsonUtility.ToJson(CalculatedMotion);
+            string json = JsonUtility.ToJson(NewMotion);
 
             // Write the JSON string to a file
             File.WriteAllText(directory, json);
+
+
+
+            if(spell == ME.MotionType)
+                CalculatedMotion = NewMotion;
+
+
+            NewMotion.DebugTotalFrames(spell);
+            NewMotion.DebugStateCounts(spell);
         }
         //RunPythonScript.ExecutePythonScript(JSONDirectory + "/DeepLearningModel.py");
     }
@@ -209,7 +194,7 @@ public class PythonTest : SerializedMonoBehaviour
         List<Motion> ReturnList = new List<Motion>();
         List<Frame> currentFrames = new List<Frame>();
         Cycler.FrameLoop((spell, motionIndex, frameIndex, frame) => {
-            if (spell == spellType || Cycler.MotionWorks(spell, motionIndex))
+            if (spell == spellType || Cycler.MotionWorks(spell, motionIndex) || UseOtherFalseFrames)
             {
                 float[] FramesInfo = R.FrameToValues(new List<AthenaFrame>() { frame }).ToArray();
                 bool FrameState = spell == spellType && Cycler.FrameWorks(spell, motionIndex, frameIndex);
@@ -240,10 +225,6 @@ public class PythonTest : SerializedMonoBehaviour
                     return 1;
 
             }
-            else if (spellType == Spell.Flames)
-            {
-                return State ? 1 : 0;
-            }
             else if (spellType == Spell.Parry)
             {
                 return State ? 1 : 0;
@@ -260,6 +241,21 @@ public class PythonTest : SerializedMonoBehaviour
     {
         [ListDrawerSettings(ShowIndexLabels = true)]public List<Motion> Motions;
         public FinalMotion(List<Motion> Motions) { this.Motions = Motions; }
+
+        public void DebugTotalFrames(Spell spell)
+        {
+            int totalFrames = Motions.Sum(motion => motion.Frames.Count);
+            Debug.Log(spell.ToString() + " Total Frames: " + totalFrames);
+        }
+
+        public void DebugStateCounts(Spell spell)
+        {
+            int state0Count = Motions.Sum(motion => motion.Frames.Count(frame => frame.State == 0));
+            int state1Count = Motions.Sum(motion => motion.Frames.Count(frame => frame.State == 1));
+
+            Debug.Log(spell.ToString() + " 'State' = 0: " + state0Count);
+            Debug.Log(spell.ToString() + " 'State' = 1: " + state1Count);
+        }
     }
     [System.Serializable]public class Motion
     {

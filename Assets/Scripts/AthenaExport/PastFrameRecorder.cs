@@ -3,6 +3,9 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.XR;
 using System.Linq;
+using System.Collections;
+using System.Threading.Tasks;
+using System.Threading;
 namespace Athena
 {
     public class PastFrameRecorder : SerializedMonoBehaviour
@@ -17,6 +20,8 @@ namespace Athena
 
         public bool DrawDebug;
 
+        public const int FPS = 30;
+
         public bool[] HandsActive;
 
         public delegate void ControllerSide(Side side);
@@ -29,18 +34,30 @@ namespace Athena
 
         public List<AthenaFrame> GetFramesList(Side side, int Frames) { return Enumerable.Range(FrameInfo[(int)side].Count - Frames, Frames).Select(x => FrameInfo[(int)side][x]).ToList(); }
 
+        //public int[] ListTry;
+        #region ASNC code
+        private IEnumerator RunAsyncCodeRoutine()
+        {
+            while (true)
+            {
+                for (int i = 0; i < FrameInfo.Count; i++)
+                {
+                    FrameInfo[i].Add(GetControllerInfo((Side)i));
+                    if (FrameInfo[i].Count > MaxStoreInfo)
+                        FrameInfo[i].RemoveAt(0);
 
+                    NewFrame?.Invoke((Side)i);
+                }
+                if (IsReady)
+                    Runtime.instance.RunModel();
+                yield return new WaitForSeconds(1f / (float)FPS);
+            }
+        }
+        #endregion
         private AthenaFrame GetControllerInfo(Side side)
         {
             List<XRNode> Devices = new List<XRNode>() { side == Side.right ? XRNode.RightHand : XRNode.LeftHand, XRNode.Head };
             List<DeviceInfo> DeviceInfos = new List<DeviceInfo>();
-
-            // Get headset's rotation and position first
-            InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 headPosition);
-            InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion headRotation);
-
-            // Create an inverse rotation based only on the y-axis to rotate everything to look forward
-            Quaternion inverseYRotation = Quaternion.Euler(0, -headRotation.eulerAngles.y, 0);
 
             for (int i = 0; i < Devices.Count; i++)
             {
@@ -52,19 +69,11 @@ namespace Athena
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.deviceVelocity, out deviceInfo.velocity);
                 InputDevices.GetDeviceAtXRNode(Device).TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out deviceInfo.angularVelocity);
 
-                // Apply transformations
-                deviceInfo.Pos = inverseYRotation * (deviceInfo.Pos - headPosition);
-                deviceInfo.velocity = inverseYRotation * deviceInfo.velocity;
-
-                // Adjust rotation for relative to the headset
-                quat = inverseYRotation * quat;
-
-
                 //Acceleraion
                 if(FrameInfo[(int)side].Count > sampleSize)
                 {
                     AthenaFrame PastFrame = FrameInfo[(int)side][^1];
-                    float TimeBetween = PastFrame.frameTime;
+                    float TimeBetween = 1f / (float)FPS;
 
                     Vector3 newSample = (deviceInfo.velocity - PastFrame.Devices[i].velocity) / TimeBetween;
                     deviceInfo.AccelerationHold = newSample;
@@ -82,20 +91,14 @@ namespace Athena
                         //Debug.Log("Diff: " + (deviceInfo.velocity - PastFrame.Devices[i].velocity).magnitude.ToString("f5") + "  Time: " + TimeBetween + "  Acc: " + deviceInfo.acceleration.magnitude.ToString("f5") + "    Sum: " + sum.magnitude.ToString("f5"));
                 }
 
-
-                if (side == Side.left && i == 0)
-                {
-                    quat.w = -quat.w;
-                    quat.x = -quat.x;
-                }
-
                 deviceInfo.Rot = new Vector3(quat.eulerAngles.x / 360f, quat.eulerAngles.y / 360f, quat.eulerAngles.z / 360f);
                 //if (Device == XRNode.Head)
                    // deviceInfo.Rot.y = 0;
 
-
-                // No need to apply the inverseYRotation here since we've adjusted the quaternion already
-                // deviceInfo.Rot = inverseYRotation * deviceInfo.Rot;
+                if(side == Side.left && i == 0)
+                {
+                    deviceInfo.Invert();
+                }
 
                 DeviceInfos.Add(deviceInfo);
             }
@@ -106,26 +109,16 @@ namespace Athena
             */
             return new AthenaFrame(DeviceInfos);
         }
-        
-        private void Update()
-        {
-            //both sides
-            for (int i = 0; i < FrameInfo.Count; i++)
-            {
-                FrameInfo[i].Add(GetControllerInfo((Side)i));
-                if (FrameInfo[i].Count > MaxStoreInfo)
-                    FrameInfo[i].RemoveAt(0);
-                NewFrame?.Invoke((Side)i);
-            }
-            if (IsReady)
-                Runtime.instance.RunModel();
-        }
+
+       
         public static bool IsReady { get { return instance.FrameInfo[0].Count >= MaxStoreInfo - 1; } }
         private void Start()
         {
             HandsActive = new bool[2];
             InputTracking.trackingLost += TrackingLost;
             InputTracking.trackingAcquired += TrackingFound;
+
+            StartCoroutine(RunAsyncCodeRoutine());
         }
         public void TrackingLost(XRNodeState state)
         {
@@ -170,6 +163,11 @@ namespace Athena
             this.Devices = Devices;
             frameTime = Time.deltaTime;
         }
+        public AthenaFrame(AthenaFrame Copy)
+        {
+            this.Devices = new List<DeviceInfo>(Copy.Devices);
+            this.frameTime = Copy.frameTime;
+        }
     }
 
     [System.Serializable]
@@ -184,6 +182,22 @@ namespace Athena
         public Vector3 acceleration;
 
 
+        public DeviceInfo Invert()
+        {
+            DeviceInfo newInfo = new DeviceInfo();
+            newInfo.Pos = this.Pos;
+            newInfo.Rot = this.Rot;
+            newInfo.velocity = this.velocity;
+            newInfo.angularVelocity = this.angularVelocity;
+            newInfo.acceleration = this.acceleration;
+            newInfo.Rot = new Vector3(Rot.x, Rot.y, -Rot.z);
+            return newInfo;
+            //Quaternion quat = Quaternion.Euler(Rot * 360f);
+            //quat.w = -quat.w;
+            //quat.x = -quat.x;
+            //Rot = quat.eulerAngles / 360;
+        }
+        
         [HideInInspector] public Vector3 AccelerationHold;
 
         public Vector3 GetValue(AthenaValue value)

@@ -17,7 +17,6 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 25347d6485546f640922a2d4cfd85b57, type: 2}
-    - {fileID: 11400000, guid: 18a3b38a205183d40bd01ea7eb1a28e4, type: 2}
     - {fileID: 11400000, guid: 3b52d8fc8354c6741b645fff58b0e814, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -26,11 +25,11 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Movements
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[Spell, Assembly-CSharp],[Athena.AthenaSpell,
+      Data: 0|System.Collections.Generic.Dictionary`2[[Spell, Athena],[Athena.AthenaSpell,
         Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Spell, Assembly-CSharp]],
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Spell, Athena]],
         mscorlib
     - Name: 
       Entry: 12
@@ -43,7 +42,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 2
     - Name: 
       Entry: 7
       Data: 
@@ -65,18 +64,6 @@ MonoBehaviour:
     - Name: $v
       Entry: 10
       Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 3
-    - Name: $v
-      Entry: 10
-      Data: 2
     - Name: 
       Entry: 8
       Data: 

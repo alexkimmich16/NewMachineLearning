@@ -24,7 +24,7 @@ public class MotionEditor : SerializedMonoBehaviour
 
     public int MotionNum;
     public Spell MotionType;
-    public EditSettings Setting;
+    
     public bool Typing;
     
     public TMP_InputField input;
@@ -43,6 +43,7 @@ public class MotionEditor : SerializedMonoBehaviour
     public TextMeshProUGUI CurrentMotionNum;
 
     public TextMeshProUGUI MiscDisplay;
+    public TextMeshProUGUI FrameDisplay;
 
     public Toggle TestAllMotions;
 
@@ -165,7 +166,7 @@ public class MotionEditor : SerializedMonoBehaviour
         FrameNum.text = "Frame: " + display.Frame;
         MotionTypeText.text = "Motion: " + MotionType.ToString();
         //MotionTestDisplay.text = "Test: " + MotionType.ToString();
-        SettingText.text = "Settings: " + Setting.ToString();
+        //SettingText.text = "Settings: " + Setting.ToString();
         display.PlaybackSpeed += SpeedChangeAdd();
         PlaybackSpeed.text = "Speed: " + display.PlaybackSpeed.ToString("F2");
         Max.text = "Max: " + Cycler.Movements[MotionType].Motions[MotionNum].Infos.Count;

@@ -36,8 +36,8 @@ public class SpreadSheet : SerializedMonoBehaviour
         ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
         //headers
-        for (int i = 0; i < Values.Length; i++)
-            worksheet.Cells[2, i + 1].Value = MathF.Round(Values[i], PythonTest.PrintDecimals).ToString();
+        //for (int i = 0; i < Values.Length; i++)
+            //worksheet.Cells[2, i + 1].Value = MathF.Round(Values[i], PythonTest.PrintDecimals).ToString();
         package.Save();
     }
     /*

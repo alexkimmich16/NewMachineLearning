@@ -20,7 +20,7 @@ namespace Athena
     {
         public bool AtFrameState(int Frame) { return TrueRanges.Any(range => Frame >= range.x && Frame <= range.y); }
 
-        public List<AthenaFrame> Infos;
+        [ListDrawerSettings(Expanded = false, ShowIndexLabels = true)] public List<AthenaFrame> Infos;
         public List<Vector2> TrueRanges;
 
         public static List<Vector2> ConvertToRange(List<bool> Values)

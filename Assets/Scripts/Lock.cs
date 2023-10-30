@@ -10,6 +10,7 @@ public class Lock : SerializedMonoBehaviour
     public static Lock instance;
     private void Awake() { instance = this; }
     [ReadOnly]public List<int> InActive;
+    [ReadOnly, ListDrawerSettings(ShowIndexLabels = true)] public List<int2> Ranges;
     
 
 
@@ -46,7 +47,6 @@ public class Lock : SerializedMonoBehaviour
     {
         foreach(Spell spell in Restrictions.Keys)
         {
-            
             for (int i = 0; i < Cycler.MovementCount(spell); i++)
             {
                 LockMotion(spell, i);
@@ -54,12 +54,13 @@ public class Lock : SerializedMonoBehaviour
         }
 
         GetInActiveMotions(M.MotionType);
+        GetRanges(M.MotionType);
     }
+    public void GetRanges(Spell spell) { Ranges = Enumerable.Range(0, Cycler.MaxTrueMotion(spell) + 1).Select(x => new int2((int)Cycler.TrueRange(spell, x).x, (int)Cycler.TrueRange(spell, x).y)).ToList(); }
     public void GetInActiveMotions(Spell spell) { InActive = Enumerable.Range(0, Cycler.MaxTrueMotion(spell) + 1).Where(x => Cycler.TrueRange(spell, x) == new Vector2(-1, -1)).ToList(); }
     public void LockMotion(Spell spell, int MotionIndex)
     {
         //ALL FRAMES
-        Debug.Log(Cycler.MaxTrueMotion(spell));
         bool Works = MotionIndex <= Cycler.MaxTrueMotion(spell);
         if (!Works)
         {
@@ -67,12 +68,12 @@ public class Lock : SerializedMonoBehaviour
 
             return;
         }
-        
         List<bool> WorkingFrames = Enumerable.Range(0, Cycler.FrameCount(spell, MotionIndex)).Select(index => index >= Restrictions[spell].FrameLock.x && index <= Restrictions[spell].FrameLock.y).ToList();
         foreach (RestrictionSettings settings in Restrictions[spell].Restrictions)
         {
             for (int i = 0; i < Cycler.FrameCount(spell, MotionIndex); i++)
             {
+                
                 List<float> Output = settings.Restriction.GetValue(Cycler.AtFrameInfo(spell, MotionIndex, i));
 
                 //Debug.Log("index:" + i + "  " + Output + " Works: " + (Output < settings.Lock.x || Output > settings.Lock.y));
@@ -95,23 +96,5 @@ public class Lock : SerializedMonoBehaviour
         }
         Cycler.Movements[spell].Motions[MotionIndex].TrueRanges = WorkingRanges;
         //GetInActiveMotions(spell);
-    }
-    /*
-    public bool InsideTrueMotions(int Try, int MotionIndex)
-    {
-        if (MotionIndex < 0 || MotionIndex > TrueMotions.Count)
-            return false;
-        return TrueMotions[MotionIndex].Any(Vector => Try >= Vector.x && Try <= Vector.y);
-    }
-    */
-    // Update is called once per frame
-    void Update()
-    {
-        //degree assign
-        if (!AbleToCallWithButtons)
-            return;
-
-        //270 on right, 90 on left
-        //Value = RestrictionManager.RestrictionDictionary[Restriction.HandToHeadAngle].Invoke(null, PR.PastFrame(Side.right), PastFrameRecorder.instance.GetControllerInfo(Side.right));
     }
 }

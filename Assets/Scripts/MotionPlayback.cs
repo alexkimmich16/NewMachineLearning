@@ -33,6 +33,10 @@ public class MotionPlayback : MonoBehaviour
 
     public bool DoLines = true;
 
+    public Side side;
+    public EditSettings Setting;
+
+
 
 
     public delegate void NewFrame();
@@ -47,7 +51,22 @@ public class MotionPlayback : MonoBehaviour
     {
         MotionEditor.OnChangeMotion += OnSomethingChanged;
         if(type == PlayType.WatchPlayer)
+        {
             Runtime.AllSpellChangeState += SpellStateChange;
+            PastFrameRecorder.NewFrame += WatchPlayerUpdate;
+        }
+            
+    }
+
+    public void WatchPlayerUpdate(Side FrameSide)
+    {
+        if (side != FrameSide)
+            return;
+        if (!PastFrameRecorder.IsReady)
+            return;
+
+        AthenaFrame info = PastFrameRecorder.instance.GetFramesList(side, 1)[0];
+        moveAll(info);
     }
     public void OnSomethingChanged()
     {
@@ -70,44 +89,67 @@ public class MotionPlayback : MonoBehaviour
                 return;
             Timer = 0;
             Frame += 1;
-            
+            ME.FrameDisplay.text = "Frame: " + Frame;
             if (Frame >= Cycler.FrameCount(ME.MotionType, ME.MotionNum))
                 Frame = 0;
 
-
-            if (ME.Setting == EditSettings.DisplayingMotion)
+            AthenaFrame info = new AthenaFrame(Cycler.AtFrameInfo(ME.MotionType, ME.MotionNum, Frame));
+            if (side == Side.left)
+                info.Devices[0] = info.Devices[0].Invert();
+            if (Setting == EditSettings.Editing)
             {
-                //ConditionManager.instance.PassValue(State, ME.CurrentTestMotion, Side.right);
+                handToChange.material = Materials[Cycler.FrameWorks(ME.MotionType, ME.MotionNum, Frame) ? 1 : 0];
+            }
+            else if(Setting == EditSettings.DisplayingMotion)
+            {
+                /*
+                List<AthenaFrame> Frames = Cycler.GetFrames(ME.MotionType, ME.MotionNum, ).instance.GetFramesList(side, Runtime.FramesAgoBuild);
+
+
+                List<float> FrameValues = FrameToValues(Frames);
+                int ActiveInputCount = FrameValues.Count / FramesAgoBuild;
+                //Debug.Log(ActiveInputCount);
+                Tensor input = new Tensor(1, 1, FramesAgoBuild, ActiveInputCount, FrameValues.ToArray());
+
+                IWorker worker = R.Workers[spell][side];
+
+                worker.Execute(input);
+                Tensor output = worker.PeekOutput();
+
+                int State = output.ArgMax()[0];
+
+                if (SideStates[spell][side] != State)
+                {
+                    AllSpellChangeState?.Invoke(spell, side, State);
+                    SpellHolder.Spells[spell].StateChangeEvent(side, State);
+                    SideStates[spell][side] = State;
+                }
+
+                input.Dispose();
+                output.Dispose();
+                */
             }
 
-            AthenaFrame info = Cycler.AtFrameInfo(ME.MotionType, ME.MotionNum, Frame);
 
-            handToChange.material = Materials[Cycler.FrameWorks(ME.MotionType, ME.MotionNum, Frame) ? 1 : 0];
-
+            
             moveAll(info);
+
+
             LastMotion = Motion;
             OnNewFrame?.Invoke();
-
             //MotionRestriction GetMotionRestriction() { return ME.Setting == EditSettings.DisplayingBrute ? BruteForce.instance.BruteForceSettings : RestrictionManager.instance.RestrictionSettings.MotionRestrictions[(int)ME.MotionType - 1]; }
         }
-        else if(type == PlayType.WatchPlayer)
-        {
-            if (!PastFrameRecorder.IsReady)
-                return;
-            AthenaFrame info = PastFrameRecorder.instance.GetFramesList(Side.right, 1)[0];
-            moveAll(info);
-        }
-        void moveAll(AthenaFrame info)
-        {
-            MoveDevice(Right, info.Devices[0]);
-            MoveDevice(Head, info.Devices[1]);
+    }
+    void moveAll(AthenaFrame info)
+    {
+        MoveDevice(Right, info.Devices[0]);
+        MoveDevice(Head, info.Devices[1]);
 
-            SetLine(Velocities[0], info.Devices[0], true, Right);
-            SetLine(Velocities[1], info.Devices[1], true, Head);
+        SetLine(Velocities[0], info.Devices[0], true, Right);
+        SetLine(Velocities[1], info.Devices[1], true, Head);
 
-            SetLine(Accelerations[0], info.Devices[0], false, Right);
-            SetLine(Accelerations[1], info.Devices[1], false, Head);
-        }
+        SetLine(Accelerations[0], info.Devices[0], false, Right);
+        SetLine(Accelerations[1], info.Devices[1], false, Head);
     }
     public void MoveDevice(Transform trans, DeviceInfo info)
     {

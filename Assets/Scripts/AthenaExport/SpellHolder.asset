@@ -25,11 +25,11 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Spells
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[Spell, Assembly-CSharp],[Athena.AthenaSpellHolder+SpellReferences,
-        Assembly-CSharp]], mscorlib
+      Data: 0|System.Collections.Generic.Dictionary`2[[Spell, Athena],[Athena.AthenaSpellHolder+SpellReferences,
+        Athena]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Spell, Assembly-CSharp]],
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Spell, Athena]],
         mscorlib
     - Name: 
       Entry: 12
@@ -51,7 +51,7 @@ MonoBehaviour:
       Data: 1
     - Name: $v
       Entry: 7
-      Data: 2|Athena.AthenaSpellHolder+SpellReferences, Assembly-CSharp
+      Data: 2|Athena.AthenaSpellHolder+SpellReferences, Athena
     - Name: Model
       Entry: 10
       Data: 0
@@ -66,10 +66,10 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 3
+      Data: 2
     - Name: $v
       Entry: 7
-      Data: 3|Athena.AthenaSpellHolder+SpellReferences, Assembly-CSharp
+      Data: 3|Athena.AthenaSpellHolder+SpellReferences, Athena
     - Name: Model
       Entry: 10
       Data: 1
@@ -89,54 +89,112 @@ MonoBehaviour:
   - restriction: 0
     Device1: 0
     TestVal1: 2
-    Device2: 0
-    TestVal2: 0
+    Dir1: 0
+    Device2: 1
+    TestVal2: 1
+    Dir2: 5
     InActiveAxis: 
   - restriction: 0
     Device1: 0
     TestVal1: 3
+    Dir1: 0
     Device2: 0
     TestVal2: 0
+    Dir2: 0
     InActiveAxis: 
   - restriction: 0
     Device1: 0
     TestVal1: 4
+    Dir1: 0
     Device2: 0
     TestVal2: 0
-    InActiveAxis: 
-  - restriction: 1
-    Device1: 0
-    TestVal1: 1
-    Device2: 0
-    TestVal2: 0
-    InActiveAxis: 
-  - restriction: 1
-    Device1: 0
-    TestVal1: 1
-    Device2: 0
-    TestVal2: 4
-    InActiveAxis: 
-  - restriction: 1
-    Device1: 0
-    TestVal1: 1
-    Device2: 0
-    TestVal2: 2
-    InActiveAxis: 
-  - restriction: 1
-    Device1: 0
-    TestVal1: 2
-    Device2: 0
-    TestVal2: 4
+    Dir2: 0
     InActiveAxis: 
   - restriction: 2
     Device1: 1
     TestVal1: 0
+    Dir1: 0
     Device2: 0
     TestVal2: 0
+    Dir2: 0
     InActiveAxis: 01000000
   - restriction: 2
     Device1: 1
     TestVal1: 0
+    Dir1: 0
     Device2: 0
     TestVal2: 0
+    Dir2: 0
     InActiveAxis: 0000000002000000
+  - restriction: 1
+    Device1: 0
+    TestVal1: 2
+    Dir1: 0
+    Device2: 0
+    TestVal2: 4
+    Dir2: 5
+    InActiveAxis: 
+  - restriction: 1
+    Device1: 0
+    TestVal1: 4
+    Dir1: 0
+    Device2: 2
+    TestVal2: 0
+    Dir2: 4
+    InActiveAxis: 
+  - restriction: 1
+    Device1: 0
+    TestVal1: 1
+    Dir1: 0
+    Device2: 0
+    TestVal2: 2
+    Dir2: 4
+    InActiveAxis: 
+  - restriction: 1
+    Device1: 0
+    TestVal1: 1
+    Dir1: 0
+    Device2: 0
+    TestVal2: 4
+    Dir2: 4
+    InActiveAxis: 
+  - restriction: 1
+    Device1: 0
+    TestVal1: 1
+    Dir1: 0
+    Device2: 2
+    TestVal2: 0
+    Dir2: 4
+    InActiveAxis: 
+  - restriction: 1
+    Device1: 0
+    TestVal1: 2
+    Dir1: 0
+    Device2: 1
+    TestVal2: 2
+    Dir2: 5
+    InActiveAxis: 
+  - restriction: 1
+    Device1: 0
+    TestVal1: 4
+    Dir1: 0
+    Device2: 1
+    TestVal2: 4
+    Dir2: 5
+    InActiveAxis: 
+  - restriction: 1
+    Device1: 0
+    TestVal1: 2
+    Dir1: 0
+    Device2: 1
+    TestVal2: 1
+    Dir2: 5
+    InActiveAxis: 
+  - restriction: 1
+    Device1: 0
+    TestVal1: 4
+    Dir1: 0
+    Device2: 1
+    TestVal2: 1
+    Dir2: 5
+    InActiveAxis: 

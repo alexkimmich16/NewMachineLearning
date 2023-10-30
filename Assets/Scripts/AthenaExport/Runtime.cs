@@ -16,8 +16,7 @@ public enum Spell
 {
     Nothing = 0,
     Fireball = 1,
-    Flames = 2,
-    Parry = 3,
+    Parry = 2,
 }
 namespace Athena
 {
@@ -28,7 +27,7 @@ namespace Athena
         public static Runtime instance;
         private void Awake() { instance = this; }
 
-        public const int FramesAgoBuild = 15;
+        public const int FramesAgoBuild = 6;
         public AthenaSpellHolder SpellHolder;
 
         private Dictionary<Spell, Dictionary<Side, IWorker>> Workers = new Dictionary<Spell, Dictionary<Side, IWorker>>();
@@ -60,7 +59,6 @@ namespace Athena
             Parallel.ForEach(Sides, side =>
             {
                 List<AthenaFrame> Frames = PastFrameRecorder.instance.GetFramesList(side, FramesAgoBuild);
-
 
                 foreach (Spell spell in SpellHolder.Spells.Keys)
                 {

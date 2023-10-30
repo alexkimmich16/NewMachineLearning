@@ -89,9 +89,8 @@ for file_name in files_to_process:
             excel_row = []
             for frame_index, frame in enumerate(sequence):
                 for input_index, input_value in enumerate(frame):
-                    rounded_value = round(input_value, 5)
-                    debug_str += f"'Inputs[{input_index + frame_index * len(frame)}]':{rounded_value} "
-                    excel_row.append(f"{rounded_value}")
+                    debug_str += f"'Inputs[{input_index + frame_index * len(frame)}]':{input_value} "
+                    excel_row.append(f"{input_value}")
 
             # If this is the first frame of the first motion, write to Excel
             sequences.append(sequence)

@@ -24,11 +24,7 @@ public class RecordMotions : MonoBehaviour
     public Side RecordSide;
     private void Start()
     {
-        //FrameInterval = 1 / FramesPerSecond;
         RecordingMotion = false;
-        //CanRecordToggle.onValueChanged.AddListener(delegate {
-            //OnToggleChanged(CanRecordToggle);
-        //});
     }
     public bool HitRecordButton(out Side side)
     {

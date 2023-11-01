@@ -198,3 +198,27 @@ MonoBehaviour:
     TestVal2: 1
     Dir2: 5
     InActiveAxis: 
+  - restriction: 1
+    Device1: 0
+    TestVal1: 1
+    Dir1: 0
+    Device2: 1
+    TestVal2: 1
+    Dir2: 0
+    InActiveAxis: 0100000002000000
+  - restriction: 1
+    Device1: 0
+    TestVal1: 1
+    Dir1: 0
+    Device2: 1
+    TestVal2: 1
+    Dir2: 0
+    InActiveAxis: 0000000002000000
+  - restriction: 1
+    Device1: 0
+    TestVal1: 1
+    Dir1: 0
+    Device2: 1
+    TestVal2: 1
+    Dir2: 0
+    InActiveAxis: 0000000001000000
